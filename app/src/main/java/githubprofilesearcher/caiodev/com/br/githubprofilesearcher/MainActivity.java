@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void fillProfileInfo(String profile) {
-        String requestUrl = BASE_URL_ADDRESS + profile;
+        String requestUrl = BASE_URL_ADDRESS.concat(profile);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -90,14 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
                                 mUserName.setText(rootObj.getString(getString(R.string.login_alias)));
 
-                                if(rootObj.getString(getString(R.string.bio_alias)).equals("null")){
+                                if (rootObj.getString(getString(R.string.bio_alias)).equals("null")) {
                                     mUserBio.setText(getString(R.string.null_bio_message));
 
-                                } else{
+                                } else {
                                     mUserBio.setText(rootObj.getString(getString(R.string.bio_alias)));
                                 }
 
-                                if(rootObj.getInt(getString(R.string.followers_alias)) <= 1){
+                                if (rootObj.getInt(getString(R.string.followers_alias)) <= 1) {
                                     mUserFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
                                             rootObj.getInt(getString(R.string.followers_alias)),
                                             getString(R.string.number_of_followers_singular)));
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                                             getString(R.string.number_of_followers_plural)));
                                 }
 
-                                if(rootObj.getInt(getString(R.string.public_repos_alias)) <= 1){
+                                if (rootObj.getInt(getString(R.string.public_repos_alias)) <= 1) {
                                     mUserRepos.setText(getString(R.string.number_of_repos_passing_attributes,
                                             rootObj.getInt(getString(R.string.public_repos_alias)),
                                             getString(R.string.number_of_repos_singular)));

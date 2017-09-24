@@ -19,23 +19,23 @@
 
             <TextView
                 android:id="@+id/cc_months_label"
-                android:layout_marginLeft="@dimen/horizontal_margin_8dp"
-                android:layout_marginStart="@dimen/horizontal_margin_8dp"
-                android:textAppearance="?android:textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/horizontal_margin_8dp"
+                android:layout_marginStart="@dimen/horizontal_margin_8dp"
                 android:layout_marginTop="@dimen/vertical_margin_8dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="@string/github_address" />
+                android:text="@string/github_address"
+                android:textAppearance="?android:textAppearanceMedium" />
 
             <EditText
                 android:id="@+id/search_profile"
                 style="@style/ViewStyle"
-                android:hint="@string/edit_text_hint"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:hint="@string/edit_text_hint"
                 android:inputType="text" />
 
         </LinearLayout>
@@ -44,18 +44,18 @@
             android:id="@+id/search_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vertical_margin_8dp"
             android:layout_below="@+id/search_layout"
+            android:layout_marginTop="@dimen/vertical_margin_8dp"
             android:text="@string/search_button_string"
             android:textAllCaps="false"
             android:textAppearance="?android:textAppearanceLarge" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_user_info"
+            style="@style/MarginViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/search_button"
-            style="@style/MarginViewStyle"
             android:layout_marginBottom="@dimen/margin_8dp">
 
             <LinearLayout
@@ -85,8 +85,8 @@
                         style="@style/ViewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
+                        android:layout_marginTop="4dp"
                         android:text="@string/user_name"
                         android:textColor="@color/black" />
 
@@ -124,10 +124,10 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_repo1"
+            style="@style/MarginViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_user_info"
-            style="@style/MarginViewStyle"
             android:layout_marginBottom="@dimen/vertical_margin_8dp">
 
             <RelativeLayout
@@ -136,12 +136,12 @@
 
                 <TextView
                     android:id="@+id/repo1_name"
+                    style="@style/MarginAndTextAppearenceViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/vertical_margin_8dp"
                     android:text="@string/repo_name"
-                    android:textColor="@color/black"
-                    style="@style/MarginAndTextAppearenceViewStyle" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/repo1_url"
@@ -186,11 +186,11 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_repo2"
+            style="@style/MarginViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_repo1"
-            android:layout_marginBottom="@dimen/vertical_margin_8dp"
-            style="@style/MarginViewStyle">
+            android:layout_marginBottom="@dimen/vertical_margin_8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -198,12 +198,12 @@
 
                 <TextView
                     android:id="@+id/repo2_name"
+                    style="@style/MarginAndTextAppearenceViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/horizontal_margin_8dp"
                     android:text="@string/repo_name"
-                    android:textColor="@color/black"
-                    style="@style/MarginAndTextAppearenceViewStyle" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/repo2_url"
@@ -248,11 +248,11 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_repo3"
+            style="@style/MarginViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_repo2"
-            android:layout_marginBottom="@dimen/vertical_margin_8dp"
-            style="@style/MarginViewStyle">
+            android:layout_marginBottom="@dimen/vertical_margin_8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -260,12 +260,12 @@
 
                 <TextView
                     android:id="@+id/repo3_name"
+                    style="@style/MarginAndTextAppearenceViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/vertical_margin_8dp"
                     android:text="@string/repo_name"
-                    android:textColor="@color/black"
-                    style="@style/MarginAndTextAppearenceViewStyle" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/repo3_url"
