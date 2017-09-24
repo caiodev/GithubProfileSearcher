@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name" translatable="false">GithubProfileSearcher</string>
+    <string name="github_address" translatable="false">https://github.com/</string>
+    <string name="login_alias" translatable="false">login</string>
+    <string name="bio_alias" translatable="false">bio</string>
+    <string name="followers_alias" translatable="false">followers</string>
+    <string name="followers">Followers</string>
+    <string name="public_repos_alias" translatable="false">public_repos</string>
+    <string name="repositories">Repositories</string>
+    <string name="search_button_string">Search</string>
+    <string name="user_name">User Name</string>
+    <string name="user_bio">User Bio</string>
+    <string name="repo_name">Repo Name</string>
+    <string name="avatar_image_url" translatable="false">avatar_url</string>
+    <string name="repo_url">Repo Url</string>
+    <string name="null_bio_message">None</string>
+    <string name="edit_text_hint">e.g: JakeWharton</string>
+    <string name="number_of_followers_singular">Follower</string>
+    <string name="number_of_followers_plural">Followers</string>
+    <string name="number_of_repos_singular">Repository</string>
+    <string name="number_of_repos_plural">Repositories</string>
+    <string name="number_of_watchers_singular">Watcher</string>
+    <string name="number_of_watchers_plural">Watchers</string>
+    <string name="number_of_open_issues">Open issues</string>
+    <string name="number_of_followers_passing_attributes" translatable="false">%1$d %2$s</string>
+    <string name="number_of_repos_passing_attributes" translatable="false">@string/number_of_followers_passing_attributes</string>
+</resources>

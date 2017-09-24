@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cc_months_label"
+                android:layout_marginLeft="@dimen/horizontal_margin_8dp"
+                android:layout_marginStart="@dimen/horizontal_margin_8dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/vertical_margin_8dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/github_address" />
+
+            <EditText
+                android:id="@+id/search_profile"
+                style="@style/ViewStyle"
+                android:hint="@string/edit_text_hint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:inputType="text" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_8dp"
+            android:layout_below="@+id/search_layout"
+            android:text="@string/search_button_string"
+            android:textAllCaps="false"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_user_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search_button"
+            style="@style/MarginViewStyle"
+            android:layout_marginBottom="@dimen/margin_8dp">
+
+            <LinearLayout
+                android:id="@+id/name_photo_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vertical_margin_8dp"
+                android:layout_marginTop="@dimen/vertical_margin_8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/margin_8dp"
+                    android:background="@color/cardview_dark_background"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/user_name"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/user_bio"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/user_bio"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/user_folowers"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/number_of_followers_plural"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/user_repos"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_repos_plural"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_repo1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_user_info"
+            style="@style/MarginViewStyle"
+            android:layout_marginBottom="@dimen/vertical_margin_8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/repo1_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/vertical_margin_8dp"
+                    android:text="@string/repo_name"
+                    android:textColor="@color/black"
+                    style="@style/MarginAndTextAppearenceViewStyle" />
+
+                <TextView
+                    android:id="@+id/repo1_url"
+                    style="@style/ViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/repo1_name"
+                    android:layout_marginBottom="@dimen/vertical_margin_8dp"
+                    android:text="@string/repo_url"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/repo1_stats_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/repo1_url"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/repo1_watchers"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/vertical_margin_8dp"
+                        android:text="@string/number_of_watchers_plural"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/repo1_issues"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/vertical_margin_8dp"
+                        android:text="@string/number_of_open_issues"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_repo2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_repo1"
+            android:layout_marginBottom="@dimen/vertical_margin_8dp"
+            style="@style/MarginViewStyle">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/repo2_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/horizontal_margin_8dp"
+                    android:text="@string/repo_name"
+                    android:textColor="@color/black"
+                    style="@style/MarginAndTextAppearenceViewStyle" />
+
+                <TextView
+                    android:id="@+id/repo2_url"
+                    style="@style/ViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/repo2_name"
+                    android:layout_marginBottom="@dimen/horizontal_margin_8dp"
+                    android:text="@string/repo_url"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/repo2_stats_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/repo2_url"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/repo2_watchers"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
+                        android:text="@string/number_of_watchers_plural"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/repo2_issues"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
+                        android:text="@string/number_of_open_issues"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_repo3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_repo2"
+            android:layout_marginBottom="@dimen/vertical_margin_8dp"
+            style="@style/MarginViewStyle">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/repo3_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/vertical_margin_8dp"
+                    android:text="@string/repo_name"
+                    android:textColor="@color/black"
+                    style="@style/MarginAndTextAppearenceViewStyle" />
+
+                <TextView
+                    android:id="@+id/repo3_url"
+                    style="@style/ViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/repo3_name"
+                    android:layout_marginBottom="@dimen/horizontal_margin_8dp"
+                    android:text="@string/repo_url"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/repo3_stats_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/repo3_url"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/repo3_watchers"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
+                        android:text="@string/number_of_watchers_plural"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/repo3_issues"
+                        style="@style/ViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
+                        android:text="@string/number_of_open_issues"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+</ScrollView>

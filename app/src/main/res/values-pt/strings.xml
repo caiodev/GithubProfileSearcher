@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="followers">Seguidores</string>
+    <string name="repositories">Repositórios</string>
+    <string name="search_button_string">Buscar</string>
+    <string name="user_name">Usuário</string>
+    <string name="user_bio">Bio do usuário</string>
+    <string name="repo_name">Nome do repositório</string>
+    <string name="number_of_open_issues">Issue(s) aberta(s)</string>
+    <string name="number_of_repos_plural">Repositórios</string>
+    <string name="number_of_repos_singular">Repositório</string>
+    <string name="number_of_watchers_plural">Observadores</string>
+    <string name="number_of_watchers_singular">Observador</string>
+    <string name="number_of_followers_singular">Seguidor</string>
+    <string name="number_of_followers_plural">Seguidores</string>
+    <string name="null_bio_message">Nenhum</string>
+    <string name="edit_text_hint">Ex: JakeWharton</string>
+    <string name="repo_url">URL do repositório</string>
+</resources>
