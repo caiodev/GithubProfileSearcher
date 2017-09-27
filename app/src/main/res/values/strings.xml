@@ -6,6 +6,7 @@
     <string name="followers_alias" translatable="false">followers</string>
     <string name="followers">Followers</string>
     <string name="public_repos_alias" translatable="false">public_repos</string>
+    <string name="repos_url_alias" translatable="false">repos_url</string>
     <string name="repositories">Repositories</string>
     <string name="search_button_string">Search</string>
     <string name="user_name">User Name</string>
@@ -13,6 +14,7 @@
     <string name="repo_name">Repo Name</string>
     <string name="avatar_image_url" translatable="false">avatar_url</string>
     <string name="repo_url">Repo Url</string>
+    <string name="null_string" translatable="false">null</string>
     <string name="null_bio_message">None</string>
     <string name="edit_text_hint">e.g: JakeWharton</string>
     <string name="number_of_followers_singular">Follower</string>

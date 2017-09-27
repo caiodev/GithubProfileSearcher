@@ -25,15 +25,33 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    final private String BASE_URL_ADDRESS = "https://api.github.com/users/";
+    private String BASE_URL_ADDRESS = "https://api.github.com/users/";
     private EditText mSearchProfile;
     private Button mSearchButton;
     private CardView mUserCard;
+    private CardView mUserCardRepo1;
+    private CardView mUserCardRepo2;
+    private CardView mUserCardRepo3;
     private TextView mUserName;
     private TextView mUserBio;
     private TextView mUserFollowers;
     private TextView mUserRepos;
     private ImageView mUserAvatar;
+
+    private TextView mFirstRepoName;
+    private TextView mFirstRepoUrl;
+    private TextView mFirstRepoWatchers;
+    private TextView mFirstRepoIssues;
+
+    private TextView mSecondRepoName;
+    private TextView mSecondRepoUrl;
+    private TextView mSecondRepoWatchers;
+    private TextView mSecondRepoIssues;
+
+    private TextView mThirdRepoName;
+    private TextView mThirdRepoUrl;
+    private TextView mThirdRepoWatchers;
+    private TextView mThirdRepoIssues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 mUserName.setText(rootObj.getString(getString(R.string.login_alias)));
 
-                                if (rootObj.getString(getString(R.string.bio_alias)).equals("null")) {
+                                if (rootObj.getString(getString(R.string.bio_alias)).equals(getString(R.string.null_string))) {
                                     mUserBio.setText(getString(R.string.null_bio_message));
 
                                 } else {
@@ -129,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 mUserCard.setVisibility(View.VISIBLE);
-                                fillRepoInfo();
+                                fillRepoInfo(rootObj.getString(getString(R.string.login_alias)));
                             } catch (JSONException e) {
                                 mUserCard.setVisibility(View.GONE);
                             }
@@ -140,7 +158,112 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void fillRepoInfo() {
-        // Implemente aqui a sequência
+    void fillRepoInfo(String userName) {
+
+        String requestUrl = BASE_URL_ADDRESS.concat(userName);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .get()
+                .url(requestUrl)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("getProfileInfo", "FAIL");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String jsonData = response.body().string();
+                Log.i("getProfileInfo", jsonData);
+
+                if (response.isSuccessful()) {
+
+                    mUserCardRepo1 = findViewById(R.id.card_repo1);
+                    mUserCardRepo2 = findViewById(R.id.card_repo2);
+                    mUserCardRepo3 = findViewById(R.id.card_repo3);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                JSONObject rootObj = new JSONObject(jsonData);
+
+                                mFirstRepoName = findViewById(R.id.repo1_name);
+
+                                mFirstRepoUrl = findViewById(R.id.repo1_url);
+                                mFirstRepoUrl.setText(rootObj.getString(getString(R.string.repos_url_alias)));
+
+                                mFirstRepoWatchers = findViewById(R.id.repo1_watchers);
+
+                                mFirstRepoIssues = findViewById(R.id.repo1_issues);
+
+
+                                mSecondRepoName = findViewById(R.id.repo2_name);
+
+                                mSecondRepoUrl = findViewById(R.id.repo2_url);
+
+                                mSecondRepoWatchers = findViewById(R.id.repo2_watchers);
+
+                                mSecondRepoIssues = findViewById(R.id.repo2_issues);
+
+
+                                mThirdRepoName = findViewById(R.id.repo3_name);
+
+                                mThirdRepoUrl = findViewById(R.id.repo3_url);
+
+                                mThirdRepoWatchers = findViewById(R.id.repo3_watchers);
+
+                                mThirdRepoIssues = findViewById(R.id.repo3_issues);
+
+                                mUserName = findViewById(R.id.user_name);
+                                mUserBio = findViewById(R.id.user_bio);
+                                mUserFollowers = findViewById(R.id.user_folowers);
+                                mUserRepos = findViewById(R.id.user_repos);
+                                mUserAvatar = findViewById((R.id.user_avatar));
+
+                                mUserName.setText(rootObj.getString(getString(R.string.login_alias)));
+
+                                if (rootObj.getString(getString(R.string.bio_alias)).equals(getString(R.string.null_string))) {
+                                    mUserBio.setText(getString(R.string.null_bio_message));
+
+                                } else {
+                                    mUserBio.setText(rootObj.getString(getString(R.string.bio_alias)));
+                                }
+
+                                if (rootObj.getInt(getString(R.string.followers_alias)) <= 1) {
+                                    mUserFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
+                                            rootObj.getInt(getString(R.string.followers_alias)),
+                                            getString(R.string.number_of_followers_singular)));
+
+                                } else {
+                                    mUserFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
+                                            rootObj.getInt(getString(R.string.followers_alias)),
+                                            getString(R.string.number_of_followers_plural)));
+                                }
+
+                                if (rootObj.getInt(getString(R.string.public_repos_alias)) <= 1) {
+                                    mUserRepos.setText(getString(R.string.number_of_repos_passing_attributes,
+                                            rootObj.getInt(getString(R.string.public_repos_alias)),
+                                            getString(R.string.number_of_repos_singular)));
+
+                                } else {
+                                    mUserRepos.setText(getString(R.string.number_of_repos_passing_attributes,
+                                            rootObj.getInt(getString(R.string.public_repos_alias)),
+                                            getString(R.string.number_of_repos_plural)));
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }
