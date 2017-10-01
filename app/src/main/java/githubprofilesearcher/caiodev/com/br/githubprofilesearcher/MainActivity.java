@@ -1,5 +1,8 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -9,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -17,6 +21,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -26,49 +33,73 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     private final String BASE_URL_ADDRESS = "https://api.github.com/users/";
-    private EditText mSearchProfile;
-    private Button mSearchButton;
-    private CardView mUserCard;
-    private CardView mUserCardRepo1;
-    private CardView mUserCardRepo2;
-    private CardView mUserCardRepo3;
-    private TextView mUserName;
-    private TextView mUserBio;
-    private TextView mUserFollowers;
-    private TextView mUserRepos;
-    private ImageView mUserAvatar;
+    @BindView(R.id.search_profile)
+    protected EditText mSearchProfile;
+    @BindView(R.id.search_button)
+    protected Button mSearchButton;
 
-    private TextView mFirstRepoName;
-    private TextView mFirstRepoUrl;
-    private TextView mFirstRepoWatchers;
-    private TextView mFirstRepoIssues;
+    @BindView(R.id.card_user_info)
+    protected CardView mUserCard;
+    @BindView(R.id.user_name)
+    protected TextView mUserName;
+    @BindView(R.id.user_bio)
+    protected TextView mUserBio;
+    @BindView(R.id.user_folowers)
+    protected TextView mUserFollowers;
+    @BindView(R.id.user_repos)
+    protected TextView mUserRepos;
+    @BindView(R.id.user_avatar)
+    protected ImageView mUserAvatar;
 
-    private TextView mSecondRepoName;
-    private TextView mSecondRepoUrl;
-    private TextView mSecondRepoWatchers;
-    private TextView mSecondRepoIssues;
+    @BindView(R.id.repo1_name)
+    protected TextView mFirstRepoName;
+    @BindView(R.id.repo1_url)
+    protected TextView mFirstRepoUrl;
+    @BindView(R.id.repo1_watchers)
+    protected TextView mFirstRepoWatchers;
+    @BindView(R.id.repo1_issues)
+    protected TextView mFirstRepoIssues;
 
-    private TextView mThirdRepoName;
-    private TextView mThirdRepoUrl;
-    private TextView mThirdRepoWatchers;
-    private TextView mThirdRepoIssues;
+    @BindView(R.id.repo2_name)
+    protected TextView mSecondRepoName;
+    @BindView(R.id.repo2_url)
+    protected TextView mSecondRepoUrl;
+    @BindView(R.id.repo2_watchers)
+    protected TextView mSecondRepoWatchers;
+    @BindView(R.id.repo2_issues)
+    protected TextView mSecondRepoIssues;
+
+    @BindView(R.id.repo3_name)
+    protected TextView mThirdRepoName;
+    @BindView(R.id.repo3_url)
+    protected TextView mThirdRepoUrl;
+    @BindView(R.id.repo3_watchers)
+    protected TextView mThirdRepoWatchers;
+    @BindView(R.id.repo3_issues)
+    protected TextView mThirdRepoIssues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mSearchProfile = findViewById(R.id.search_profile);
-
-        mSearchButton = findViewById(R.id.search_button);
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fillProfileInfo(mSearchProfile.getText().toString());
-            }
-        });
+        ButterKnife.bind(this);
     }
 
+    //This method gets the text inserted into the mSearchProfile EditText, besides,
+    //it checks first, if there is internet connection and second, if the EditText is empty, if these two
+    //conditions are satisfied, the EditText's content will be obtained
+    @OnClick(R.id.search_button)
+    void run() {
+        if (isNetworkAvailable()) {
+            if (!isFieldEmpty(mSearchProfile)) {
+                fillProfileInfo(mSearchProfile.getText().toString());
+            }
+        } else {
+            toastMaker(getString(R.string.no_connection_error));
+        }
+    }
+
+    //This method fills the requested github profile info
     void fillProfileInfo(String profile) {
         String requestUrl = BASE_URL_ADDRESS.concat(profile);
 
@@ -91,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("getProfileInfo", jsonData);
 
                 if (response.isSuccessful()) {
-                    mUserCard = findViewById(R.id.card_user_info);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -159,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //This method fills the requested github Repo information as Repo name, repo URL and so on
     void fillRepoInfo(String userName) {
 
         String requestUrl = BASE_URL_ADDRESS.concat(userName).concat("/repos");
@@ -183,10 +214,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
 
-                    mUserCardRepo1 = findViewById(R.id.card_repo1);
-                    mUserCardRepo2 = findViewById(R.id.card_repo2);
-                    mUserCardRepo3 = findViewById(R.id.card_repo3);
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -194,69 +221,7 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 JSONObject rootObj = new JSONObject(jsonData);
 
-                                mFirstRepoName = findViewById(R.id.repo1_name);
-
-                                mFirstRepoUrl = findViewById(R.id.repo1_url);
                                 mFirstRepoUrl.setText(rootObj.getString("name"));
-
-                                mFirstRepoWatchers = findViewById(R.id.repo1_watchers);
-
-                                mFirstRepoIssues = findViewById(R.id.repo1_issues);
-
-
-                                mSecondRepoName = findViewById(R.id.repo2_name);
-
-                                mSecondRepoUrl = findViewById(R.id.repo2_url);
-
-                                mSecondRepoWatchers = findViewById(R.id.repo2_watchers);
-
-                                mSecondRepoIssues = findViewById(R.id.repo2_issues);
-
-
-                                mThirdRepoName = findViewById(R.id.repo3_name);
-
-                                mThirdRepoUrl = findViewById(R.id.repo3_url);
-
-                                mThirdRepoWatchers = findViewById(R.id.repo3_watchers);
-
-                                mThirdRepoIssues = findViewById(R.id.repo3_issues);
-
-                                mUserName = findViewById(R.id.user_name);
-                                mUserBio = findViewById(R.id.user_bio);
-                                mUserFollowers = findViewById(R.id.user_folowers);
-                                mUserRepos = findViewById(R.id.user_repos);
-                                mUserAvatar = findViewById((R.id.user_avatar));
-
-                                mUserName.setText(rootObj.getString(getString(R.string.login_alias)));
-
-                                if (rootObj.getString(getString(R.string.bio_alias)).equals(getString(R.string.null_string))) {
-                                    mUserBio.setText(getString(R.string.null_bio_message));
-
-                                } else {
-                                    mUserBio.setText(rootObj.getString(getString(R.string.bio_alias)));
-                                }
-
-                                if (rootObj.getInt(getString(R.string.followers_alias)) <= 1) {
-                                    mUserFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
-                                            rootObj.getInt(getString(R.string.followers_alias)),
-                                            getString(R.string.number_of_followers_singular)));
-
-                                } else {
-                                    mUserFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
-                                            rootObj.getInt(getString(R.string.followers_alias)),
-                                            getString(R.string.number_of_followers_plural)));
-                                }
-
-                                if (rootObj.getInt(getString(R.string.public_repos_alias)) <= 1) {
-                                    mUserRepos.setText(getString(R.string.number_of_repos_passing_attributes,
-                                            rootObj.getInt(getString(R.string.public_repos_alias)),
-                                            getString(R.string.number_of_repos_singular)));
-
-                                } else {
-                                    mUserRepos.setText(getString(R.string.number_of_repos_passing_attributes,
-                                            rootObj.getInt(getString(R.string.public_repos_alias)),
-                                            getString(R.string.number_of_repos_plural)));
-                                }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -266,5 +231,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    //This method checks if there is a field empty based on the parameter received
+    boolean isFieldEmpty(EditText textField) {
+
+        if (textField.getText().toString().equals("")) {
+            textField.setError(getString(R.string.empty_field_error));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //It checks whether internet connection is available or not
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    //It pops up a message received as parameter
+    void toastMaker(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

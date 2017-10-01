@@ -16,4 +16,6 @@
     <string name="null_bio_message">Nenhum</string>
     <string name="edit_text_hint">Ex: JakeWharton</string>
     <string name="repo_url">URL do repositório</string>
+    <string name="empty_field_error">Campo vazio</string>
+    <string name="no_connection_error">Não há conexão com a internet</string>
 </resources>

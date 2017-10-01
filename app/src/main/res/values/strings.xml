@@ -26,4 +26,9 @@
     <string name="number_of_open_issues">Open issues</string>
     <string name="number_of_followers_passing_attributes" translatable="false">%1$d %2$s</string>
     <string name="number_of_repos_passing_attributes" translatable="false">@string/number_of_followers_passing_attributes</string>
+
+    <!-- Error messages -->
+    <string name="empty_field_error">Empty field</string>
+    <string name="no_connection_error">There is no internet connection</string>
+
 </resources>
