@@ -25,7 +25,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String BASE_URL_ADDRESS = "https://api.github.com/users/";
+    private final String BASE_URL_ADDRESS = "https://api.github.com/users/";
     private EditText mSearchProfile;
     private Button mSearchButton;
     private CardView mUserCard;
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
 
                             try {
+
                                 JSONObject rootObj = new JSONObject(jsonData);
 
                                 mUserName = findViewById(R.id.user_name);
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     void fillRepoInfo(String userName) {
 
-        String requestUrl = BASE_URL_ADDRESS.concat(userName);
+        String requestUrl = BASE_URL_ADDRESS.concat(userName).concat("/repos");
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                                 mFirstRepoName = findViewById(R.id.repo1_name);
 
                                 mFirstRepoUrl = findViewById(R.id.repo1_url);
-                                mFirstRepoUrl.setText(rootObj.getString(getString(R.string.repos_url_alias)));
+                                mFirstRepoUrl.setText(rootObj.getString("name"));
 
                                 mFirstRepoWatchers = findViewById(R.id.repo1_watchers);
 
