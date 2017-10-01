@@ -33,50 +33,32 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     private final String BASE_URL_ADDRESS = "https://api.github.com/users/";
-    @BindView(R.id.search_profile)
-    protected EditText mSearchProfile;
-    @BindView(R.id.search_button)
-    protected Button mSearchButton;
 
-    @BindView(R.id.card_user_info)
-    protected CardView mUserCard;
-    @BindView(R.id.user_name)
-    protected TextView mUserName;
-    @BindView(R.id.user_bio)
-    protected TextView mUserBio;
-    @BindView(R.id.user_folowers)
-    protected TextView mUserFollowers;
-    @BindView(R.id.user_repos)
-    protected TextView mUserRepos;
+    @BindView(R.id.search_profile) protected EditText mSearchProfile;
+    @BindView(R.id.search_button) protected Button mSearchButton;
+
+    @BindView(R.id.card_user_info) protected CardView mUserCard;
+    @BindView(R.id.user_name) protected TextView mUserName;
+    @BindView(R.id.user_bio) protected TextView mUserBio;
+    @BindView(R.id.user_folowers) protected TextView mUserFollowers;
+    @BindView(R.id.user_repos) protected TextView mUserRepos;
     @BindView(R.id.user_avatar)
     protected ImageView mUserAvatar;
 
-    @BindView(R.id.repo1_name)
-    protected TextView mFirstRepoName;
-    @BindView(R.id.repo1_url)
-    protected TextView mFirstRepoUrl;
-    @BindView(R.id.repo1_watchers)
-    protected TextView mFirstRepoWatchers;
-    @BindView(R.id.repo1_issues)
-    protected TextView mFirstRepoIssues;
+    @BindView(R.id.repo1_name) protected TextView mFirstRepoName;
+    @BindView(R.id.repo1_url) protected TextView mFirstRepoUrl;
+    @BindView(R.id.repo1_watchers) protected TextView mFirstRepoWatchers;
+    @BindView(R.id.repo1_issues) protected TextView mFirstRepoIssues;
 
-    @BindView(R.id.repo2_name)
-    protected TextView mSecondRepoName;
-    @BindView(R.id.repo2_url)
-    protected TextView mSecondRepoUrl;
-    @BindView(R.id.repo2_watchers)
-    protected TextView mSecondRepoWatchers;
-    @BindView(R.id.repo2_issues)
-    protected TextView mSecondRepoIssues;
+    @BindView(R.id.repo2_name) protected TextView mSecondRepoName;
+    @BindView(R.id.repo2_url) protected TextView mSecondRepoUrl;
+    @BindView(R.id.repo2_watchers) protected TextView mSecondRepoWatchers;
+    @BindView(R.id.repo2_issues) protected TextView mSecondRepoIssues;
 
-    @BindView(R.id.repo3_name)
-    protected TextView mThirdRepoName;
-    @BindView(R.id.repo3_url)
-    protected TextView mThirdRepoUrl;
-    @BindView(R.id.repo3_watchers)
-    protected TextView mThirdRepoWatchers;
-    @BindView(R.id.repo3_issues)
-    protected TextView mThirdRepoIssues;
+    @BindView(R.id.repo3_name) protected TextView mThirdRepoName;
+    @BindView(R.id.repo3_url) protected TextView mThirdRepoUrl;
+    @BindView(R.id.repo3_watchers) protected TextView mThirdRepoWatchers;
+    @BindView(R.id.repo3_issues) protected TextView mThirdRepoIssues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
