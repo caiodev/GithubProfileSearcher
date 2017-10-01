@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.user_bio) protected TextView mUserBio;
     @BindView(R.id.user_folowers) protected TextView mUserFollowers;
     @BindView(R.id.user_repos) protected TextView mUserRepos;
-    @BindView(R.id.user_avatar)
-    protected ImageView mUserAvatar;
+    @BindView(R.id.user_avatar) protected ImageView mUserAvatar;
 
     @BindView(R.id.repo1_name) protected TextView mFirstRepoName;
     @BindView(R.id.repo1_url) protected TextView mFirstRepoUrl;
@@ -215,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //This method checks if there is a field empty based on the parameter received
+    //This method checks if there is an empty field based on the EditText object received
     boolean isFieldEmpty(EditText textField) {
 
         if (textField.getText().toString().equals("")) {
