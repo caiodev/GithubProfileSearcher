@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ProgressBar
+            android:id="@+id/github_repository_search_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <LinearLayout
-            android:id="@+id/search_layout"
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vertical_margin_8dp"
-            android:orientation="horizontal">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/cc_months_label"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/horizontal_margin_8dp"
-                android:layout_marginStart="@dimen/horizontal_margin_8dp"
-                android:layout_marginTop="@dimen/vertical_margin_8dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/github_address"
                 android:textAppearance="?android:textAppearanceMedium" />
@@ -32,38 +42,31 @@
             <EditText
                 android:id="@+id/search_profile"
                 style="@style/ViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:hint="@string/edit_text_hint"
+                android:imeOptions="actionSearch"
                 android:inputType="text" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/search_layout"
-            android:layout_marginTop="@dimen/vertical_margin_8dp"
-            android:text="@string/search_button_string"
-            android:textAllCaps="false"
-            android:textAppearance="?android:textAppearanceLarge" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_user_info"
             style="@style/MarginViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/search_button"
-            android:layout_marginBottom="@dimen/margin_8dp">
+            android:layout_marginTop="@dimen/margin_8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
             <LinearLayout
                 android:id="@+id/name_photo_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/vertical_margin_8dp"
-                android:layout_marginTop="@dimen/vertical_margin_8dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -122,192 +125,192 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_repo1"
-            style="@style/MarginViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/card_user_info"
-            android:layout_marginBottom="@dimen/vertical_margin_8dp">
+        <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/card_repo1"-->
+        <!--style="@style/MarginViewStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/card_user_info"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp">-->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-                <TextView
-                    android:id="@+id/repo1_name"
-                    style="@style/MarginAndTextAppearenceViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/vertical_margin_8dp"
-                    android:text="@string/repo_name"
-                    android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo1_name"-->
+        <!--style="@style/MarginAndTextAppearenceViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp"-->
+        <!--android:text="@string/repo_name"-->
+        <!--android:textColor="@color/black" />-->
 
-                <TextView
-                    android:id="@+id/repo1_url"
-                    style="@style/ViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/repo1_name"
-                    android:layout_marginBottom="@dimen/vertical_margin_8dp"
-                    android:text="@string/repo_url"
-                    android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo1_url"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/repo1_name"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp"-->
+        <!--android:text="@string/repo_url"-->
+        <!--android:textColor="@color/black" />-->
 
-                <LinearLayout
-                    android:id="@+id/repo1_stats_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/repo1_url"
-                    android:orientation="horizontal">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/repo1_stats_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/repo1_url"-->
+        <!--android:orientation="horizontal">-->
 
-                    <TextView
-                        android:id="@+id/repo1_watchers"
-                        style="@style/ViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/vertical_margin_8dp"
-                        android:text="@string/number_of_watchers_plural"
-                        android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo1_watchers"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp"-->
+        <!--android:text="@string/number_of_watchers_plural"-->
+        <!--android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/repo1_issues"
-                        style="@style/ViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/vertical_margin_8dp"
-                        android:text="@string/number_of_open_issues"
-                        android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo1_issues"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp"-->
+        <!--android:text="@string/number_of_open_issues"-->
+        <!--android:textColor="@color/black" />-->
 
-                </LinearLayout>
+        <!--</LinearLayout>-->
 
-            </RelativeLayout>
+        <!--</RelativeLayout>-->
 
-        </android.support.v7.widget.CardView>
+        <!--</android.support.v7.widget.CardView>-->
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_repo2"
-            style="@style/MarginViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/card_repo1"
-            android:layout_marginBottom="@dimen/vertical_margin_8dp">
+        <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/card_repo2"-->
+        <!--style="@style/MarginViewStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/card_repo1"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp">-->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-                <TextView
-                    android:id="@+id/repo2_name"
-                    style="@style/MarginAndTextAppearenceViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/horizontal_margin_8dp"
-                    android:text="@string/repo_name"
-                    android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo2_name"-->
+        <!--style="@style/MarginAndTextAppearenceViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/horizontal_margin_8dp"-->
+        <!--android:text="@string/repo_name"-->
+        <!--android:textColor="@color/black" />-->
 
-                <TextView
-                    android:id="@+id/repo2_url"
-                    style="@style/ViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/repo2_name"
-                    android:layout_marginBottom="@dimen/horizontal_margin_8dp"
-                    android:text="@string/repo_url"
-                    android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo2_url"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/repo2_name"-->
+        <!--android:layout_marginBottom="@dimen/horizontal_margin_8dp"-->
+        <!--android:text="@string/repo_url"-->
+        <!--android:textColor="@color/black" />-->
 
-                <LinearLayout
-                    android:id="@+id/repo2_stats_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/repo2_url"
-                    android:orientation="horizontal">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/repo2_stats_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/repo2_url"-->
+        <!--android:orientation="horizontal">-->
 
-                    <TextView
-                        android:id="@+id/repo2_watchers"
-                        style="@style/ViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
-                        android:text="@string/number_of_watchers_plural"
-                        android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo2_watchers"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/horizontal_margin_8dp"-->
+        <!--android:text="@string/number_of_watchers_plural"-->
+        <!--android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/repo2_issues"
-                        style="@style/ViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
-                        android:text="@string/number_of_open_issues"
-                        android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo2_issues"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/horizontal_margin_8dp"-->
+        <!--android:text="@string/number_of_open_issues"-->
+        <!--android:textColor="@color/black" />-->
 
-                </LinearLayout>
+        <!--</LinearLayout>-->
 
-            </RelativeLayout>
+        <!--</RelativeLayout>-->
 
-        </android.support.v7.widget.CardView>
+        <!--</android.support.v7.widget.CardView>-->
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_repo3"
-            style="@style/MarginViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/card_repo2"
-            android:layout_marginBottom="@dimen/vertical_margin_8dp">
+        <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/card_repo3"-->
+        <!--style="@style/MarginViewStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/card_repo2"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp">-->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-                <TextView
-                    android:id="@+id/repo3_name"
-                    style="@style/MarginAndTextAppearenceViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/vertical_margin_8dp"
-                    android:text="@string/repo_name"
-                    android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo3_name"-->
+        <!--style="@style/MarginAndTextAppearenceViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/vertical_margin_8dp"-->
+        <!--android:text="@string/repo_name"-->
+        <!--android:textColor="@color/black" />-->
 
-                <TextView
-                    android:id="@+id/repo3_url"
-                    style="@style/ViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/repo3_name"
-                    android:layout_marginBottom="@dimen/horizontal_margin_8dp"
-                    android:text="@string/repo_url"
-                    android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo3_url"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/repo3_name"-->
+        <!--android:layout_marginBottom="@dimen/horizontal_margin_8dp"-->
+        <!--android:text="@string/repo_url"-->
+        <!--android:textColor="@color/black" />-->
 
-                <LinearLayout
-                    android:id="@+id/repo3_stats_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/repo3_url"
-                    android:orientation="horizontal">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/repo3_stats_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/repo3_url"-->
+        <!--android:orientation="horizontal">-->
 
-                    <TextView
-                        android:id="@+id/repo3_watchers"
-                        style="@style/ViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
-                        android:text="@string/number_of_watchers_plural"
-                        android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo3_watchers"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/horizontal_margin_8dp"-->
+        <!--android:text="@string/number_of_watchers_plural"-->
+        <!--android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/repo3_issues"
-                        style="@style/ViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/horizontal_margin_8dp"
-                        android:text="@string/number_of_open_issues"
-                        android:textColor="@color/black" />
+        <!--<TextView-->
+        <!--android:id="@+id/repo3_issues"-->
+        <!--style="@style/ViewStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/horizontal_margin_8dp"-->
+        <!--android:text="@string/number_of_open_issues"-->
+        <!--android:textColor="@color/black" />-->
 
-                </LinearLayout>
+        <!--</LinearLayout>-->
 
-            </RelativeLayout>
+        <!--</RelativeLayout>-->
 
-        </android.support.v7.widget.CardView>
+        <!--</android.support.v7.widget.CardView>-->
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

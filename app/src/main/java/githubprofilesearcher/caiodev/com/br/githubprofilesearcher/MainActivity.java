@@ -1,16 +1,22 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +29,6 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -32,48 +37,101 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Attributes to save and restore the app's instance and its content
+    private static final String USER_PROFILE_IMAGE = "UserProfileImage";
+    private static final String USER_NAME = "UserName";
+    private static final String USER_BIO = "UserBio";
+    private static final String USER_FOLLOWERS = "UserFollowers";
+    private static final String USER_REPOS = "UserRepos";
+    //Attributes
     private final String BASE_URL_ADDRESS = "https://api.github.com/users/";
-
-    @BindView(R.id.search_profile) protected EditText mSearchProfile;
-    @BindView(R.id.search_button) protected Button mSearchButton;
-
-    @BindView(R.id.card_user_info) protected CardView mUserCard;
-    @BindView(R.id.user_name) protected TextView mUserName;
-    @BindView(R.id.user_bio) protected TextView mUserBio;
-    @BindView(R.id.user_folowers) protected TextView mUserFollowers;
-    @BindView(R.id.user_repos) protected TextView mUserRepos;
-    @BindView(R.id.user_avatar) protected ImageView mUserAvatar;
-
-    @BindView(R.id.repo1_name) protected TextView mFirstRepoName;
-    @BindView(R.id.repo1_url) protected TextView mFirstRepoUrl;
-    @BindView(R.id.repo1_watchers) protected TextView mFirstRepoWatchers;
-    @BindView(R.id.repo1_issues) protected TextView mFirstRepoIssues;
-
-    @BindView(R.id.repo2_name) protected TextView mSecondRepoName;
-    @BindView(R.id.repo2_url) protected TextView mSecondRepoUrl;
-    @BindView(R.id.repo2_watchers) protected TextView mSecondRepoWatchers;
-    @BindView(R.id.repo2_issues) protected TextView mSecondRepoIssues;
-
-    @BindView(R.id.repo3_name) protected TextView mThirdRepoName;
-    @BindView(R.id.repo3_url) protected TextView mThirdRepoUrl;
-    @BindView(R.id.repo3_watchers) protected TextView mThirdRepoWatchers;
-    @BindView(R.id.repo3_issues) protected TextView mThirdRepoIssues;
+    private final String GITHUB_USER_PAGE = "https://github.com/";
+    //Views
+    @BindView(R.id.search_profile)
+    protected EditText searchProfile;
+    //UserRepoViews
+    @BindView(R.id.card_user_info)
+    protected CardView userCard;
+    @BindView(R.id.user_avatar)
+    protected ImageView userAvatar;
+    @BindView(R.id.user_name)
+    protected TextView userName;
+    @BindView(R.id.user_bio)
+    protected TextView userBio;
+    @BindView(R.id.user_folowers)
+    protected TextView userFollowers;
+    @BindView(R.id.user_repos)
+    protected TextView userRepos;
+    @BindView(R.id.github_repository_search_progress_bar)
+    protected ProgressBar githubProfileSearchProgressBar;
+    private boolean isUserInfoLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        githubProfileSearchProgressBar.setVisibility(View.INVISIBLE);
+
+        searchProfile.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    run();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        userCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isUserInfoLoaded) {
+                    openRepoPage(GITHUB_USER_PAGE.concat(searchProfile.getText().toString()));
+
+                } else {
+                    toastMaker(getString(R.string.empty_card_view_error));
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        BitmapDrawable drawable = (BitmapDrawable) userAvatar.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+
+        // Save the state of item position
+        outState.putParcelable(USER_PROFILE_IMAGE, bitmap);
+        outState.putString(USER_NAME, userName.getText().toString());
+        outState.putString(USER_BIO, userBio.getText().toString());
+        outState.putString(USER_FOLLOWERS, userFollowers.getText().toString());
+        outState.putString(USER_REPOS, userRepos.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Read the state of item position
+        userAvatar.setImageBitmap((Bitmap) savedInstanceState.getParcelable(USER_PROFILE_IMAGE));
+        userName.setText(savedInstanceState.getString(USER_NAME));
+        userBio.setText(savedInstanceState.getString(USER_BIO));
+        userFollowers.setText(savedInstanceState.getString(USER_FOLLOWERS));
+        userRepos.setText(savedInstanceState.getString(USER_REPOS));
     }
 
     //This method gets the text inserted into the mSearchProfile EditText, besides,
     //it checks first, if there is internet connection and second, if the EditText is empty, if these two
     //conditions are satisfied, the EditText's content will be obtained
-    @OnClick(R.id.search_button)
     void run() {
         if (isNetworkAvailable()) {
-            if (!isFieldEmpty(mSearchProfile)) {
-                fillProfileInfo(mSearchProfile.getText().toString());
+            if (!isFieldEmpty(searchProfile)) {
+                fillProfileInfo(searchProfile.getText().toString());
             }
         } else {
             toastMaker(getString(R.string.no_connection_error));
@@ -99,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
                 final String jsonData = response.body().string();
                 Log.i("getProfileInfo", jsonData);
 
@@ -108,43 +167,39 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
+                            githubProfileSearchProgressBar.setVisibility(View.VISIBLE);
+
                             try {
 
                                 JSONObject rootObj = new JSONObject(jsonData);
 
-                                mUserName = findViewById(R.id.user_name);
-                                mUserBio = findViewById(R.id.user_bio);
-                                mUserFollowers = findViewById(R.id.user_folowers);
-                                mUserRepos = findViewById(R.id.user_repos);
-                                mUserAvatar = findViewById((R.id.user_avatar));
-
-                                mUserName.setText(rootObj.getString(getString(R.string.login_alias)));
+                                userName.setText(rootObj.getString(getString(R.string.login_alias)));
 
                                 if (rootObj.getString(getString(R.string.bio_alias)).equals(getString(R.string.null_string))) {
-                                    mUserBio.setText(getString(R.string.null_bio_message));
+                                    userBio.setText(getString(R.string.null_bio_message));
 
                                 } else {
-                                    mUserBio.setText(rootObj.getString(getString(R.string.bio_alias)));
+                                    userBio.setText(rootObj.getString(getString(R.string.bio_alias)));
                                 }
 
                                 if (rootObj.getInt(getString(R.string.followers_alias)) <= 1) {
-                                    mUserFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
+                                    userFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
                                             rootObj.getInt(getString(R.string.followers_alias)),
                                             getString(R.string.number_of_followers_singular)));
 
                                 } else {
-                                    mUserFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
+                                    userFollowers.setText(getString(R.string.number_of_followers_passing_attributes,
                                             rootObj.getInt(getString(R.string.followers_alias)),
                                             getString(R.string.number_of_followers_plural)));
                                 }
 
                                 if (rootObj.getInt(getString(R.string.public_repos_alias)) <= 1) {
-                                    mUserRepos.setText(getString(R.string.number_of_repos_passing_attributes,
+                                    userRepos.setText(getString(R.string.number_of_repos_passing_attributes,
                                             rootObj.getInt(getString(R.string.public_repos_alias)),
                                             getString(R.string.number_of_repos_singular)));
 
                                 } else {
-                                    mUserRepos.setText(getString(R.string.number_of_repos_passing_attributes,
+                                    userRepos.setText(getString(R.string.number_of_repos_passing_attributes,
                                             rootObj.getInt(getString(R.string.public_repos_alias)),
                                             getString(R.string.number_of_repos_plural)));
                                 }
@@ -154,16 +209,22 @@ public class MainActivity extends AppCompatActivity {
                                             .load(rootObj.getString(getString(R.string.avatar_image_url)))
                                             .asBitmap()
                                             .fitCenter()
-                                            .into(mUserAvatar);
+                                            .into(userAvatar);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                mUserCard.setVisibility(View.VISIBLE);
+                                userCard.setVisibility(View.VISIBLE);
                                 fillRepoInfo(rootObj.getString(getString(R.string.login_alias)));
+
+                                isUserInfoLoaded = true;
+
+                                githubProfileSearchProgressBar.setVisibility(View.INVISIBLE);
+
                             } catch (JSONException e) {
-                                mUserCard.setVisibility(View.GONE);
+                                userCard.setVisibility(View.GONE);
                             }
                         }
+
                     });
                 }
             }
@@ -190,28 +251,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final String jsonData = response.body().string();
-                Log.i("getProfileInfo", jsonData);
 
-                if (response.isSuccessful()) {
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                JSONObject rootObj = new JSONObject(jsonData);
-
-                                mFirstRepoUrl.setText(rootObj.getString("name"));
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
             }
         });
+    }
+
+    private void openRepoPage(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
     }
 
     //This method checks if there is an empty field based on the EditText object received

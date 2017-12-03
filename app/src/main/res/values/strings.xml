@@ -16,7 +16,7 @@
     <string name="repo_url">Repo Url</string>
     <string name="null_string" translatable="false">null</string>
     <string name="null_bio_message">None</string>
-    <string name="edit_text_hint">e.g: JakeWharton</string>
+    <string name="edit_text_hint">e.g: torvalds</string>
     <string name="number_of_followers_singular">Follower</string>
     <string name="number_of_followers_plural">Followers</string>
     <string name="number_of_repos_singular">Repository</string>
@@ -30,5 +30,6 @@
     <!-- Error messages -->
     <string name="empty_field_error">Empty field</string>
     <string name="no_connection_error">There is no internet connection</string>
+    <string name="empty_card_view_error">You didn\'t search any profile yet</string>
 
 </resources>
