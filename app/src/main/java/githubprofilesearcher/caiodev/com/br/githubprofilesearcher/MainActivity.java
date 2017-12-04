@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.github_repository_search_progress_bar)
     protected ProgressBar githubProfileSearchProgressBar;
     private boolean isUserInfoLoaded = false;
+    private Unbinder mUnbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,5 +284,14 @@ public class MainActivity extends AppCompatActivity {
     //It pops up a message received as parameter
     void toastMaker(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
+            mUnbinder = null;
+        }
     }
 }
