@@ -14,9 +14,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
     protected TextView userFollowers;
     @BindView(R.id.user_repos)
     protected TextView userRepos;
-    @BindView(R.id.github_repository_search_progress_bar)
-    protected ProgressBar githubProfileSearchProgressBar;
     private boolean isUserInfoLoaded = false;
     private Unbinder mUnbinder;
 
@@ -74,13 +72,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        githubProfileSearchProgressBar.setVisibility(View.INVISIBLE);
-
         searchProfile.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     run();
+                    hideKeyboard();
                     return true;
                 }
                 return false;
@@ -169,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            githubProfileSearchProgressBar.setVisibility(View.VISIBLE);
-
                             try {
 
                                 JSONObject rootObj = new JSONObject(jsonData);
@@ -219,8 +214,6 @@ public class MainActivity extends AppCompatActivity {
                                 fillRepoInfo(rootObj.getString(getString(R.string.login_alias)));
 
                                 isUserInfoLoaded = true;
-
-                                githubProfileSearchProgressBar.setVisibility(View.INVISIBLE);
 
                             } catch (JSONException e) {
                                 userCard.setVisibility(View.GONE);
@@ -279,6 +272,11 @@ public class MainActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(searchProfile.getApplicationWindowToken(), 0);
     }
 
     //It pops up a message received as parameter
