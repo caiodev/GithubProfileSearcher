@@ -1,28 +1,28 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ViewStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ViewStyle" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="android:layout_marginLeft">@dimen/horizontal_margin_8dp</item>
         <item name="android:layout_marginRight">@dimen/horizontal_margin_8dp</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
-    <style name="MarginAndTextAppearenceViewStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MarginAndTextAppearanceViewStyle" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="android:layout_marginLeft">@dimen/horizontal_margin_8dp</item>
         <item name="android:layout_marginRight">@dimen/horizontal_margin_8dp</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="MarginViewStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MarginViewStyle" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="android:layout_marginLeft">@dimen/horizontal_margin_8dp</item>
         <item name="android:layout_marginRight">@dimen/horizontal_margin_8dp</item>

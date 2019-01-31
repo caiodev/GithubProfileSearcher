@@ -17,6 +17,8 @@
     <string name="null_string" translatable="false">null</string>
     <string name="null_bio_message">None</string>
     <string name="edit_text_hint">e.g: torvalds</string>
+
+    <!--User information-->
     <string name="number_of_followers_singular">Follower</string>
     <string name="number_of_followers_plural">Followers</string>
     <string name="number_of_repos_singular">Repository</string>

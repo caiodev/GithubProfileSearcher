@@ -3,7 +3,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import org.json.JSONException
@@ -43,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         cardUserInfo.setOnClickListener {
             if (isUserInfoLoaded) {
                 openRepoPage(githubUserPage + searchProfile.text.toString())
-
             } else {
                 toastMaker(getString(R.string.empty_card_view_error))
             }
@@ -65,6 +67,9 @@ class MainActivity : AppCompatActivity() {
 
     //This method fills the requested github profile info
     private fun fillProfileInfo(profile: String) {
+
+        repositoryLoadingProgressBar.visibility = View.VISIBLE
+
         val requestUrl = baseUrlAddress + profile
 
         val client = OkHttpClient()
@@ -132,10 +137,16 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             try {
+
                                 Glide.with(this@MainActivity)
                                     .load(rootObj.getString(getString(R.string.avatar_image_url)))
-                                    .asBitmap()
-                                    .fitCenter()
+                                    .apply(
+                                        RequestOptions()
+                                            .error(R.mipmap.ic_launcher) // will be displayed if the image cannot be loaded
+                                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                            .priority(Priority.HIGH)
+                                    )
+                                    .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(userAvatar)
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -143,7 +154,7 @@ class MainActivity : AppCompatActivity() {
 
                             cardUserInfo.visibility = View.VISIBLE
                             fillRepoInfo(rootObj.getString(getString(R.string.login_alias)))
-
+                            repositoryLoadingProgressBar.visibility = View.INVISIBLE
                             isUserInfoLoaded = true
 
                         } catch (e: JSONException) {
@@ -167,6 +178,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val call = client.newCall(request)
+
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.i("getProfileInfo", "FAIL")
@@ -180,7 +192,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openRepoPage(url: String) {
-        startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
+        startActivity(
+            Intent(
+                applicationContext,
+                ShowRepositoryInfoActivity::class.java
+            ).putExtra("repo_url", url)
+        )
     }
 
     //This method checks if there is an empty field based on the EditText object received

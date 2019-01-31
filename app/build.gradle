@@ -22,14 +22,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     implementation "androidx.appcompat:appcompat:$appCompat"
     implementation "androidx.cardview:cardview:$cardView"
-    implementation "com.squareup.okhttp3:okhttp:$okHttp"
-    implementation "com.github.bumptech.glide:glide:$glide"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
-    testImplementation "junit:junit:$junit"
+    implementation "com.github.bumptech.glide:glide:$glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.google.android.material:material:$materialDesign"
+    implementation "com.squareup.okhttp3:okhttp:$okHttp"
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation("androidx.test.espresso:espresso-core:$espressoCore", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }
