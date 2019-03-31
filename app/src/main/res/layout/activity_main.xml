@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent"
+    tools:context=".sections.sections.repoInformationObtainment.view.RepoInfoObtainmentActivity">
 
     <TextView
         android:id="@+id/githubUrlTextView"
@@ -17,30 +17,57 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/searchProfile"
-        style="@style/ViewStyle"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/githubUserTextInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autofillHints="username"
-        android:hint="@string/edit_text_hint"
-        android:imeOptions="actionSearch"
-        android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="@+id/githubUrlTextView"
+        android:layout_marginStart="@dimen/margin_8dp"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:hint="@string/text_input_layout_hint"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/githubUrlTextView"
-        app:layout_constraintTop_toTopOf="@+id/githubUrlTextView"
-        tools:targetApi="o" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchProfileTextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints="username"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingLeft="@dimen/padding_8dp"
+            android:paddingEnd="@dimen/padding_8dp"
+            android:paddingRight="@dimen/padding_8dp"
+            android:textSize="@dimen/text_size_20"
+            tools:targetApi="o" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/searchIconImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/margin_16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/githubUserTextInputLayout"
+        app:layout_constraintEnd_toEndOf="@+id/githubUserTextInputLayout"
+        app:layout_constraintTop_toTopOf="@+id/githubUserTextInputLayout"
+        app:srcCompat="@drawable/ic_search"
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardUserInfo"
         style="@style/MarginViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/margin_8dp"
+        app:cardElevation="@dimen/margin_4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchProfile">
+        app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -65,40 +92,42 @@
                 android:layout_height="wrap_content"
                 android:text="@string/user_name"
                 android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16"
+                app:layout_constraintBottom_toTopOf="@+id/userBio"
                 app:layout_constraintStart_toEndOf="@+id/userAvatar"
-                app:layout_constraintTop_toTopOf="@+id/userAvatar" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/userBio"
-                style="@style/ViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:text="@string/user_bio"
                 android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
+                android:textSize="@dimen/text_size_16"
+                app:layout_constraintBottom_toTopOf="@+id/userFollowers"
+                app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@+id/userName" />
 
             <TextView
                 android:id="@+id/userFollowers"
-                style="@style/ViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/number_of_followers_plural"
+                android:text="@string/number_of_followers"
                 android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
+                android:textSize="@dimen/text_size_16"
+                app:layout_constraintBottom_toTopOf="@+id/userRepos"
+                app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@+id/userBio" />
 
             <TextView
                 android:id="@+id/userRepos"
-                style="@style/ViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/number_of_repos_plural"
+                android:text="@string/number_of_repositories"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
+                android:textSize="@dimen/text_size_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@+id/userFollowers" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

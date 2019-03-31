@@ -1,37 +1,28 @@
 <resources>
     <string name="app_name" translatable="false">GithubProfileSearcher</string>
     <string name="github_address" translatable="false">https://github.com/</string>
-    <string name="login_alias" translatable="false">login</string>
-    <string name="bio_alias" translatable="false">bio</string>
-    <string name="followers_alias" translatable="false">followers</string>
-    <string name="followers">Followers</string>
-    <string name="public_repos_alias" translatable="false">public_repos</string>
-    <string name="repos_url_alias" translatable="false">repos_url</string>
-    <string name="repositories">Repositories</string>
-    <string name="search_button_string">Search</string>
-    <string name="user_name">User Name</string>
-    <string name="user_bio">User Bio</string>
-    <string name="repo_name">Repo Name</string>
-    <string name="avatar_image_url" translatable="false">avatar_url</string>
-    <string name="repo_url">Repo Url</string>
-    <string name="null_string" translatable="false">null</string>
-    <string name="null_bio_message">None</string>
-    <string name="edit_text_hint">e.g: torvalds</string>
+    <string name="github_template_address" translatable="false">https://github.com/ %1$s</string>
 
     <!--User information-->
-    <string name="number_of_followers_singular">Follower</string>
-    <string name="number_of_followers_plural">Followers</string>
-    <string name="number_of_repos_singular">Repository</string>
-    <string name="number_of_repos_plural">Repositories</string>
-    <string name="number_of_watchers_singular">Watcher</string>
-    <string name="number_of_watchers_plural">Watchers</string>
-    <string name="number_of_open_issues">Open issues</string>
-    <string name="number_of_followers_passing_attributes" translatable="false">%1$d %2$s</string>
-    <string name="number_of_repos_passing_attributes" translatable="false">@string/number_of_followers_passing_attributes</string>
+    <string name="text_input_layout_hint">Type a profile e.g: torvalds</string>
+    <string name="repo_url">Repo Url</string>
+    <string name="user_name">Name:</string>
+    <string name="null_user_name_message">None</string>
+    <string name="user_bio">Bio:</string>
+    <string name="null_user_bio_message">@string/null_user_name_message</string>
+    <string name="number_of_followers">Followers:</string>
+    <string name="number_of_repositories">Repositories:</string>
+    <string name="user_name_template">Name: %1$s</string>
+    <string name="user_bio_template">Bio: %1$s</string>
+    <string name="number_of_followers_template">Followers: %1$s</string>
+    <string name="number_of_repositories_template">Repositories: %1$s</string>
 
-    <!-- Error messages -->
+    <!-- RepositoryInformationError messages -->
     <string name="empty_field_error">Empty field</string>
-    <string name="no_connection_error">There is no internet connection</string>
-    <string name="empty_card_view_error">You didn\'t search any profile yet</string>
+    <string name="no_connection_error">There is no internet connection. Check it and try again</string>
+    <string name="empty_card_view_error">You haven\'t searched for any profile yet</string>
+
+    <!--Intent names-->
+    <string name="repository_opening_intent" translatable="false">repo_url</string>
 
 </resources>

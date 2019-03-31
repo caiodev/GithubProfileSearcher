@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="followers">Seguidores</string>
-    <string name="repositories">Repositórios</string>
-    <string name="search_button_string">Buscar</string>
     <string name="user_name">Usuário</string>
     <string name="user_bio">Bio do usuário</string>
-    <string name="repo_name">Nome do repositório</string>
-    <string name="number_of_open_issues">Issue(s) aberta(s)</string>
-    <string name="number_of_repos_plural">Repositórios</string>
-    <string name="number_of_repos_singular">Repositório</string>
-    <string name="number_of_watchers_plural">Observadores</string>
-    <string name="number_of_watchers_singular">Observador</string>
-    <string name="number_of_followers_singular">Seguidor</string>
-    <string name="number_of_followers_plural">Seguidores</string>
-    <string name="null_bio_message">Nenhum</string>
-    <string name="edit_text_hint">Ex: torvalds</string>
+    <string name="number_of_repositories">Repositórios</string>
+    <string name="number_of_followers">Seguidores</string>
+    <string name="null_user_bio_message">Não há</string>
+    <string name="text_input_layout_hint">Digite um perfil ex: torvalds</string>
     <string name="repo_url">URL do repositório</string>
     <string name="empty_field_error">Campo vazio</string>
     <string name="no_connection_error">Não há conexão com a internet</string>
     <string name="empty_card_view_error">Você ainda não buscou nenhum perfil</string>
+    <string name="number_of_repositories_template">Repositórios: %1$s</string>
+    <string name="number_of_followers_template">Seguidores: %1$s</string>
+    <string name="user_name_template">" Nome: %1$s"</string>
+    <string name="user_bio_template">Bio: %1$s</string>
+    <string name="null_user_name_message">Não há</string>
 </resources>
