@@ -9,9 +9,6 @@ class UserRepository : Repository() {
     private var retrofitService = RetrofitService()
 
     suspend fun getRepositoryInformation(user: String): Any {
-
-        retrofitService.getRetrofitService<UserRepositoryService>().loginAsync(user).await()
-
         return callApi(call = {
             retrofitService.getRetrofitService<UserRepositoryService>().loginAsync(user).await()
         })

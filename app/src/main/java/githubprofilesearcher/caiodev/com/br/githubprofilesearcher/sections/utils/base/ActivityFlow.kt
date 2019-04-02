@@ -2,6 +2,5 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 interface ActivityFlow {
     fun setupView()
-    fun setupViewModel()
-    fun handlePostViewModelSetupProcessing()
+    fun handleViewModel()
 }

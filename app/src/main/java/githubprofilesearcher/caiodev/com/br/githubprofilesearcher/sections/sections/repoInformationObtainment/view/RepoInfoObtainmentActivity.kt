@@ -25,26 +25,22 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
-    private lateinit var viewModel: RepoInfoObtainmentViewModel
+    private val viewModel: RepoInfoObtainmentViewModel by lazy {
+        ViewModelProviders.of(this).get(RepoInfoObtainmentViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setupView()
-        setupViewModel()
-        handlePostViewModelSetupProcessing()
+        handleViewModel()
     }
 
     override fun setupView() {
+
         searchIconImageView.setOnClickListener {
             searchProfile()
         }
-    }
-
-    override fun setupViewModel() {
-
-        viewModel = ViewModelProviders.of(this).get(RepoInfoObtainmentViewModel::class.java)
 
         cardUserInfo.setOnClickListener {
             if (viewModel.isUserInfoLoaded()) {
@@ -69,7 +65,7 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
         })
     }
 
-    override fun handlePostViewModelSetupProcessing() {
+    override fun handleViewModel() {
 
         viewModel.getLiveData().observe(this, Observer { state ->
 
@@ -82,7 +78,8 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                     with(state) {
 
                         name?.let {
-                            userName.text = String.format(getString(R.string.user_name_template), name)
+                            userName.text =
+                                String.format(getString(R.string.user_name_template), name)
                         } ?: run {
                             userName.text = String.format(
                                 getString(R.string.user_name_template),
