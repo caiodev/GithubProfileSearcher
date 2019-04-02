@@ -20,7 +20,7 @@ class ShowRepositoryInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         try {
-            setContentView(githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R.layout.activity_show_repository_info)
+            setContentView(R.layout.activity_show_repository_info)
             githubRepositoryWebView.loadUrl(
                 intent?.extras?.getString(
                     getString(
