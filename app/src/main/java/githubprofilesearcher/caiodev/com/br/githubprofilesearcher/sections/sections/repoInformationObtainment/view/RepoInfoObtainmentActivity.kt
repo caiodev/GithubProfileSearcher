@@ -1,6 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.view
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -19,7 +20,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferencesReference
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -47,7 +47,7 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                 if (NetworkChecking.isInternetConnectionAvailable(applicationContext))
                     openRepoPage(
                         getValueFromSharedPreferencesThroughViewModel(
-                            SharedPreferences.githubProfileUrl, null
+                            githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferences.githubProfileUrl, null
                         )
                     )
                 else toastMaker(getString(R.string.no_connection_error))

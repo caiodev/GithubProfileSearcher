@@ -30,7 +30,7 @@ dependencies {
 
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat"
-    implementation "androidx.core:core:$core"
+    implementation "androidx.core:core:$androidXCore"
 
     //ConstraintLayout
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
@@ -43,7 +43,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //Ktx
-    implementation "androidx.core:core-ktx:$core"
+    implementation "androidx.core:core-ktx:$ktxCore"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModel"
 
     //LeakCanary
@@ -51,8 +51,8 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
     //Lifecycle section
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidLifecycle"
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidLifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$viewModel"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
 
     //Material design
     implementation "com.google.android.material:material:$materialDesign"
@@ -67,8 +67,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$moshiRetrofitConverter"
 
     //Test section
-    androidTestImplementation "androidx.test:core:$junit"
+    androidTestImplementation "androidx.test:core:$testCore"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
     androidTestImplementation "androidx.test.ext:junit:$junit"
     androidTestImplementation "androidx.test:runner:$testRunner"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
 }
