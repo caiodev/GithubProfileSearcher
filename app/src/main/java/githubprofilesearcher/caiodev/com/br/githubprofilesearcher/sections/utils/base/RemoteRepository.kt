@@ -5,7 +5,7 @@ import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-open class Repository {
+open class RemoteRepository {
 
     private var errorResponse = Any()
 

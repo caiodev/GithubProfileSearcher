@@ -19,8 +19,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.sharedPreferences.SharedPreferencesKeys
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.sharedPreferences.SharedPreferencesReference
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferences
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferencesReference
 import kotlinx.android.synthetic.main.activity_main.*
 
 class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
@@ -47,7 +47,7 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                 if (NetworkChecking.isInternetConnectionAvailable(applicationContext))
                     openRepoPage(
                         getValueFromSharedPreferencesThroughViewModel(
-                            SharedPreferencesKeys.githubProfileUrl, null
+                            SharedPreferences.githubProfileUrl, null
                         )
                     )
                 else toastMaker(getString(R.string.no_connection_error))
@@ -116,7 +116,7 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                         )
 
                         insertValueIntoSharedPreferencesThroughViewModel(
-                            SharedPreferencesKeys.githubProfileUrl,
+                            SharedPreferences.githubProfileUrl,
                             state.profileUrl
                         )
 
@@ -152,16 +152,16 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
     private fun getValueFromSharedPreferencesThroughViewModel(key: String, value: String?) =
         viewModel.getValueFromSharedPreferences(
             SharedPreferencesReference.getSharedPreferencesReference(
-                applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
-                SharedPreferencesKeys.sharedPreferencesPrivateMode
+                applicationContext, SharedPreferences.sharedPreferencesRoot,
+                SharedPreferences.sharedPreferencesPrivateMode
             ), key, value
         )
 
     private fun insertValueIntoSharedPreferencesThroughViewModel(key: String, value: String) {
         viewModel.insertValueIntoSharedPreferences(
             SharedPreferencesReference.getSharedPreferencesReference(
-                applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
-                SharedPreferencesKeys.sharedPreferencesPrivateMode
+                applicationContext, SharedPreferences.sharedPreferencesRoot,
+                SharedPreferences.sharedPreferencesPrivateMode
             ), key, value
         )
     }
