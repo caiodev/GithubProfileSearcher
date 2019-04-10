@@ -1,12 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
 
     ext {
+
         //Androidx AppCompat
         appCompat = '1.1.0-alpha04'
         androidXCore = '1.1.0-alpha05'
@@ -63,12 +60,40 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
-}
 
-allprojects {
     repositories {
         google()
         jcenter()
+    }
+}
+
+allprojects {
+
+    repositories {
+
+        maven {
+            url "https://maven.google.com"
+            content {
+                includeGroupByRegex "com\\.android.*"
+                includeGroupByRegex "androidx.*"
+                includeGroup "com.google.android.material"
+            }
+        }
+
+        jcenter {
+            content {
+                includeGroupByRegex "com\\.jakewharton.*"
+                includeGroupByRegex "com\\.squareup.*"
+                includeGroupByRegex "org\\.jetbrains.*"
+                includeGroupByRegex "javax.*"
+                includeGroupByRegex "junit.*"
+                includeGroup "com.github.bumptech.glide"
+                includeGroup "com.google.code.findbugs"
+                includeGroup "com.google.guava"
+                includeGroup "net.sf.kxml"
+                includeGroup "org.hamcrest"
+            }
+        }
     }
 }
 

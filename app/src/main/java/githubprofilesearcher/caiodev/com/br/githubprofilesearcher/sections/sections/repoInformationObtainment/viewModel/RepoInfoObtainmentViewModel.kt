@@ -40,12 +40,6 @@ class RepoInfoObtainmentViewModel : ViewModel() {
 
     internal fun getLiveData() = state
 
-    internal fun isUserInfoLoaded() = isUserInfoLoaded
-
-    internal fun setUserInfoLoadingStatus(status: Boolean) {
-        isUserInfoLoaded = status
-    }
-
     internal fun insertValueIntoSharedPreferences(
         sharedPreferences: SharedPreferences,
         key: String,
@@ -59,6 +53,12 @@ class RepoInfoObtainmentViewModel : ViewModel() {
         key: String,
         value: String? = null
     ) = localUserRepository.getValueFromSharedPreferences(sharedPreferences, key, value)
+
+    internal fun isUserInfoLoaded() = isUserInfoLoaded
+
+    internal fun setUserInfoLoadingStatus(status: Boolean) {
+        isUserInfoLoaded = status
+    }
 
     companion object {
         const val onRepositoryObtainmentFailure = 1
