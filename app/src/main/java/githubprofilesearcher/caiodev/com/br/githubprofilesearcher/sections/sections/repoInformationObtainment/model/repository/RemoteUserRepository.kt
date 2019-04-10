@@ -4,7 +4,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.RemoteRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory.RetrofitService
 
-class UserRepository : RemoteRepository() {
+class RemoteUserRepository : RemoteRepository() {
 
     private var retrofitService = RetrofitService()
 

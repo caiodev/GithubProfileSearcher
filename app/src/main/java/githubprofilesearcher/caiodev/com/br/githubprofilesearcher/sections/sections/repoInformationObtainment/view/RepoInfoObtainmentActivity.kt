@@ -1,7 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.view
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -17,11 +16,15 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.viewModel.RepoInfoObtainmentViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toastMaker
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory.SharedPreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferencesReference
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferencesKeys
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 
 class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
@@ -45,11 +48,13 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
         cardUserInfo.setOnClickListener {
             if (viewModel.isUserInfoLoaded()) {
                 if (NetworkChecking.isInternetConnectionAvailable(applicationContext))
-                    openRepoPage(
-                        getValueFromSharedPreferencesThroughViewModel(
-                            githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferences.githubProfileUrl, null
-                        )
-                    )
+
+                    getValueFromSharedPreferencesThroughViewModel(
+                        SharedPreferencesKeys.githubProfileUrl,
+                        null
+                    )?.let {
+                        openRepoPage(it)
+                    }
                 else toastMaker(getString(R.string.no_connection_error))
             } else {
                 toastMaker(getString(R.string.empty_card_view_error))
@@ -116,7 +121,7 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                         )
 
                         insertValueIntoSharedPreferencesThroughViewModel(
-                            SharedPreferences.githubProfileUrl,
+                            SharedPreferencesKeys.githubProfileUrl,
                             state.profileUrl
                         )
 
@@ -141,27 +146,45 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
         hideKeyboard(searchProfileTextInputEditText)
 
-        if (NetworkChecking.isInternetConnectionAvailable(applicationContext)) {
-            if (searchProfileTextInputEditText.text.toString().isNotEmpty()) {
+        if (searchProfileTextInputEditText.text.toString().isNotEmpty()) {
+            if (NetworkChecking.isInternetConnectionAvailable(applicationContext)) {
                 setViewVisibility(repositoryLoadingProgressBar, View.VISIBLE)
                 viewModel.getGithubUserInformation(searchProfileTextInputEditText.text.toString())
-            } else toastMaker(getString(R.string.empty_field_error))
-        } else toastMaker(getString(R.string.no_connection_error))
+            } else toastMaker(getString(R.string.no_connection_error))
+        } else toastMaker(getString(R.string.empty_field_error))
     }
 
-    private fun getValueFromSharedPreferencesThroughViewModel(key: String, value: String?) =
-        viewModel.getValueFromSharedPreferences(
-            SharedPreferencesReference.getSharedPreferencesReference(
-                applicationContext, SharedPreferences.sharedPreferencesRoot,
-                SharedPreferences.sharedPreferencesPrivateMode
-            ), key, value
+    private fun getValueFromSharedPreferencesThroughViewModel(
+        key: String,
+        value: String?
+    ): String? {
+
+        Timber.i(
+            "VALUE: %s", "Retrieve: ${
+            viewModel.getValueFromSharedPreferences(
+                SharedPreferences.getSharedPreferencesReference(
+                    applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
+                    SharedPreferencesKeys.sharedPreferencesPrivateMode
+                ), key, value
+            )}"
         )
 
+        return viewModel.getValueFromSharedPreferences(
+            SharedPreferences.getSharedPreferencesReference(
+                applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
+                SharedPreferencesKeys.sharedPreferencesPrivateMode
+            ), key, value
+        )
+    }
+
     private fun insertValueIntoSharedPreferencesThroughViewModel(key: String, value: String) {
+
+        Timber.i("VALUE: %s", "Insert: $value")
+
         viewModel.insertValueIntoSharedPreferences(
-            SharedPreferencesReference.getSharedPreferencesReference(
-                applicationContext, SharedPreferences.sharedPreferencesRoot,
-                SharedPreferences.sharedPreferencesPrivateMode
+            SharedPreferences.getSharedPreferencesReference(
+                applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
+                SharedPreferencesKeys.sharedPreferencesPrivateMode
             ), key, value
         )
     }

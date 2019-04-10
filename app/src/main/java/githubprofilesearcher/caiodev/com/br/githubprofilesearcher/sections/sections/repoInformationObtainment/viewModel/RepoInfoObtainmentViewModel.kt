@@ -1,24 +1,27 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.viewModel
 
+import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.model.UserRepositoryInformation
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.model.repository.UserRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.model.repository.LocalUserRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.repoInformationObtainment.model.repository.RemoteUserRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
 
 class RepoInfoObtainmentViewModel : ViewModel() {
 
     private val state = MutableLiveData<Any>()
-    private val repository = UserRepository()
+    private val localUserRepository = LocalUserRepository()
+    private val remoteUserRepository = RemoteUserRepository()
     private var isUserInfoLoaded = false
 
     fun getGithubUserInformation(user: String) {
 
         viewModelScope.launch {
 
-            val value = repository.getRepositoryInformation(user)
+            val value = remoteUserRepository.getRepositoryInformation(user)
 
             when (value) {
 
@@ -42,6 +45,20 @@ class RepoInfoObtainmentViewModel : ViewModel() {
     internal fun setUserInfoLoadingStatus(status: Boolean) {
         isUserInfoLoaded = status
     }
+
+    internal fun insertValueIntoSharedPreferences(
+        sharedPreferences: SharedPreferences,
+        key: String,
+        value: String
+    ) {
+        localUserRepository.insertValueIntoSharedPreferences(sharedPreferences, key, value)
+    }
+
+    internal fun getValueFromSharedPreferences(
+        sharedPreferences: SharedPreferences,
+        key: String,
+        value: String? = null
+    ) = localUserRepository.getValueFromSharedPreferences(sharedPreferences, key, value)
 
     companion object {
         const val onRepositoryObtainmentFailure = 1
