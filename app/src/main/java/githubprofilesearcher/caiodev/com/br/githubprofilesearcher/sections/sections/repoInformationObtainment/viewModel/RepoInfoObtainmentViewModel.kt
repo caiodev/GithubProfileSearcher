@@ -21,9 +21,7 @@ class RepoInfoObtainmentViewModel : ViewModel() {
 
         viewModelScope.launch {
 
-            val value = remoteUserRepository.getRepositoryInformation(user)
-
-            when (value) {
+            when (val value = remoteUserRepository.getRepositoryInformation(user)) {
 
                 is APICallResult.Success<*> -> with(value.data as UserRepositoryInformation) {
                     state.postValue(this)
