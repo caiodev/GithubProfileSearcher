@@ -21,7 +21,7 @@ buildscript {
         gradleVersion = '3.3.2'
 
         //Kotlin
-        kotlin_version = '1.3.21'
+        kotlin_version = '1.3.30'
 
         //Ktx
         ktxCore = '1.1.0-alpha05'
