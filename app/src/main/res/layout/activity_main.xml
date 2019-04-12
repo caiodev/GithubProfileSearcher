@@ -66,9 +66,8 @@
                 android:id="@+id/userAvatar"
                 android:layout_width="@dimen/view_100dp"
                 android:layout_height="@dimen/view_100dp"
-                android:layout_gravity="center_vertical"
-                android:scaleType="center"
-                android:src="@mipmap/ic_launcher"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_octocat"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -77,50 +76,47 @@
             <TextView
                 android:id="@+id/userName"
                 style="@style/ViewStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/user_name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_16"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/userBio"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/userAvatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/userBio"
-                android:layout_width="wrap_content"
+                style="@style/ViewStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/user_bio"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/userFollowers"
-                app:layout_constraintStart_toStartOf="@+id/userName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/userAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/userName" />
 
             <TextView
                 android:id="@+id/userFollowers"
-                android:layout_width="wrap_content"
+                style="@style/ViewStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/number_of_followers"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_16"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/userRepos"
-                app:layout_constraintStart_toStartOf="@+id/userName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/userAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/userBio" />
 
             <TextView
                 android:id="@+id/userRepos"
-                android:layout_width="wrap_content"
+                style="@style/ViewStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/number_of_repositories"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_16"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/userName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/userAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/userFollowers" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

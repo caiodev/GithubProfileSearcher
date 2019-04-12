@@ -5,14 +5,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.InflateException
+import android.view.View
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
 import kotlinx.android.synthetic.main.activity_show_repository_info.*
+
 
 class ShowRepositoryInfoActivity : AppCompatActivity() {
 
-    private var webViewClient: WebViewClient? = null
     private var browserIntent: Intent? = null
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -27,8 +30,12 @@ class ShowRepositoryInfoActivity : AppCompatActivity() {
                 )
             )
             githubRepositoryWebView.settings.javaScriptEnabled = true
-            webViewClient = WebViewClient()
-            githubRepositoryWebView.webViewClient = webViewClient
+            githubRepositoryWebView.webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    setViewVisibility(webViewProgressBar, View.INVISIBLE)
+                }
+            }
         } catch (exception: Exception) {
             when (exception) {
                 is InflateException -> {

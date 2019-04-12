@@ -132,8 +132,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_search" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/app/src/main/res/drawable-xxxhdpi/ic_search.svg" />
+                            <entry key="outputName" value="ic_github_icon" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/app/src/main/res/drawable/github-icon.svg" />
                           </map>
                         </option>
                       </PersistentState>
