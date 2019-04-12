@@ -23,9 +23,7 @@ class ShowRepositoryInfoActivity : AppCompatActivity() {
             setContentView(R.layout.activity_show_repository_info)
             githubRepositoryWebView.loadUrl(
                 intent?.extras?.getString(
-                    getString(
-                        githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R.string.repository_opening_intent
-                    )
+                    getString(R.string.repository_opening_intent)
                 )
             )
             githubRepositoryWebView.settings.javaScriptEnabled = true

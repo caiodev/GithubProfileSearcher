@@ -1,12 +1,14 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
+@Suppress("UNUSED")
 fun Context.setViewVisibility(view: View, visibility: Int? = null) {
 
     when (view) {
@@ -23,7 +25,9 @@ fun Context.setViewVisibility(view: View, visibility: Int? = null) {
     }
 }
 
-fun Context.getSharedPreferencesInstance(name: String) = getSharedPreferences(name, 0)
+@Suppress("UNUSED")
+fun Context.getSharedPreferencesInstance(name: String): SharedPreferences =
+    getSharedPreferences(name, 0)
 
 fun Context.hideKeyboard(editText: EditText) {
     with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {

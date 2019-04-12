@@ -9,9 +9,9 @@
     <application
         android:name=".sections.utils.init.App"
         android:allowBackup="true"
-        android:icon="@mipmap/octocat"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/octocat"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
@@ -23,7 +23,6 @@
             </intent-filter>
         </activity>
         <activity android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.ShowRepositoryInfoActivity" />
-        <activity android:name=".sections.utils.base.Activity" />
     </application>
 
 </manifest>

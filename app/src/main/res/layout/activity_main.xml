@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_8dp"
-        app:cardElevation="@dimen/margin_4dp"
+        app:cardElevation="@dimen/elevation_4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout">
@@ -64,11 +64,11 @@
 
             <ImageView
                 android:id="@+id/userAvatar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/view_100dp"
+                android:layout_height="@dimen/view_100dp"
                 android:layout_gravity="center_vertical"
                 android:scaleType="center"
-                android:src="@mipmap/octocat"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -82,6 +82,7 @@
                 android:text="@string/user_name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/userBio"
                 app:layout_constraintStart_toEndOf="@+id/userAvatar"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -93,6 +94,7 @@
                 android:text="@string/user_bio"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/userFollowers"
                 app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@+id/userName" />
@@ -104,6 +106,7 @@
                 android:text="@string/number_of_followers"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/userRepos"
                 app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@+id/userBio" />
@@ -115,6 +118,7 @@
                 android:text="@string/number_of_repositories"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@+id/userFollowers" />

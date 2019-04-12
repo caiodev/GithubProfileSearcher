@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">GithubProfileSearcher</string>
-    <string name="github_address" translatable="false">https://github.com/</string>
-    <string name="github_template_address" translatable="false">https://github.com/ %1$s</string>
 
     <!--User information-->
     <string name="text_input_layout_hint">Type a profile e.g: torvalds</string>
-    <string name="repo_url">Repo Url</string>
     <string name="user_name">Name:</string>
     <string name="null_user_name_message">None</string>
     <string name="user_bio">Bio:</string>

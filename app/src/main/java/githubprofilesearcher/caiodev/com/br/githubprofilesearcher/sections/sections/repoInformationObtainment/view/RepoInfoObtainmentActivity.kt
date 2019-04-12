@@ -46,7 +46,9 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
         }
 
         cardUserInfo.setOnClickListener {
+
             if (viewModel.isUserInfoLoaded()) {
+
                 if (NetworkChecking.isInternetConnectionAvailable(applicationContext))
 
                     getValueFromSharedPreferencesThroughViewModel(
@@ -113,7 +115,7 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
                         LoadImage.loadImage(
                             this@RepoInfoObtainmentActivity, userImage,
-                            R.mipmap.octocat,
+                            R.mipmap.ic_launcher,
                             DiskCacheStrategy.ALL,
                             Priority.IMMEDIATE,
                             DrawableTransitionOptions.withCrossFade(),
