@@ -9,9 +9,9 @@
     <string name="empty_field_error">Campo vazio</string>
     <string name="no_connection_error">Não há conexão com a internet</string>
     <string name="empty_card_view_error">Você ainda não buscou nenhum perfil</string>
-    <string name="number_of_repositories_template">Repositórios: %1$s</string>
-    <string name="number_of_followers_template">Seguidores: %1$s</string>
-    <string name="user_name_template">" Nome: %1$s"</string>
-    <string name="user_bio_template">Bio: %1$s</string>
+    <string name="number_of_repositories_template">Repositórios: %s</string>
+    <string name="number_of_followers_template">Seguidores: %s</string>
+    <string name="user_name_template">" Nome: %s"</string>
+    <string name="user_bio_template">Bio: %s</string>
     <string name="null_user_name_message">Não há</string>
 </resources>

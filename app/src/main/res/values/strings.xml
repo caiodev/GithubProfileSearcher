@@ -9,10 +9,10 @@
     <string name="null_user_bio_message">@string/null_user_name_message</string>
     <string name="number_of_followers">Followers:</string>
     <string name="number_of_repositories">Repositories:</string>
-    <string name="user_name_template">Name: %1$s</string>
-    <string name="user_bio_template">Bio: %1$s</string>
-    <string name="number_of_followers_template">Followers: %1$s</string>
-    <string name="number_of_repositories_template">Repositories: %1$s</string>
+    <string name="user_name_template">Name: %s</string>
+    <string name="user_bio_template">Bio: %s</string>
+    <string name="number_of_followers_template">Followers: %s</string>
+    <string name="number_of_repositories_template">Repositories: %s</string>
 
     <!-- RepositoryInformationError messages -->
     <string name="empty_field_error">Empty field</string>

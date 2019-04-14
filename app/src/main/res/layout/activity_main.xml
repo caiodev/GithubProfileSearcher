@@ -14,6 +14,7 @@
         android:layout_marginTop="@dimen/margin_8dp"
         android:layout_marginEnd="@dimen/margin_8dp"
         android:hint="@string/text_input_layout_hint"
+        app:hintTextAppearance="?android:textAppearanceSmall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,10 +26,9 @@
             android:autofillHints="username"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:paddingLeft="@dimen/padding_8dp"
-            android:paddingEnd="@dimen/padding_8dp"
-            android:paddingRight="@dimen/padding_8dp"
-            android:textSize="@dimen/text_size_20"
+            android:paddingEnd="@dimen/padding_56dp"
+            android:textSize="@dimen/text_input_edit_text_text_size"
+            tools:ignore="RtlSymmetry"
             tools:targetApi="o" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -64,8 +64,8 @@
 
             <ImageView
                 android:id="@+id/userAvatar"
-                android:layout_width="@dimen/view_100dp"
-                android:layout_height="@dimen/view_100dp"
+                android:layout_width="@dimen/user_avatar_size"
+                android:layout_height="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_octocat"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -82,7 +82,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/userBio"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/userAvatar"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/userAvatar" />
 
             <TextView
                 android:id="@+id/userBio"
@@ -91,7 +91,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/user_bio"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_16"
                 app:layout_constraintBottom_toTopOf="@+id/userFollowers"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/userAvatar"
@@ -114,7 +113,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/number_of_repositories"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/userAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/userFollowers" />

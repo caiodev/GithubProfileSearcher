@@ -1,7 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -24,10 +23,6 @@ fun Context.setViewVisibility(view: View, visibility: Int? = null) {
         }
     }
 }
-
-@Suppress("UNUSED")
-fun Context.getSharedPreferencesInstance(name: String): SharedPreferences =
-    getSharedPreferences(name, 0)
 
 fun Context.hideKeyboard(editText: EditText) {
     with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {

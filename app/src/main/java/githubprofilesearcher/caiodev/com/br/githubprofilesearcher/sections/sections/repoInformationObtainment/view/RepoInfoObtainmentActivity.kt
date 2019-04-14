@@ -23,6 +23,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.projectKeys.SharedPreferencesKeys
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.concatenateStrings
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -30,6 +31,13 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
     private val viewModel: RepoInfoObtainmentViewModel by lazy {
         ViewModelProviders.of(this).get(RepoInfoObtainmentViewModel::class.java)
+    }
+
+    private val sharedPreferences: android.content.SharedPreferences by lazy {
+        SharedPreferences.getSharedPreferencesReference(
+            applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
+            SharedPreferencesKeys.sharedPreferencesPrivateMode
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +59,8 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
                 if (NetworkChecking.isInternetConnectionAvailable(applicationContext))
 
-                    getValueFromSharedPreferencesThroughViewModel(
-                        SharedPreferencesKeys.githubProfileUrl,
+                    viewModel.getValueFromSharedPreferences(
+                        sharedPreferences, SharedPreferencesKeys.githubProfileUrl,
                         null
                     )?.let {
                         openRepoPage(it)
@@ -85,30 +93,34 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                     with(state) {
 
                         name?.let {
-                            userName.text =
-                                String.format(getString(R.string.user_name_template), name)
-                        } ?: run {
-                            userName.text = String.format(
+                            userName.text = concatenateStrings(
                                 getString(R.string.user_name_template),
-                                getString(R.string.null_user_name_message)
+                                name
                             )
+                        } ?: run {
+                            userName.text =
+                                concatenateStrings(
+                                    getString(R.string.user_name_template),
+                                    getString(R.string.null_user_name_message)
+                                )
                         }
 
                         bio?.let {
-                            userBio.text = String.format(getString(R.string.user_bio_template), bio)
+                            userBio.text =
+                                concatenateStrings(getString(R.string.user_bio_template), bio)
                         } ?: run {
-                            userBio.text = String.format(
+                            userBio.text = concatenateStrings(
                                 getString(R.string.user_bio_template),
                                 getString(R.string.null_user_bio_message)
                             )
                         }
 
-                        userFollowers.text = String.format(
+                        userFollowers.text = concatenateStrings(
                             getString(R.string.number_of_followers_template),
                             numberOfFollowers.toString()
                         )
 
-                        userRepos.text = String.format(
+                        userRepos.text = concatenateStrings(
                             getString(R.string.number_of_repositories_template),
                             numberOfRepositories.toString()
                         )
@@ -122,8 +134,10 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                             userAvatar
                         )
 
-                        insertValueIntoSharedPreferencesThroughViewModel(
-                            SharedPreferencesKeys.githubProfileUrl,
+                        Timber.i("VALUE: %s", "Insert: ${state.profileUrl}")
+
+                        viewModel.insertValueIntoSharedPreferences(
+                            sharedPreferences, SharedPreferencesKeys.githubProfileUrl,
                             state.profileUrl
                         )
 
@@ -154,41 +168,6 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                 viewModel.getGithubUserInformation(searchProfileTextInputEditText.text.toString())
             } else toastMaker(getString(R.string.no_connection_error))
         } else toastMaker(getString(R.string.empty_field_error))
-    }
-
-    private fun getValueFromSharedPreferencesThroughViewModel(
-        key: String,
-        value: String?
-    ): String? {
-
-        Timber.i(
-            "VALUE: %s", "Retrieve: ${
-            viewModel.getValueFromSharedPreferences(
-                SharedPreferences.getSharedPreferencesReference(
-                    applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
-                    SharedPreferencesKeys.sharedPreferencesPrivateMode
-                ), key, value
-            )}"
-        )
-
-        return viewModel.getValueFromSharedPreferences(
-            SharedPreferences.getSharedPreferencesReference(
-                applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
-                SharedPreferencesKeys.sharedPreferencesPrivateMode
-            ), key, value
-        )
-    }
-
-    private fun insertValueIntoSharedPreferencesThroughViewModel(key: String, value: String) {
-
-        Timber.i("VALUE: %s", "Insert: $value")
-
-        viewModel.insertValueIntoSharedPreferences(
-            SharedPreferences.getSharedPreferencesReference(
-                applicationContext, SharedPreferencesKeys.sharedPreferencesRoot,
-                SharedPreferencesKeys.sharedPreferencesPrivateMode
-            ), key, value
-        )
     }
 
     private fun openRepoPage(url: String?) {

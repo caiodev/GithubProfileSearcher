@@ -6,16 +6,23 @@
     <dimen name="margin_16dp">16dp</dimen>
 
     <!-- Padding sizes -->
-    <dimen name="padding_8dp">8dp</dimen>
+    <dimen name="padding_56dp">56dp</dimen>
 
     <!--Elevation sizes-->
     <dimen name="elevation_4dp">4dp</dimen>
 
     <!-- View sizes -->
+    <dimen name="view_90dp">90dp</dimen>
     <dimen name="view_100dp">100dp</dimen>
+    <dimen name="view_102dp">102dp</dimen>
+    <dimen name="view_116dp">116dp</dimen>
 
     <!--Text sizes-->
     <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_19">19sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
 
 </resources>

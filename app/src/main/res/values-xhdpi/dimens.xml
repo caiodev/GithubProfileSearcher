@@ -1,0 +1,6 @@
+<resources>
+    <!--activity_main.xml-->
+    <dimen name="text_input_edit_text_text_size">@dimen/text_size_20</dimen>
+    <dimen name="user_avatar_size">@dimen/view_100dp</dimen>
+    <dimen name="repository_info_text_size">@dimen/text_size_18</dimen>
+</resources>
