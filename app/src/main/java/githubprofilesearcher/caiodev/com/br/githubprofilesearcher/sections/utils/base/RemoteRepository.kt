@@ -1,7 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base
 
+import android.system.ErrnoException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import retrofit2.Response
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -28,7 +30,7 @@ open class RemoteRepository {
 
         } catch (exception: Exception) {
             when (exception) {
-                is UnknownHostException, is SocketTimeoutException -> return APICallResult.ConnectionError
+                is UnknownHostException, is SocketTimeoutException, is ConnectException, is ErrnoException -> return APICallResult.ConnectionError
             }
         }
 

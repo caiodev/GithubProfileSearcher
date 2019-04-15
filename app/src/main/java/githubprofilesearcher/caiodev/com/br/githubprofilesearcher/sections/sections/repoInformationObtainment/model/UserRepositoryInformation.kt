@@ -3,6 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sect
 import com.squareup.moshi.Json
 
 data class UserRepositoryInformation(
+    @field:Json(name = "id") val userId: String = "",
     @field:Json(name = "avatar_url") val userImage: String = "",
     @field:Json(name = "html_url") val profileUrl: String = "",
     @field:Json(name = "name") val name: String? = "",

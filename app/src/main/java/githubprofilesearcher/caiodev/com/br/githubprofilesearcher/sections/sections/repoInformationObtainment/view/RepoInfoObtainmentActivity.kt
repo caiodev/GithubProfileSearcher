@@ -53,7 +53,7 @@ class RepoInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
             searchProfile()
         }
 
-        cardUserInfo.setOnClickListener {
+        userInfoCardView.setOnClickListener {
 
             if (viewModel.isUserInfoLoaded()) {
 

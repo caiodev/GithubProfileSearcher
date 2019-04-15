@@ -23,13 +23,9 @@ class RepoInfoObtainmentViewModel : ViewModel() {
 
             when (val value = remoteUserRepository.getRepositoryInformation(user)) {
 
-                is APICallResult.Success<*> -> with(value.data as UserRepositoryInformation) {
-                    state.postValue(this)
-                }
+                is APICallResult.Success<*> -> state.postValue(value.data as UserRepositoryInformation)
 
-                is APICallResult.InternalError<*> -> with(value.error as String) {
-                    state.postValue(this)
-                }
+                is APICallResult.InternalError<*> -> state.postValue(value.error as String)
 
                 else -> state.postValue(onRepositoryObtainmentFailure)
             }
