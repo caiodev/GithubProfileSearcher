@@ -1,11 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view
 
-import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubUserInformation
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.concatenateStrings
 import kotlinx.android.synthetic.main.github_profile_view_holder.view.*
@@ -14,13 +12,9 @@ import timber.log.Timber
 class GithubUserInformationViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
 
-    init {
-        itemView.setOnClickListener {
-            itemView.context.startActivity(Intent(itemView.context, ShowRepositoryInfoActivity::class.java))
-        }
-    }
-
     fun bind(model: GithubUserInformation) {
+
+        model.profileUrl
 
         model.userId.let {
             itemView.userId.text =
