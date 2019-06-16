@@ -4,17 +4,22 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubUserInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.concatenateStrings
 import kotlinx.android.synthetic.main.github_profile_view_holder.view.*
 import timber.log.Timber
 
-class GithubUserInformationViewHolder(itemView: View) :
+class GithubUserInformationViewHolder(itemView: View, private val onItemClicked: OnItemClicked?) :
     RecyclerView.ViewHolder(itemView) {
 
-    fun bind(model: GithubUserInformation) {
+    init {
+        itemView.parentLayout.setOnClickListener {
+            onItemClicked?.onItemClick(adapterPosition, 1)
+        }
+    }
 
-        model.profileUrl
+    fun bind(model: GithubUserInformation) {
 
         model.userId.let {
             itemView.userId.text =

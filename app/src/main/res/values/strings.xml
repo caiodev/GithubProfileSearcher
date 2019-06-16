@@ -23,7 +23,4 @@
     <string name="no_connection_error">Well&#8230;, There\'s no internet connection. Check it and try again</string>
     <string name="empty_card_view_error">You haven\'t searched for any profile yet</string>
 
-    <!--Intent names-->
-    <string name="repository_opening_intent" translatable="false">repo_url</string>
-
 </resources>

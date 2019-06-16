@@ -8,13 +8,16 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.GithubUserInformationViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.HeaderViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.RecyclerViewViewTypes
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import timber.log.Timber
 
-class GithubUserAdapter(data: MutableList<ViewType>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GithubUserAdapter :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var dataSource = data
+    private var itemClicked: OnItemClicked? = null
+    private var dataSource: MutableList<ViewType>? = null
 
     override fun getItemCount() = getTotalCount()
 
@@ -43,6 +46,7 @@ class GithubUserAdapter(data: MutableList<ViewType>) : RecyclerView.Adapter<Recy
                         parent,
                         false
                     )
+                    , itemClicked
                 )
             }
         }
@@ -59,11 +63,25 @@ class GithubUserAdapter(data: MutableList<ViewType>) : RecyclerView.Adapter<Recy
     }
 
     internal fun updateDataSource(newDataSource: MutableList<ViewType>) {
-        //Implement DiffUtils
         dataSource = newDataSource
     }
 
-    private fun getTotalCount() = dataSource.size
+    private fun getTotalCount(): Int {
 
-    private fun itemViewType(position: Int) = dataSource[position]
+        dataSource?.size?.let {
+            return it
+        }
+        return 0
+    }
+
+    private fun itemViewType(position: Int): ViewType {
+        dataSource?.get(position)?.let {
+            return it
+        }
+        return Header(0)
+    }
+
+    fun setOnItemClicked(onItemClicked: OnItemClicked) {
+        itemClicked = onItemClicked
+    }
 }
