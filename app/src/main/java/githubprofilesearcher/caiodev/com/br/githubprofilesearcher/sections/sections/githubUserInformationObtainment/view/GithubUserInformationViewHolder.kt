@@ -8,6 +8,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.concatenateStrings
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.formatNumber
 import kotlinx.android.synthetic.main.github_profile_view_holder.view.*
 import timber.log.Timber
 
@@ -34,8 +35,7 @@ class GithubUserInformationViewHolder(itemView: View, private val onItemClicked:
 
         model.score?.let {
             itemView.userScore.text = concatenateStrings(
-                itemView.context.getString(R.string.score),
-                it.toString()
+                itemView.context.getString(R.string.score), formatNumber(it)
             )
         }
 
