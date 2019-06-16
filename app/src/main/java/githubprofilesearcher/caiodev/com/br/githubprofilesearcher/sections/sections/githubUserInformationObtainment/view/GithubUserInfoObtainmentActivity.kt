@@ -142,6 +142,8 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                 }
 
                 viewModel.getGithubUsersList(searchProfileTextInputEditText.text.toString())
+            } else {
+                showSnackBar(this, getString(R.string.no_connection_error))
             }
         } else showSnackBar(this, getString(R.string.empty_field_error))
     }
