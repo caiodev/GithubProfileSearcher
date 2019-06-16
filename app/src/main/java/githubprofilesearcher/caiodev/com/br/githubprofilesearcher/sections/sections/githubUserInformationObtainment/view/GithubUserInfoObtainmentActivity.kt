@@ -1,5 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -13,7 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.adapter.GithubUserAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubUserInfoObtainmentViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showSnackBar
@@ -22,11 +27,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
+    private val githubUserAdapter = GithubUserAdapter()
+
     private val viewModel: GithubUserInfoObtainmentViewModel by lazy {
         ViewModelProviders.of(this).get(GithubUserInfoObtainmentViewModel::class.java)
     }
 
-    private var githubUserAdapter: GithubUserAdapter? = null
+    private val sharedPreferences: SharedPreferences by lazy {
+        githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory.SharedPreferences
+            .getSharedPreferencesReference(
+                applicationContext,
+                Constants.sharedPreferencesRoot,
+                Constants.sharedPreferencesPrivateMode
+            )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +52,7 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
     override fun setupView() {
 
         userInfoRecyclerView.setHasFixedSize(true)
+        userInfoRecyclerView.adapter = githubUserAdapter
 
         searchIconImageView.setOnClickListener {
             searchProfile()
@@ -54,6 +69,33 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
             searchProfile()
         }
+
+        githubUserAdapter.setOnItemClicked(object : OnItemClicked {
+
+            override fun onItemClick(adapterPosition: Int, id: Int) {
+
+                when (id) {
+
+                    Constants.githubProfileRecyclerViewCell -> {
+
+                        if (!NetworkChecking.isInternetConnectionAvailable(applicationContext)) {
+                            showSnackBar(
+                                this@GithubUserInfoObtainmentActivity,
+                                getString(R.string.no_connection_error)
+                            )
+                        } else {
+                            startActivity(
+                                Intent(applicationContext, ShowRepositoryInfoActivity::class.java)
+                                    .putExtra(
+                                        Constants.githubProfileUrl,
+                                        viewModel.getProfileUrlThroughViewModel(adapterPosition)
+                                    )
+                            )
+                        }
+                    }
+                }
+            }
+        })
     }
 
     override fun handleViewModel() {
@@ -64,14 +106,8 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
                 setViewVisibility(noInternetConnectionLinearLayout, View.INVISIBLE)
             }
 
-            githubUserAdapter?.let {
-                it.updateDataSource(state)
-                runLayoutAnimation(userInfoRecyclerView)
-            } ?: run {
-                githubUserAdapter = GithubUserAdapter(state)
-                userInfoRecyclerView.adapter = githubUserAdapter
-                runLayoutAnimation(userInfoRecyclerView)
-            }
+            githubUserAdapter.updateDataSource(state)
+            runLayoutAnimation(userInfoRecyclerView)
         })
 
         viewModel.errorStateCopy.observeSingleEvent(this, Observer { state ->
@@ -127,15 +163,11 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
     private fun showOfflineLayout() {
 
-        if (githubUserAdapter == null) {
-            if (!noInternetConnectionLinearLayout.isVisible) {
-                setViewVisibility(noInternetConnectionLinearLayout, View.VISIBLE)
-            }
-        }
-
-        showSnackBar(
-            this,
-            getString(R.string.no_connection_error)
+        if (!noInternetConnectionLinearLayout.isVisible) setViewVisibility(
+            noInternetConnectionLinearLayout,
+            View.VISIBLE
         )
+
+        showSnackBar(this, getString(R.string.no_connection_error))
     }
 }
