@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubUserInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.OnItemClicked
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.concatenateStrings
 import kotlinx.android.synthetic.main.github_profile_view_holder.view.*
@@ -15,7 +16,7 @@ class GithubUserInformationViewHolder(itemView: View, private val onItemClicked:
 
     init {
         itemView.parentLayout.setOnClickListener {
-            onItemClicked?.onItemClick(adapterPosition, 1)
+            onItemClicked?.onItemClick(adapterPosition, Constants.githubProfileRecyclerViewCell)
         }
     }
 
