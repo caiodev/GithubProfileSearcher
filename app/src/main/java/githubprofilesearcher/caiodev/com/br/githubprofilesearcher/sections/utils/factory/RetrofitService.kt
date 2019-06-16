@@ -1,6 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,9 +11,12 @@ class RetrofitService {
 
     @PublishedApi
     internal val baseUrl = "https://api.github.com/"
+
     private val timberTag = "OkHttpLogging"
+
     @PublishedApi
     internal var retrofitBuilder: Any? = null
+
     private var okHttpClient: OkHttpClient? = null
 
     @PublishedApi
@@ -33,7 +35,6 @@ class RetrofitService {
             .baseUrl(baseUrl)
             .client(getOkHttpClient())
             .addConverterFactory(MoshiConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build().create(T::class.java) as T
 
     @PublishedApi

@@ -14,4 +14,7 @@
     <string name="user_name_template">" Nome: %s"</string>
     <string name="user_bio_template">Bio: %s</string>
     <string name="null_user_name_message">Não há</string>
+    <string name="github_user_list_header">Perfis</string>
+    <string name="login">Usuário: %s</string>
+    <string name="score">Pontuação do Github: %s</string>
 </resources>

@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view
 
 import android.annotation.SuppressLint
 import android.content.Intent

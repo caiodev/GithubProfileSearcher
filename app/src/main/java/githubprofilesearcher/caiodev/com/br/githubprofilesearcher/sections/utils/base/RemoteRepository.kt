@@ -6,6 +6,7 @@ import retrofit2.Response
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.net.ssl.SSLHandshakeException
 
 open class RemoteRepository {
 
@@ -30,7 +31,8 @@ open class RemoteRepository {
 
         } catch (exception: Exception) {
             when (exception) {
-                is UnknownHostException, is SocketTimeoutException, is ConnectException, is ErrnoException -> return APICallResult.ConnectionError
+                is UnknownHostException, is SocketTimeoutException, is ConnectException, is ErrnoException,
+                is SSLHandshakeException -> return APICallResult.ConnectionError
             }
         }
 

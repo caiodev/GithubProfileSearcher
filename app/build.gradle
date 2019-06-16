@@ -1,24 +1,33 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
+
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            debuggable = true
+            signingConfig signingConfigs.debug
+        }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -48,27 +57,31 @@ dependencies {
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
     //Lifecycle section
     implementation "androidx.lifecycle:lifecycle-viewmodel:$viewModel"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
-
-    //Material design
-    implementation "com.google.android.material:material:$materialDesign"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleRuntime"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleCompiler"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
     implementation "com.jakewharton.timber:timber:$timber"
 
+    //Material design
+    implementation "com.google.android.material:material:$materialDesign"
+
+    //Paging
+    implementation "android.arch.paging:runtime:$paging"
+
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutinesAdapter"
+
     implementation "com.squareup.retrofit2:converter-moshi:$moshiRetrofitConverter"
 
     //Test section
     androidTestImplementation "androidx.test:core:$testCore"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
     androidTestImplementation "androidx.test.ext:junit:$junit"
-    androidTestImplementation "androidx.test:runner:$testRunner"
+    androidTestImplementation "androidx.test:runner:$runner"
 }

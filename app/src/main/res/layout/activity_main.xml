@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".sections.sections.repoInformationObtainment.view.RepoInfoObtainmentActivity">
+    tools:context=".sections.sections.githubUserInformationObtainment.view.GithubUserInfoObtainmentActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/githubUserTextInputLayout"
@@ -47,96 +47,68 @@
         app:srcCompat="@drawable/ic_search"
         tools:ignore="ContentDescription" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/userInfoCardView"
-        style="@style/MarginViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_8dp"
-        app:cardElevation="@dimen/elevation_4dp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/githubProfileListSwipeRefreshLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userInfoRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/padding_8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <ImageView
-                android:id="@+id/userAvatar"
-                android:layout_width="@dimen/user_avatar_size"
-                android:layout_height="0dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_octocat"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <TextView
-                android:id="@+id/userName"
-                style="@style/ViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/user_name"
-                app:layout_constraintBottom_toTopOf="@+id/userBio"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
-                app:layout_constraintTop_toTopOf="@+id/userAvatar" />
-
-            <TextView
-                android:id="@+id/userBio"
-                style="@style/ViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/user_bio"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@+id/userFollowers"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
-                app:layout_constraintTop_toBottomOf="@+id/userName" />
-
-            <TextView
-                android:id="@+id/userFollowers"
-                style="@style/ViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/number_of_followers"
-                app:layout_constraintBottom_toTopOf="@+id/userRepos"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
-                app:layout_constraintTop_toBottomOf="@+id/userBio" />
-
-            <TextView
-                android:id="@+id/userRepos"
-                style="@style/ViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/number_of_repositories"
-                app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
-                app:layout_constraintTop_toBottomOf="@+id/userFollowers" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ProgressBar
-            android:id="@+id/repositoryLoadingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:visibility="invisible" />
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userInfoRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    <ProgressBar
+        android:id="@+id/repositoryLoadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userInfoCardView" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/noInternetConnectionLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/offlineImageView"
+            android:layout_width="@dimen/view_100dp"
+            android:layout_height="@dimen/view_100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_no_internet_connection"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:fontFamily="@font/nunito_regular"
+            android:gravity="center"
+            android:text="@string/no_connection_error"
+            android:textSize="@dimen/text_size_20" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

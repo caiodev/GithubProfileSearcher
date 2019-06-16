@@ -3,6 +3,9 @@
 
     <!--User information-->
     <string name="text_input_layout_hint">Type a profile e.g: torvalds</string>
+    <string name="user_id" translatable="false">ID: %s</string>
+    <string name="login">User: %s</string>
+    <string name="score">Github score: %s</string>
     <string name="user_name">Name:</string>
     <string name="null_user_name_message">None</string>
     <string name="user_bio">Bio:</string>
@@ -13,10 +16,11 @@
     <string name="user_bio_template">Bio: %s</string>
     <string name="number_of_followers_template">Followers: %s</string>
     <string name="number_of_repositories_template">Repositories: %s</string>
+    <string name="github_user_list_header">Profiles</string>
 
     <!-- RepositoryInformationError messages -->
     <string name="empty_field_error">Empty field</string>
-    <string name="no_connection_error">There is no internet connection. Check it and try again</string>
+    <string name="no_connection_error">Well&#8230;, There\'s no internet connection. Check it and try again</string>
     <string name="empty_card_view_error">You haven\'t searched for any profile yet</string>
 
     <!--Intent names-->
