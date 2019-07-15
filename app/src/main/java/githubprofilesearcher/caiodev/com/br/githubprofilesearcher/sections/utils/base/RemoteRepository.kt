@@ -24,10 +24,7 @@ open class RemoteRepository {
                 response.body()?.let { apiResponse ->
                     return APICallResult.Success(apiResponse)
                 }
-
-            } else {
-                errorResponse = response.message()
-            }
+            } else errorResponse = response.message()
 
         } catch (exception: Exception) {
             when (exception) {
