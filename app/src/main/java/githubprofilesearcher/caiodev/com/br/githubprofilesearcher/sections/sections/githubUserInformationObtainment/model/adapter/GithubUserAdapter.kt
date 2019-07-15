@@ -13,8 +13,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import timber.log.Timber
 
-class GithubUserAdapter :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GithubUserAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var itemClicked: OnItemClicked? = null
     private var dataSource: MutableList<ViewType>? = null

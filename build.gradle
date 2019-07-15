@@ -5,36 +5,36 @@ buildscript {
     ext {
 
         //Androidx AppCompat
-        appCompat = '1.1.0-beta01'
-        androidXCore = '1.2.0-alpha01'
+        appCompat = '1.1.0-rc01'
+        androidXCore = '1.2.0-alpha02'
 
         //Androidx ConstraintLayout
-        constraintLayout = '2.0.0-beta1'
+        constraintLayout = '2.0.0-beta2'
 
         //Glide
-        glide = "4.9.0"
+        glide = '4.9.0'
 
         //Gradle
-        gradleVersion = '3.4.1'
+        gradleVersion = '3.4.2'
 
         //Kotlin
-        kotlin_version = '1.3.31'
+        kotlin_version = '1.3.41'
 
         //Ktx
-        ktxCore = '1.2.0-alpha01'
-        ktxViewModel = '2.2.0-alpha01'
+        ktxCore = '1.2.0-alpha02'
+        ktxViewModel = '2.2.0-alpha02'
 
         //LeakCanary
         leakCanary = '2.0-alpha-2'
 
         //Lifecycle Architecture component
         lifecycleCompiler = '2.2.0-alpha01'
-        lifecycleExtensions = '2.2.0-alpha01'
-        lifecycleRuntime = '2.2.0-alpha01'
-        viewModel = '2.2.0-alpha01'
+        lifecycleExtensions = '2.2.0-alpha02'
+        lifecycleRuntime = '2.2.0-alpha02'
+        viewModel = '2.2.0-alpha02'
 
         //Material design
-        materialDesign = "1.1.0-alpha07"
+        materialDesign = '1.1.0-alpha08'
 
         //OkHttpLoggingInterceptor
         loggingInterceptor = '3.14.2'
