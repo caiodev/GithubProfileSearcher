@@ -2,9 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 object Constants {
 
-    //SharedPreferences
-    const val sharedPreferencesPrivateMode = 0
-    const val sharedPreferencesRoot = "sharedPreferencesRoot"
     const val githubProfileUrl = "githubProfileUrl"
 
     //View

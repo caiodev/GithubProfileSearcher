@@ -1,7 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -16,12 +15,12 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.adapter.GithubUserAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubUserInfoObtainmentViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showSnackBar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -31,15 +30,6 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
     private val viewModel: GithubUserInfoObtainmentViewModel by lazy {
         ViewModelProviders.of(this).get(GithubUserInfoObtainmentViewModel::class.java)
-    }
-
-    private val sharedPreferences: SharedPreferences by lazy {
-        githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory.SharedPreferences
-            .getSharedPreferencesReference(
-                applicationContext,
-                Constants.sharedPreferencesRoot,
-                Constants.sharedPreferencesPrivateMode
-            )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +60,8 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
             searchProfile()
         }
 
-        githubUserAdapter.setOnItemClicked(object : OnItemClicked {
+        githubUserAdapter.setOnItemClicked(object :
+            OnItemClicked {
 
             override fun onItemClick(adapterPosition: Int, id: Int) {
 
@@ -136,15 +127,10 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
         if (searchProfileTextInputEditText.text.toString().isNotEmpty()) {
 
             if (NetworkChecking.isInternetConnectionAvailable(applicationContext)) {
-
-                if (!githubProfileListSwipeRefreshLayout.isRefreshing) {
+                if (!githubProfileListSwipeRefreshLayout.isRefreshing)
                     setViewVisibility(repositoryLoadingProgressBar, View.VISIBLE)
-                }
-
                 viewModel.getGithubUsersList(searchProfileTextInputEditText.text.toString())
-            } else {
-                showSnackBar(this, getString(R.string.no_connection_error))
-            }
+            } else showSnackBar(this, getString(R.string.no_connection_error))
         } else showSnackBar(this, getString(R.string.empty_field_error))
     }
 
@@ -157,18 +143,14 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
         recyclerView.scheduleLayoutAnimation()
         setViewVisibility(githubProfileListSwipeRefreshLayout)
 
-        if (repositoryLoadingProgressBar.isVisible) setViewVisibility(
-            repositoryLoadingProgressBar,
-            View.GONE
-        )
+        if (repositoryLoadingProgressBar.isVisible)
+            setViewVisibility(repositoryLoadingProgressBar, View.GONE)
     }
 
     private fun showOfflineLayout() {
 
-        if (!noInternetConnectionLinearLayout.isVisible) setViewVisibility(
-            noInternetConnectionLinearLayout,
-            View.VISIBLE
-        )
+        if (!noInternetConnectionLinearLayout.isVisible)
+            setViewVisibility(noInternetConnectionLinearLayout, View.VISIBLE)
 
         showSnackBar(this, getString(R.string.no_connection_error))
     }
