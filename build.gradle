@@ -34,13 +34,10 @@ buildscript {
         viewModel = '2.2.0-alpha02'
 
         //Material design
-        materialDesign = '1.1.0-alpha08'
+        materialDesign = '1.1.0-alpha09'
 
         //OkHttpLoggingInterceptor
         loggingInterceptor = '3.14.2'
-
-        //Paging
-        paging = '2.1.0'
 
         //Retrofit
         retrofit = '2.6.0'
