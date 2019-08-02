@@ -1,6 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel
 
-import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,10 +8,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.repository.GithubUserInformationRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubUserInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.LocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.SingleLiveEvent
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.getValueFromSharedPreferences
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.insertValueIntoSharedPreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
@@ -23,7 +19,6 @@ class GithubUserInfoObtainmentViewModel : ViewModel() {
     internal val successStateCopy get() = successState
     private val errorState = SingleLiveEvent<Any>()
     internal val errorStateCopy get() = errorState
-    private val localRepository = LocalRepository()
     private val remoteRepository = GithubUserInformationRepository()
     private val githubUsersInfoList = mutableListOf<ViewType>()
 
@@ -70,22 +65,6 @@ class GithubUserInfoObtainmentViewModel : ViewModel() {
                 githubInfo.numberOfRepositories
             )
         )
-    }
-
-    fun getValueThroughViewModel(
-        sharedPreferences: SharedPreferences,
-        key: String,
-        value: String
-    ) {
-        insertValueIntoSharedPreferences(localRepository, sharedPreferences, key, value)
-    }
-
-    fun insertValueThroughViewModel(
-        sharedPreferences: SharedPreferences,
-        key: String,
-        value: String
-    ) {
-        getValueFromSharedPreferences(localRepository, sharedPreferences, key, value)
     }
 
     fun getProfileUrlThroughViewModel(adapterPosition: Int) =

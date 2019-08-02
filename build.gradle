@@ -4,11 +4,11 @@ buildscript {
 
     ext {
 
-        //Androidx AppCompat
+        //AppCompat
         appCompat = '1.1.0-rc01'
         androidXCore = '1.2.0-alpha02'
 
-        //Androidx ConstraintLayout
+        //ConstraintLayout
         constraintLayout = '2.0.0-beta2'
 
         //Glide
@@ -34,17 +34,17 @@ buildscript {
         viewModel = '2.2.0-alpha02'
 
         //Material design
-        materialDesign = '1.1.0-alpha08'
+        materialDesign = '1.1.0-alpha09'
 
         //OkHttpLoggingInterceptor
         loggingInterceptor = '3.14.2'
 
-        //Paging
-        paging = '2.1.0'
-
         //Retrofit
         retrofit = '2.6.0'
         moshiRetrofitConverter = '2.6.0'
+
+        //SwipeRefreshLayout
+        swipeRefreshLayout = '1.1.0-alpha02'
 
         //Test dependency versions
         testCore = '1.2.0'
