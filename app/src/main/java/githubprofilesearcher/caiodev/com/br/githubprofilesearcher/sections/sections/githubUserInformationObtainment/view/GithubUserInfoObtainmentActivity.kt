@@ -24,7 +24,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.activity_main.*
 
-class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
+class GithubUserInfoObtainmentActivity : AppCompatActivity(R.layout.activity_main), ActivityFlow {
 
     private val githubUserAdapter = GithubUserAdapter()
 
@@ -34,7 +34,6 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(), ActivityFlow {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         setupView()
         handleViewModel()
     }

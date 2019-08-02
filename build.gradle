@@ -4,11 +4,11 @@ buildscript {
 
     ext {
 
-        //Androidx AppCompat
+        //AppCompat
         appCompat = '1.1.0-rc01'
         androidXCore = '1.2.0-alpha02'
 
-        //Androidx ConstraintLayout
+        //ConstraintLayout
         constraintLayout = '2.0.0-beta2'
 
         //Glide
@@ -42,6 +42,9 @@ buildscript {
         //Retrofit
         retrofit = '2.6.0'
         moshiRetrofitConverter = '2.6.0'
+
+        //SwipeRefreshLayout
+        swipeRefreshLayout = '1.1.0-alpha02'
 
         //Test dependency versions
         testCore = '1.2.0'

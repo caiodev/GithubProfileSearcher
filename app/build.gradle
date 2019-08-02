@@ -41,8 +41,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appCompat"
     implementation "androidx.core:core:$androidXCore"
 
-    //ConstraintLayout
+    //Layout
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide"
