@@ -15,7 +15,7 @@ class ExampleInstrumentedTest {
     @Test
     @Throws(Exception::class)
     fun useAppContext() {
-        // Context of the app under test
+        // App Context under test
         val appContext =
             androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext
 

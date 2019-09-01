@@ -8,24 +8,20 @@ import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 
-@Suppress("UNUSED")
+@Suppress("unused")
 fun Context.setViewVisibility(view: View, visibility: Int? = null) {
 
     when (view) {
 
-        is SwipeRefreshLayout -> {
-            if (view.isRefreshing) view.isRefreshing = false
-        }
+        is SwipeRefreshLayout -> if (view.isRefreshing) view.isRefreshing = false
 
-        else -> {
-            visibility?.let {
-                view.visibility = it
-            }
+        else -> visibility?.let {
+            view.visibility = it
         }
     }
 }
 
-@Suppress("UNUSED")
+@Suppress("unused")
 fun Context.showSnackBar(
     fragmentActivity: FragmentActivity, message: String
 ) {
@@ -42,7 +38,7 @@ fun Context.hideKeyboard(editText: EditText) {
     }
 }
 
-@Suppress("UNUSED")
+@Suppress("unused")
 fun Context.setViewXYScales(view: View, xAxis: Float, yAxis: Float) {
     view.scaleX = xAxis
     view.scaleY = yAxis

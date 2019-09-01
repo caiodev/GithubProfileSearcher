@@ -2,14 +2,13 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sect
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.adapter.GithubUserAdapter
@@ -17,6 +16,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showSnackBar
@@ -29,7 +30,7 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(R.layout.activity_mai
     private val githubUserAdapter = GithubUserAdapter()
 
     private val viewModel: GithubUserInfoObtainmentViewModel by lazy {
-        ViewModelProviders.of(this).get(GithubUserInfoObtainmentViewModel::class.java)
+        ViewModelProvider(this).get(GithubUserInfoObtainmentViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,30 +92,16 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(R.layout.activity_mai
     override fun handleViewModel() {
 
         viewModel.successStateCopy.observe(this, Observer { state ->
-
-            if (noInternetConnectionLinearLayout.isVisible) {
-                setViewVisibility(noInternetConnectionLinearLayout, View.INVISIBLE)
-            }
-
+            if (noInternetConnectionLayout.visibility == VISIBLE)
+                setViewVisibility(noInternetConnectionLayout, INVISIBLE)
             githubUserAdapter.updateDataSource(state)
             runLayoutAnimation(userInfoRecyclerView)
         })
 
         viewModel.errorStateCopy.observeSingleEvent(this, Observer { state ->
-
-            when (state) {
-
-                is String -> {
-                    setViewVisibility(repositoryLoadingProgressBar, View.INVISIBLE)
-                    setViewVisibility(githubProfileListSwipeRefreshLayout, View.INVISIBLE)
-                    showSnackBar(this, state)
-                }
-
-                else -> {
-                    setViewVisibility(repositoryLoadingProgressBar, View.INVISIBLE)
-                    setViewVisibility(githubProfileListSwipeRefreshLayout, View.INVISIBLE)
-                    showOfflineLayout()
-                }
+            when (state as Int) {
+                unknownHostException, sslHandshakeException -> showErrorMessages(state, true)
+                else -> showErrorMessages(state, false)
             }
         })
     }
@@ -124,12 +111,7 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(R.layout.activity_mai
         hideKeyboard(searchProfileTextInputEditText)
 
         if (searchProfileTextInputEditText.text.toString().isNotEmpty()) {
-
-            if (NetworkChecking.isInternetConnectionAvailable(applicationContext)) {
-                if (!githubProfileListSwipeRefreshLayout.isRefreshing)
-                    setViewVisibility(repositoryLoadingProgressBar, View.VISIBLE)
-                viewModel.getGithubUsersList(searchProfileTextInputEditText.text.toString())
-            } else showSnackBar(this, getString(R.string.no_connection_error))
+            callApi { viewModel.getGithubUsersList(searchProfileTextInputEditText.text.toString()) }
         } else showSnackBar(this, getString(R.string.empty_field_error))
     }
 
@@ -142,15 +124,25 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(R.layout.activity_mai
         recyclerView.scheduleLayoutAnimation()
         setViewVisibility(githubProfileListSwipeRefreshLayout)
 
-        if (repositoryLoadingProgressBar.isVisible)
-            setViewVisibility(repositoryLoadingProgressBar, View.GONE)
+        if (repositoryLoadingProgressBar.visibility == VISIBLE)
+            setViewVisibility(repositoryLoadingProgressBar, GONE)
     }
 
-    private fun showOfflineLayout() {
+    private fun callApi(genericFunction: () -> Unit) {
+        if (NetworkChecking.isInternetConnectionAvailable(applicationContext)) {
+            if (!githubProfileListSwipeRefreshLayout.isRefreshing)
+                setViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+            genericFunction.invoke()
+        } else showSnackBar(this, getString(R.string.no_connection_error))
+    }
 
-        if (!noInternetConnectionLinearLayout.isVisible)
-            setViewVisibility(noInternetConnectionLinearLayout, View.VISIBLE)
-
-        showSnackBar(this, getString(R.string.no_connection_error))
+    private fun showErrorMessages(message: Int, shouldOfflineLayoutBeShown: Boolean) {
+        if (shouldOfflineLayoutBeShown) {
+            if (noInternetConnectionLayout.visibility != VISIBLE)
+                setViewVisibility(noInternetConnectionLayout, VISIBLE)
+        }
+        setViewVisibility(repositoryLoadingProgressBar, INVISIBLE)
+        setViewVisibility(githubProfileListSwipeRefreshLayout, INVISIBLE)
+        showSnackBar(this, getString(message))
     }
 }
