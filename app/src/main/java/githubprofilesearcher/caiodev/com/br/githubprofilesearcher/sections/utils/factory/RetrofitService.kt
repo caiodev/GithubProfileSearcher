@@ -12,12 +12,21 @@ class RetrofitService {
     @PublishedApi
     internal val baseUrl = "https://api.github.com/"
 
-    private val timberTag = "OkHttpLogging"
+    private val timberTag = "OkHttp"
 
     @PublishedApi
     internal var retrofitBuilder: Any? = null
 
     private var okHttpClient: OkHttpClient? = null
+
+    private val httpLoggingInterceptor =
+        HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                Timber.tag(timberTag).d(message)
+            }
+        }).apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
 
     @PublishedApi
     internal inline fun <reified T> getRetrofitService(): T {
@@ -49,14 +58,9 @@ class RetrofitService {
 
     private fun createOkHttpClient() =
         OkHttpClient.Builder()
-            .addInterceptor(
-                HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
-                    Timber.tag(timberTag).d(message)
-                }).setLevel(HttpLoggingInterceptor.Level.BODY)
-            )
+            .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(60, TimeUnit.SECONDS)
-            .hostnameVerifier { _, _ -> true }
             .build()
 }

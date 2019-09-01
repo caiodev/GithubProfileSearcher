@@ -1,16 +1,20 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base
 
-import android.system.ErrnoException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.successWithoutBody
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import retrofit2.Response
-import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 open class RemoteRepository {
-
-    private var errorResponse = Any()
 
     protected suspend fun <T : Any> callApi(
         call: suspend () -> Response<T>
@@ -23,16 +27,27 @@ open class RemoteRepository {
             if (response.isSuccessful) {
                 response.body()?.let { apiResponse ->
                     return APICallResult.Success(apiResponse)
+                } ?: run {
+                    return APICallResult.Success(APICallResult.Success(successWithoutBody)) //a.k.a 204
                 }
-            } else errorResponse = response.message()
+            } else {
+                when (response.code()) {
+                    in 400..450 -> APICallResult.Error(clientSideError)
+                    in 500..598 -> APICallResult.Error(serverSideError)
+                }
+            }
 
         } catch (exception: Exception) {
-            when (exception) {
-                is UnknownHostException, is SocketTimeoutException, is ConnectException, is ErrnoException,
-                is SSLHandshakeException -> return APICallResult.ConnectionError
+            return when (exception) {
+                is UnknownHostException -> APICallResult.Error(
+                    unknownHostException
+                )
+                is SocketTimeoutException -> APICallResult.Error(socketTimeoutException)
+                is SSLHandshakeException -> APICallResult.Error(sslHandshakeException)
+                else -> APICallResult.Error(genericException)
             }
         }
 
-        return APICallResult.InternalError(errorResponse)
+        return APICallResult.Error(genericError)
     }
 }

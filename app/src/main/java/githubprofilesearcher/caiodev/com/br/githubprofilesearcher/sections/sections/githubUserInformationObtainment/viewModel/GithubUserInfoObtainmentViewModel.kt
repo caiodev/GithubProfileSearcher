@@ -9,6 +9,11 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubUserInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.SingleLiveEvent
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
@@ -30,11 +35,9 @@ class GithubUserInfoObtainmentViewModel : ViewModel() {
 
                 is APICallResult.Success<*> -> {
 
-                    githubUsersInfoList.clear()
-
-                    githubUsersInfoList.add(Header(R.string.github_user_list_header))
-
                     with(value.data as GithubUsersList) {
+                        githubUsersInfoList.clear()
+                        githubUsersInfoList.add(Header(R.string.github_user_list_header))
 
                         githubUserInformationList.forEach {
                             populateList(it)
@@ -44,9 +47,16 @@ class GithubUserInfoObtainmentViewModel : ViewModel() {
                     }
                 }
 
-                is APICallResult.InternalError<*> -> errorState.postValue(value.error as String)
+                is APICallResult.Error<*> -> {
 
-                else -> errorState.postValue(onRepositoryObtainmentFailure)
+                    when (value.error) {
+                        unknownHostException, socketTimeoutException -> errorState.postValue(R.string.unknown_host_exception_and_socket_timeout_exception)
+                        sslHandshakeException -> errorState.postValue(R.string.ssl_handshake_exception)
+                        clientSideError -> errorState.postValue(R.string.client_side_error)
+                        serverSideError -> errorState.postValue(R.string.server_side_error)
+                        else -> errorState.postValue(R.string.generic_exception_and_generic_error)
+                    }
+                }
             }
         }
     }
@@ -69,8 +79,4 @@ class GithubUserInfoObtainmentViewModel : ViewModel() {
 
     fun getProfileUrlThroughViewModel(adapterPosition: Int) =
         (githubUsersInfoList[adapterPosition] as GithubUserInformation).profileUrl
-
-    companion object {
-        const val onRepositoryObtainmentFailure = 1
-    }
 }

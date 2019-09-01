@@ -32,6 +32,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -40,6 +44,9 @@ dependencies {
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat"
     implementation "androidx.core:core:$androidXCore"
+
+    //Epoxy
+    implementation "com.airbnb.android:epoxy:$epoxy"
 
     //Layout
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
@@ -63,7 +70,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$viewModel"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleRuntime"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleCompiler"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleCommon"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
@@ -74,7 +81,7 @@ dependencies {
 
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-moshi:$moshiRetrofitConverter"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
 
     //Test section
     androidTestImplementation "androidx.test:core:$testCore"

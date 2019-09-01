@@ -1,65 +1,63 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
 
     ext {
 
         //AppCompat
         appCompat = '1.1.0-rc01'
-        androidXCore = '1.2.0-alpha02'
+        androidXCore = '1.2.0-alpha03'
 
         //ConstraintLayout
         constraintLayout = '2.0.0-beta2'
+
+        //Epoxy
+        epoxy = '3.7.0'
 
         //Glide
         glide = '4.9.0'
 
         //Gradle
-        gradleVersion = '3.4.2'
+        gradleVersion = '3.5.0'
 
         //Kotlin
-        kotlin_version = '1.3.41'
+        kotlin_version = '1.3.50'
 
         //Ktx
-        ktxCore = '1.2.0-alpha02'
-        ktxViewModel = '2.2.0-alpha02'
+        ktxCore = '1.2.0-alpha03'
+        ktxViewModel = '2.2.0-alpha03'
 
         //LeakCanary
-        leakCanary = '2.0-alpha-2'
+        leakCanary = '2.0-beta-3'
 
         //Lifecycle Architecture component
-        lifecycleCompiler = '2.2.0-alpha01'
-        lifecycleExtensions = '2.2.0-alpha02'
-        lifecycleRuntime = '2.2.0-alpha02'
-        viewModel = '2.2.0-alpha02'
+        lifecycleCommon = '2.2.0-alpha03'
+        lifecycleExtensions = '2.2.0-alpha03'
+        lifecycleRuntime = '2.2.0-alpha03'
+        viewModel = '2.2.0-alpha03'
 
         //Material design
         materialDesign = '1.1.0-alpha09'
 
         //OkHttpLoggingInterceptor
-        loggingInterceptor = '3.14.2'
+        loggingInterceptor = '4.1.0'
 
         //Retrofit
-        retrofit = '2.6.0'
-        moshiRetrofitConverter = '2.6.0'
+        retrofit = '2.6.1'
 
         //SwipeRefreshLayout
         swipeRefreshLayout = '1.1.0-alpha02'
 
-        //Test dependency versions
-        testCore = '1.2.0'
-        espresso = '3.2.0'
-        junit = '1.1.1'
-        runner = '1.2.0'
-
         //Timber
         timber = '4.7.1'
+
+        //Test dependency versions
+        testCore = '1.2.1-alpha02'
+        espresso = '3.3.0-alpha02'
+        junit = '1.1.2-alpha02'
+        runner = '1.3.0-alpha02'
     }
 
     dependencies {
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-        classpath "com.android.tools.build:gradle:${gradleVersion}"
+        classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 
@@ -89,6 +87,7 @@ allprojects {
                 includeGroupByRegex "org\\.jetbrains.*"
                 includeGroupByRegex "javax.*"
                 includeGroupByRegex "junit.*"
+                includeGroup "com.airbnb.android"
                 includeGroup "com.github.bumptech.glide"
                 includeGroup "com.google.auto"
                 includeGroup "com.google.code.findbugs"

@@ -6,6 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".sections.sections.githubUserInformationObtainment.view.GithubUserInfoObtainmentActivity">
 
+    <ImageView
+        android:id="@+id/searchIconImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/margin_16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/githubUserTextInputLayout"
+        app:layout_constraintEnd_toEndOf="@+id/githubUserTextInputLayout"
+        app:layout_constraintTop_toTopOf="@+id/githubUserTextInputLayout"
+        app:srcCompat="@drawable/ic_search"
+        tools:ignore="ContentDescription" />
+
+    <ProgressBar
+        android:id="@+id/repositoryLoadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/githubProfileListSwipeRefreshLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userInfoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/padding_8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/githubUserTextInputLayout"
         android:layout_width="match_parent"
@@ -33,81 +77,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageView
-        android:id="@+id/searchIconImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/margin_16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/githubUserTextInputLayout"
-        app:layout_constraintEnd_toEndOf="@+id/githubUserTextInputLayout"
-        app:layout_constraintTop_toTopOf="@+id/githubUserTextInputLayout"
-        app:srcCompat="@drawable/ic_search"
-        tools:ignore="ContentDescription" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/githubProfileListSwipeRefreshLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/userInfoRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/padding_8dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <ProgressBar
-        android:id="@+id/repositoryLoadingProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/noInternetConnectionLinearLayout"
+    <include
+        android:id="@+id/noInternetConnectionLayout"
+        layout="@layout/no_internet_connection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="invisible"
         android:layout_marginTop="@dimen/margin_16dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:id="@+id/offlineImageView"
-            android:layout_width="@dimen/view_100dp"
-            android:layout_height="@dimen/view_100dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_no_internet_connection"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin_8dp"
-            android:fontFamily="@font/nunito_regular"
-            android:gravity="center"
-            android:text="@string/no_connection_error"
-            android:textSize="@dimen/text_size_20" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
