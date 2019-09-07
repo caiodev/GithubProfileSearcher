@@ -33,6 +33,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+
     kapt {
         correctErrorTypes = true
     }
@@ -45,6 +51,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appCompat"
     implementation "androidx.core:core:$androidXCore"
 
+    //Coil
+    implementation("io.coil-kt:coil:0.6.1")
+
     //Epoxy
     implementation "com.airbnb.android:epoxy:$epoxy"
 
@@ -52,25 +61,21 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
 
-    //Glide
-    implementation "com.github.bumptech.glide:glide:$glide"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glide"
-
     //Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     //Ktx
     implementation "androidx.core:core-ktx:$ktxCore"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ktxViewModel"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch"
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
 
     //Lifecycle section
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$viewModel"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
-    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleRuntime"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleCommon"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$arch"
+    implementation "androidx.lifecycle:lifecycle-extensions:$arch"
+    implementation "androidx.lifecycle:lifecycle-runtime:$arch"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
