@@ -20,7 +20,7 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
-class ShowRepositoryInfoActivity : AppCompatActivity(R.layout.activity_show_repository_info) {
+class ShowRepositoryInfoActivity : AppCompatActivity() {
 
     private var browserIntent: Intent? = null
 
@@ -42,6 +42,7 @@ class ShowRepositoryInfoActivity : AppCompatActivity(R.layout.activity_show_repo
     @SuppressLint("SetJavaScriptEnabled")
     private fun openWebview() {
         try {
+            setContentView(R.layout.activity_show_repository_info)
             githubRepositoryWebView.loadUrl(intent?.extras?.getString(githubProfileUrl))
             githubRepositoryWebView.settings.javaScriptEnabled = true
             githubRepositoryWebView.webViewClient = object : WebViewClient() {

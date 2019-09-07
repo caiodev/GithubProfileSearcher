@@ -48,6 +48,8 @@ class GithubUserInfoObtainmentActivity : AppCompatActivity(R.layout.activity_mai
             searchProfile()
         }
 
+        searchProfileTextInputEditText.requestFocus()
+
         searchProfileTextInputEditText.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchProfile()
