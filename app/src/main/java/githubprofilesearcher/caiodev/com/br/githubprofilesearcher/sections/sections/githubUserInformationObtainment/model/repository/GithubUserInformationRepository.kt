@@ -6,26 +6,27 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 
 class GithubUserInformationRepository : RemoteRepository() {
 
-    private val retrofitService = RetrofitService()
+    private val retrofitService = RetrofitService().getRetrofitService<UserRepositoryService>()
 
-    suspend fun getGithubUserList(user: String, maxResultsPerPage: Int): Any {
+    suspend fun getGithubUserList(
+        user: String,
+        pageNumber: Int,
+        maxResultsPerPage: Int
+    ): Any {
         return callApi(call = {
-            retrofitService.getRetrofitService<UserRepositoryService>()
-                .getGithubUsersListAsync(user, maxResultsPerPage)
+            retrofitService.getGithubUsersListAsync(user, pageNumber, maxResultsPerPage)
         })
     }
 
     suspend fun getGithubUserInformation(user: String): Any {
         return callApi(call = {
-            retrofitService.getRetrofitService<UserRepositoryService>()
-                .getGithubUserInformationAsync(user)
+            retrofitService.getGithubUserInformationAsync(user)
         })
     }
 
     suspend fun getGithubUserRepositoriesInformation(user: String): Any {
         return callApi(call = {
-            retrofitService.getRetrofitService<UserRepositoryService>()
-                .getGithubUserRepositoriesInformationAsync(user)
+            retrofitService.getGithubUserRepositoriesInformationAsync(user)
         })
     }
 }

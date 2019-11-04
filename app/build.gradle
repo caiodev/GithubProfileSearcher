@@ -49,15 +49,17 @@ dependencies {
 
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat"
+
+    //AndroidXCore
     implementation "androidx.core:core:$androidXCore"
 
     //Coil
-    implementation("io.coil-kt:coil:0.6.1")
+    implementation("io.coil-kt:coil:$koil")
 
     //Epoxy
     implementation "com.airbnb.android:epoxy:$epoxy"
 
-    //Layout
+    //Layouts
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
 

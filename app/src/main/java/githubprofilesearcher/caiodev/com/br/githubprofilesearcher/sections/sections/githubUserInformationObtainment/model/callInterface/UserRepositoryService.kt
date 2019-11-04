@@ -13,6 +13,7 @@ interface UserRepositoryService {
     @GET("search/users")
     suspend fun getGithubUsersListAsync(
         @Query("q") user: String,
+        @Query("page") pageNumber: Int,
         @Query("per_page") maxQuantityPerPage: Int
     ): Response<GithubUsersList>
 

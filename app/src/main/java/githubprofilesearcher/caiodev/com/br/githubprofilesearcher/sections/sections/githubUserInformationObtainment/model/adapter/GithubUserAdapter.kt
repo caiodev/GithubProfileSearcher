@@ -16,7 +16,7 @@ import timber.log.Timber
 class GithubUserAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var itemClicked: OnItemClicked? = null
-    private var dataSource: MutableList<ViewType>? = null
+    private var dataSource: List<ViewType>? = null
 
     override fun getItemCount() = getTotalCount()
 
@@ -61,7 +61,7 @@ class GithubUserAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    internal fun updateDataSource(newDataSource: MutableList<ViewType>) {
+    internal fun updateDataSource(newDataSource: List<ViewType>) {
         dataSource = newDataSource
     }
 

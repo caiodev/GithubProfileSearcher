@@ -3,6 +3,16 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">@color/colorPrimaryDark</color>
+
+    <!--Black-->
     <color name="black">#000000</color>
+
+    <!--Gray-->
     <color name="gray_200">#EEEEEE</color>
+
+    <!--Red-->
+    <color name="red_700">#D32F2F</color>
+
+    <!--Green-->
+    <color name="green_700">#388E3C</color>
 </resources>
