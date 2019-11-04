@@ -20,7 +20,26 @@ object Constants {
     //HTTP codes
     const val clientSideError = 7
     const val serverSideError = 8
+    const val forbidden = 9
 
     //Generic
-    const val genericError = 9
+    const val genericError = 10
+
+    //Pagination
+    const val fifteenItemsPerPage = 15
+    const val thirtyItemsPerPage = 30
+    const val fortyFiveItemsPerPage = 45
+    const val sixtyItemsPerPage = 60
+
+    //Internet connection variants
+
+    //Connected
+    const val wifi = 0
+    const val cellular = 1
+
+    //Disconnected
+    const val disconnected = 2
+
+    //Generic
+    const val generic = 3
 }

@@ -10,6 +10,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.SingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
@@ -18,43 +19,58 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
 
-class GithubUserInfoObtainmentViewModel : ViewModel() {
+class GithubUserInfoObtainmentViewModel(private val githubUserInformationRepository: GithubUserInformationRepository) :
+    ViewModel() {
 
-    private val successState = MutableLiveData<MutableList<ViewType>>()
-    internal val successStateCopy get() = successState
-    private val errorState = SingleLiveEvent<Any>()
-    internal val errorStateCopy get() = errorState
-    private val remoteRepository = GithubUserInformationRepository()
-    private val githubUsersInfoList = mutableListOf<ViewType>()
+    internal val successMutableLiveData = MutableLiveData<MutableList<ViewType>>()
+    internal val errorSingleLiveEvent = SingleLiveEvent<Int>()
+    private val githubUsersInfoMutableList = mutableListOf<ViewType>()
+    internal var hasFirstCallBeenMade = false
+    private var pageNumber = 1
+    internal var hasUserRequestedRefresh = false
 
-    fun getGithubUsersList(user: String) {
+    fun getGithubUsersList(
+        user: String,
+        itemsPerPage: Int,
+        shouldTheListItemsBeRemoved: Boolean? = null
+    ) {
+
+        shouldTheListItemsBeRemoved?.let {
+            if (hasUserRequestedRefresh || it) pageNumber = 1
+        }
 
         viewModelScope.launch {
 
-            when (val value = remoteRepository.getGithubUserList(user, 30)) {
+            when (val value =
+                githubUserInformationRepository.getGithubUserList(user, pageNumber, itemsPerPage)) {
 
                 is APICallResult.Success<*> -> {
-
                     with(value.data as GithubUsersList) {
-                        githubUsersInfoList.clear()
-                        githubUsersInfoList.add(Header(R.string.github_user_list_header))
-
-                        githubUserInformationList.forEach {
-                            populateList(it)
+                        shouldTheListItemsBeRemoved?.let {
+                            if (it) {
+                                setupList(githubUserInformationList)
+                            } else {
+                                githubUsersInfoMutableList.addAll(githubUserInformationList)
+                                successMutableLiveData.postValue(githubUsersInfoMutableList)
+                            }
                         }
-
-                        successState.postValue(githubUsersInfoList)
+                        pageNumber++
                     }
                 }
 
-                is APICallResult.Error<*> -> {
+                is APICallResult.Error -> {
+
+                    hasUserRequestedRefresh = false
 
                     when (value.error) {
-                        unknownHostException, socketTimeoutException -> errorState.postValue(R.string.unknown_host_exception_and_socket_timeout_exception)
-                        sslHandshakeException -> errorState.postValue(R.string.ssl_handshake_exception)
-                        clientSideError -> errorState.postValue(R.string.client_side_error)
-                        serverSideError -> errorState.postValue(R.string.server_side_error)
-                        else -> errorState.postValue(R.string.generic_exception_and_generic_error)
+                        unknownHostException, socketTimeoutException -> errorSingleLiveEvent.postValue(
+                            R.string.unknown_host_exception_and_socket_timeout_exception
+                        )
+                        sslHandshakeException -> errorSingleLiveEvent.postValue(R.string.ssl_handshake_exception)
+                        clientSideError -> errorSingleLiveEvent.postValue(R.string.client_side_error)
+                        serverSideError -> errorSingleLiveEvent.postValue(R.string.server_side_error)
+                        forbidden -> errorSingleLiveEvent.postValue(R.string.api_query_limit_exceeded_error)
+                        else -> errorSingleLiveEvent.postValue(R.string.generic_exception_and_generic_error)
                     }
                 }
             }
@@ -62,7 +78,7 @@ class GithubUserInfoObtainmentViewModel : ViewModel() {
     }
 
     private fun populateList(githubInfo: GithubUserInformation) {
-        githubUsersInfoList.add(
+        githubUsersInfoMutableList.add(
             GithubUserInformation(
                 githubInfo.userId,
                 githubInfo.login,
@@ -78,5 +94,16 @@ class GithubUserInfoObtainmentViewModel : ViewModel() {
     }
 
     fun getProfileUrlThroughViewModel(adapterPosition: Int) =
-        (githubUsersInfoList[adapterPosition] as GithubUserInformation).profileUrl
+        (githubUsersInfoMutableList[adapterPosition] as GithubUserInformation).profileUrl
+
+    private fun setupList(
+        githubUserInformationList: MutableList<GithubUserInformation>
+    ) {
+        if (githubUsersInfoMutableList.isNotEmpty()) githubUsersInfoMutableList.clear()
+        githubUsersInfoMutableList.add(Header(R.string.github_user_list_header))
+        githubUserInformationList.forEach {
+            populateList(it)
+        }
+        successMutableLiveData.postValue(githubUsersInfoMutableList)
+    }
 }

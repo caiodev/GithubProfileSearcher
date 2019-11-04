@@ -21,4 +21,6 @@
     <string name="client_side_error">Não conseguimos obter o que você está procurando. Por favor, tente novamente mais tarde</string>
     <string name="unknown_host_exception_and_socket_timeout_exception">Por favor, verifique sua conexão e tente novamente mais tarde</string>
     <string name="generic_exception_and_generic_error">Ocorreu um erro. Por favor, tente novamente mais tarde</string>
+    <string name="api_query_limit_exceeded_error">A cota de buscas da API foi excedida. Por favor, tente novamente mais tarde</string>
+    <string name="back_online_success_message">Conexão reestabelecida</string>
 </resources>

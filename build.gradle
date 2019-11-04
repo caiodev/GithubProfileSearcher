@@ -4,40 +4,43 @@ buildscript {
 
         //AppCompat
         appCompat = '1.1.0'
-        androidXCore = '1.2.0-alpha04'
+        androidXCore = '1.2.0-beta01'
 
         //ConstraintLayout
-        constraintLayout = '2.0.0-beta2'
+        constraintLayout = '2.0.0-beta3'
 
         //Epoxy
         epoxy = '3.7.0'
 
         //Gradle
-        gradleVersion = '3.5.0'
+        gradleVersion = '3.5.1'
+
+        //Koil
+        koil = '0.8.0'
 
         //Kotlin
         kotlinVersion = '1.3.50'
 
         //Ktx
-        ktxCore = '1.2.0-alpha04'
+        ktxCore = '1.2.0-beta01'
 
         //LeakCanary
         leakCanary = '2.0-beta-3'
 
-        //Lifecycle Architecture component
-        arch = '2.2.0-alpha04'
+        //Lifecycle Architecture components
+        arch = '2.2.0-rc01'
 
         //Material design
-        materialDesign = '1.1.0-alpha10'
+        materialDesign = '1.2.0-alpha01'
 
         //OkHttpLoggingInterceptor
         loggingInterceptor = '4.1.0'
 
         //Retrofit
-        retrofit = '2.6.1'
+        retrofit = '2.6.2'
 
         //SwipeRefreshLayout
-        swipeRefreshLayout = '1.1.0-alpha02'
+        swipeRefreshLayout = '1.1.0-alpha03'
 
         //Timber
         timber = '4.7.1'

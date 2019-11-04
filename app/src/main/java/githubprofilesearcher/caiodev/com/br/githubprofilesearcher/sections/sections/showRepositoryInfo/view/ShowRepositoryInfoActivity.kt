@@ -11,7 +11,10 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.cellular
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.disconnected
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileUrl
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
@@ -30,12 +33,18 @@ class ShowRepositoryInfoActivity : AppCompatActivity() {
     }
 
     private fun checkInternetConnection(genericFunction: () -> Unit) {
-        if (NetworkChecking.isInternetConnectionAvailable(applicationContext))
-            genericFunction.invoke()
-        else {
-            if (noInternetConnectionWebViewLayout.visibility != VISIBLE)
-                setViewVisibility(noInternetConnectionWebViewLayout, VISIBLE)
-            showSnackBar(this, getString(R.string.no_connection_error))
+
+        when (NetworkChecking.checkIfInternetConnectionIsAvailable(applicationContext)) {
+
+            cellular, wifi -> {
+                genericFunction.invoke()
+            }
+
+            disconnected -> {
+                if (noInternetConnectionWebViewLayout.visibility != VISIBLE)
+                    setViewVisibility(noInternetConnectionWebViewLayout, VISIBLE)
+                showSnackBar(this, getString(R.string.no_connection_error))
+            }
         }
     }
 
@@ -62,9 +71,18 @@ class ShowRepositoryInfoActivity : AppCompatActivity() {
                     finish()
                 }
 
-                is SocketTimeoutException -> showSnackBar(this, getString(R.string.no_connection_error))
-                is UnknownHostException -> showSnackBar(this, getString(R.string.no_connection_error))
-                is SSLHandshakeException -> showSnackBar(this, getString(R.string.no_connection_error))
+                is SocketTimeoutException -> showSnackBar(
+                    this,
+                    getString(R.string.no_connection_error)
+                )
+                is UnknownHostException -> showSnackBar(
+                    this,
+                    getString(R.string.no_connection_error)
+                )
+                is SSLHandshakeException -> showSnackBar(
+                    this,
+                    getString(R.string.no_connection_error)
+                )
             }
         }
     }

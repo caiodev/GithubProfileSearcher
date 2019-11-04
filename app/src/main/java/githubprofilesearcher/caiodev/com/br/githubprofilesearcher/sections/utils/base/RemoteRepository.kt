@@ -1,6 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
@@ -10,6 +11,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import retrofit2.Response
+import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
@@ -26,17 +28,21 @@ open class RemoteRepository {
 
             if (response.isSuccessful) {
                 response.body()?.let { apiResponse ->
-                    return APICallResult.Success(apiResponse)
+                    return APICallResult.Success(apiResponse) //a.k.a 200
                 } ?: run {
-                    return APICallResult.Success(APICallResult.Success(successWithoutBody)) //a.k.a 204
+                    return APICallResult.Success(successWithoutBody) //a.k.a 204
                 }
             } else {
-                when (response.code()) {
-                    in 400..450 -> APICallResult.Error(clientSideError)
+
+                Timber.d("ErrorCode: ${response.code()}")
+
+                return when (response.code()) {
+                    in 400..402, in 404..450 -> APICallResult.Error(clientSideError)
+                    403 -> APICallResult.Error(forbidden)
                     in 500..598 -> APICallResult.Error(serverSideError)
+                    else -> APICallResult.Error(genericError)
                 }
             }
-
         } catch (exception: Exception) {
             return when (exception) {
                 is UnknownHostException -> APICallResult.Error(
@@ -47,7 +53,5 @@ open class RemoteRepository {
                 else -> APICallResult.Error(genericException)
             }
         }
-
-        return APICallResult.Error(genericError)
     }
 }

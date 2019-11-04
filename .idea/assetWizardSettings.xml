@@ -132,8 +132,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_octocat" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/app/src/main/res/drawable/ic_octocat.svg" />
+                            <entry key="outputName" value="ic_search" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/app/src/main/res/drawable/ic_search.svg" />
                           </map>
                         </option>
                       </PersistentState>
