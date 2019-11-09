@@ -25,7 +25,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.cellular
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.disconnected
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fifteenItemsPerPage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
@@ -44,7 +43,7 @@ class GithubUserInfoObtainmentActivity :
     ActivityFlow {
 
     private val githubUserAdapter = GithubUserAdapter()
-    private var hasUserClickedOnTheSearchIcon = false
+    private var hasUserClickedOnTheActionIcon = false
     private var hasUserReachedEndOfList = false
     private var customSnackBar: CustomSnackBar? = null
 
@@ -91,23 +90,23 @@ class GithubUserInfoObtainmentActivity :
             })
         }
 
-        searchIconImageView.setOnClickListener {
-            if (!hasUserClickedOnTheSearchIcon) {
+        actionIconImageView.setOnClickListener {
+            if (!hasUserClickedOnTheActionIcon) {
                 if (!isFieldEmpty()) {
                     searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
                     changeDrawable(
-                        searchIconImageView,
+                        actionIconImageView,
                         R.drawable.ic_close
                     )
-                    hasUserClickedOnTheSearchIcon = true
+                    hasUserClickedOnTheActionIcon = true
                 } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
             } else {
                 searchProfileTextInputEditText.setText("")
                 changeDrawable(
-                    searchIconImageView,
+                    actionIconImageView,
                     R.drawable.ic_search
                 )
-                hasUserClickedOnTheSearchIcon = false
+                hasUserClickedOnTheActionIcon = false
             }
         }
 
@@ -115,6 +114,8 @@ class GithubUserInfoObtainmentActivity :
             requestFocus()
             setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hasUserClickedOnTheActionIcon = true
+                    changeDrawable(actionIconImageView, R.drawable.ic_close)
                     searchProfile(isFieldEmpty(), true)
                     return@OnEditorActionListener true
                 }
@@ -124,7 +125,7 @@ class GithubUserInfoObtainmentActivity :
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
                     if (text.isNullOrEmpty()) changeDrawable(
-                        searchIconImageView,
+                        actionIconImageView,
                         R.drawable.ic_search
                     )
                 }
@@ -224,7 +225,7 @@ class GithubUserInfoObtainmentActivity :
         if (!isFieldEmpty) {
             callApi {
                 viewModel.getGithubUsersList(
-                    searchProfileTextInputEditText.text.toString(), fifteenItemsPerPage,
+                    searchProfileTextInputEditText.text.toString(),
                     shouldTheListItemsBeRemoved
                 )
             }

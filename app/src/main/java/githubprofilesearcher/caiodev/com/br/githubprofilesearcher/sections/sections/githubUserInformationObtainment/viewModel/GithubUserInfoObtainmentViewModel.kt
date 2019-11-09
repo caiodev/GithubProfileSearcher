@@ -11,6 +11,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.SingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItemsPerPage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
@@ -31,7 +32,6 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
 
     fun getGithubUsersList(
         user: String,
-        itemsPerPage: Int,
         shouldTheListItemsBeRemoved: Boolean? = null
     ) {
 
@@ -42,7 +42,11 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
         viewModelScope.launch {
 
             when (val value =
-                githubUserInformationRepository.getGithubUserList(user, pageNumber, itemsPerPage)) {
+                githubUserInformationRepository.getGithubUserList(
+                    user,
+                    pageNumber,
+                    numberOfItemsPerPage
+                )) {
 
                 is APICallResult.Success<*> -> {
                     with(value.data as GithubUsersList) {
