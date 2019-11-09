@@ -26,10 +26,7 @@ object Constants {
     const val genericError = 10
 
     //Pagination
-    const val fifteenItemsPerPage = 15
-    const val thirtyItemsPerPage = 30
-    const val fortyFiveItemsPerPage = 45
-    const val sixtyItemsPerPage = 60
+    const val numberOfItemsPerPage = 20
 
     //Internet connection variants
 
