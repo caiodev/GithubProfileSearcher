@@ -28,7 +28,7 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     }
 
     @MainThread
-    fun value(t: T?) {
+    override fun setValue(t: T?) {
         pending.set(true)
         super.setValue(t)
     }
@@ -39,6 +39,6 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     @Suppress("unused")
     @MainThread
     fun call() {
-        value(null)
+        value = null
     }
 }

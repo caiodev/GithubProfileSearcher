@@ -29,6 +29,8 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
     internal var hasFirstCallBeenMade = false
     private var pageNumber = 1
     internal var hasUserRequestedRefresh = false
+    internal var shouldActionIconPerformSearch = false
+    internal var isThereAnOngoingCall = false
 
     fun getGithubUsersList(
         user: String,
@@ -86,6 +88,7 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
             )) {
 
             is APICallResult.Success<*> -> {
+                isThereAnOngoingCall = false
                 with(value.data as GithubUsersList) {
                     shouldListItemsBeRemoved?.let {
                         if (it) setupList(githubUserInformationList)
@@ -100,17 +103,21 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
 
             is APICallResult.Error -> {
 
+                isThereAnOngoingCall = false
                 hasUserRequestedRefresh = false
 
-                when (value.error) {
-                    unknownHostException, socketTimeoutException -> errorSingleLiveEvent.postValue(
-                        R.string.unknown_host_exception_and_socket_timeout_exception
-                    )
-                    sslHandshakeException -> errorSingleLiveEvent.postValue(R.string.ssl_handshake_exception)
-                    clientSideError -> errorSingleLiveEvent.postValue(R.string.client_side_error)
-                    serverSideError -> errorSingleLiveEvent.postValue(R.string.server_side_error)
-                    forbidden -> errorSingleLiveEvent.postValue(R.string.api_query_limit_exceeded_error)
-                    else -> errorSingleLiveEvent.postValue(R.string.generic_exception_and_generic_error)
+                with(errorSingleLiveEvent) {
+                    when (value.error) {
+                        unknownHostException, socketTimeoutException ->
+                            postValue(
+                                R.string.unknown_host_exception_and_socket_timeout_exception
+                            )
+                        sslHandshakeException -> postValue(R.string.ssl_handshake_exception)
+                        clientSideError -> postValue(R.string.client_side_error)
+                        serverSideError -> postValue(R.string.server_side_error)
+                        forbidden -> postValue(R.string.api_query_limit_exceeded_error)
+                        else -> postValue(R.string.generic_exception_and_generic_error)
+                    }
                 }
             }
         }

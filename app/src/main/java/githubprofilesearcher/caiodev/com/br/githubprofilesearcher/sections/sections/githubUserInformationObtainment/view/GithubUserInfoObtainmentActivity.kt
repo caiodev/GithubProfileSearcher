@@ -42,7 +42,6 @@ class GithubUserInfoObtainmentActivity :
     ActivityFlow {
 
     private val githubUserAdapter = GithubUserAdapter()
-    private var shouldActionIconPerformASearch = false
     private var hasUserReachedEndOfList = false
     private var customSnackBar: CustomSnackBar? = null
 
@@ -63,6 +62,15 @@ class GithubUserInfoObtainmentActivity :
 
     override fun setupView() {
 
+        if (viewModel.isThereAnOngoingCall) {
+            setViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+            viewModel.shouldActionIconPerformSearch = false
+            changeDrawable(actionIconImageView, R.drawable.ic_close)
+            setupUpperViewsUserInteraction(false)
+        }
+
+        if (viewModel.hasFirstCallBeenMade) changeDrawable(actionIconImageView, R.drawable.ic_close)
+
         customSnackBar = CustomSnackBar.make(this.findViewById(android.R.id.content))
 
         userInfoRecyclerView.apply {
@@ -80,6 +88,7 @@ class GithubUserInfoObtainmentActivity :
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
             viewModel.hasUserRequestedRefresh = true
             searchProfile(isFieldEmpty(), true)
+            setupUpperViewsUserInteraction(false)
         }
 
         githubUserAdapter.setOnItemClicked(object :
@@ -120,6 +129,8 @@ class GithubUserInfoObtainmentActivity :
         //Success LiveData
         viewModel.successMutableLiveData.observe(this, Observer { githubUsersList ->
 
+            setupUpperViewsUserInteraction(true)
+
             setViewVisibility(githubProfileListSwipeRefreshLayout)
 
             if (noInternetConnectionLayout.visibility == VISIBLE)
@@ -128,26 +139,33 @@ class GithubUserInfoObtainmentActivity :
             if (viewModel.hasUserRequestedRefresh) {
                 setViewVisibility(githubProfileListSwipeRefreshLayout)
                 githubUserAdapter.updateDataSource(githubUsersList)
-                runLayoutAnimation(userInfoRecyclerView)
                 viewModel.hasUserRequestedRefresh = false
             }
 
             if (!viewModel.hasFirstCallBeenMade) {
                 githubUserAdapter.updateDataSource(githubUsersList)
-                runLayoutAnimation(userInfoRecyclerView)
             } else {
                 githubUserAdapter.updateDataSource(githubUsersList)
                 userInfoRecyclerView.adapter?.notifyDataSetChanged()
                 setViewVisibility(repositoryLoadingProgressBar, GONE)
             }
             hasUserReachedEndOfList = false
+            runLayoutAnimation(userInfoRecyclerView)
         })
 
         //Error LiveData
         viewModel.errorSingleLiveEvent.observeSingleEvent(this, Observer { state ->
+
+            viewModel.shouldActionIconPerformSearch = true
+            setupUpperViewsUserInteraction(true)
+            changeDrawable(actionIconImageView, R.drawable.ic_search)
+
             when (state) {
-                unknownHostException, sslHandshakeException ->
-                    showErrorMessages(state, true)
+                unknownHostException, sslHandshakeException -> {
+                    if (viewModel.hasFirstCallBeenMade)
+                        showErrorMessages(state, false)
+                    else showErrorMessages(state, true)
+                }
 
                 else -> showErrorMessages(state, false)
             }
@@ -174,6 +192,7 @@ class GithubUserInfoObtainmentActivity :
                     shouldTheListItemsBeRemoved
                 )
             }
+            viewModel.isThereAnOngoingCall = true
         } else {
             showSnackBar(
                 this,
@@ -260,22 +279,19 @@ class GithubUserInfoObtainmentActivity :
     }
 
     private fun handleActionIconClick() {
-        if (shouldActionIconPerformASearch) {
-            if (!isFieldEmpty()) {
-                searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
-                changeDrawable(
-                    actionIconImageView,
-                    R.drawable.ic_close
-                )
-                shouldActionIconPerformASearch = false
-            } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
-        } else {
-            searchProfileTextInputEditText.setText("")
-            changeDrawable(
-                actionIconImageView,
-                R.drawable.ic_search
-            )
-            shouldActionIconPerformASearch = true
+        if (!viewModel.isThereAnOngoingCall) {
+            if (viewModel.shouldActionIconPerformSearch) {
+                if (!isFieldEmpty()) {
+                    searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
+                    setupUpperViewsUserInteraction(false)
+                    changeDrawable(actionIconImageView, R.drawable.ic_close)
+                    viewModel.shouldActionIconPerformSearch = false
+                } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
+            } else {
+                searchProfileTextInputEditText.setText("")
+                changeDrawable(actionIconImageView, R.drawable.ic_search)
+                viewModel.shouldActionIconPerformSearch = true
+            }
         }
     }
 
@@ -284,7 +300,8 @@ class GithubUserInfoObtainmentActivity :
             requestFocus()
             setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    shouldActionIconPerformASearch = false
+                    setupUpperViewsUserInteraction(false)
+                    viewModel.shouldActionIconPerformSearch = false
                     changeDrawable(actionIconImageView, R.drawable.ic_close)
                     searchProfile(isFieldEmpty(), true)
                     return@OnEditorActionListener true
@@ -294,7 +311,7 @@ class GithubUserInfoObtainmentActivity :
 
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
-                    shouldActionIconPerformASearch = true
+                    viewModel.shouldActionIconPerformSearch = true
                     if (text.isNullOrEmpty()) changeDrawable(
                         actionIconImageView,
                         R.drawable.ic_search
@@ -323,5 +340,22 @@ class GithubUserInfoObtainmentActivity :
                 }
             }
         })
+    }
+
+    private fun setupUpperViewsUserInteraction(shouldUsersBeAbleToInteractWithTheUpperViews: Boolean) {
+
+        actionIconImageView.apply {
+            isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
+            isFocusable = shouldUsersBeAbleToInteractWithTheUpperViews
+        }
+
+        with(searchProfileTextInputEditText) {
+            isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
+            isCursorVisible = shouldUsersBeAbleToInteractWithTheUpperViews
+            isFocusable = shouldUsersBeAbleToInteractWithTheUpperViews
+            isFocusableInTouchMode = shouldUsersBeAbleToInteractWithTheUpperViews
+            isLongClickable = shouldUsersBeAbleToInteractWithTheUpperViews
+            if (shouldUsersBeAbleToInteractWithTheUpperViews) requestFocus()
+        }
     }
 }
