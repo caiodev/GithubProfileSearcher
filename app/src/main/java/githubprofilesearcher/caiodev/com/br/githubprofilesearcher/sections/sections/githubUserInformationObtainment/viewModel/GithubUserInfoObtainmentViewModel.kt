@@ -29,6 +29,8 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
     internal var hasFirstCallBeenMade = false
     private var pageNumber = 1
     internal var hasUserRequestedRefresh = false
+    internal var shouldActionIconPerformSearch = false
+    internal var isThereAnOngoingCall = false
 
     fun getGithubUsersList(
         user: String,
@@ -86,6 +88,7 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
             )) {
 
             is APICallResult.Success<*> -> {
+                isThereAnOngoingCall = false
                 with(value.data as GithubUsersList) {
                     shouldListItemsBeRemoved?.let {
                         if (it) setupList(githubUserInformationList)
@@ -100,6 +103,7 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
 
             is APICallResult.Error -> {
 
+                isThereAnOngoingCall = false
                 hasUserRequestedRefresh = false
 
                 with(errorSingleLiveEvent) {
