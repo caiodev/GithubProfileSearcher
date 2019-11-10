@@ -20,7 +20,7 @@ class GithubUserAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount() = getTotalCount()
 
-    override fun getItemViewType(position: Int) = itemViewType(position).getViewType()
+    override fun getItemViewType(position: Int) = itemViewType(position).provideViewType()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
