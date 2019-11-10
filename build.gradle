@@ -10,7 +10,7 @@ buildscript {
         constraintLayout = '2.0.0-beta3'
 
         //Epoxy
-        epoxy = '3.7.0'
+        epoxy = '3.8.0'
 
         //Gradle
         gradleVersion = '3.5.2'
@@ -34,7 +34,7 @@ buildscript {
         materialDesign = '1.2.0-alpha01'
 
         //OkHttpLoggingInterceptor
-        loggingInterceptor = '4.1.0'
+        loggingInterceptor = '4.2.1'
 
         //Retrofit
         retrofit = '2.6.2'
