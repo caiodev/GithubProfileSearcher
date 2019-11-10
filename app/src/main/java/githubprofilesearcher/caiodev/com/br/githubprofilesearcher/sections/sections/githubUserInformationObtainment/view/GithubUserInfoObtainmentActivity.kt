@@ -42,7 +42,7 @@ class GithubUserInfoObtainmentActivity :
     ActivityFlow {
 
     private val githubUserAdapter = GithubUserAdapter()
-    private var hasUserClickedOnTheActionIcon = false
+    private var shouldActionIconPerformASearch = false
     private var hasUserReachedEndOfList = false
     private var customSnackBar: CustomSnackBar? = null
 
@@ -145,7 +145,6 @@ class GithubUserInfoObtainmentActivity :
 
         //Error LiveData
         viewModel.errorSingleLiveEvent.observeSingleEvent(this, Observer { state ->
-
             when (state) {
                 unknownHostException, sslHandshakeException ->
                     showErrorMessages(state, true)
@@ -261,14 +260,14 @@ class GithubUserInfoObtainmentActivity :
     }
 
     private fun handleActionIconClick() {
-        if (!hasUserClickedOnTheActionIcon) {
+        if (shouldActionIconPerformASearch) {
             if (!isFieldEmpty()) {
                 searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
                 changeDrawable(
                     actionIconImageView,
                     R.drawable.ic_close
                 )
-                hasUserClickedOnTheActionIcon = true
+                shouldActionIconPerformASearch = false
             } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
         } else {
             searchProfileTextInputEditText.setText("")
@@ -276,7 +275,7 @@ class GithubUserInfoObtainmentActivity :
                 actionIconImageView,
                 R.drawable.ic_search
             )
-            hasUserClickedOnTheActionIcon = false
+            shouldActionIconPerformASearch = true
         }
     }
 
@@ -285,7 +284,7 @@ class GithubUserInfoObtainmentActivity :
             requestFocus()
             setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    hasUserClickedOnTheActionIcon = true
+                    shouldActionIconPerformASearch = false
                     changeDrawable(actionIconImageView, R.drawable.ic_close)
                     searchProfile(isFieldEmpty(), true)
                     return@OnEditorActionListener true
@@ -295,6 +294,7 @@ class GithubUserInfoObtainmentActivity :
 
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
+                    shouldActionIconPerformASearch = true
                     if (text.isNullOrEmpty()) changeDrawable(
                         actionIconImageView,
                         R.drawable.ic_search
