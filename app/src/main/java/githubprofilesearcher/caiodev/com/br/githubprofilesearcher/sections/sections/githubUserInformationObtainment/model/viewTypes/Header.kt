@@ -5,5 +5,5 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 
 class Header(val headerName: Int) :
     ViewType {
-    override fun getViewType() = RecyclerViewViewTypes.header
+    override fun provideViewType() = RecyclerViewViewTypes.header
 }

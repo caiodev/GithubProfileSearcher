@@ -32,52 +32,15 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
 
     fun getGithubUsersList(
         user: String,
-        shouldTheListItemsBeRemoved: Boolean? = null
+        shouldListItemsBeRemoved: Boolean? = null
     ) {
 
-        shouldTheListItemsBeRemoved?.let {
+        shouldListItemsBeRemoved?.let {
             if (hasUserRequestedRefresh || it) pageNumber = 1
         }
 
         viewModelScope.launch {
-
-            when (val value =
-                githubUserInformationRepository.getGithubUserList(
-                    user,
-                    pageNumber,
-                    numberOfItemsPerPage
-                )) {
-
-                is APICallResult.Success<*> -> {
-                    with(value.data as GithubUsersList) {
-                        shouldTheListItemsBeRemoved?.let {
-                            if (it) {
-                                setupList(githubUserInformationList)
-                            } else {
-                                githubUsersInfoMutableList.addAll(githubUserInformationList)
-                                successMutableLiveData.postValue(githubUsersInfoMutableList)
-                            }
-                        }
-                        pageNumber++
-                    }
-                }
-
-                is APICallResult.Error -> {
-
-                    hasUserRequestedRefresh = false
-
-                    when (value.error) {
-                        unknownHostException, socketTimeoutException -> errorSingleLiveEvent.postValue(
-                            R.string.unknown_host_exception_and_socket_timeout_exception
-                        )
-                        sslHandshakeException -> errorSingleLiveEvent.postValue(R.string.ssl_handshake_exception)
-                        clientSideError -> errorSingleLiveEvent.postValue(R.string.client_side_error)
-                        serverSideError -> errorSingleLiveEvent.postValue(R.string.server_side_error)
-                        forbidden -> errorSingleLiveEvent.postValue(R.string.api_query_limit_exceeded_error)
-                        else -> errorSingleLiveEvent.postValue(R.string.generic_exception_and_generic_error)
-                    }
-                }
-            }
+            handleCallResult(user, shouldListItemsBeRemoved)
         }
     }
 
@@ -97,7 +60,7 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
         )
     }
 
-    fun getProfileUrlThroughViewModel(adapterPosition: Int) =
+    fun provideProfileUrlThroughViewModel(adapterPosition: Int) =
         (githubUsersInfoMutableList[adapterPosition] as GithubUserInformation).profileUrl
 
     private fun setupList(
@@ -109,5 +72,47 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
             populateList(it)
         }
         successMutableLiveData.postValue(githubUsersInfoMutableList)
+    }
+
+    private suspend fun handleCallResult(
+        user: String,
+        shouldListItemsBeRemoved: Boolean? = null
+    ) {
+        when (val value =
+            githubUserInformationRepository.provideGithubUserInformation(
+                user,
+                pageNumber,
+                numberOfItemsPerPage
+            )) {
+
+            is APICallResult.Success<*> -> {
+                with(value.data as GithubUsersList) {
+                    shouldListItemsBeRemoved?.let {
+                        if (it) setupList(githubUserInformationList)
+                        else {
+                            githubUsersInfoMutableList.addAll(githubUserInformationList)
+                            successMutableLiveData.postValue(githubUsersInfoMutableList)
+                        }
+                    }
+                    pageNumber++
+                }
+            }
+
+            is APICallResult.Error -> {
+
+                hasUserRequestedRefresh = false
+
+                when (value.error) {
+                    unknownHostException, socketTimeoutException -> errorSingleLiveEvent.postValue(
+                        R.string.unknown_host_exception_and_socket_timeout_exception
+                    )
+                    sslHandshakeException -> errorSingleLiveEvent.postValue(R.string.ssl_handshake_exception)
+                    clientSideError -> errorSingleLiveEvent.postValue(R.string.client_side_error)
+                    serverSideError -> errorSingleLiveEvent.postValue(R.string.server_side_error)
+                    forbidden -> errorSingleLiveEvent.postValue(R.string.api_query_limit_exceeded_error)
+                    else -> errorSingleLiveEvent.postValue(R.string.generic_exception_and_generic_error)
+                }
+            }
+        }
     }
 }

@@ -15,5 +15,5 @@ data class GithubUserInformation(
     @field:Json(name = "followers") val numberOfFollowers: Int = 0,
     @field:Json(name = "public_repos") val numberOfRepositories: Int = 0
 ) : ViewType {
-    override fun getViewType() = RecyclerViewViewTypes.githubUserProfileInformation
+    override fun provideViewType() = RecyclerViewViewTypes.githubUserProfileInformation
 }

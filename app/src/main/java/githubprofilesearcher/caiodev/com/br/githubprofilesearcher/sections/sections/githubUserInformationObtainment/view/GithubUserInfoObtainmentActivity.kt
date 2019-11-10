@@ -36,14 +36,13 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
 
 class GithubUserInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
     ActivityFlow {
 
     private val githubUserAdapter = GithubUserAdapter()
-    private var hasUserClickedOnTheActionIcon = false
+    private var shouldActionIconPerformASearch = false
     private var hasUserReachedEndOfList = false
     private var customSnackBar: CustomSnackBar? = null
 
@@ -69,68 +68,14 @@ class GithubUserInfoObtainmentActivity :
         userInfoRecyclerView.apply {
             setHasFixedSize(true)
             adapter = githubUserAdapter
-
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val total = recyclerView.layoutManager?.itemCount
-                    val currentLastItem =
-                        (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                    if (currentLastItem == total?.minus(1)) {
-                        if (!isFieldEmpty()) {
-                            if (!hasUserReachedEndOfList) {
-                                searchProfile(
-                                    isFieldEmpty = false,
-                                    shouldTheListItemsBeRemoved = false
-                                )
-                                hasUserReachedEndOfList = true
-                            }
-                        } else searchProfile(isFieldEmpty = true)
-                    }
-                }
-            })
+            setupRecyclerViewAddOnScrollListener()
         }
 
         actionIconImageView.setOnClickListener {
-            if (!hasUserClickedOnTheActionIcon) {
-                if (!isFieldEmpty()) {
-                    searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
-                    changeDrawable(
-                        actionIconImageView,
-                        R.drawable.ic_close
-                    )
-                    hasUserClickedOnTheActionIcon = true
-                } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
-            } else {
-                searchProfileTextInputEditText.setText("")
-                changeDrawable(
-                    actionIconImageView,
-                    R.drawable.ic_search
-                )
-                hasUserClickedOnTheActionIcon = false
-            }
+            handleActionIconClick()
         }
 
-        searchProfileTextInputEditText.apply {
-            requestFocus()
-            setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    hasUserClickedOnTheActionIcon = true
-                    changeDrawable(actionIconImageView, R.drawable.ic_close)
-                    searchProfile(isFieldEmpty(), true)
-                    return@OnEditorActionListener true
-                }
-                false
-            })
-
-            addTextChangedListener {
-                doOnTextChanged { text, _, _, _ ->
-                    if (text.isNullOrEmpty()) changeDrawable(
-                        actionIconImageView,
-                        R.drawable.ic_search
-                    )
-                }
-            }
-        }
+        setupTextInputEditText()
 
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
             viewModel.hasUserRequestedRefresh = true
@@ -143,7 +88,6 @@ class GithubUserInfoObtainmentActivity :
             override fun onItemClick(adapterPosition: Int, id: Int) {
                 when (id) {
                     Constants.githubProfileRecyclerViewCell -> {
-
                         when (NetworkChecking.checkIfInternetConnectionIsAvailable(
                             applicationContext
                         )) {
@@ -156,7 +100,9 @@ class GithubUserInfoObtainmentActivity :
                                     )
                                         .putExtra(
                                             Constants.githubProfileUrl,
-                                            viewModel.getProfileUrlThroughViewModel(adapterPosition)
+                                            viewModel.provideProfileUrlThroughViewModel(
+                                                adapterPosition
+                                            )
                                         )
                                 )
                             }
@@ -199,7 +145,6 @@ class GithubUserInfoObtainmentActivity :
 
         //Error LiveData
         viewModel.errorSingleLiveEvent.observeSingleEvent(this, Observer { state ->
-
             when (state) {
                 unknownHostException, sslHandshakeException ->
                     showErrorMessages(state, true)
@@ -240,7 +185,7 @@ class GithubUserInfoObtainmentActivity :
     }
 
     private fun runLayoutAnimation(recyclerView: RecyclerView) {
-        recyclerView.apply {
+        with(recyclerView) {
             layoutAnimation = AnimationUtils.loadLayoutAnimation(
                 context,
                 R.anim.layout_animation_fall_down
@@ -248,12 +193,12 @@ class GithubUserInfoObtainmentActivity :
             adapter?.notifyDataSetChanged()
             scheduleLayoutAnimation()
             viewModel.hasFirstCallBeenMade = true
+
+            setViewVisibility(githubProfileListSwipeRefreshLayout)
+
+            if (repositoryLoadingProgressBar.visibility == VISIBLE)
+                setViewVisibility(repositoryLoadingProgressBar, GONE)
         }
-
-        setViewVisibility(githubProfileListSwipeRefreshLayout)
-
-        if (repositoryLoadingProgressBar.visibility == VISIBLE)
-            setViewVisibility(repositoryLoadingProgressBar, GONE)
     }
 
     private fun callApi(genericFunction: () -> Unit) {
@@ -285,7 +230,6 @@ class GithubUserInfoObtainmentActivity :
     private fun setupInternetConnectionObserver() {
         NetworkChecking.internetConnectionAvailabilityObservable(applicationContext)
             .observe(this, Observer { isInternetAvailable ->
-                Timber.d("IWasCalled Observable")
                 when (isInternetAvailable) {
                     true -> showInternetConnectionStatusSnackBar(true)
                     false -> showInternetConnectionStatusSnackBar(false)
@@ -294,29 +238,90 @@ class GithubUserInfoObtainmentActivity :
     }
 
     private fun showInternetConnectionStatusSnackBar(isInternetConnectionAvailable: Boolean) {
-
-        Timber.d("IWasCalled Activity")
-
-        customSnackBar?.apply {
+        with(customSnackBar) {
             if (isInternetConnectionAvailable) {
-                setText(getString(R.string.back_online_success_message)).setBackgroundColor(
+                this?.setText(getString(R.string.back_online_success_message))?.setBackgroundColor(
                     ContextCompat.getColor(
                         applicationContext,
                         R.color.green_700
                     )
                 )
-                dismiss()
+                this?.dismiss()
             } else {
-                customSnackBar?.apply {
-                    setText(getString(R.string.no_connection_error)).setBackgroundColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.red_700
-                        )
+                this?.setText(getString(R.string.no_connection_error))?.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.red_700
                     )
-                    show()
+                )
+                this?.show()
+            }
+        }
+    }
+
+    private fun handleActionIconClick() {
+        if (shouldActionIconPerformASearch) {
+            if (!isFieldEmpty()) {
+                searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
+                changeDrawable(
+                    actionIconImageView,
+                    R.drawable.ic_close
+                )
+                shouldActionIconPerformASearch = false
+            } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
+        } else {
+            searchProfileTextInputEditText.setText("")
+            changeDrawable(
+                actionIconImageView,
+                R.drawable.ic_search
+            )
+            shouldActionIconPerformASearch = true
+        }
+    }
+
+    private fun setupTextInputEditText() {
+        with(searchProfileTextInputEditText) {
+            requestFocus()
+            setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    shouldActionIconPerformASearch = false
+                    changeDrawable(actionIconImageView, R.drawable.ic_close)
+                    searchProfile(isFieldEmpty(), true)
+                    return@OnEditorActionListener true
+                }
+                false
+            })
+
+            addTextChangedListener {
+                doOnTextChanged { text, _, _, _ ->
+                    shouldActionIconPerformASearch = true
+                    if (text.isNullOrEmpty()) changeDrawable(
+                        actionIconImageView,
+                        R.drawable.ic_search
+                    )
                 }
             }
         }
+    }
+
+    private fun setupRecyclerViewAddOnScrollListener() {
+        userInfoRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val total = recyclerView.layoutManager?.itemCount
+                val currentLastItem =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                if (currentLastItem == total?.minus(1)) {
+                    if (!isFieldEmpty()) {
+                        if (!hasUserReachedEndOfList) {
+                            searchProfile(
+                                isFieldEmpty = false,
+                                shouldTheListItemsBeRemoved = false
+                            )
+                            hasUserReachedEndOfList = true
+                        }
+                    } else searchProfile(isFieldEmpty = true)
+                }
+            }
+        })
     }
 }

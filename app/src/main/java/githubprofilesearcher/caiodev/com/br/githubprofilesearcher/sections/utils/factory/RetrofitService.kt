@@ -29,7 +29,7 @@ class RetrofitService {
         }
 
     @PublishedApi
-    internal inline fun <reified T> getRetrofitService(): T {
+    internal inline fun <reified T> provideRetrofitService(): T {
         retrofitBuilder?.let { retrofitService ->
             return retrofitService as T
         } ?: run {
@@ -42,12 +42,12 @@ class RetrofitService {
     internal inline fun <reified T> createRetrofitService() =
         Retrofit.Builder()
             .baseUrl(baseUrl)
-            .client(getOkHttpClient())
+            .client(provideOkHttpClient())
             .addConverterFactory(MoshiConverterFactory.create())
             .build().create(T::class.java) as T
 
     @PublishedApi
-    internal fun getOkHttpClient(): OkHttpClient {
+    internal fun provideOkHttpClient(): OkHttpClient {
         okHttpClient?.let { client ->
             return client
         } ?: run {

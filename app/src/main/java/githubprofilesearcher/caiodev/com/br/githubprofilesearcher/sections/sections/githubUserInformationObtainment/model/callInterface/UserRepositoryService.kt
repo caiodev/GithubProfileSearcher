@@ -11,16 +11,16 @@ import retrofit2.http.Query
 interface UserRepositoryService {
 
     @GET("search/users")
-    suspend fun getGithubUsersListAsync(
+    suspend fun provideGithubUsersListAsync(
         @Query("q") user: String,
         @Query("page") pageNumber: Int,
         @Query("per_page") maxQuantityPerPage: Int
     ): Response<GithubUsersList>
 
     @GET("users/{user}")
-    suspend fun getGithubUserInformationAsync(@Path("user") user: String): Response<GithubUserInformation>
+    suspend fun provideGithubUserInformationAsync(@Path("user") user: String): Response<GithubUserInformation>
 
     @GET("users/{user}/repos")
-    suspend fun getGithubUserRepositoriesInformationAsync(@Path("user") user: String):
+    suspend fun provideGithubUserRepositoriesInformationAsync(@Path("user") user: String):
             Response<GithubUserRepositoryInformation>
 }
