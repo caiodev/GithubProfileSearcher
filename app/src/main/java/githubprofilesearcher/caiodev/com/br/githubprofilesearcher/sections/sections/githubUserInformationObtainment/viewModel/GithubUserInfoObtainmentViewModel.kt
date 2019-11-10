@@ -102,15 +102,18 @@ class GithubUserInfoObtainmentViewModel(private val githubUserInformationReposit
 
                 hasUserRequestedRefresh = false
 
-                when (value.error) {
-                    unknownHostException, socketTimeoutException -> errorSingleLiveEvent.postValue(
-                        R.string.unknown_host_exception_and_socket_timeout_exception
-                    )
-                    sslHandshakeException -> errorSingleLiveEvent.postValue(R.string.ssl_handshake_exception)
-                    clientSideError -> errorSingleLiveEvent.postValue(R.string.client_side_error)
-                    serverSideError -> errorSingleLiveEvent.postValue(R.string.server_side_error)
-                    forbidden -> errorSingleLiveEvent.postValue(R.string.api_query_limit_exceeded_error)
-                    else -> errorSingleLiveEvent.postValue(R.string.generic_exception_and_generic_error)
+                with(errorSingleLiveEvent) {
+                    when (value.error) {
+                        unknownHostException, socketTimeoutException ->
+                            postValue(
+                                R.string.unknown_host_exception_and_socket_timeout_exception
+                            )
+                        sslHandshakeException -> postValue(R.string.ssl_handshake_exception)
+                        clientSideError -> postValue(R.string.client_side_error)
+                        serverSideError -> postValue(R.string.server_side_error)
+                        forbidden -> postValue(R.string.api_query_limit_exceeded_error)
+                        else -> postValue(R.string.generic_exception_and_generic_error)
+                    }
                 }
             }
         }

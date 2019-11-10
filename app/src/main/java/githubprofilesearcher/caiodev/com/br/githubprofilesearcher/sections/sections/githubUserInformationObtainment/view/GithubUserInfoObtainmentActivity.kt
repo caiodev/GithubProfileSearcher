@@ -146,8 +146,11 @@ class GithubUserInfoObtainmentActivity :
         //Error LiveData
         viewModel.errorSingleLiveEvent.observeSingleEvent(this, Observer { state ->
             when (state) {
-                unknownHostException, sslHandshakeException ->
-                    showErrorMessages(state, true)
+                unknownHostException, sslHandshakeException -> {
+                    if (viewModel.hasFirstCallBeenMade)
+                        showErrorMessages(state, false)
+                    else showErrorMessages(state, true)
+                }
 
                 else -> showErrorMessages(state, false)
             }
