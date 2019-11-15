@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.RecyclerViewViewTypes
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 
-data class GithubUserInformation(
+data class GithubProfileInformation(
     @field:Json(name = "id") val userId: Long = 0,
     @field:Json(name = "login") val login: String = "",
     @field:Json(name = "avatar_url") val userImage: String = "",

@@ -16,16 +16,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.adapter.GithubUserAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.repository.GithubUserInformationRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubUserInfoObtainmentViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubUserInfoObtainmentViewModelFactory
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.adapter.GithubProfileAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.repository.GithubProfileInformationRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubProfileInfoObtainmentViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubProfileInfoObtainmentViewModelFactory
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.cellular
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.disconnected
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
@@ -36,21 +36,23 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.no_internet_connection.view.*
 
-class GithubUserInfoObtainmentActivity :
+class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
     ActivityFlow {
 
-    private val githubUserAdapter = GithubUserAdapter()
-    private var hasUserReachedEndOfList = false
+    private val githubUserAdapter = GithubProfileAdapter()
     private var customSnackBar: CustomSnackBar? = null
+    private var hasUserRequestedAnotherResultPage = false
+    private var shouldRecyclerViewAnimationBeExecuted = true
 
-    private val viewModel: GithubUserInfoObtainmentViewModel by lazy {
+    private val viewModel: GithubProfileInfoObtainmentViewModel by lazy {
         ViewModelProvider(
-            this, GithubUserInfoObtainmentViewModelFactory(
-                GithubUserInformationRepository()
+            this, GithubProfileInfoObtainmentViewModelFactory(
+                GithubProfileInformationRepository()
             )
-        ).get(GithubUserInfoObtainmentViewModel::class.java)
+        ).get(GithubProfileInfoObtainmentViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,8 +88,8 @@ class GithubUserInfoObtainmentActivity :
         setupTextInputEditText()
 
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.hasUserRequestedRefresh = true
-            searchProfile(isFieldEmpty(), true)
+            viewModel.hasUserRequestedAListRefresh = true
+            searchProfile(null, true)
             setupUpperViewsUserInteraction(false)
         }
 
@@ -122,6 +124,13 @@ class GithubUserInfoObtainmentActivity :
                 }
             }
         })
+
+        noInternetConnectionLayout.retryButton.setOnClickListener {
+            if (!isFieldEmpty())
+                searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
+            else
+                searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
+        }
     }
 
     override fun handleViewModel() {
@@ -130,16 +139,15 @@ class GithubUserInfoObtainmentActivity :
         viewModel.successMutableLiveData.observe(this, Observer { githubUsersList ->
 
             setupUpperViewsUserInteraction(true)
-
             setViewVisibility(githubProfileListSwipeRefreshLayout)
 
             if (noInternetConnectionLayout.visibility == VISIBLE)
                 setViewVisibility(noInternetConnectionLayout, GONE)
 
-            if (viewModel.hasUserRequestedRefresh) {
+            if (viewModel.hasUserRequestedAListRefresh) {
                 setViewVisibility(githubProfileListSwipeRefreshLayout)
                 githubUserAdapter.updateDataSource(githubUsersList)
-                viewModel.hasUserRequestedRefresh = false
+                viewModel.hasUserRequestedAListRefresh = false
             }
 
             if (!viewModel.hasFirstCallBeenMade) {
@@ -149,25 +157,30 @@ class GithubUserInfoObtainmentActivity :
                 userInfoRecyclerView.adapter?.notifyDataSetChanged()
                 setViewVisibility(repositoryLoadingProgressBar, GONE)
             }
-            hasUserReachedEndOfList = false
-            runLayoutAnimation(userInfoRecyclerView)
+
+            if (shouldRecyclerViewAnimationBeExecuted)
+                runLayoutAnimation(userInfoRecyclerView)
+
+            if (!shouldRecyclerViewAnimationBeExecuted)
+                shouldRecyclerViewAnimationBeExecuted = true
         })
 
         //Error LiveData
         viewModel.errorSingleLiveEvent.observeSingleEvent(this, Observer { state ->
 
+            if (!shouldRecyclerViewAnimationBeExecuted) shouldRecyclerViewAnimationBeExecuted = true
             viewModel.shouldActionIconPerformSearch = true
             setupUpperViewsUserInteraction(true)
-            changeDrawable(actionIconImageView, R.drawable.ic_search)
+            if (state.first != forbidden) changeDrawable(actionIconImageView, R.drawable.ic_search)
 
-            when (state) {
-                unknownHostException, sslHandshakeException -> {
+            when (state.first) {
+                unknownHostException -> {
                     if (viewModel.hasFirstCallBeenMade)
-                        showErrorMessages(state, false)
-                    else showErrorMessages(state, true)
+                        showErrorMessages(state.second, false)
+                    else showErrorMessages(state.second, true)
                 }
 
-                else -> showErrorMessages(state, false)
+                else -> showErrorMessages(state.second, false)
             }
         })
     }
@@ -181,25 +194,54 @@ class GithubUserInfoObtainmentActivity :
         setupInternetConnectionObserver()
     }
 
-    private fun searchProfile(isFieldEmpty: Boolean, shouldTheListItemsBeRemoved: Boolean? = null) {
+    private fun searchProfile(
+        isFieldEmpty: Boolean? = null,
+        shouldTheListItemsBeRemoved: Boolean? = null
+    ) {
 
         hideKeyboard(searchProfileTextInputEditText)
 
-        if (!isFieldEmpty) {
+        //Since the SwipeRefreshLayout is only visible when at least one call has already been made, even if users delete the text from the
+        //TextInputEditText, users will already have typed something onto it and this string will be stored in the ViewModel as soon as they search for it, so,
+        //it can be used to either refresh the list or to keep getting more pages from the Github API. It does not apply to the "ActionIcon" when it is a Magnifying glass icon
+        // or when users search using the Keyboard Magnifying Glass icon, in this case, there has to be some text on the TextInputEditText
+        if (viewModel.hasUserRequestedAListRefresh) {
+            viewModel.isThereAnOngoingCall = true
             callApi {
-                viewModel.getGithubUsersList(
-                    searchProfileTextInputEditText.text.toString(),
+                viewModel.getGithubProfileList(
+                    null,
                     shouldTheListItemsBeRemoved
                 )
             }
-            viewModel.isThereAnOngoingCall = true
-        } else {
-            showSnackBar(
-                this,
-                getString(R.string.empty_field_error)
-            )
+        }
 
-            viewModel.hasUserRequestedRefresh = false
+        if (hasUserRequestedAnotherResultPage) {
+            viewModel.isThereAnOngoingCall = true
+            callApi {
+                viewModel.getGithubProfileList(
+                    null,
+                    shouldTheListItemsBeRemoved
+                )
+            }
+        }
+
+        isFieldEmpty?.let {
+            if (!it) {
+                viewModel.isThereAnOngoingCall = true
+                callApi {
+                    viewModel.getGithubProfileList(
+                        searchProfileTextInputEditText.text.toString(),
+                        shouldTheListItemsBeRemoved
+                    )
+                }
+            } else {
+                showSnackBar(
+                    this,
+                    getString(R.string.empty_field_error)
+                )
+
+                viewModel.hasUserRequestedAListRefresh = false
+            }
         }
     }
 
@@ -328,15 +370,17 @@ class GithubUserInfoObtainmentActivity :
                 val currentLastItem =
                     (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                 if (currentLastItem == total?.minus(1)) {
-                    if (!isFieldEmpty()) {
-                        if (!hasUserReachedEndOfList) {
-                            searchProfile(
-                                isFieldEmpty = false,
-                                shouldTheListItemsBeRemoved = false
-                            )
-                            hasUserReachedEndOfList = true
-                        }
-                    } else searchProfile(isFieldEmpty = true)
+                    //This attribute was created to avoid making an API call twice or more because sometimes this callback is called more than once, so,
+                    //the API call method won't be called until the previous API call finishes combining it with the 'isThereAnOngoingCall' attribute located in the
+                    //GithubProfileInfoObtainmentViewModel
+                    hasUserRequestedAnotherResultPage = true
+                    shouldRecyclerViewAnimationBeExecuted = false
+                    if (hasUserRequestedAnotherResultPage && !viewModel.isThereAnOngoingCall && !viewModel.hasUserRequestedAListRefresh) {
+                        searchProfile(
+                            isFieldEmpty = null,
+                            shouldTheListItemsBeRemoved = false
+                        )
+                    }
                 }
             }
         })

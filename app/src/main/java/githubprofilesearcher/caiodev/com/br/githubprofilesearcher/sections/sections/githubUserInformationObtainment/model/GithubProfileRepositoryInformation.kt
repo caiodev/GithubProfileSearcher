@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sect
 
 import com.squareup.moshi.Json
 
-data class GithubUserRepositoryInformation(
+data class GithubProfileRepositoryInformation(
     @field:Json(name = "id") val repositoryId: String,
     @field:Json(name = "name") val repositoryName: String?,
     @field:Json(name = "html_url") val repositoryUrl: String,

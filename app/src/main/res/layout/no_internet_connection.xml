@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -23,5 +24,19 @@
         android:gravity="center"
         android:text="@string/no_connection_error"
         android:textSize="@dimen/text_size_20" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/retryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:fontFamily="@font/nunito_regular"
+        android:text="@string/retry_button_message"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_20"
+        android:textStyle="bold"
+        app:cornerRadius="@dimen/corner_24dp" />
 
 </LinearLayout>

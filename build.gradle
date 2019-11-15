@@ -19,7 +19,7 @@ buildscript {
         koil = '0.8.0'
 
         //Kotlin
-        kotlinVersion = '1.3.50'
+        kotlinVersion = '1.3.60'
 
         //Ktx
         ktxCore = '1.2.0-beta02'

@@ -3,7 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubUserInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
@@ -12,7 +12,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import kotlinx.android.synthetic.main.github_profile_view_holder.view.*
 import timber.log.Timber
 
-class GithubUserInformationViewHolder(itemView: View, private val onItemClicked: OnItemClicked?) :
+class GithubProfileInformationViewHolder(itemView: View, private val onItemClicked: OnItemClicked?) :
     RecyclerView.ViewHolder(itemView) {
 
     init {
@@ -21,7 +21,7 @@ class GithubUserInformationViewHolder(itemView: View, private val onItemClicked:
         }
     }
 
-    fun bind(model: GithubUserInformation) {
+    fun bind(model: GithubProfileInformation) {
 
         model.userId.let {
             itemView.userId.text =

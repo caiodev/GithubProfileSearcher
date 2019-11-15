@@ -1,12 +1,12 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.repository
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.callInterface.UserRepositoryService
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.callInterface.ProfileRepositoryService
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.RemoteRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory.RetrofitService
 
-class GithubUserInformationRepository : RemoteRepository() {
+class GithubProfileInformationRepository : RemoteRepository() {
 
-    private val retrofitService = RetrofitService().provideRetrofitService<UserRepositoryService>()
+    private val retrofitService = RetrofitService().provideRetrofitService<ProfileRepositoryService>()
 
     suspend fun provideGithubUserInformation(
         user: String,

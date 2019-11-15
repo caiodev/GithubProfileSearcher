@@ -23,4 +23,5 @@
     <string name="generic_exception_and_generic_error">Ocorreu um erro. Por favor, tente novamente mais tarde</string>
     <string name="api_query_limit_exceeded_error">A cota de buscas da API foi excedida. Por favor, tente novamente mais tarde</string>
     <string name="back_online_success_message">Conexão reestabelecida</string>
+    <string name="retry_button_message">Tentar novamente</string>
 </resources>

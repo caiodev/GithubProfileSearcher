@@ -4,16 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubUserInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.GithubUserInformationViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.GithubProfileInformationViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.HeaderViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.RecyclerViewViewTypes
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import timber.log.Timber
 
-class GithubUserAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var itemClicked: OnItemClicked? = null
     private var dataSource: List<ViewType>? = null
@@ -39,7 +39,7 @@ class GithubUserAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
 
             else -> {
-                GithubUserInformationViewHolder(
+                GithubProfileInformationViewHolder(
                     itemView.inflate(
                         R.layout.github_profile_view_holder,
                         parent,
@@ -54,9 +54,9 @@ class GithubUserAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         when (viewHolder) {
             is HeaderViewHolder -> viewHolder.bind(itemViewType(position) as Header)
-            is GithubUserInformationViewHolder -> {
-                Timber.i("Login: %s", (itemViewType(position) as GithubUserInformation).login)
-                viewHolder.bind(itemViewType(position) as GithubUserInformation)
+            is GithubProfileInformationViewHolder -> {
+                Timber.i("Login: %s", (itemViewType(position) as GithubProfileInformation).login)
+                viewHolder.bind(itemViewType(position) as GithubProfileInformation)
             }
         }
     }
