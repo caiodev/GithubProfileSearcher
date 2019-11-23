@@ -19,7 +19,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toSingleEvent
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ class GithubProfileInfoObtainmentViewModel(
 
     //Error LiveDatas
     private val errorSingleMutableLiveDataEvent = LiveEvent<Pair<Int, Int>>()
-    internal val errorSingleImmutableLiveDataEvent = errorSingleMutableLiveDataEvent.toSingleEvent()
+    internal val errorSingleImmutableLiveDataEvent = errorSingleMutableLiveDataEvent.toImmutableSingleEvent()
 
     private val githubProfilesInfoMutableList = mutableListOf<ViewType>()
     private var githubProfilesInfoList = listOf<ViewType>()
