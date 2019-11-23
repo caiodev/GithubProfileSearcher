@@ -1,5 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +9,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.repository.GithubProfileInformationRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.SingleLiveEvent
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.LiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItemsPerPage
@@ -17,6 +19,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toSingleEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
@@ -26,13 +29,24 @@ class GithubProfileInfoObtainmentViewModel(
     GithubProfileInformationRepository
 ) : ViewModel() {
 
-    internal val successMutableLiveData = MutableLiveData<MutableList<ViewType>>()
-    internal val errorSingleLiveEvent = SingleLiveEvent<Pair<Int, Int>>()
+    //Success LiveDatas
+    private val successMutableLiveData = MutableLiveData<List<ViewType>>()
+    internal val successLiveData: LiveData<List<ViewType>> = successMutableLiveData
+
+    //Error LiveDatas
+    private val errorSingleMutableLiveDataEvent = LiveEvent<Pair<Int, Int>>()
+    internal val errorSingleImmutableLiveDataEvent = errorSingleMutableLiveDataEvent.toSingleEvent()
+
     private val githubProfilesInfoMutableList = mutableListOf<ViewType>()
+    private var githubProfilesInfoList = listOf<ViewType>()
+
+    private val statePair = Pair(0, 0)
+
+    internal var haveUsersHadAnyTroubleDuringTheirFirstCall = false
     internal var hasFirstCallBeenMade = false
     private var pageNumber = 1
-    internal var hasUserRequestedAListRefresh = false
-    internal var shouldActionIconPerformSearch = false
+    internal var hasUserRequestedUpdatedData = false
+    internal var shouldASearchBePerformed = false
     internal var isThereAnOngoingCall = false
     private var currentProfile = ""
 
@@ -46,7 +60,7 @@ class GithubProfileInfoObtainmentViewModel(
         }
 
         shouldListItemsBeRemoved?.let {
-            if (hasUserRequestedAListRefresh || it) pageNumber = 1
+            if (hasUserRequestedUpdatedData || it) pageNumber = 1
         }
 
         viewModelScope.launch {
@@ -81,7 +95,8 @@ class GithubProfileInfoObtainmentViewModel(
         githubUserInformationList.forEach {
             populateList(it)
         }
-        successMutableLiveData.postValue(githubProfilesInfoMutableList)
+        githubProfilesInfoList = githubProfilesInfoMutableList
+        successMutableLiveData.postValue(githubProfilesInfoList)
     }
 
     private suspend fun handleCallResult(
@@ -112,11 +127,11 @@ class GithubProfileInfoObtainmentViewModel(
             is APICallResult.Error -> {
 
                 isThereAnOngoingCall = false
-                hasUserRequestedAListRefresh = false
+                hasUserRequestedUpdatedData = false
 
-                with(errorSingleLiveEvent) {
+                with(errorSingleMutableLiveDataEvent) {
                     when (value.error) {
-                        unknownHostException, socketTimeoutException ->
+                        unknownHostException, socketTimeoutException, connectException ->
                             postValue(
                                 errorPairProvider(
                                     unknownHostException,
@@ -159,7 +174,7 @@ class GithubProfileInfoObtainmentViewModel(
         }
     }
 
-    private fun errorPairProvider(errorState: Int, errorString: Int) = Pair(
-        errorState, errorString
-    )
+    private fun errorPairProvider(errorState: Int, errorString: Int): Pair<Int, Int> {
+        return statePair.copy(errorState, errorString)
+    }
 }

@@ -7,15 +7,17 @@ object Constants {
     //RecyclerView view type
     const val githubProfileRecyclerViewCell = 1
 
+    //Call states
     //Success
-    const val successWithoutBody = 2
+    const val successWithoutBody = 1
 
     //Error
     //Exceptions
-    const val unknownHostException = 3
+    const val connectException = 2
+    const val genericException = 3
     const val socketTimeoutException = 4
     const val sslHandshakeException = 5
-    const val genericException = 6
+    const val unknownHostException = 6
 
     //HTTP codes
     const val clientSideError = 7

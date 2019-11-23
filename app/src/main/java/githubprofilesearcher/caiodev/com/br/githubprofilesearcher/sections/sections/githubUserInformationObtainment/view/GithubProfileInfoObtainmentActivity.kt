@@ -36,7 +36,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.no_internet_connection.view.*
+import kotlinx.android.synthetic.main.offline_layout.view.*
 
 class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
@@ -72,7 +72,10 @@ class GithubProfileInfoObtainmentActivity :
         }
 
         if (viewModel.hasFirstCallBeenMade) changeDrawable(actionIconImageView, R.drawable.ic_close)
-
+        if (viewModel.haveUsersHadAnyTroubleDuringTheirFirstCall) setViewVisibility(
+            offlineLayout,
+            VISIBLE
+        )
         customSnackBar = CustomSnackBar.make(this.findViewById(android.R.id.content))
 
         userInfoRecyclerView.apply {
@@ -88,7 +91,7 @@ class GithubProfileInfoObtainmentActivity :
         setupTextInputEditText()
 
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.hasUserRequestedAListRefresh = true
+            viewModel.hasUserRequestedUpdatedData = true
             searchProfile(null, true)
         }
 
@@ -124,7 +127,8 @@ class GithubProfileInfoObtainmentActivity :
             }
         })
 
-        noInternetConnectionLayout.retryButton.setOnClickListener {
+        offlineLayout.retryButton.setOnClickListener {
+            if (offlineLayout.visibility == VISIBLE) setViewVisibility(offlineLayout, GONE)
             if (!isFieldEmpty())
                 searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
             else
@@ -135,18 +139,20 @@ class GithubProfileInfoObtainmentActivity :
     override fun handleViewModel() {
 
         //Success LiveData
-        viewModel.successMutableLiveData.observe(this, Observer { githubUsersList ->
+        viewModel.successLiveData.observe(this, Observer { githubUsersList ->
 
             setupUpperViewsUserInteraction(true)
             setViewVisibility(githubProfileListSwipeRefreshLayout)
 
-            if (noInternetConnectionLayout.visibility == VISIBLE)
-                setViewVisibility(noInternetConnectionLayout, GONE)
+            if (offlineLayout.visibility != GONE) {
+                setViewVisibility(offlineLayout, GONE)
+                viewModel.haveUsersHadAnyTroubleDuringTheirFirstCall = false
+            }
 
-            if (viewModel.hasUserRequestedAListRefresh) {
+            if (viewModel.hasUserRequestedUpdatedData) {
                 setViewVisibility(githubProfileListSwipeRefreshLayout)
                 githubUserAdapter.updateDataSource(githubUsersList)
-                viewModel.hasUserRequestedAListRefresh = false
+                viewModel.hasUserRequestedUpdatedData = false
             }
 
             if (!viewModel.hasFirstCallBeenMade)
@@ -165,7 +171,7 @@ class GithubProfileInfoObtainmentActivity :
         })
 
         //Error LiveData
-        viewModel.errorSingleLiveEvent.observeSingleEvent(this, Observer { state ->
+        viewModel.errorSingleImmutableLiveDataEvent.observe(this, Observer { state ->
 
             if (!shouldRecyclerViewAnimationBeExecuted) shouldRecyclerViewAnimationBeExecuted = true
             setupUpperViewsUserInteraction(true)
@@ -203,7 +209,7 @@ class GithubProfileInfoObtainmentActivity :
         //TextInputEditText, users will already have typed something onto it and this string will be stored in the ViewModel as soon as they search for it, so,
         //it can be used to either refresh the list or to keep getting more pages from the Github API. It does not apply to the "ActionIcon" when it is a Magnifying glass icon
         // or when users search using the Keyboard Magnifying Glass icon, in this case, there has to be some text on the TextInputEditText
-        if (viewModel.hasUserRequestedAListRefresh) {
+        if (viewModel.hasUserRequestedUpdatedData) {
             callApi {
                 viewModel.getGithubProfileList(
                     null,
@@ -235,7 +241,7 @@ class GithubProfileInfoObtainmentActivity :
                     getString(R.string.empty_field_error)
                 )
 
-                viewModel.hasUserRequestedAListRefresh = false
+                viewModel.hasUserRequestedUpdatedData = false
             }
         }
     }
@@ -276,8 +282,10 @@ class GithubProfileInfoObtainmentActivity :
 
     private fun showErrorMessages(message: Int, shouldOfflineLayoutBeShown: Boolean) {
         if (shouldOfflineLayoutBeShown) {
-            if (noInternetConnectionLayout.visibility != VISIBLE)
-                setViewVisibility(noInternetConnectionLayout, VISIBLE)
+            if (offlineLayout.visibility != VISIBLE) {
+                setViewVisibility(offlineLayout, VISIBLE)
+                viewModel.haveUsersHadAnyTroubleDuringTheirFirstCall = true
+            }
         }
         setViewVisibility(repositoryLoadingProgressBar, GONE)
         setViewVisibility(githubProfileListSwipeRefreshLayout)
@@ -319,15 +327,19 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     private fun handleActionIconClick() {
+        if (offlineLayout.visibility == VISIBLE) setViewVisibility(
+            offlineLayout,
+            GONE
+        )
         if (!viewModel.isThereAnOngoingCall) {
-            if (viewModel.shouldActionIconPerformSearch) {
+            if (viewModel.shouldASearchBePerformed) {
                 if (!isFieldEmpty()) {
                     searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
                 } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
             } else {
                 searchProfileTextInputEditText.setText("")
                 changeDrawable(actionIconImageView, R.drawable.ic_search)
-                viewModel.shouldActionIconPerformSearch = true
+                viewModel.shouldASearchBePerformed = true
             }
         }
     }
@@ -347,7 +359,7 @@ class GithubProfileInfoObtainmentActivity :
 
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
-                    viewModel.shouldActionIconPerformSearch = true
+                    viewModel.shouldASearchBePerformed = true
                     if (text.isNullOrEmpty()) changeDrawable(
                         actionIconImageView,
                         R.drawable.ic_search
@@ -369,7 +381,7 @@ class GithubProfileInfoObtainmentActivity :
                     //GithubProfileInfoObtainmentViewModel
                     hasUserRequestedAnotherResultPage = true
                     shouldRecyclerViewAnimationBeExecuted = false
-                    if (hasUserRequestedAnotherResultPage && !viewModel.isThereAnOngoingCall && !viewModel.hasUserRequestedAListRefresh) {
+                    if (hasUserRequestedAnotherResultPage && !viewModel.isThereAnOngoingCall && !viewModel.hasUserRequestedUpdatedData) {
                         searchProfile(
                             isFieldEmpty = null,
                             shouldTheListItemsBeRemoved = false
@@ -382,7 +394,7 @@ class GithubProfileInfoObtainmentActivity :
 
     private fun setupUpperViewsUserInteraction(shouldUsersBeAbleToInteractWithTheUpperViews: Boolean) {
 
-        viewModel.shouldActionIconPerformSearch = shouldUsersBeAbleToInteractWithTheUpperViews
+        viewModel.shouldASearchBePerformed = shouldUsersBeAbleToInteractWithTheUpperViews
 
         actionIconImageView.apply {
             isClickable = shouldUsersBeAbleToInteractWithTheUpperViews

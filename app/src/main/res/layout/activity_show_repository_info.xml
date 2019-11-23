@@ -27,7 +27,7 @@
 
     <include
         android:id="@+id/noInternetConnectionWebViewLayout"
-        layout="@layout/no_internet_connection"
+        layout="@layout/offline_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="invisible"
