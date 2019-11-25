@@ -93,17 +93,15 @@
 
     <ImageView
         android:id="@+id/backToTopButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/view_48dp"
+        android:layout_height="@dimen/view_48dp"
         android:padding="@dimen/padding_8dp"
         android:scaleType="centerCrop"
-        android:layout_marginBottom="@dimen/margin_8dp"
-        android:layout_marginEnd="@dimen/margin_8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_back_to_top"
         android:rotation="-90"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

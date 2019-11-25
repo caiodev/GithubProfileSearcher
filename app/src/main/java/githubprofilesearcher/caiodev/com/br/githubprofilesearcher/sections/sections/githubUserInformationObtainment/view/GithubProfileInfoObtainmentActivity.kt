@@ -46,6 +46,7 @@ class GithubProfileInfoObtainmentActivity :
     private var hasUserRequestedAnotherResultPage = false
     private var shouldRecyclerViewAnimationBeExecuted = true
     private var previousErrorMessage = 0
+    private var hasBackToTopButtonBeenClicked = false
 
     private val viewModel: GithubProfileInfoObtainmentViewModel by lazy {
         ViewModelProvider(
@@ -72,7 +73,7 @@ class GithubProfileInfoObtainmentActivity :
             changeDrawable(actionIconImageView, R.drawable.ic_close)
         }
 
-        if (viewModel.hasFirstSuccessfulCallBeenMade && !viewModel.isFieldEmpty)
+        if (viewModel.hasFirstSuccessfulCallBeenMade && !viewModel.isThereAnyProfileToBeSearched)
             changeDrawable(
                 actionIconImageView,
                 R.drawable.ic_close
@@ -83,13 +84,16 @@ class GithubProfileInfoObtainmentActivity :
             VISIBLE
         )
 
+        if (viewModel.lastVisibleListItem >= 10) applyViewVisibility(backToTopButton, VISIBLE)
+
         customSnackBar = CustomSnackBar.make(this.findViewById(android.R.id.content))
 
         backToTopButton.setOnClickListener {
-            if (backToTopButton.visibility != INVISIBLE) applyViewVisibility(
+            if (backToTopButton.visibility != GONE) applyViewVisibility(
                 backToTopButton,
                 INVISIBLE
             )
+            hasBackToTopButtonBeenClicked = true
             profileInfoRecyclerView.smoothScrollToPosition(0)
         }
 
@@ -106,7 +110,7 @@ class GithubProfileInfoObtainmentActivity :
         setupTextInputEditText()
 
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.hasUserRequestedUpdatedData = true
+            viewModel.hasAnyUserRequestedUpdatedData = true
             searchProfile(null, true)
         }
 
@@ -165,10 +169,10 @@ class GithubProfileInfoObtainmentActivity :
                 viewModel.haveUsersHadAnyTroubleDuringTheFirstCall = false
             }
 
-            if (viewModel.hasUserRequestedUpdatedData) {
+            if (viewModel.hasAnyUserRequestedUpdatedData) {
                 applyViewVisibility(githubProfileListSwipeRefreshLayout)
                 githubUserAdapter.updateDataSource(githubUsersList)
-                viewModel.hasUserRequestedUpdatedData = false
+                viewModel.hasAnyUserRequestedUpdatedData = false
             }
 
             if (!viewModel.hasFirstSuccessfulCallBeenMade)
@@ -229,16 +233,16 @@ class GithubProfileInfoObtainmentActivity :
         //TextInputEditText, users will already have typed something onto it and this string will be stored in the ViewModel as soon as they search for it, so,
         //it can be used to either refresh the list or to keep getting more pages from the Github API. It does not apply to the "ActionIcon" when it is a Magnifying glass icon
         // or when users search using the Keyboard Magnifying Glass icon, in this case, there has to be some text on the TextInputEditText
-        if (viewModel.hasUserRequestedUpdatedData) {
+        if (viewModel.hasAnyUserRequestedUpdatedData) {
             callApi {
                 viewModel.getGithubProfileList(
                     null,
                     shouldTheListItemsBeRemoved
                 )
             }
-        }
-
-        if (hasUserRequestedAnotherResultPage) {
+        } else if (hasUserRequestedAnotherResultPage && !viewModel.isTheNumberOfItemsOfTheLastCallLessThanTwenty) {
+            /** ${viewModel.isTheNumberOfItemsOfTheLastCallLessThanTwenty} being false basically means it's the last page and
+             * there's no need to perform another call because one has reached the end of the list */
             callApi {
                 viewModel.getGithubProfileList(
                     null,
@@ -248,20 +252,19 @@ class GithubProfileInfoObtainmentActivity :
         }
 
         isFieldEmpty?.let {
-            if (!it) {
-                callApi {
-                    viewModel.getGithubProfileList(
-                        searchProfileTextInputEditText.text.toString(),
-                        shouldTheListItemsBeRemoved
-                    )
-                }
-            } else {
+            if (!it) callApi {
+                viewModel.getGithubProfileList(
+                    searchProfileTextInputEditText.text.toString(),
+                    shouldTheListItemsBeRemoved
+                )
+            }
+            else {
                 showSnackBar(
                     this,
                     getString(R.string.empty_field_error)
                 )
 
-                viewModel.hasUserRequestedUpdatedData = false
+                viewModel.hasAnyUserRequestedUpdatedData = false
             }
         }
     }
@@ -410,17 +413,28 @@ class GithubProfileInfoObtainmentActivity :
                 val total = recyclerView.layoutManager?.itemCount
                 val currentLastItem =
                     (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+
+                viewModel.lastVisibleListItem = currentLastItem
+
+                if (currentLastItem in 4..9)
+                    if (backToTopButton.visibility != GONE) {
+                        applyViewVisibility(backToTopButton, GONE)
+                        hasBackToTopButtonBeenClicked = false
+                    }
+
+                if (currentLastItem >= 10 && backToTopButton.visibility != VISIBLE && !hasBackToTopButtonBeenClicked)
+                    applyViewVisibility(
+                        backToTopButton,
+                        VISIBLE
+                    )
+
                 if (currentLastItem == total?.minus(1)) {
                     //This attribute was created to avoid making an API call twice or more because sometimes this callback is called more than once, so,
                     //the API call method won't be called until the previous API call finishes combining it with the 'isThereAnOngoingCall' attribute located in the
                     //GithubProfileInfoObtainmentViewModel
                     hasUserRequestedAnotherResultPage = true
                     shouldRecyclerViewAnimationBeExecuted = false
-                    if (backToTopButton.visibility != VISIBLE) applyViewVisibility(
-                        backToTopButton,
-                        VISIBLE
-                    )
-                    if (hasUserRequestedAnotherResultPage && !viewModel.isThereAnOngoingCall && !viewModel.hasUserRequestedUpdatedData) {
+                    if (hasUserRequestedAnotherResultPage && !viewModel.isThereAnOngoingCall && !viewModel.hasAnyUserRequestedUpdatedData) {
                         searchProfile(
                             isFieldEmpty = null,
                             shouldTheListItemsBeRemoved = false
@@ -450,6 +464,7 @@ class GithubProfileInfoObtainmentActivity :
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.isFieldEmpty = searchProfileTextInputEditText.text.toString().isEmpty()
+        viewModel.isThereAnyProfileToBeSearched =
+            searchProfileTextInputEditText.text.toString().isEmpty()
     }
 }

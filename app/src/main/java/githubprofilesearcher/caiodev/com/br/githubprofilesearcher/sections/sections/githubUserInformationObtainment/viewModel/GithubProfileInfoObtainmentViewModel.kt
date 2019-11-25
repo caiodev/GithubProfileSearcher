@@ -38,20 +38,28 @@ class GithubProfileInfoObtainmentViewModel(
     internal val errorSingleImmutableLiveDataEvent =
         errorSingleMutableLiveDataEvent.toImmutableSingleEvent()
 
+    //Result lists
     private val githubProfilesInfoMutableList = mutableListOf<ViewType>()
     private var githubProfilesInfoList = listOf<ViewType>()
 
-    private val statePair = Pair(0, 0)
+    private val errorStatePair = Pair(0, 0)
 
-    internal var haveUsersHadAnyTroubleDuringTheFirstCall = false
-    internal var hasFirstSuccessfulCallBeenMade = false
+    //Flags
     private var pageNumber = 1
-    internal var hasUserRequestedUpdatedData = false
-    internal var shouldASearchBePerformed = false
-    internal var isThereAnOngoingCall = false
-    private var currentProfile = ""
+
+    //Call related flags
+    internal var hasFirstSuccessfulCallBeenMade = false
     internal var hasLastCallBeenSuccessful = false
-    internal var isFieldEmpty = false
+    internal var haveUsersHadAnyTroubleDuringTheFirstCall = false
+    internal var isThereAnOngoingCall = false
+
+    internal var hasAnyUserRequestedUpdatedData = false
+    internal var shouldASearchBePerformed = false
+
+    private var currentProfile = ""
+    internal var isThereAnyProfileToBeSearched = false
+    internal var lastVisibleListItem = 0
+    internal var isTheNumberOfItemsOfTheLastCallLessThanTwenty = false
 
     //These variables keep track of all calls made successful or not
     internal var successfulCallsCount = 0
@@ -67,7 +75,8 @@ class GithubProfileInfoObtainmentViewModel(
         }
 
         shouldListItemsBeRemoved?.let {
-            if (hasUserRequestedUpdatedData || it) pageNumber = 1
+            if (hasAnyUserRequestedUpdatedData || it) pageNumber = 1
+            pageNumber
         }
 
         viewModelScope.launch {
@@ -122,6 +131,7 @@ class GithubProfileInfoObtainmentViewModel(
                 isThereAnOngoingCall = false
                 hasLastCallBeenSuccessful = true
                 with(value.data as GithubProfilesList) {
+                    if (githubProfileInformationList.size < 20) isTheNumberOfItemsOfTheLastCallLessThanTwenty = true
                     shouldListItemsBeRemoved?.let {
                         if (it)
                             setupList(githubProfileInformationList)
@@ -137,7 +147,7 @@ class GithubProfileInfoObtainmentViewModel(
             is APICallResult.Error -> {
                 unsuccessfulCallsCount++
                 isThereAnOngoingCall = false
-                hasUserRequestedUpdatedData = false
+                hasAnyUserRequestedUpdatedData = false
                 hasLastCallBeenSuccessful = false
 
                 with(errorSingleMutableLiveDataEvent) {
@@ -183,6 +193,6 @@ class GithubProfileInfoObtainmentViewModel(
         errorString: Int,
         state: LiveEvent<Pair<Int, Int>>
     ) {
-        state.postValue(statePair.copy(errorState, errorString))
+        state.postValue(errorStatePair.copy(errorState, errorString))
     }
 }

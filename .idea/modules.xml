@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-GithubProfileSearcher.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-GithubProfileSearcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/GithubProfileSearcher.iml" filepath="$PROJECT_DIR$/GithubProfileSearcher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/GithubProfileSearcher-app.iml" filepath="$PROJECT_DIR$/app/GithubProfileSearcher-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
