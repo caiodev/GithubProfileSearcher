@@ -15,7 +15,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.disconnected
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileUrl
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.activity_show_repository_info.*
@@ -42,7 +42,7 @@ class ShowRepositoryInfoActivity : AppCompatActivity() {
 
             disconnected -> {
                 if (noInternetConnectionWebViewLayout.visibility != VISIBLE)
-                    setViewVisibility(noInternetConnectionWebViewLayout, VISIBLE)
+                    applyViewVisibility(noInternetConnectionWebViewLayout, VISIBLE)
                 showSnackBar(this, getString(R.string.no_connection_error))
             }
         }
@@ -57,7 +57,7 @@ class ShowRepositoryInfoActivity : AppCompatActivity() {
             githubRepositoryWebView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    setViewVisibility(webViewProgressBar, INVISIBLE)
+                    applyViewVisibility(webViewProgressBar, INVISIBLE)
                 }
             }
         } catch (exception: Exception) {

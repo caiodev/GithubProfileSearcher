@@ -12,7 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 
 @Suppress("unused")
-fun Context.setViewVisibility(view: View, visibility: Int? = null) {
+fun Context.applyViewVisibility(view: View, visibility: Int? = null) {
 
     when (view) {
 

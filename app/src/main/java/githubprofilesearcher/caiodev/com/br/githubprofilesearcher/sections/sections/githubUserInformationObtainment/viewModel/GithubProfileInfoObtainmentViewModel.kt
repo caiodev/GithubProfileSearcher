@@ -35,20 +35,27 @@ class GithubProfileInfoObtainmentViewModel(
 
     //Error LiveDatas
     private val errorSingleMutableLiveDataEvent = LiveEvent<Pair<Int, Int>>()
-    internal val errorSingleImmutableLiveDataEvent = errorSingleMutableLiveDataEvent.toImmutableSingleEvent()
+    internal val errorSingleImmutableLiveDataEvent =
+        errorSingleMutableLiveDataEvent.toImmutableSingleEvent()
 
     private val githubProfilesInfoMutableList = mutableListOf<ViewType>()
     private var githubProfilesInfoList = listOf<ViewType>()
 
     private val statePair = Pair(0, 0)
 
-    internal var haveUsersHadAnyTroubleDuringTheirFirstCall = false
-    internal var hasFirstCallBeenMade = false
+    internal var haveUsersHadAnyTroubleDuringTheFirstCall = false
+    internal var hasFirstSuccessfulCallBeenMade = false
     private var pageNumber = 1
     internal var hasUserRequestedUpdatedData = false
     internal var shouldASearchBePerformed = false
     internal var isThereAnOngoingCall = false
     private var currentProfile = ""
+    internal var hasLastCallBeenSuccessful = false
+    internal var isFieldEmpty = false
+
+    //These variables keep track of all calls made successful or not
+    internal var successfulCallsCount = 0
+    internal var unsuccessfulCallsCount = 0
 
     fun getGithubProfileList(
         profile: String? = null,
@@ -111,10 +118,13 @@ class GithubProfileInfoObtainmentViewModel(
             )) {
 
             is APICallResult.Success<*> -> {
+                successfulCallsCount++
                 isThereAnOngoingCall = false
+                hasLastCallBeenSuccessful = true
                 with(value.data as GithubProfilesList) {
                     shouldListItemsBeRemoved?.let {
-                        if (it) setupList(githubProfileInformationList)
+                        if (it)
+                            setupList(githubProfileInformationList)
                         else {
                             githubProfilesInfoMutableList.addAll(githubProfileInformationList)
                             successMutableLiveData.postValue(githubProfilesInfoMutableList)
@@ -125,48 +135,42 @@ class GithubProfileInfoObtainmentViewModel(
             }
 
             is APICallResult.Error -> {
-
+                unsuccessfulCallsCount++
                 isThereAnOngoingCall = false
                 hasUserRequestedUpdatedData = false
+                hasLastCallBeenSuccessful = false
 
                 with(errorSingleMutableLiveDataEvent) {
                     when (value.error) {
-                        unknownHostException, socketTimeoutException, connectException ->
-                            postValue(
-                                errorPairProvider(
-                                    unknownHostException,
-                                    R.string.unknown_host_exception_and_socket_timeout_exception
-                                )
-                            )
-                        sslHandshakeException -> postValue(
-                            errorPairProvider(
-                                sslHandshakeException,
-                                R.string.ssl_handshake_exception
-                            )
+                        unknownHostException, socketTimeoutException, connectException -> errorPairProvider(
+                            unknownHostException,
+                            R.string.unknown_host_exception_and_socket_timeout_exception,
+                            this
                         )
-                        clientSideError -> postValue(
-                            errorPairProvider(
-                                clientSideError,
-                                R.string.client_side_error
-                            )
+                        sslHandshakeException -> errorPairProvider(
+                            sslHandshakeException,
+                            R.string.ssl_handshake_exception,
+                            this
                         )
-                        serverSideError -> postValue(
-                            errorPairProvider(
-                                serverSideError,
-                                R.string.server_side_error
-                            )
+                        clientSideError -> errorPairProvider(
+                            clientSideError,
+                            R.string.client_side_error,
+                            this
                         )
-                        forbidden -> postValue(
-                            errorPairProvider(
-                                forbidden,
-                                R.string.api_query_limit_exceeded_error
-                            )
+                        serverSideError -> errorPairProvider(
+                            serverSideError,
+                            R.string.server_side_error,
+                            this
                         )
-                        else -> postValue(
-                            errorPairProvider(
-                                genericError,
-                                R.string.generic_exception_and_generic_error
-                            )
+                        forbidden -> errorPairProvider(
+                            forbidden,
+                            R.string.api_query_limit_exceeded_error,
+                            this
+                        )
+                        else -> errorPairProvider(
+                            genericError,
+                            R.string.generic_exception_and_generic_error,
+                            this
                         )
                     }
                 }
@@ -174,7 +178,11 @@ class GithubProfileInfoObtainmentViewModel(
         }
     }
 
-    private fun errorPairProvider(errorState: Int, errorString: Int): Pair<Int, Int> {
-        return statePair.copy(errorState, errorString)
+    private fun errorPairProvider(
+        errorState: Int,
+        errorString: Int,
+        state: LiveEvent<Pair<Int, Int>>
+    ) {
+        state.postValue(statePair.copy(errorState, errorString))
     }
 }

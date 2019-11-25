@@ -18,7 +18,7 @@
         app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/userInfoRecyclerView"
+            android:id="@+id/profileInfoRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:autofillHints="username"
             android:imeOptions="actionSearch"
-            android:inputType="text"
+            android:inputType="text|textNoSuggestions"
             android:paddingEnd="@dimen/padding_56dp"
             android:textSize="@dimen/text_input_edit_text_text_size"
             tools:ignore="RtlSymmetry"
@@ -89,6 +89,21 @@
         app:layout_constraintEnd_toEndOf="@+id/githubUserTextInputLayout"
         app:layout_constraintTop_toTopOf="@+id/githubUserTextInputLayout"
         app:srcCompat="@drawable/ic_search"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/backToTopButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="@dimen/padding_8dp"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_back_to_top"
+        android:rotation="-90"
+        android:visibility="invisible"
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

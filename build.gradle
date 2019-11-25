@@ -4,7 +4,7 @@ buildscript {
 
         //AppCompat
         appCompat = '1.1.0'
-        androidXCore = '1.2.0-beta02'
+        androidXCore = '1.2.0-rc01'
 
         //ConstraintLayout
         constraintLayout = '2.0.0-beta3'
@@ -22,7 +22,7 @@ buildscript {
         kotlinVersion = '1.3.60'
 
         //Ktx
-        ktxCore = '1.2.0-beta02'
+        ktxCore = '1.2.0-rc01'
 
         //LeakCanary
         leakCanary = '2.0-beta-3'
@@ -31,7 +31,7 @@ buildscript {
         arch = '2.2.0-rc02'
 
         //Material design
-        materialDesign = '1.2.0-alpha01'
+        materialDesign = '1.2.0-alpha02'
 
         //OkHttpLoggingInterceptor
         loggingInterceptor = '4.2.1'

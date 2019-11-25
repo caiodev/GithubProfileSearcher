@@ -2,8 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sect
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -29,9 +28,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.changeDrawable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.setViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
@@ -46,6 +45,7 @@ class GithubProfileInfoObtainmentActivity :
     private var customSnackBar: CustomSnackBar? = null
     private var hasUserRequestedAnotherResultPage = false
     private var shouldRecyclerViewAnimationBeExecuted = true
+    private var previousErrorMessage = 0
 
     private val viewModel: GithubProfileInfoObtainmentViewModel by lazy {
         ViewModelProvider(
@@ -66,19 +66,34 @@ class GithubProfileInfoObtainmentActivity :
 
         //Condition when users rotate the screen and the activity gets destroyed
         if (viewModel.isThereAnOngoingCall) {
-            setViewVisibility(repositoryLoadingProgressBar, VISIBLE)
-            setupUpperViewsUserInteraction(false)
+            applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+            setupUpperViewsInteraction(false)
+            viewModel.shouldASearchBePerformed = false
             changeDrawable(actionIconImageView, R.drawable.ic_close)
         }
 
-        if (viewModel.hasFirstCallBeenMade) changeDrawable(actionIconImageView, R.drawable.ic_close)
-        if (viewModel.haveUsersHadAnyTroubleDuringTheirFirstCall) setViewVisibility(
+        if (viewModel.hasFirstSuccessfulCallBeenMade && !viewModel.isFieldEmpty)
+            changeDrawable(
+                actionIconImageView,
+                R.drawable.ic_close
+            )
+
+        if (viewModel.haveUsersHadAnyTroubleDuringTheFirstCall) applyViewVisibility(
             offlineLayout,
             VISIBLE
         )
+
         customSnackBar = CustomSnackBar.make(this.findViewById(android.R.id.content))
 
-        userInfoRecyclerView.apply {
+        backToTopButton.setOnClickListener {
+            if (backToTopButton.visibility != INVISIBLE) applyViewVisibility(
+                backToTopButton,
+                INVISIBLE
+            )
+            profileInfoRecyclerView.smoothScrollToPosition(0)
+        }
+
+        profileInfoRecyclerView.apply {
             setHasFixedSize(true)
             adapter = githubUserAdapter
             setupRecyclerViewAddOnScrollListener()
@@ -128,7 +143,7 @@ class GithubProfileInfoObtainmentActivity :
         })
 
         offlineLayout.retryButton.setOnClickListener {
-            if (offlineLayout.visibility == VISIBLE) setViewVisibility(offlineLayout, GONE)
+            if (offlineLayout.visibility == VISIBLE) applyViewVisibility(offlineLayout, GONE)
             if (!isFieldEmpty())
                 searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
             else
@@ -141,30 +156,31 @@ class GithubProfileInfoObtainmentActivity :
         //Success LiveData
         viewModel.successLiveData.observe(this, Observer { githubUsersList ->
 
-            setupUpperViewsUserInteraction(true)
-            setViewVisibility(githubProfileListSwipeRefreshLayout)
+            setupUpperViewsInteraction(true)
+            viewModel.shouldASearchBePerformed = false
+            applyViewVisibility(githubProfileListSwipeRefreshLayout)
 
             if (offlineLayout.visibility != GONE) {
-                setViewVisibility(offlineLayout, GONE)
-                viewModel.haveUsersHadAnyTroubleDuringTheirFirstCall = false
+                applyViewVisibility(offlineLayout, GONE)
+                viewModel.haveUsersHadAnyTroubleDuringTheFirstCall = false
             }
 
             if (viewModel.hasUserRequestedUpdatedData) {
-                setViewVisibility(githubProfileListSwipeRefreshLayout)
+                applyViewVisibility(githubProfileListSwipeRefreshLayout)
                 githubUserAdapter.updateDataSource(githubUsersList)
                 viewModel.hasUserRequestedUpdatedData = false
             }
 
-            if (!viewModel.hasFirstCallBeenMade)
+            if (!viewModel.hasFirstSuccessfulCallBeenMade)
                 githubUserAdapter.updateDataSource(githubUsersList)
             else {
                 githubUserAdapter.updateDataSource(githubUsersList)
-                userInfoRecyclerView.adapter?.notifyDataSetChanged()
-                setViewVisibility(repositoryLoadingProgressBar, GONE)
+                profileInfoRecyclerView.adapter?.notifyDataSetChanged()
+                applyViewVisibility(repositoryLoadingProgressBar, GONE)
             }
 
             if (shouldRecyclerViewAnimationBeExecuted)
-                runLayoutAnimation(userInfoRecyclerView)
+                runLayoutAnimation(profileInfoRecyclerView)
 
             if (!shouldRecyclerViewAnimationBeExecuted)
                 shouldRecyclerViewAnimationBeExecuted = true
@@ -174,14 +190,18 @@ class GithubProfileInfoObtainmentActivity :
         viewModel.errorSingleImmutableLiveDataEvent.observe(this, Observer { state ->
 
             if (!shouldRecyclerViewAnimationBeExecuted) shouldRecyclerViewAnimationBeExecuted = true
-            setupUpperViewsUserInteraction(true)
+            setupUpperViewsInteraction(true)
+            viewModel.shouldASearchBePerformed = true
             if (state.first != forbidden) changeDrawable(actionIconImageView, R.drawable.ic_search)
 
             when (state.first) {
                 unknownHostException -> {
-                    if (viewModel.hasFirstCallBeenMade)
+                    //It needs to be checked otherwise, the app could end up replacing a list full of items
+                    // with the offline layout
+                    if (viewModel.hasFirstSuccessfulCallBeenMade)
                         showErrorMessages(state.second, false)
-                    else showErrorMessages(state.second, true)
+                    else
+                        showErrorMessages(state.second, true)
                 }
 
                 else -> showErrorMessages(state.second, false)
@@ -254,12 +274,13 @@ class GithubProfileInfoObtainmentActivity :
             )
             adapter?.notifyDataSetChanged()
             scheduleLayoutAnimation()
-            viewModel.hasFirstCallBeenMade = true
 
-            setViewVisibility(githubProfileListSwipeRefreshLayout)
+            if (viewModel.successfulCallsCount == 1) viewModel.hasFirstSuccessfulCallBeenMade = true
+
+            applyViewVisibility(githubProfileListSwipeRefreshLayout)
 
             if (repositoryLoadingProgressBar.visibility == VISIBLE)
-                setViewVisibility(repositoryLoadingProgressBar, GONE)
+                applyViewVisibility(repositoryLoadingProgressBar, GONE)
         }
     }
 
@@ -269,8 +290,9 @@ class GithubProfileInfoObtainmentActivity :
 
             cellular, wifi -> {
                 if (!githubProfileListSwipeRefreshLayout.isRefreshing)
-                    setViewVisibility(repositoryLoadingProgressBar, VISIBLE)
-                setupUpperViewsUserInteraction(false)
+                    applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+                setupUpperViewsInteraction(false)
+                viewModel.shouldASearchBePerformed = false
                 changeDrawable(actionIconImageView, R.drawable.ic_close)
                 genericFunction.invoke()
                 viewModel.isThereAnOngoingCall = true
@@ -283,13 +305,22 @@ class GithubProfileInfoObtainmentActivity :
     private fun showErrorMessages(message: Int, shouldOfflineLayoutBeShown: Boolean) {
         if (shouldOfflineLayoutBeShown) {
             if (offlineLayout.visibility != VISIBLE) {
-                setViewVisibility(offlineLayout, VISIBLE)
-                viewModel.haveUsersHadAnyTroubleDuringTheirFirstCall = true
+                applyViewVisibility(offlineLayout, VISIBLE)
+                if (viewModel.successfulCallsCount == 0 && viewModel.unsuccessfulCallsCount == 1)
+                    viewModel.haveUsersHadAnyTroubleDuringTheFirstCall = true
             }
         }
-        setViewVisibility(repositoryLoadingProgressBar, GONE)
-        setViewVisibility(githubProfileListSwipeRefreshLayout)
-        showSnackBar(this, getString(message))
+        applyViewVisibility(repositoryLoadingProgressBar, GONE)
+        applyViewVisibility(githubProfileListSwipeRefreshLayout)
+
+        if (viewModel.hasLastCallBeenSuccessful)
+            showSnackBar(this, getString(message))
+        else {
+            if (previousErrorMessage != message) {
+                previousErrorMessage = message
+                showSnackBar(this, getString(message))
+            }
+        }
     }
 
     private fun isFieldEmpty() = searchProfileTextInputEditText.text.toString().isEmpty()
@@ -327,7 +358,7 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     private fun handleActionIconClick() {
-        if (offlineLayout.visibility == VISIBLE) setViewVisibility(
+        if (offlineLayout.visibility == VISIBLE) applyViewVisibility(
             offlineLayout,
             GONE
         )
@@ -335,11 +366,12 @@ class GithubProfileInfoObtainmentActivity :
             if (viewModel.shouldASearchBePerformed) {
                 if (!isFieldEmpty()) {
                     searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
-                } else searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
+                } else
+                    searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
             } else {
                 searchProfileTextInputEditText.setText("")
                 changeDrawable(actionIconImageView, R.drawable.ic_search)
-                viewModel.shouldASearchBePerformed = true
+                if (!viewModel.shouldASearchBePerformed) viewModel.shouldASearchBePerformed = true
             }
         }
     }
@@ -358,9 +390,12 @@ class GithubProfileInfoObtainmentActivity :
             })
 
             addTextChangedListener {
-                doOnTextChanged { text, _, _, _ ->
-                    viewModel.shouldASearchBePerformed = true
-                    if (text.isNullOrEmpty()) changeDrawable(
+                doOnTextChanged { _, _, _, _ ->
+
+                    if (!viewModel.shouldASearchBePerformed) viewModel.shouldASearchBePerformed =
+                        true
+
+                    changeDrawable(
                         actionIconImageView,
                         R.drawable.ic_search
                     )
@@ -370,7 +405,7 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     private fun setupRecyclerViewAddOnScrollListener() {
-        userInfoRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        profileInfoRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val total = recyclerView.layoutManager?.itemCount
                 val currentLastItem =
@@ -381,6 +416,10 @@ class GithubProfileInfoObtainmentActivity :
                     //GithubProfileInfoObtainmentViewModel
                     hasUserRequestedAnotherResultPage = true
                     shouldRecyclerViewAnimationBeExecuted = false
+                    if (backToTopButton.visibility != VISIBLE) applyViewVisibility(
+                        backToTopButton,
+                        VISIBLE
+                    )
                     if (hasUserRequestedAnotherResultPage && !viewModel.isThereAnOngoingCall && !viewModel.hasUserRequestedUpdatedData) {
                         searchProfile(
                             isFieldEmpty = null,
@@ -392,9 +431,7 @@ class GithubProfileInfoObtainmentActivity :
         })
     }
 
-    private fun setupUpperViewsUserInteraction(shouldUsersBeAbleToInteractWithTheUpperViews: Boolean) {
-
-        viewModel.shouldASearchBePerformed = shouldUsersBeAbleToInteractWithTheUpperViews
+    private fun setupUpperViewsInteraction(shouldUsersBeAbleToInteractWithTheUpperViews: Boolean) {
 
         actionIconImageView.apply {
             isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
@@ -409,5 +446,10 @@ class GithubProfileInfoObtainmentActivity :
             isLongClickable = shouldUsersBeAbleToInteractWithTheUpperViews
             if (shouldUsersBeAbleToInteractWithTheUpperViews) requestFocus()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.isFieldEmpty = searchProfileTextInputEditText.text.toString().isEmpty()
     }
 }
