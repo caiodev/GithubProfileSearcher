@@ -1,7 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes
 
 import com.squareup.moshi.Json
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.RecyclerViewViewTypes
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 
 data class GithubProfileInformation(
@@ -15,5 +15,5 @@ data class GithubProfileInformation(
     @field:Json(name = "followers") val numberOfFollowers: Int = 0,
     @field:Json(name = "public_repos") val numberOfRepositories: Int = 0
 ) : ViewType {
-    override fun provideViewType() = RecyclerViewViewTypes.githubUserProfileInformation
+    override fun provideViewType() = githubProfileCell
 }

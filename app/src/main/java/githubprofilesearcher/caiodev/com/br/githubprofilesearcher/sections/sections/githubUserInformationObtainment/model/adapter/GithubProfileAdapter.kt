@@ -4,19 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Generic
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.GenericViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.GithubProfileInformationViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.HeaderViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.RecyclerViewViewTypes
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
-import timber.log.Timber
 
 class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var itemClicked: OnItemClicked? = null
     private var dataSource: List<ViewType>? = null
+    private var genericViewHolder: GenericViewHolder? = null
 
     override fun getItemCount() = getTotalCount()
 
@@ -28,35 +31,39 @@ class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         return when (viewType) {
 
-            RecyclerViewViewTypes.header -> {
-                HeaderViewHolder(
-                    itemView.inflate(
-                        R.layout.header_view_holder,
-                        parent,
-                        false
-                    )
+            header -> HeaderViewHolder(
+                itemView.inflate(
+                    R.layout.header_view_holder_layout,
+                    parent,
+                    false
                 )
-            }
+            )
 
-            else -> {
-                GithubProfileInformationViewHolder(
-                    itemView.inflate(
-                        R.layout.github_profile_view_holder,
-                        parent,
-                        false
-                    )
-                    , itemClicked
-                )
-            }
+            githubProfileCell -> GithubProfileInformationViewHolder(
+                itemView.inflate(
+                    R.layout.github_profile_view_holder_layout,
+                    parent,
+                    false
+                ), itemClicked
+            )
+
+            else -> GenericViewHolder(
+                itemView.inflate(
+                    R.layout.generic_view_holder_layout,
+                    parent,
+                    false
+                ), itemClicked
+            )
         }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         when (viewHolder) {
             is HeaderViewHolder -> viewHolder.bind(itemViewType(position) as Header)
-            is GithubProfileInformationViewHolder -> {
-                Timber.i("Login: %s", (itemViewType(position) as GithubProfileInformation).login)
-                viewHolder.bind(itemViewType(position) as GithubProfileInformation)
+            is GithubProfileInformationViewHolder -> viewHolder.bind(itemViewType(position) as GithubProfileInformation)
+            is GenericViewHolder -> {
+                viewHolder.bind(itemViewType(position) as Generic)
+                genericViewHolder = viewHolder
             }
         }
     }
@@ -66,7 +73,6 @@ class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     private fun getTotalCount(): Int {
-
         dataSource?.size?.let {
             return it
         }
@@ -80,7 +86,11 @@ class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return Header(0)
     }
 
-    fun setOnItemClicked(onItemClicked: OnItemClicked) {
+    internal fun setOnItemClicked(onItemClicked: OnItemClicked) {
         itemClicked = onItemClicked
+    }
+
+    internal fun changeGenericState(state: Int) {
+        genericViewHolder?.changeState(state)
     }
 }

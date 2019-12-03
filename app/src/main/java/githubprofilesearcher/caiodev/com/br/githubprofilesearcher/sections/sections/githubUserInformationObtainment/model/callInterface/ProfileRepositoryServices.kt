@@ -4,11 +4,11 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.GithubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
-interface ProfileRepositoryService {
+interface ProfileRepositoryServices {
+
+    /** https://github.com/square/okhttp/issues/1496  ||  https://github.com/square/okhttp/issues/3251 */
 
     @GET("search/users")
     suspend fun provideGithubUsersListAsync(

@@ -3,7 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
-import kotlinx.android.synthetic.main.header_view_holder.view.*
+import kotlinx.android.synthetic.main.header_view_holder_layout.view.*
 
 class HeaderViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {

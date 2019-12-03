@@ -7,14 +7,17 @@ import androidx.lifecycle.viewModelScope
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.GithubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.repository.GithubProfileInformationRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Generic
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.LiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItemsPerPage
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.paginationLoading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
@@ -49,7 +52,6 @@ class GithubProfileInfoObtainmentViewModel(
 
     //Call related flags
     internal var hasFirstSuccessfulCallBeenMade = false
-    internal var hasLastCallBeenSuccessful = false
     internal var haveUsersHadAnyTroubleDuringTheFirstCall = false
     internal var isThereAnOngoingCall = false
 
@@ -61,11 +63,15 @@ class GithubProfileInfoObtainmentViewModel(
     internal var lastVisibleListItem = 0
     internal var isTheNumberOfItemsOfTheLastCallLessThanTwenty = false
 
+    internal var isPaginationLoadingListItemVisible = false
+    internal var isRetryListItemVisible = false
+    internal var isEndOfResultsListItemVisible = false
+
     //These variables keep track of all calls made successful or not
     internal var successfulCallsCount = 0
     internal var unsuccessfulCallsCount = 0
 
-    fun getGithubProfileList(
+    internal fun getGithubProfileList(
         profile: String? = null,
         shouldListItemsBeRemoved: Boolean? = null
     ) {
@@ -76,7 +82,6 @@ class GithubProfileInfoObtainmentViewModel(
 
         shouldListItemsBeRemoved?.let {
             if (hasAnyUserRequestedUpdatedData || it) pageNumber = 1
-            pageNumber
         }
 
         viewModelScope.launch {
@@ -100,20 +105,8 @@ class GithubProfileInfoObtainmentViewModel(
         )
     }
 
-    fun provideProfileUrlThroughViewModel(adapterPosition: Int) =
+    internal fun provideProfileUrlThroughViewModel(adapterPosition: Int) =
         (githubProfilesInfoMutableList[adapterPosition] as GithubProfileInformation).profileUrl
-
-    private fun setupList(
-        githubUserInformationList: MutableList<GithubProfileInformation>
-    ) {
-        if (githubProfilesInfoMutableList.isNotEmpty()) githubProfilesInfoMutableList.clear()
-        githubProfilesInfoMutableList.add(Header(R.string.github_user_list_header))
-        githubUserInformationList.forEach {
-            populateList(it)
-        }
-        githubProfilesInfoList = githubProfilesInfoMutableList
-        successMutableLiveData.postValue(githubProfilesInfoList)
-    }
 
     private suspend fun handleCallResult(
         user: String,
@@ -129,15 +122,44 @@ class GithubProfileInfoObtainmentViewModel(
             is APICallResult.Success<*> -> {
                 successfulCallsCount++
                 isThereAnOngoingCall = false
-                hasLastCallBeenSuccessful = true
                 with(value.data as GithubProfilesList) {
-                    if (githubProfileInformationList.size < 20) isTheNumberOfItemsOfTheLastCallLessThanTwenty = true
+
+                    isTheNumberOfItemsOfTheLastCallLessThanTwenty =
+                        githubProfileInformationList.size < 20
+
+                    if (!hasAnyUserRequestedUpdatedData && isEndOfResultsListItemVisible)
+                        isEndOfResultsListItemVisible = false
+
                     shouldListItemsBeRemoved?.let {
                         if (it)
                             setupList(githubProfileInformationList)
                         else {
+                            //Check if either "Try again" or "Pagination loading" are visible
+                            if (isPaginationLoadingListItemVisible) {
+                                githubProfilesInfoMutableList.removeAt(
+                                    githubProfilesInfoMutableList.size.minus(
+                                        1
+                                    )
+                                )
+                                isPaginationLoadingListItemVisible = false
+                            } else if (isRetryListItemVisible) {
+                                githubProfilesInfoMutableList.removeAt(
+                                    githubProfilesInfoMutableList.size.minus(
+                                        1
+                                    )
+                                )
+                                isRetryListItemVisible = false
+                            }
+
                             githubProfilesInfoMutableList.addAll(githubProfileInformationList)
-                            successMutableLiveData.postValue(githubProfilesInfoMutableList)
+                            if (isTheNumberOfItemsOfTheLastCallLessThanTwenty) {
+                                insertGenericItemIntoTheResultsList(
+                                    endOfResults
+                                )
+                                isEndOfResultsListItemVisible = true
+                            }
+                            githubProfilesInfoList = githubProfilesInfoMutableList
+                            successMutableLiveData.postValue(githubProfilesInfoList)
                         }
                     }
                     pageNumber++
@@ -148,25 +170,29 @@ class GithubProfileInfoObtainmentViewModel(
                 unsuccessfulCallsCount++
                 isThereAnOngoingCall = false
                 hasAnyUserRequestedUpdatedData = false
-                hasLastCallBeenSuccessful = false
 
                 with(errorSingleMutableLiveDataEvent) {
+
                     when (value.error) {
+
                         unknownHostException, socketTimeoutException, connectException -> errorPairProvider(
                             unknownHostException,
                             R.string.unknown_host_exception_and_socket_timeout_exception,
                             this
                         )
+
                         sslHandshakeException -> errorPairProvider(
                             sslHandshakeException,
                             R.string.ssl_handshake_exception,
                             this
                         )
+
                         clientSideError -> errorPairProvider(
                             clientSideError,
                             R.string.client_side_error,
                             this
                         )
+
                         serverSideError -> errorPairProvider(
                             serverSideError,
                             R.string.server_side_error,
@@ -177,6 +203,7 @@ class GithubProfileInfoObtainmentViewModel(
                             R.string.api_query_limit_exceeded_error,
                             this
                         )
+
                         else -> errorPairProvider(
                             genericError,
                             R.string.generic_exception_and_generic_error,
@@ -188,11 +215,46 @@ class GithubProfileInfoObtainmentViewModel(
         }
     }
 
+    private fun setupList(
+        githubUserInformationList: MutableList<GithubProfileInformation>
+    ) {
+        if (githubProfilesInfoMutableList.isNotEmpty()) githubProfilesInfoMutableList.clear()
+        githubProfilesInfoMutableList.add(Header(R.string.github_user_list_header))
+        githubUserInformationList.forEach {
+            populateList(it)
+        }
+
+        if (isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertGenericItemIntoTheResultsList(
+            endOfResults
+        )
+        githubProfilesInfoList = githubProfilesInfoMutableList
+        successMutableLiveData.postValue(githubProfilesInfoList)
+    }
+
     private fun errorPairProvider(
         errorState: Int,
         errorString: Int,
         state: LiveEvent<Pair<Int, Int>>
     ) {
         state.postValue(errorStatePair.copy(errorState, errorString))
+    }
+
+    internal fun insertGenericItemIntoTheResultsList(state: Int, shouldPostValue: Boolean? = null) {
+        if (state == paginationLoading)
+            isPaginationLoadingListItemVisible = true
+        else
+            isRetryListItemVisible = true
+        githubProfilesInfoMutableList.add(Generic(state))
+        githubProfilesInfoList = githubProfilesInfoMutableList
+
+        shouldPostValue?.let {
+            successMutableLiveData.postValue(githubProfilesInfoList)
+        }
+    }
+
+    internal fun provideLastListItemIndex() = githubProfilesInfoList.size - 1
+
+    internal fun removeLastItem() {
+        githubProfilesInfoMutableList.removeAt(githubProfilesInfoMutableList.size - 1)
     }
 }

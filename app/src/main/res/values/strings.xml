@@ -18,6 +18,7 @@
     <string name="number_of_repositories_template">Repositories: %s</string>
     <string name="github_user_list_header">Profiles</string>
     <string name="retry_button_message">Retry</string>
+    <string name="end_of_results">End of results</string>
 
     <!-- Success messages -->
     <string name="back_online_success_message">Back online</string>

@@ -1,8 +1,8 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.header
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 
-data class Header(val headerName: Int) : ViewType {
-    override fun provideViewType() = header
+data class Generic(val state: Int) : ViewType {
+    override fun provideViewType() = genericType
 }
