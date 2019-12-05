@@ -1,13 +1,17 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class RetrofitService {
+class Retrofit {
 
     @PublishedApi
     internal val baseUrl = "https://api.github.com/"
@@ -28,6 +32,7 @@ class RetrofitService {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
+    @UnstableDefault
     @PublishedApi
     internal inline fun <reified T> provideRetrofitService(): T {
         retrofitBuilder?.let { retrofitService ->
@@ -38,12 +43,13 @@ class RetrofitService {
         }
     }
 
+    @UnstableDefault
     @PublishedApi
     internal inline fun <reified T> createRetrofitService() =
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(provideOkHttpClient())
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(Json(JsonConfiguration(strictMode = false)).asConverterFactory("application/json".toMediaType()))
             .build().create(T::class.java) as T
 
     @PublishedApi

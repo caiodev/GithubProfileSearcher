@@ -96,12 +96,12 @@
         android:layout_width="@dimen/view_48dp"
         android:layout_height="@dimen/view_48dp"
         android:padding="@dimen/padding_8dp"
+        android:rotation="-90"
         android:scaleType="centerCrop"
+        android:src="@drawable/ic_back_to_top"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_back_to_top"
-        android:rotation="-90"
-        android:visibility="gone"
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

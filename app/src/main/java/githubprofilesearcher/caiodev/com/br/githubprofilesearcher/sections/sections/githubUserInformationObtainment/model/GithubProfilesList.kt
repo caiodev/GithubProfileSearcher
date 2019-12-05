@@ -1,8 +1,10 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model
 
-import com.squareup.moshi.Json
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GithubProfilesList(
-    @field:Json(name = "items") val githubProfileInformationList: MutableList<GithubProfileInformation>
+    @SerialName("items") val githubProfileInformationList: List<GithubProfileInformation>
 )

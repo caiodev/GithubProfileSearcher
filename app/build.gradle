@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion 29
@@ -38,10 +38,6 @@ android {
             jvmTarget = "1.8"
         }
     }
-
-    kapt {
-        correctErrorTypes = true
-    }
 }
 
 dependencies {
@@ -56,15 +52,12 @@ dependencies {
     //Coil
     implementation("io.coil-kt:coil:$koil")
 
-    //Epoxy
-    implementation "com.airbnb.android:epoxy:$epoxy"
-
     //Layouts
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
 
     //Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin"
 
     //Ktx
     implementation "androidx.core:core-ktx:$ktxCore"
@@ -88,7 +81,10 @@ dependencies {
 
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
+
+    //Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization"
 
     //Test section
     androidTestImplementation "androidx.test:core:$testCore"

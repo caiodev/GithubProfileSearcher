@@ -54,9 +54,10 @@ class GithubProfileInfoObtainmentViewModel(
     internal var hasFirstSuccessfulCallBeenMade = false
     internal var haveUsersHadAnyTroubleDuringTheFirstCall = false
     internal var isThereAnOngoingCall = false
+    internal var hasUserTriggeredANewRequest = false
 
     internal var hasAnyUserRequestedUpdatedData = false
-    internal var shouldASearchBePerformed = false
+    internal var shouldASearchBePerformed = true
 
     private var currentProfile = ""
     internal var isThereAnyProfileToBeSearched = false
@@ -87,22 +88,6 @@ class GithubProfileInfoObtainmentViewModel(
         viewModelScope.launch {
             handleCallResult(currentProfile, shouldListItemsBeRemoved)
         }
-    }
-
-    private fun populateList(githubInfo: GithubProfileInformation) {
-        githubProfilesInfoMutableList.add(
-            GithubProfileInformation(
-                githubInfo.userId,
-                githubInfo.login,
-                githubInfo.userImage,
-                githubInfo.profileUrl,
-                githubInfo.name,
-                githubInfo.score,
-                githubInfo.bio,
-                githubInfo.numberOfFollowers,
-                githubInfo.numberOfRepositories
-            )
-        )
     }
 
     internal fun provideProfileUrlThroughViewModel(adapterPosition: Int) =
@@ -198,6 +183,7 @@ class GithubProfileInfoObtainmentViewModel(
                             R.string.server_side_error,
                             this
                         )
+
                         forbidden -> errorPairProvider(
                             forbidden,
                             R.string.api_query_limit_exceeded_error,
@@ -216,7 +202,7 @@ class GithubProfileInfoObtainmentViewModel(
     }
 
     private fun setupList(
-        githubUserInformationList: MutableList<GithubProfileInformation>
+        githubUserInformationList: List<GithubProfileInformation>
     ) {
         if (githubProfilesInfoMutableList.isNotEmpty()) githubProfilesInfoMutableList.clear()
         githubProfilesInfoMutableList.add(Header(R.string.github_user_list_header))
@@ -229,6 +215,18 @@ class GithubProfileInfoObtainmentViewModel(
         )
         githubProfilesInfoList = githubProfilesInfoMutableList
         successMutableLiveData.postValue(githubProfilesInfoList)
+    }
+
+    private fun populateList(githubInfo: GithubProfileInformation) {
+        githubProfilesInfoMutableList.add(
+            GithubProfileInformation(
+                githubInfo.login,
+                githubInfo.profileUrl,
+                githubInfo.score,
+                githubInfo.userId,
+                githubInfo.userImage
+            )
+        )
     }
 
     private fun errorPairProvider(

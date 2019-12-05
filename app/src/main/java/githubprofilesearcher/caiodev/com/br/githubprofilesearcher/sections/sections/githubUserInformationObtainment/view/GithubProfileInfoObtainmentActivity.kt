@@ -181,7 +181,7 @@ class GithubProfileInfoObtainmentActivity :
             }
 
             shouldRecyclerViewAnimationBeExecuted =
-                if (!viewModel.hasFirstSuccessfulCallBeenMade || viewModel.isRetryListItemVisible) {
+                if (!viewModel.hasFirstSuccessfulCallBeenMade || viewModel.isRetryListItemVisible || viewModel.hasUserTriggeredANewRequest) {
                     githubUserAdapter.updateDataSource(githubUsersList)
                     true
                 } else {
@@ -195,6 +195,8 @@ class GithubProfileInfoObtainmentActivity :
                     applyViewVisibility(repositoryLoadingProgressBar, GONE)
                     false
                 }
+
+            if (viewModel.hasUserTriggeredANewRequest) viewModel.hasUserTriggeredANewRequest = false
 
             if (viewModel.hasAnyUserRequestedUpdatedData) {
                 applyViewVisibility(githubProfileListSwipeRefreshLayout)
@@ -212,15 +214,15 @@ class GithubProfileInfoObtainmentActivity :
         //Error LiveData
         viewModel.errorSingleImmutableLiveDataEvent.observe(this, Observer { state ->
 
+            if (viewModel.hasUserTriggeredANewRequest) viewModel.hasUserTriggeredANewRequest = false
+
             if (!shouldRecyclerViewAnimationBeExecuted)
                 shouldRecyclerViewAnimationBeExecuted = true
 
             setupUpperViewsInteraction(true)
-
             changeGenericItemState(retry)
             smoothScrollToPosition(viewModel.provideLastListItemIndex())
             viewModel.isRetryListItemVisible = true
-
             viewModel.isPaginationLoadingListItemVisible = false
 
             if (state.first != forbidden) {
@@ -392,6 +394,7 @@ class GithubProfileInfoObtainmentActivity :
             if (viewModel.shouldASearchBePerformed) {
                 if (!isFieldEmpty()) {
                     searchProfile(isFieldEmpty = false, shouldTheListItemsBeRemoved = true)
+                    viewModel.hasUserTriggeredANewRequest = true
                 } else
                     searchProfile(isFieldEmpty = true, shouldTheListItemsBeRemoved = true)
             } else {
