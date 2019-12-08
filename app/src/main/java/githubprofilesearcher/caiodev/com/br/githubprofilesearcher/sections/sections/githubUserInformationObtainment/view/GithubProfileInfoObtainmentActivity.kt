@@ -327,6 +327,12 @@ class GithubProfileInfoObtainmentActivity :
                 R.anim.layout_animation_fall_down
             )
             adapter?.notifyDataSetChanged()
+
+            // For some reason, when a call that removes all previous items from the result list is made
+            // (e.g: Pull-to-refresh or by clicking on the search icon), if one scrolled till some point of the list,
+            // when the call is finished, the top of the list is not shown, which should happen. So a temporary solution
+            // until i figure out what is going on is to go back to the top after any successful call that is required to
+            // remove all previous list items so pagination call will not be affected by this
             scrollToPosition(0, false)
             scheduleLayoutAnimation()
 
@@ -385,22 +391,24 @@ class GithubProfileInfoObtainmentActivity :
 
     private fun showInternetConnectionStatusSnackBar(isInternetConnectionAvailable: Boolean) {
         with(customSnackBar) {
-            if (isInternetConnectionAvailable) {
-                this?.setText(getString(R.string.back_online_success_message))?.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.green_700
+            this?.let {
+                if (isInternetConnectionAvailable) {
+                    setText(getString(R.string.back_online_success_message)).setBackgroundColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.green_700
+                        )
                     )
-                )
-                delay(3000, action = { this?.dismiss() })
-            } else {
-                this?.setText(getString(R.string.no_connection_error))?.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.red_700
+                    delay(3000, action = { this.dismiss() })
+                } else {
+                    setText(getString(R.string.no_connection_error)).setBackgroundColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.red_700
+                        )
                     )
-                )
-                this?.show()
+                    this.show()
+                }
             }
         }
     }

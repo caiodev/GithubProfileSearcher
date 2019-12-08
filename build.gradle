@@ -10,7 +10,7 @@ buildscript {
         constraintLayout = '2.0.0-beta3'
 
         //Gradle
-        gradleVersion = '3.5.2'
+        gradleVersion = '3.5.3'
 
         //Koil
         koil = '0.8.0'
