@@ -30,11 +30,13 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.offline_layout.view.*
+import kotlinx.serialization.UnstableDefault
 
 class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
@@ -54,6 +56,7 @@ class GithubProfileInfoObtainmentActivity :
         ).get(GithubProfileInfoObtainmentViewModel::class.java)
     }
 
+    @UnstableDefault
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupView()
@@ -61,6 +64,7 @@ class GithubProfileInfoObtainmentActivity :
         setupExtras()
     }
 
+    @UnstableDefault
     override fun setupView() {
 
         //Condition when users rotate the screen and the activity gets destroyed
@@ -266,6 +270,7 @@ class GithubProfileInfoObtainmentActivity :
         setupInternetConnectionObserver()
     }
 
+    @UnstableDefault
     private fun searchProfile(
         isFieldEmpty: Boolean? = null,
         shouldListItemsBeRemoved: Boolean? = null
@@ -387,7 +392,7 @@ class GithubProfileInfoObtainmentActivity :
                         R.color.green_700
                     )
                 )
-                this?.dismiss()
+                delay(3000, action = { this?.dismiss() })
             } else {
                 this?.setText(getString(R.string.no_connection_error))?.setBackgroundColor(
                     ContextCompat.getColor(
@@ -400,6 +405,7 @@ class GithubProfileInfoObtainmentActivity :
         }
     }
 
+    @UnstableDefault
     private fun handleActionIconClick() {
         hasUserRequestedAnotherResultPage = false
         if (offlineLayout.visibility == VISIBLE) applyViewVisibility(
@@ -421,6 +427,7 @@ class GithubProfileInfoObtainmentActivity :
         }
     }
 
+    @UnstableDefault
     private fun setupTextInputEditText() {
         hasUserRequestedAnotherResultPage = false
         with(searchProfileTextInputEditText) {
@@ -449,6 +456,7 @@ class GithubProfileInfoObtainmentActivity :
         }
     }
 
+    @UnstableDefault
     private fun setupRecyclerViewAddOnScrollListener() {
         profileInfoRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

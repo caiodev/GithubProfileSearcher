@@ -27,6 +27,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
+import kotlinx.serialization.UnstableDefault
 
 class GithubProfileInfoObtainmentViewModel(
     private val githubUserInformationRepository:
@@ -74,6 +75,7 @@ class GithubProfileInfoObtainmentViewModel(
     internal var successfulCallsCount = 0
     internal var unsuccessfulCallsCount = 0
 
+    @UnstableDefault
     internal fun getGithubProfileList(
         profile: String? = null,
         shouldListItemsBeRemoved: Boolean? = null
@@ -96,6 +98,7 @@ class GithubProfileInfoObtainmentViewModel(
     internal fun provideProfileUrlThroughViewModel(adapterPosition: Int) =
         (githubProfilesInfoMutableList[adapterPosition] as GithubProfileInformation).profileUrl
 
+    @UnstableDefault
     private suspend fun handleCallResult(
         user: String,
         shouldListItemsBeRemoved: Boolean? = null
