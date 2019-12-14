@@ -36,6 +36,10 @@ fun Context.changeDrawable(target: ImageView, newDrawable: Int) {
     )
 }
 
+fun Context.applyBackgroundColor(view: View, color: Int) {
+    view.setBackgroundColor(ContextCompat.getColor(applicationContext, color))
+}
+
 @Suppress("unused")
 fun Context.showSnackBar(
     fragmentActivity: FragmentActivity, message: String

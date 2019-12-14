@@ -1,6 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View.*
 import android.view.animation.AnimationUtils
@@ -58,6 +59,7 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setupView()
         handleViewModel()
@@ -66,7 +68,6 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     override fun setupView() {
-
         //Condition when users rotate the screen and the activity gets destroyed
         if (viewModel.isThereAnOngoingCall) {
             applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
@@ -88,6 +89,16 @@ class GithubProfileInfoObtainmentActivity :
 
         if (viewModel.lastVisibleListItem >= 10) applyViewVisibility(backToTopButton, VISIBLE)
 
+        //Setting true black because in my case what was applied way actually a dark grey shade
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                applyBackgroundColor(
+                    parentConstraintLayout,
+                    android.R.color.black
+                )
+            }
+        }
+
         customSnackBar = CustomSnackBar.make(this.findViewById(android.R.id.content))
         backToTopButton.setOnClickListener {
             if (backToTopButton.visibility != GONE) applyViewVisibility(
@@ -98,23 +109,23 @@ class GithubProfileInfoObtainmentActivity :
             scrollToPosition(0, true)
         }
 
-        profileInfoRecyclerView.apply {
-            setHasFixedSize(true)
-            adapter = githubUserAdapter
-            setupRecyclerViewAddOnScrollListener()
-        }
+        setupTextInputEditText()
 
         actionIconImageView.setOnClickListener {
             handleActionIconClick()
         }
-
-        setupTextInputEditText()
 
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
             hasUserRequestedAnotherResultPage = false
             viewModel.hasAnyUserRequestedUpdatedData = true
             viewModel.hasUserTriggeredANewRequest = true
             searchProfile(null, true)
+        }
+
+        profileInfoRecyclerView.apply {
+            setHasFixedSize(true)
+            adapter = githubUserAdapter
+            setupRecyclerViewAddOnScrollListener()
         }
 
         githubUserAdapter.setOnItemClicked(object :
@@ -439,7 +450,6 @@ class GithubProfileInfoObtainmentActivity :
     private fun setupTextInputEditText() {
         hasUserRequestedAnotherResultPage = false
         with(searchProfileTextInputEditText) {
-            requestFocus()
             setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (!isFieldEmpty()) {
