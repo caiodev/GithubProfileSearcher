@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 29
@@ -19,11 +20,13 @@ android {
 
         release {
             minifyEnabled true
+            debuggable = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             debuggable = true
+            testCoverageEnabled = true
             signingConfig signingConfigs.debug
         }
     }
@@ -38,6 +41,12 @@ android {
             jvmTarget = "1.8"
         }
     }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -50,7 +59,7 @@ dependencies {
     implementation "androidx.core:core:$androidXCore"
 
     //Coil
-    implementation("io.coil-kt:coil:$koil")
+    implementation "io.coil-kt:coil:$koil"
 
     //Layouts
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
@@ -86,9 +95,59 @@ dependencies {
     //Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization"
 
-    //Test section
+    //Testing section
     androidTestImplementation "androidx.test:core:$testCore"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
-    androidTestImplementation "androidx.test.ext:junit:$junit"
     androidTestImplementation "androidx.test:runner:$runner"
+
+    //Jacoco
+    testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
+
+    //JUnit
+    androidTestImplementation "androidx.test.ext:junit:$junitAndroidX"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junit5"
+
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso"
+}
+
+jacoco {
+    toolVersion = "$jacocoVersion"
+    reportsDir = file("$buildDir")
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+
+    def coverageSourceDirs = [
+            "src/main/java"
+    ]
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*'
+    ]
+
+    def javaClasses = fileTree(dir: "$buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def kotlinClasses = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+
+    classDirectories.setFrom files([javaClasses, kotlinClasses])
+    additionalSourceDirs.setFrom files(coverageSourceDirs)
+
+    sourceDirectories.setFrom files([
+            "$project.projectDir/src/main/java"
+    ])
+
+    executionData.setFrom fileTree(dir: project.projectDir, includes: ["**/*.exec"])
+
+    reports {
+        html.enabled true
+    }
 }
