@@ -20,6 +20,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.dropLast
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
@@ -136,7 +137,7 @@ class GithubProfileInfoObtainmentViewModel(
                     if (shouldListItemsBeRemoved)
                         setupList(githubProfileInformationList)
                     else {
-                        if (hasLastCallBeenSuccessful() && isPaginationLoadingListItemVisible) removeLastItem()
+                        if (hasLastCallBeenSuccessful() && isPaginationLoadingListItemVisible) dropLastItem()
                         githubProfilesInfoMutableList.addAll(githubProfileInformationList)
                         if (isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertTransientItemIntoTheResultsList(
                             endOfResults, true
@@ -250,7 +251,7 @@ class GithubProfileInfoObtainmentViewModel(
 
                 loading -> {
                     isThereAnOngoingCall = true
-                    if (isRetryListItemVisible) removeLastItem()
+                    if (isRetryListItemVisible) dropLastItem()
                     githubProfilesInfoMutableList.add(Loading())
                     isPaginationLoadingListItemVisible = true
                     isRetryListItemVisible = false
@@ -258,7 +259,7 @@ class GithubProfileInfoObtainmentViewModel(
                 }
 
                 retry -> {
-                    if (isPaginationLoadingListItemVisible) removeLastItem()
+                    if (isPaginationLoadingListItemVisible) dropLastItem()
                     githubProfilesInfoMutableList.add(Retry())
                     isRetryListItemVisible = true
                     isPaginationLoadingListItemVisible = false
@@ -266,7 +267,7 @@ class GithubProfileInfoObtainmentViewModel(
                 }
 
                 else -> {
-                    if (isPaginationLoadingListItemVisible || isRetryListItemVisible) removeLastItem()
+                    if (isPaginationLoadingListItemVisible || isRetryListItemVisible) dropLastItem()
                     githubProfilesInfoMutableList.add(EndOfResults())
                     isEndOfResultsListItemVisible = true
                     isPaginationLoadingListItemVisible = false
@@ -280,8 +281,8 @@ class GithubProfileInfoObtainmentViewModel(
         if (shouldPostValue) mainListMutableLiveData.postValue(githubProfilesInfoList)
     }
 
-    private fun removeLastItem() {
-        githubProfilesInfoMutableList.removeAt(githubProfilesInfoMutableList.size - 1)
+    private fun dropLastItem() {
+        dropLast(githubProfilesInfoMutableList)
     }
 
     private fun hasLastCallBeenSuccessful() = githubProfilesInfoList.isNotEmpty()

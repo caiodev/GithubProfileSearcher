@@ -18,9 +18,9 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
-open class RemoteRepository {
+class RemoteRepository {
 
-    protected suspend fun <T> callApi(
+    suspend fun <T> callApi(
         call: suspend () -> Response<T>
     ): Any {
 

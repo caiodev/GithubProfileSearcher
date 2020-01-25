@@ -3,5 +3,9 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 import androidx.lifecycle.ViewModel
 
 @Suppress("UNUSED")
-internal inline fun <reified T> ViewModel.castAttributeThroughViewModel(attribute: Any?) =
+inline fun <reified T> ViewModel.castAttributeThroughViewModel(attribute: Any?) =
     attribute as T
+
+fun dropLast(listToRemoveFrom: MutableList<*>) {
+    listToRemoveFrom.removeAt(listToRemoveFrom.size - 1)
+}
