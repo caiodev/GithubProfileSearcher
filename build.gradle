@@ -31,10 +31,10 @@ buildscript {
         leakCanary = '2.0-beta-3'
 
         //Lifecycle Architecture components
-        arch = '2.2.0-rc03'
+        arch = '2.2.0'
 
         //Material design
-        materialDesign = '1.2.0-alpha03'
+        materialDesign = '1.2.0-alpha04'
 
         //OkHttp
         okHttp = '4.3.1'
