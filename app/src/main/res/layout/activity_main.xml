@@ -54,18 +54,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <include
-        android:id="@+id/offlineLayout"
-        layout="@layout/offline_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_16dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout" />
-
     <ProgressBar
         android:id="@+id/repositoryLoadingProgressBar"
         android:layout_width="wrap_content"

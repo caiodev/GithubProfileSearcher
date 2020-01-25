@@ -27,7 +27,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity"
+            android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showUserRepositoryInformation.view.ShowRepositoryInfoActivity"
+            android:theme="@style/AppTheme"
             android:configChanges="uiMode" />
     </application>
 

@@ -5,11 +5,7 @@ import kotlin.concurrent.schedule
 
 object Delay {
 
-    private val timer = Timer()
-
-    fun delay(milliseconds: Long, action: () -> Unit) {
-        timer.schedule(milliseconds) {
-            action.invoke()
-        }
+    fun delay(timer: Timer, milliseconds: Long, action: () -> Unit) {
+        timer.schedule(milliseconds) { action.invoke() }
     }
 }

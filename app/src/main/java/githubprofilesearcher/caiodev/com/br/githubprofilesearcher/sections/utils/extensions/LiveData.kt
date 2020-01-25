@@ -1,10 +1,11 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions
 
 import androidx.lifecycle.LiveData
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.LiveEvent
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.liveEvent.SingleLiveEvent
 
-fun <T> LiveData<T>.toImmutableSingleEvent(): LiveData<T> {
-    val result = LiveEvent<T>()
+fun <T> LiveData<T>.toImmutableSingleLiveEvent(): LiveData<T> {
+    val result =
+        SingleLiveEvent<T>()
     result.addSource(this) {
         result.value = it
     }

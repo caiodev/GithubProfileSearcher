@@ -1,8 +1,11 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text
 
+import java.lang.String.format
+import java.util.Locale.getDefault
+
 object TextFormatting {
 
-    fun concatenateStrings(template: String, vararg text: String) = String.format(template, *text)
+    fun concatenateStrings(template: String, vararg text: String) = format(template, *text)
 
-    fun formatNumber(number: Double) = String.format("%.2f", number)
+    fun formatNumber(number: Double) = format(getDefault(), "%.2f", number)
 }

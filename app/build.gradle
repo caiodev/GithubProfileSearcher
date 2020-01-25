@@ -47,6 +47,15 @@ android {
             useJUnitPlatform()
         }
     }
+
+    sourceSets {
+        androidTest {
+            java.srcDirs += "src/sharedTest/java"
+        }
+        test {
+            java.srcDirs += "src/sharedTest/java"
+        }
+    }
 }
 
 dependencies {
@@ -59,11 +68,19 @@ dependencies {
     implementation "androidx.core:core:$androidXCore"
 
     //Coil
-    implementation "io.coil-kt:coil:$koil"
+    implementation "io.coil-kt:coil:$coil"
 
     //Layouts
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
+
+    //Koin
+    //For Android
+    implementation "org.koin:koin-android:$koin"
+    //For Lifecycle scoping
+    implementation "org.koin:koin-androidx-scope:$koin"
+    //For Android Architecture ViewModel
+    implementation "org.koin:koin-androidx-viewmodel:$koin"
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin"
@@ -82,7 +99,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
 
     //Logging section
-    implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
     implementation "com.jakewharton.timber:timber:$timber"
 
     //Material design
@@ -95,21 +112,49 @@ dependencies {
     //Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization"
 
-    //Testing section
-    androidTestImplementation "androidx.test:core:$testCore"
-    androidTestImplementation "androidx.test:runner:$runner"
+    /*Testing section*/
+
+    /*Test source set*/
+
+    //ArchTestCore
+    testImplementation "androidx.arch.core:core-testing:$archTest"
+
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     //Jacoco
     testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
 
     //JUnit
-    androidTestImplementation "androidx.test.ext:junit:$junitAndroidX"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5"
 
+    //Mockito
+    testImplementation "org.mockito:mockito-core:$mockito"
+    testImplementation "org.mockito:mockito-inline:$mockito"
+
+    //MockWebServer
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
+
+    //Test core
+    testImplementation "androidx.test:core-ktx:$testCore"
+
+    /*AndroidTest source set*/
+
+    //Espresso
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso"
+
+    //JUnit
+    androidTestImplementation "androidx.test.ext:junit:$junitAndroidX"
+
+    //Mockito
+    androidTestImplementation "org.mockito:mockito-android:$mockito"
+
+    //Test core
+    androidTestImplementation "androidx.test:core-ktx:$testCore"
+    androidTestImplementation "androidx.test:runner:$runner"
 }
 
 jacoco {
@@ -132,7 +177,15 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
             '**/R.class',
             '**/R$*.class',
             '**/BuildConfig.*',
-            '**/Manifest*.*'
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+            'androidx/**/*.*',
+            '**/*Activity.*',
+            '**/*Adapter.*',
+            '**/*Adapter*.*',
+            '**/*Constants.*',
+            '**/*ViewHolder*.*'
     ]
 
     def javaClasses = fileTree(dir: "$buildDir/intermediates/classes/debug", excludes: fileFilter)

@@ -42,13 +42,18 @@ fun Context.applyBackgroundColor(view: View, color: Int) {
 
 @Suppress("unused")
 fun Context.showSnackBar(
-    fragmentActivity: FragmentActivity, message: String
+    fragmentActivity: FragmentActivity, message: String, onDismissed: () -> Unit
 ) {
     Snackbar.make(
         fragmentActivity.findViewById(android.R.id.content),
         message,
         Snackbar.LENGTH_LONG
-    ).show()
+    ).addCallback(object : Snackbar.Callback() {
+        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+            super.onDismissed(transientBottomBar, event)
+            onDismissed.invoke()
+        }
+    }).show()
 }
 
 fun Context.hideKeyboard(editText: EditText) {

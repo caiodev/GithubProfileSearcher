@@ -32,9 +32,8 @@ object NetworkChecking {
     }
 
     //Checks whether or not there is internet connection
-    fun checkIfInternetConnectionIsAvailable(applicationContext: Context): Int {
-        return handleInternetConnectionAvailability((applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager))
-    }
+    fun checkIfInternetConnectionIsAvailable(applicationContext: Context) =
+        handleInternetConnectionAvailability((applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager))
 
     //Returns a LiveData so internet connection related state changes can be observed
     fun internetConnectionAvailabilityObservable(applicationContext: Context): MutableLiveData<Boolean> {

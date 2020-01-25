@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity">
+    tools:context=".sections.sections.showUserRepositoryInformation.view.ShowRepositoryInfoActivity">
 
     <WebView
         android:id="@+id/githubRepositoryWebView"
@@ -20,17 +20,6 @@
         android:id="@+id/webViewProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <include
-        android:id="@+id/noInternetConnectionWebViewLayout"
-        layout="@layout/offline_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

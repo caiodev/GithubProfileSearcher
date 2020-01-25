@@ -12,49 +12,43 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.adapter.GithubProfileAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.repository.GithubProfileInformationRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubProfileInfoObtainmentViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.viewModel.GithubProfileInfoObtainmentViewModelFactory
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showRepositoryInfo.view.ShowRepositoryInfoActivity
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showUserRepositoryInformation.view.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.cellular
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.disconnected
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.paginationLoading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.internetConnectionAvailabilityObservable
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.offline_layout.view.*
 import kotlinx.serialization.UnstableDefault
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
     ActivityFlow {
 
-    private val githubUserAdapter = GithubProfileAdapter()
-    private var customSnackBar: CustomSnackBar? = null
-    private var hasUserRequestedAnotherResultPage = false
     private var shouldRecyclerViewAnimationBeExecuted = true
     private var hasBackToTopButtonBeenClicked = false
 
-    private val viewModel: GithubProfileInfoObtainmentViewModel by lazy {
-        ViewModelProvider(
-            this, GithubProfileInfoObtainmentViewModelFactory(
-                GithubProfileInformationRepository()
-            )
-        ).get(GithubProfileInfoObtainmentViewModel::class.java)
+    private lateinit var customSnackBar: CustomSnackBar
+
+    private val viewModel by viewModel<GithubProfileInfoObtainmentViewModel>()
+
+    private val githubUserAdapter by lazy {
+        GithubProfileAdapter()
     }
 
     @UnstableDefault
@@ -68,6 +62,7 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     override fun setupView() {
+
         //Condition when users rotate the screen and the activity gets destroyed
         if (viewModel.isThereAnOngoingCall) {
             applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
@@ -82,11 +77,6 @@ class GithubProfileInfoObtainmentActivity :
                 R.drawable.ic_close
             )
 
-        if (viewModel.haveUsersHadAnyTroubleDuringTheFirstCall) applyViewVisibility(
-            offlineLayout,
-            VISIBLE
-        )
-
         if (viewModel.lastVisibleListItem >= 10) applyViewVisibility(backToTopButton, VISIBLE)
 
         //Setting true black because in my case what was applied way actually a dark grey shade
@@ -100,13 +90,14 @@ class GithubProfileInfoObtainmentActivity :
         }
 
         customSnackBar = CustomSnackBar.make(this.findViewById(android.R.id.content))
+
         backToTopButton.setOnClickListener {
             if (backToTopButton.visibility != GONE) applyViewVisibility(
                 backToTopButton,
                 INVISIBLE
             )
             hasBackToTopButtonBeenClicked = true
-            scrollToPosition(0, true)
+            scrollToTop(true)
         }
 
         setupTextInputEditText()
@@ -116,10 +107,9 @@ class GithubProfileInfoObtainmentActivity :
         }
 
         githubProfileListSwipeRefreshLayout.setOnRefreshListener {
-            hasUserRequestedAnotherResultPage = false
             viewModel.hasAnyUserRequestedUpdatedData = true
             viewModel.hasUserTriggeredANewRequest = true
-            searchProfile(null, true)
+            swipeRefreshCall()
         }
 
         profileInfoRecyclerView.apply {
@@ -134,13 +124,9 @@ class GithubProfileInfoObtainmentActivity :
             override fun onItemClick(adapterPosition: Int, id: Int) {
 
                 when (id) {
-
                     githubProfileCell -> {
-                        when (NetworkChecking.checkIfInternetConnectionIsAvailable(
-                            applicationContext
-                        )) {
-
-                            cellular, wifi -> {
+                        onConnectivityChange(
+                            onConnectionAvailable = {
                                 startActivity(
                                     Intent(
                                         applicationContext,
@@ -153,63 +139,79 @@ class GithubProfileInfoObtainmentActivity :
                                             )
                                         )
                                 )
-                            }
-
-                            disconnected -> showInternetConnectionStatusSnackBar(false)
-                        }
+                            },
+                            onConnectionUnavailable = { showInternetConnectionStatusSnackBar(false) })
                     }
 
-                    retry -> {
-                        changeGenericItemState(paginationLoading)
-                        viewModel.isRetryListItemVisible = false
-                        viewModel.isPaginationLoadingListItemVisible = true
-                        searchProfile(
-                            isFieldEmpty = null,
-                            shouldListItemsBeRemoved = false
-                        )
-                    }
+                    retry -> paginationCall()
                 }
             }
         })
+    }
 
-        offlineLayout.retryButton.setOnClickListener {
-            if (offlineLayout.visibility == VISIBLE) applyViewVisibility(offlineLayout, GONE)
-            if (!isFieldEmpty())
-                searchProfile(isFieldEmpty = false, shouldListItemsBeRemoved = true)
-            else
-                searchProfile(isFieldEmpty = true, shouldListItemsBeRemoved = true)
+    private fun onConnectivityChange(
+        onConnectionAvailable: () -> Unit,
+        onConnectionUnavailable: () -> Unit
+    ) {
+        when (checkIfInternetConnectionIsAvailable(applicationContext)) {
+            cellular, wifi -> onConnectionAvailable.invoke()
+            disconnected -> onConnectionUnavailable.invoke()
+        }
+    }
+
+    @UnstableDefault
+    private fun swipeRefreshCall() {
+        callApi { viewModel.requestUpdatedGithubProfiles() }
+    }
+
+    @UnstableDefault
+    private fun paginationCall() {
+        viewModel.requestMoreGithubProfiles()
+    }
+
+    @UnstableDefault
+    private fun textInputEditTextNotEmptyRequiredCall() {
+        hideKeyboard(searchProfileTextInputEditText)
+        if (!isTextInputEditTextEmpty()) {
+            applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+            viewModel.hasUserTriggeredANewRequest = true
+            callApi {
+                viewModel.requestUpdatedGithubProfiles(
+                    searchProfileTextInputEditText.text.toString()
+                )
+            }
+        } else {
+            showSnackBar(
+                this,
+                getString(R.string.empty_field_error)
+            ) {
+                onConnectivityChange({},
+                    { showInternetConnectionStatusSnackBar(false) })
+            }
+            viewModel.hasAnyUserRequestedUpdatedData = false
         }
     }
 
     override fun handleViewModel() {
+        onSuccess()
+        onError()
+    }
 
-        //Success LiveData
-        viewModel.successLiveData.observe(this, Observer { githubUsersList ->
+    private fun onSuccess() {
+
+        viewModel.mainListLiveData.observe(this, Observer { githubUsersList ->
 
             setupUpperViewsInteraction(true)
             viewModel.shouldASearchBePerformed = false
             applyViewVisibility(githubProfileListSwipeRefreshLayout)
 
-            if (offlineLayout.visibility != GONE) {
-                applyViewVisibility(offlineLayout, GONE)
-                viewModel.haveUsersHadAnyTroubleDuringTheFirstCall = false
-            }
-
             shouldRecyclerViewAnimationBeExecuted =
-                if (!viewModel.hasFirstSuccessfulCallBeenMade ||
-                    viewModel.isRetryListItemVisible ||
-                    viewModel.hasUserTriggeredANewRequest
-                ) {
+                if (!viewModel.hasFirstSuccessfulCallBeenMade || viewModel.hasUserTriggeredANewRequest) {
                     githubUserAdapter.updateDataSource(githubUsersList)
                     true
                 } else {
                     githubUserAdapter.updateDataSource(githubUsersList)
                     profileInfoRecyclerView.adapter?.notifyDataSetChanged()
-
-                    if (viewModel.isPaginationLoadingListItemVisible) scrollToPosition(
-                        viewModel.provideLastListItemIndex(), true
-                    )
-
                     applyViewVisibility(repositoryLoadingProgressBar, GONE)
                     false
                 }
@@ -228,9 +230,11 @@ class GithubProfileInfoObtainmentActivity :
             else
                 shouldRecyclerViewAnimationBeExecuted = true
         })
+    }
 
-        //Error LiveData
-        viewModel.errorSingleImmutableLiveDataEvent.observe(this, Observer { state ->
+    private fun onError() {
+
+        viewModel.errorSingleImmutableLiveDataEvent.observe(this, Observer { error ->
 
             if (viewModel.hasUserTriggeredANewRequest) viewModel.hasUserTriggeredANewRequest = false
 
@@ -239,96 +243,18 @@ class GithubProfileInfoObtainmentActivity :
 
             setupUpperViewsInteraction(true)
 
-            if (!viewModel.isTheNumberOfItemsOfTheLastCallLessThanTwenty) {
-                if (viewModel.isPaginationLoadingListItemVisible) {
-                    changeGenericItemState(retry)
-                    viewModel.isRetryListItemVisible = true
-                    viewModel.isPaginationLoadingListItemVisible = false
-                } else {
-                    viewModel.insertGenericItemIntoTheResultsList(retry)
-                    viewModel.isRetryListItemVisible = true
-                    viewModel.isPaginationLoadingListItemVisible = false
-                }
-            }
-
-            if (!viewModel.isRetryListItemVisible && !viewModel.isEndOfResultsListItemVisible) scrollToPosition(
-                viewModel.provideLastListItemIndex(), true
-            )
             viewModel.shouldASearchBePerformed = true
             changeDrawable(actionIconImageView, R.drawable.ic_search)
-
-            when (state.first) {
-                unknownHostException -> {
-                    //It needs to be checked otherwise, the app could end up replacing a list full of items
-                    // with the offline layout
-                    if (viewModel.hasFirstSuccessfulCallBeenMade)
-                        showErrorMessages(state.second, false)
-                    else
-                        showErrorMessages(state.second, true)
-                }
-
-                else -> showErrorMessages(state.second, false)
-            }
+            showErrorMessages(error)
         })
     }
 
-    override fun setupExtras() {
-
-        when (NetworkChecking.checkIfInternetConnectionIsAvailable(applicationContext)) {
-            disconnected -> showInternetConnectionStatusSnackBar(false)
-        }
-
-        setupInternetConnectionObserver()
-    }
-
     @UnstableDefault
-    private fun searchProfile(
-        isFieldEmpty: Boolean? = null,
-        shouldListItemsBeRemoved: Boolean? = null
-    ) {
-
-        hideKeyboard(searchProfileTextInputEditText)
-
-        //Since the SwipeRefreshLayout is only visible when at least one call has already been made, even if users delete the text from the
-        //TextInputEditText, users will already have typed something onto it and this string will be stored in the ViewModel as soon as they search for it, so,
-        //it can be used to either refresh the list or to keep getting more pages from the Github API. It does not apply to the "ActionIcon" when it is a Magnifying glass icon
-        // or when users search using the Keyboard Magnifying Glass icon, in this case, there has to be some text on the TextInputEditText
-        if (viewModel.hasAnyUserRequestedUpdatedData) {
-            callApi {
-                viewModel.getGithubProfileList(
-                    null,
-                    shouldListItemsBeRemoved
-                )
-            }
-        } else if (hasUserRequestedAnotherResultPage &&
-            !viewModel.isTheNumberOfItemsOfTheLastCallLessThanTwenty
-        ) {
-            /** ${viewModel.isTheNumberOfItemsOfTheLastCallLessThanTwenty} being false basically means it's the last
-             * page and there's no need to perform another call because one has reached the end of the list */
-            callApi {
-                viewModel.getGithubProfileList(
-                    null,
-                    shouldListItemsBeRemoved
-                )
-            }
-        }
-
-        isFieldEmpty?.let {
-            if (!it) callApi {
-                viewModel.getGithubProfileList(
-                    searchProfileTextInputEditText.text.toString(),
-                    shouldListItemsBeRemoved
-                )
-            }
-            else {
-                showSnackBar(
-                    this,
-                    getString(R.string.empty_field_error)
-                )
-
-                viewModel.hasAnyUserRequestedUpdatedData = false
-            }
-        }
+    override fun setupExtras() {
+        onConnectivityChange(
+            onConnectionAvailable = {},
+            onConnectionUnavailable = { showInternetConnectionStatusSnackBar(false) })
+        setupInternetConnectionObserver()
     }
 
     private fun runLayoutAnimation(recyclerView: RecyclerView) {
@@ -344,11 +270,8 @@ class GithubProfileInfoObtainmentActivity :
             // when the call is finished, the top of the list is not shown, which should happen. So a temporary solution
             // until i figure out what is going on is to go back to the top after any successful call that is required to
             // remove all previous list items so pagination call will not be affected by this
-            scrollToPosition(0, false)
+            scrollToTop(false)
             scheduleLayoutAnimation()
-
-            if (viewModel.successfulCallsCount == 1) viewModel.hasFirstSuccessfulCallBeenMade = true
-
             applyViewVisibility(githubProfileListSwipeRefreshLayout)
 
             if (repositoryLoadingProgressBar.visibility == VISIBLE)
@@ -357,44 +280,46 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     private fun callApi(genericFunction: () -> Unit) {
-
-        when (NetworkChecking.checkIfInternetConnectionIsAvailable(applicationContext)) {
-
-            cellular, wifi -> {
-                if (!githubProfileListSwipeRefreshLayout.isRefreshing)
-                    if (!hasUserRequestedAnotherResultPage)
-                        applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+        onConnectivityChange(
+            onConnectionAvailable = {
                 setupUpperViewsInteraction(false)
                 viewModel.shouldASearchBePerformed = false
                 changeDrawable(actionIconImageView, R.drawable.ic_close)
                 genericFunction.invoke()
-                viewModel.isThereAnOngoingCall = true
-            }
-
-            disconnected -> showInternetConnectionStatusSnackBar(false)
-        }
+            },
+            onConnectionUnavailable = {
+                showErrorMessages(
+                    R.string.no_connection_error
+                )
+            })
     }
 
-    private fun showErrorMessages(message: Int, shouldOfflineLayoutBeShown: Boolean) {
-        if (shouldOfflineLayoutBeShown) {
-            if (offlineLayout.visibility != VISIBLE) {
-                applyViewVisibility(offlineLayout, VISIBLE)
-                if (viewModel.successfulCallsCount == 0 && viewModel.unsuccessfulCallsCount == 1)
-                    viewModel.haveUsersHadAnyTroubleDuringTheFirstCall = true
-            }
-        }
+    private fun showErrorMessages(message: Int) {
+        hideKeyboard(searchProfileTextInputEditText)
         applyViewVisibility(repositoryLoadingProgressBar, GONE)
         applyViewVisibility(githubProfileListSwipeRefreshLayout)
-        showSnackBar(this, getString(message))
+        setupUpperViewsInteraction(true)
+        showSnackBar(
+            this,
+            getString(message),
+            onDismissed = {
+                onConnectivityChange({},
+                    { showInternetConnectionStatusSnackBar(false) })
+            })
     }
 
-    private fun isFieldEmpty() = searchProfileTextInputEditText.text.toString().isEmpty()
-
+    @UnstableDefault
     private fun setupInternetConnectionObserver() {
-        NetworkChecking.internetConnectionAvailabilityObservable(applicationContext)
+        internetConnectionAvailabilityObservable(applicationContext)
             .observe(this, Observer { isInternetAvailable ->
                 when (isInternetAvailable) {
-                    true -> showInternetConnectionStatusSnackBar(true)
+                    true -> {
+                        showInternetConnectionStatusSnackBar(true)
+                        if (viewModel.hasFirstSuccessfulCallBeenMade) {
+                            if (!viewModel.isThereAnOngoingCall && viewModel.isRetryListItemVisible) paginationCall()
+                        } else
+                            if (!isTextInputEditTextEmpty() && !viewModel.isThereAnOngoingCall) textInputEditTextNotEmptyRequiredCall()
+                    }
                     false -> showInternetConnectionStatusSnackBar(false)
                 }
             })
@@ -402,60 +327,35 @@ class GithubProfileInfoObtainmentActivity :
 
     private fun showInternetConnectionStatusSnackBar(isInternetConnectionAvailable: Boolean) {
         with(customSnackBar) {
-            this?.let {
-                if (isInternetConnectionAvailable) {
-                    setText(getString(R.string.back_online_success_message)).setBackgroundColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.green_700
-                        )
+            if (isInternetConnectionAvailable) {
+                setText(getString(R.string.back_online_success_message)).setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.green_700
                     )
-                    delay(3000, action = { this.dismiss() })
-                } else {
-                    setText(getString(R.string.no_connection_error)).setBackgroundColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.red_700
-                        )
-                    )
-                    this.show()
+                )
+                delay(Timer(), 3000) {
+                    this.dismiss()
                 }
-            }
-        }
-    }
-
-    @UnstableDefault
-    private fun handleActionIconClick() {
-        hasUserRequestedAnotherResultPage = false
-        if (offlineLayout.visibility == VISIBLE) applyViewVisibility(
-            offlineLayout,
-            GONE
-        )
-        if (!viewModel.isThereAnOngoingCall) {
-            if (viewModel.shouldASearchBePerformed) {
-                if (!isFieldEmpty()) {
-                    searchProfile(isFieldEmpty = false, shouldListItemsBeRemoved = true)
-                    viewModel.hasUserTriggeredANewRequest = true
-                } else
-                    searchProfile(isFieldEmpty = true, shouldListItemsBeRemoved = true)
             } else {
-                searchProfileTextInputEditText.setText("")
-                changeDrawable(actionIconImageView, R.drawable.ic_search)
-                if (!viewModel.shouldASearchBePerformed) viewModel.shouldASearchBePerformed = true
+                setText(getString(R.string.no_connection_error)).setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext,
+                        R.color.red_700
+                    )
+                )
+                this.show()
             }
         }
     }
 
     @UnstableDefault
     private fun setupTextInputEditText() {
-        hasUserRequestedAnotherResultPage = false
         with(searchProfileTextInputEditText) {
             setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (!isFieldEmpty()) {
-                        viewModel.hasUserTriggeredANewRequest = true
-                        searchProfile(isFieldEmpty = false, shouldListItemsBeRemoved = true)
-                    }
+                    viewModel.hasUserTriggeredANewRequest = true
+                    textInputEditTextNotEmptyRequiredCall()
                     return@OnEditorActionListener true
                 }
                 false
@@ -470,6 +370,19 @@ class GithubProfileInfoObtainmentActivity :
                         R.drawable.ic_search
                     )
                 }
+            }
+        }
+    }
+
+    @UnstableDefault
+    private fun handleActionIconClick() {
+        if (!viewModel.isThereAnOngoingCall) {
+            if (viewModel.shouldASearchBePerformed) {
+                textInputEditTextNotEmptyRequiredCall()
+            } else {
+                searchProfileTextInputEditText.setText("")
+                changeDrawable(actionIconImageView, R.drawable.ic_search)
+                if (!viewModel.shouldASearchBePerformed) viewModel.shouldASearchBePerformed = true
             }
         }
     }
@@ -500,24 +413,8 @@ class GithubProfileInfoObtainmentActivity :
                     /* This attribute was created to avoid  making an API call twice or more because sometimes this callback is called more than once, so,
                     the API call method won't be called until the previous API call finishes combining it with the 'isThereAnOngoingCall' attribute located in the
                     GithubProfileInfoObtainmentViewModel */
-                    hasUserRequestedAnotherResultPage = true
                     shouldRecyclerViewAnimationBeExecuted = false
-
-                    if (hasUserRequestedAnotherResultPage && !viewModel.isThereAnOngoingCall &&
-                        !viewModel.hasAnyUserRequestedUpdatedData && !viewModel.isRetryListItemVisible
-                    ) {
-                        searchProfile(
-                            isFieldEmpty = null,
-                            shouldListItemsBeRemoved = false
-                        )
-
-                        if (!viewModel.isPaginationLoadingListItemVisible && !viewModel.isRetryListItemVisible &&
-                            !viewModel.isEndOfResultsListItemVisible
-                        ) {
-                            viewModel.insertGenericItemIntoTheResultsList(paginationLoading, true)
-                            viewModel.isPaginationLoadingListItemVisible = true
-                        }
-                    }
+                    if (!viewModel.isThereAnOngoingCall && !viewModel.isRetryListItemVisible) paginationCall()
                 }
             }
         })
@@ -540,31 +437,19 @@ class GithubProfileInfoObtainmentActivity :
         }
     }
 
-    private fun changeGenericItemState(state: Int) {
-        githubUserAdapter.changeGenericState(state)
-    }
-
-    private fun scrollToPosition(position: Int, shouldScrollBeSmooth: Boolean) {
+    private fun scrollToTop(shouldScrollBeSmooth: Boolean) {
         if (shouldScrollBeSmooth)
-            profileInfoRecyclerView.smoothScrollToPosition(position)
+            profileInfoRecyclerView.smoothScrollToPosition(0)
         else
-            profileInfoRecyclerView.scrollToPosition(position)
+            profileInfoRecyclerView.scrollToPosition(0)
     }
 
-    private fun replaceLastRecyclerViewItem() {
-        if (!viewModel.isPaginationLoadingListItemVisible && !viewModel.isThereAnOngoingCall &&
-            !viewModel.isTheNumberOfItemsOfTheLastCallLessThanTwenty
-        ) {
-            viewModel.removeLastItem()
-            viewModel.insertGenericItemIntoTheResultsList(retry)
-            viewModel.isRetryListItemVisible = true
-        }
-    }
+    private fun isTextInputEditTextEmpty() =
+        searchProfileTextInputEditText.text.toString().isEmpty()
 
     override fun onDestroy() {
+        super.onDestroy()
         viewModel.isThereAnyProfileToBeSearched =
             searchProfileTextInputEditText.text.toString().isEmpty()
-        if (viewModel.isRetryListItemVisible) replaceLastRecyclerViewItem()
-        super.onDestroy()
     }
 }

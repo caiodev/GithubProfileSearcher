@@ -7,12 +7,11 @@ object Constants {
     //RecyclerView view types
     const val header = 0
     const val githubProfileCell = 1
-    const val genericType = 2
 
     //Subtypes of Generic
-    const val paginationLoading = 1
-    const val retry = 2
-    const val endOfResults = 3
+    const val loading = 2
+    const val retry = 3
+    const val endOfResults = 4
 
     //Call states
     //Success
