@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.app.Application
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.koinModule.githubProfileInfoObtainmentViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.koin.githubProfileInfoObtainmentViewModel
 import kotlinx.serialization.UnstableDefault
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

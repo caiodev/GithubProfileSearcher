@@ -5,14 +5,16 @@ import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.LoadImage
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.ImageLoader.loadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.concatenateStrings
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.formatNumber
 import kotlinx.android.synthetic.main.github_profile_view_holder_layout.view.*
-import timber.log.Timber
 
-class GithubProfileInformationViewHolder(itemView: View, private val onItemClicked: OnItemClicked?) :
+class GithubProfileInformationViewHolder(
+    itemView: View,
+    private val onItemClicked: OnItemClicked?
+) :
     RecyclerView.ViewHolder(itemView) {
 
     init {
@@ -39,12 +41,10 @@ class GithubProfileInformationViewHolder(itemView: View, private val onItemClick
             )
         }
 
-        LoadImage.loadImage(
+        loadImage(
             model.userImage,
             R.mipmap.ic_launcher,
             itemView.userAvatar
         )
-
-        Timber.i("VALUE: %s", "Insert: ${model.profileUrl}")
     }
 }

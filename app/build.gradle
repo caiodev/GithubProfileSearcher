@@ -87,6 +87,7 @@ dependencies {
 
     //Ktx
     implementation "androidx.core:core-ktx:$ktxCore"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$arch"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch"
 
     //LeakCanary

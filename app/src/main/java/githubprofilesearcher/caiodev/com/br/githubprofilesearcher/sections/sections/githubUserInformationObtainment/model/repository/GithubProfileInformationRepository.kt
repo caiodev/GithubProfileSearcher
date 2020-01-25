@@ -4,16 +4,17 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.RemoteRepository
 import kotlinx.serialization.UnstableDefault
 
-class GithubProfileInformationRepository(private val retrofitService: UserProfile) :
-    RemoteRepository(),
-    Repository {
+class GithubProfileInformationRepository(
+    private val remoteRepository: RemoteRepository,
+    private val retrofitService: UserProfile
+) : Repository {
 
     @UnstableDefault
     override suspend fun provideGithubUserInformation(
         user: String,
         pageNumber: Int,
         maxResultsPerPage: Int
-    ) = callApi(call = {
+    ) = remoteRepository.callApi(call = {
         retrofitService.provideGithubUsersListAsync(
             user,
             pageNumber,

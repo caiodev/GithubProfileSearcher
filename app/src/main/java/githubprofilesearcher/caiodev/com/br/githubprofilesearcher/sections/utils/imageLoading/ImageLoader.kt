@@ -4,13 +4,9 @@ import android.widget.ImageView
 import coil.api.load
 import coil.request.CachePolicy
 
-object LoadImage {
+object ImageLoader {
 
-    fun loadImage(
-        imageUrl: String,
-        placeholder: Int,
-        targetImageView: ImageView
-    ) {
+    fun loadImage(imageUrl: String, placeholder: Int, targetImageView: ImageView) {
         targetImageView.load(imageUrl) {
             crossfade(true)
             placeholder(placeholder)

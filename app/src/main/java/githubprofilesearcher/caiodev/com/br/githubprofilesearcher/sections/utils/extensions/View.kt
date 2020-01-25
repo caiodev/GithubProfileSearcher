@@ -41,8 +41,8 @@ fun Context.applyBackgroundColor(view: View, color: Int) {
 }
 
 @Suppress("unused")
-fun Context.showSnackBar(
-    fragmentActivity: FragmentActivity, message: String, onDismissed: () -> Unit
+inline fun Context.showSnackBar(
+    fragmentActivity: FragmentActivity, message: String, crossinline onDismissed: () -> Unit
 ) {
     Snackbar.make(
         fragmentActivity.findViewById(android.R.id.content),

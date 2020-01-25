@@ -4,16 +4,18 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.RemoteRepository
 import kotlinx.serialization.UnstableDefault
 
-class FakeGithubProfileInformationRepository : RemoteRepository(),
-    Repository {
+class FakeGithubProfileInformationRepository : Repository {
+
+    private val remoteRepository = RemoteRepository()
 
     @UnstableDefault
     override suspend fun provideGithubUserInformation(
         user: String,
         pageNumber: Int,
         maxResultsPerPage: Int
-    ){}
-//            = callApi {
+    ) {
+    }
+//            = remoteRepository.callApi {
 //
 //    }
 }

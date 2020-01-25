@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
@@ -149,7 +149,7 @@ class GithubProfileInfoObtainmentActivity :
         })
     }
 
-    private fun onConnectivityChange(
+    private inline fun onConnectivityChange(
         onConnectionAvailable: () -> Unit,
         onConnectionUnavailable: () -> Unit
     ) {
@@ -199,7 +199,7 @@ class GithubProfileInfoObtainmentActivity :
 
     private fun onSuccess() {
 
-        viewModel.mainListLiveData.observe(this, Observer { githubUsersList ->
+        viewModel.mainListLiveData.observe(this) { githubUsersList ->
 
             setupUpperViewsInteraction(true)
             viewModel.shouldASearchBePerformed = false
@@ -229,12 +229,12 @@ class GithubProfileInfoObtainmentActivity :
                 runLayoutAnimation(profileInfoRecyclerView)
             else
                 shouldRecyclerViewAnimationBeExecuted = true
-        })
+        }
     }
 
     private fun onError() {
 
-        viewModel.errorSingleImmutableLiveDataEvent.observe(this, Observer { error ->
+        viewModel.errorSingleImmutableLiveDataEvent.observe(this) { error ->
 
             if (viewModel.hasUserTriggeredANewRequest) viewModel.hasUserTriggeredANewRequest = false
 
@@ -246,7 +246,7 @@ class GithubProfileInfoObtainmentActivity :
             viewModel.shouldASearchBePerformed = true
             changeDrawable(actionIconImageView, R.drawable.ic_search)
             showErrorMessages(error)
-        })
+        }
     }
 
     @UnstableDefault
@@ -279,7 +279,7 @@ class GithubProfileInfoObtainmentActivity :
         }
     }
 
-    private fun callApi(genericFunction: () -> Unit) {
+    private inline fun callApi(genericFunction: () -> Unit) {
         onConnectivityChange(
             onConnectionAvailable = {
                 setupUpperViewsInteraction(false)
@@ -311,7 +311,7 @@ class GithubProfileInfoObtainmentActivity :
     @UnstableDefault
     private fun setupInternetConnectionObserver() {
         internetConnectionAvailabilityObservable(applicationContext)
-            .observe(this, Observer { isInternetAvailable ->
+            .observe(this) { isInternetAvailable ->
                 when (isInternetAvailable) {
                     true -> {
                         showInternetConnectionStatusSnackBar(true)
@@ -322,7 +322,7 @@ class GithubProfileInfoObtainmentActivity :
                     }
                     false -> showInternetConnectionStatusSnackBar(false)
                 }
-            })
+            }
     }
 
     private fun showInternetConnectionStatusSnackBar(isInternetConnectionAvailable: Boolean) {
