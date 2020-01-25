@@ -11,17 +11,15 @@ import retrofit2.Retrofit
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class Retrofit {
+object Retrofit {
 
     @PublishedApi
     internal val baseUrl = "https://api.github.com/"
 
-    private val timberTag = "OkHttp"
+    private const val timberTag = "OkHttp"
 
     @PublishedApi
-    internal var retrofitBuilder: Any? = null
-
-    private var okHttpClient: OkHttpClient? = null
+    internal val mediaType = "application/json".toMediaType()
 
     private val httpLoggingInterceptor =
         HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
@@ -34,14 +32,7 @@ class Retrofit {
 
     @UnstableDefault
     @PublishedApi
-    internal inline fun <reified T> provideRetrofitService(): T {
-        retrofitBuilder?.let { retrofitService ->
-            return retrofitService as T
-        } ?: run {
-            retrofitBuilder = createRetrofitService<T>()
-            return retrofitBuilder as T
-        }
-    }
+    internal inline fun <reified T> provideRetrofitService(): T = createRetrofitService()
 
     @UnstableDefault
     @PublishedApi
@@ -49,18 +40,15 @@ class Retrofit {
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(provideOkHttpClient())
-            .addConverterFactory(Json(JsonConfiguration(strictMode = false)).asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(
+                Json(JsonConfiguration(strictMode = false)).asConverterFactory(
+                    mediaType
+                )
+            )
             .build().create(T::class.java) as T
 
     @PublishedApi
-    internal fun provideOkHttpClient(): OkHttpClient {
-        okHttpClient?.let { client ->
-            return client
-        } ?: run {
-            okHttpClient = createOkHttpClient()
-            return okHttpClient as OkHttpClient
-        }
-    }
+    internal fun provideOkHttpClient(): OkHttpClient = createOkHttpClient()
 
     private fun createOkHttpClient() =
         OkHttpClient.Builder()

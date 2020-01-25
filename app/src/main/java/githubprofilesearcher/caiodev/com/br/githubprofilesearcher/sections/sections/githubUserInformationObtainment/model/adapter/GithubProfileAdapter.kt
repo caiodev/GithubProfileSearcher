@@ -4,24 +4,26 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Generic
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.viewTypes.Header
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.GenericViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.GithubProfileInformationViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.HeaderViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.viewHolders.GithubProfileInformationViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.viewHolders.HeaderViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.viewHolders.transientItemViews.EndOfResultsViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.viewHolders.transientItemViews.LoadingViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.view.viewHolders.transientItemViews.RetryViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.header
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 
 class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var itemClicked: OnItemClicked? = null
-    private var dataSource: List<ViewType>? = null
-    private var genericViewHolder: GenericViewHolder? = null
+    private lateinit var itemClicked: OnItemClicked
+    private var dataSource = listOf<ViewType>()
 
-    override fun getItemCount() = getTotalCount()
+    override fun getItemCount() = dataSource.size
 
     override fun getItemViewType(position: Int) = itemViewType(position).provideViewType()
 
@@ -47,12 +49,33 @@ class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 ), itemClicked
             )
 
-            else -> GenericViewHolder(
+            loading -> {
+                LoadingViewHolder(
+                    itemView.inflate(
+                        R.layout.loading_view_holder_layout,
+                        parent,
+                        false
+                    )
+                )
+            }
+
+            retry -> {
+                RetryViewHolder(
+                    itemView.inflate(
+                        R.layout.retry_view_holder_layout,
+                        parent,
+                        false
+                    )
+                    , itemClicked
+                )
+            }
+
+            else -> EndOfResultsViewHolder(
                 itemView.inflate(
-                    R.layout.generic_view_holder_layout,
+                    R.layout.end_of_results_view_holder_layout,
                     parent,
                     false
-                ), itemClicked
+                )
             )
         }
     }
@@ -61,10 +84,6 @@ class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (viewHolder) {
             is HeaderViewHolder -> viewHolder.bind(itemViewType(position) as Header)
             is GithubProfileInformationViewHolder -> viewHolder.bind(itemViewType(position) as GithubProfileInformation)
-            is GenericViewHolder -> {
-                viewHolder.bind(itemViewType(position) as Generic)
-                genericViewHolder = viewHolder
-            }
         }
     }
 
@@ -72,25 +91,9 @@ class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         dataSource = newDataSource
     }
 
-    private fun getTotalCount(): Int {
-        dataSource?.size?.let {
-            return it
-        }
-        return 0
-    }
-
-    private fun itemViewType(position: Int): ViewType {
-        dataSource?.get(position)?.let {
-            return it
-        }
-        return Header(0)
-    }
+    private fun itemViewType(position: Int) = dataSource[position]
 
     internal fun setOnItemClicked(onItemClicked: OnItemClicked) {
         itemClicked = onItemClicked
-    }
-
-    internal fun changeGenericState(state: Int) {
-        genericViewHolder?.changeState(state)
     }
 }

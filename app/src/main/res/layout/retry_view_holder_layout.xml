@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/retryTextViewLayoutParent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/padding_8dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/retryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:fontFamily="@font/nunito_regular"
+        android:padding="@dimen/padding_16dp"
+        android:text="@string/retry_button_message"
+        android:background="?attr/selectableItemBackground"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_size_22"
+        android:textStyle="bold" />
+
+</LinearLayout>
