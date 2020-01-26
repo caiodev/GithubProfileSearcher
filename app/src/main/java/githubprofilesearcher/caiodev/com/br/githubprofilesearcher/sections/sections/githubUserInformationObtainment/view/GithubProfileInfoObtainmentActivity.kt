@@ -450,6 +450,6 @@ class GithubProfileInfoObtainmentActivity :
     override fun onDestroy() {
         super.onDestroy()
         viewModel.isThereAnyProfileToBeSearched =
-            searchProfileTextInputEditText.text.toString().isEmpty()
+            isTextInputEditTextEmpty()
     }
 }
