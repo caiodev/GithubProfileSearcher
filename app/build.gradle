@@ -116,12 +116,11 @@ dependencies {
     /*Testing section*/
 
     /*Test source set*/
-
     //ArchTestCore
     testImplementation "androidx.arch.core:core-testing:$archTest"
 
-    //Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    //CoroutineTest
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineTest"
 
     //Jacoco
     testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
@@ -140,7 +139,6 @@ dependencies {
     testImplementation "androidx.test:core-ktx:$testCore"
 
     /*AndroidTest source set*/
-
     //Espresso
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
@@ -152,6 +150,7 @@ dependencies {
 
     //Mockito
     androidTestImplementation "org.mockito:mockito-android:$mockito"
+    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMaker"
 
     //Test core
     androidTestImplementation "androidx.test:core-ktx:$testCore"
