@@ -18,12 +18,13 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-class RemoteRepositoryTest : RemoteRepository(), TestSteps {
+class RemoteRepositoryTest : TestSteps {
 
     @PublishedApi
     internal lateinit var mockWebServer: MockWebServer
     private lateinit var userProfile: UserProfile
     private lateinit var callPath: String
+    private lateinit var remoteRepository: RemoteRepository
 
     private val json = "{\n" +
             "  \"total_count\": 156,\n" +
@@ -58,6 +59,7 @@ class RemoteRepositoryTest : RemoteRepository(), TestSteps {
     override fun setupDependencies() {
         mockWebServer = setup()
         userProfile = createRetrofitService()
+        remoteRepository = RemoteRepository()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -80,7 +82,7 @@ class RemoteRepositoryTest : RemoteRepository(), TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = callApi { userProfile }
+                response = remoteRepository.callApi { userProfile }
             }
         }
 
@@ -116,7 +118,7 @@ class RemoteRepositoryTest : RemoteRepository(), TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = callApi { userProfile }
+                response = remoteRepository.callApi { userProfile }
             }
         }
 
@@ -148,7 +150,7 @@ class RemoteRepositoryTest : RemoteRepository(), TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = callApi { userProfile }
+                response = remoteRepository.callApi { userProfile }
             }
         }
 
@@ -180,7 +182,7 @@ class RemoteRepositoryTest : RemoteRepository(), TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = callApi { userProfile }
+                response = remoteRepository.callApi { userProfile }
             }
         }
 
@@ -213,7 +215,7 @@ class RemoteRepositoryTest : RemoteRepository(), TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = callApi { userProfile }
+                response = remoteRepository.callApi { userProfile }
             }
         }
 
@@ -245,7 +247,7 @@ class RemoteRepositoryTest : RemoteRepository(), TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = callApi { userProfile }
+                response = remoteRepository.callApi { userProfile }
             }
         }
 
