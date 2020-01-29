@@ -47,7 +47,7 @@ inline fun Context.showSnackBar(
     Snackbar.make(
         fragmentActivity.findViewById(android.R.id.content),
         message,
-        Snackbar.LENGTH_LONG
+        Snackbar.LENGTH_SHORT
     ).addCallback(object : Snackbar.Callback() {
         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
             super.onDismissed(transientBottomBar, event)

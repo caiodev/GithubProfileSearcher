@@ -20,13 +20,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.secti
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.showUserRepositoryInformation.view.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.cellular
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.disconnected
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
@@ -34,7 +30,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.UnstableDefault
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
 
 class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
@@ -118,14 +113,13 @@ class GithubProfileInfoObtainmentActivity :
             setupRecyclerViewAddOnScrollListener()
         }
 
-        githubUserAdapter.setOnItemClicked(object :
-            OnItemClicked {
+        githubUserAdapter.setOnItemClicked(object : OnItemClicked {
 
             override fun onItemClick(adapterPosition: Int, id: Int) {
 
                 when (id) {
                     githubProfileCell -> {
-                        onConnectivityChange(
+                        checkIfInternetConnectionIsAvailableCaller(
                             onConnectionAvailable = {
                                 startActivity(
                                     Intent(
@@ -147,16 +141,6 @@ class GithubProfileInfoObtainmentActivity :
                 }
             }
         })
-    }
-
-    private inline fun onConnectivityChange(
-        onConnectionAvailable: () -> Unit,
-        onConnectionUnavailable: () -> Unit
-    ) {
-        when (checkIfInternetConnectionIsAvailable(applicationContext)) {
-            cellular, wifi -> onConnectionAvailable.invoke()
-            disconnected -> onConnectionUnavailable.invoke()
-        }
     }
 
     @UnstableDefault
@@ -185,7 +169,7 @@ class GithubProfileInfoObtainmentActivity :
                 this,
                 getString(R.string.empty_field_error)
             ) {
-                onConnectivityChange({},
+                checkIfInternetConnectionIsAvailableCaller({},
                     { showInternetConnectionStatusSnackBar(false) })
             }
             viewModel.hasAnyUserRequestedUpdatedData = false
@@ -251,7 +235,7 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     override fun setupExtras() {
-        onConnectivityChange(
+        checkIfInternetConnectionIsAvailableCaller(
             onConnectionAvailable = {},
             onConnectionUnavailable = { showInternetConnectionStatusSnackBar(false) })
         setupInternetConnectionObserver()
@@ -279,8 +263,8 @@ class GithubProfileInfoObtainmentActivity :
         }
     }
 
-    private inline fun callApi(genericFunction: () -> Unit) {
-        onConnectivityChange(
+    private inline fun callApi(crossinline genericFunction: () -> Unit) {
+        checkIfInternetConnectionIsAvailableCaller(
             onConnectionAvailable = {
                 setupUpperViewsInteraction(false)
                 viewModel.shouldASearchBePerformed = false
@@ -288,24 +272,37 @@ class GithubProfileInfoObtainmentActivity :
                 genericFunction.invoke()
             },
             onConnectionUnavailable = {
-                showErrorMessages(
-                    R.string.no_connection_error
-                )
+                showErrorMessages(R.string.no_connection_error)
             })
     }
 
     private fun showErrorMessages(message: Int) {
         hideKeyboard(searchProfileTextInputEditText)
         applyViewVisibility(repositoryLoadingProgressBar, GONE)
-        applyViewVisibility(githubProfileListSwipeRefreshLayout)
+        //SwipeRefreshLayout will only be visible if at least one successful call has been made so it will only be called if such condition is met
+        if (viewModel.hasFirstSuccessfulCallBeenMade) applyViewVisibility(
+            githubProfileListSwipeRefreshLayout
+        )
         setupUpperViewsInteraction(true)
         showSnackBar(
             this,
             getString(message),
             onDismissed = {
-                onConnectivityChange({},
+                checkIfInternetConnectionIsAvailableCaller(
+                    {},
                     { showInternetConnectionStatusSnackBar(false) })
             })
+    }
+
+    private fun checkIfInternetConnectionIsAvailableCaller(
+        onConnectionAvailable: () -> Unit,
+        onConnectionUnavailable: () -> Unit
+    ) {
+        checkIfInternetConnectionIsAvailable(
+            applicationContext,
+            onConnectionAvailable,
+            onConnectionUnavailable
+        )
     }
 
     @UnstableDefault
@@ -334,9 +331,7 @@ class GithubProfileInfoObtainmentActivity :
                         R.color.green_700
                     )
                 )
-                delay(Timer(), 3000) {
-                    this.dismiss()
-                }
+                if (isShown) dismiss()
             } else {
                 setText(getString(R.string.no_connection_error)).setBackgroundColor(
                     ContextCompat.getColor(
@@ -344,7 +339,7 @@ class GithubProfileInfoObtainmentActivity :
                         R.color.red_700
                     )
                 )
-                this.show()
+                show()
             }
         }
     }

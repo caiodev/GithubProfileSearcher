@@ -125,7 +125,6 @@ class GithubProfileInfoObtainmentViewModel(
 
             //Success state handling
             is APICallResult.Success<*> -> {
-
                 if (!hasLastCallBeenSuccessful()) hasFirstSuccessfulCallBeenMade = true
                 currentProfile = temporaryCurrentProfile
                 isThereAnOngoingCall = false
