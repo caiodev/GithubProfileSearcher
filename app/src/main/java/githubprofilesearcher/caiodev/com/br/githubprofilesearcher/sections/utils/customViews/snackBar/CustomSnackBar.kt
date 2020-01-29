@@ -8,7 +8,9 @@ import android.widget.TextView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
 import kotlinx.android.synthetic.main.custom_snackbar_layout.view.*
+import java.util.*
 
 class CustomSnackBar(
     parent: ViewGroup, content: View,
@@ -18,6 +20,7 @@ class CustomSnackBar(
     private val snackBarParentLayout =
         (getView().findViewById(R.id.snackBarParentLinearLayout) as LinearLayout)
     private val snackBarText = (getView().findViewById(R.id.snackBarTextView) as TextView)
+    private var hasSnackBarBeenRequestedToBeDismissed = false
 
     fun setText(text: CharSequence): CustomSnackBar {
         snackBarText.text = text
@@ -27,6 +30,16 @@ class CustomSnackBar(
     fun setBackgroundColor(backgroundColor: Int): CustomSnackBar {
         snackBarParentLayout.snackBarParentLinearLayout.setBackgroundColor(backgroundColor)
         return this
+    }
+
+    override fun dismiss() {
+        if (!hasSnackBarBeenRequestedToBeDismissed) {
+            hasSnackBarBeenRequestedToBeDismissed = true
+            delay(Timer(), 3000) {
+                super.dismiss()
+                hasSnackBarBeenRequestedToBeDismissed = false
+            }
+        }
     }
 
     companion object {

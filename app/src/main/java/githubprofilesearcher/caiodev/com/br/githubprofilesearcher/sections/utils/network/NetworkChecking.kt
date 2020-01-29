@@ -6,10 +6,6 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.MutableLiveData
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.cellular
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.disconnected
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.generic
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.wifi
 
 object NetworkChecking {
 
@@ -32,8 +28,14 @@ object NetworkChecking {
     }
 
     //Checks whether or not there is internet connection
-    fun checkIfInternetConnectionIsAvailable(applicationContext: Context) =
-        handleInternetConnectionAvailability((applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager))
+    fun checkIfInternetConnectionIsAvailable(
+        applicationContext: Context, onConnectionAvailable: () -> Unit,
+        onConnectionUnavailable: () -> Unit
+    ) =
+        handleInternetConnectionAvailability(
+            (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager),
+            onConnectionAvailable,
+            onConnectionUnavailable)
 
     //Returns a LiveData so internet connection related state changes can be observed
     fun internetConnectionAvailabilityObservable(applicationContext: Context): MutableLiveData<Boolean> {
@@ -45,27 +47,24 @@ object NetworkChecking {
         return networkState
     }
 
-    private fun handleInternetConnectionAvailability(
-        connectivityManager: ConnectivityManager
-    ): Int {
+    private inline fun handleInternetConnectionAvailability(
+        connectivityManager: ConnectivityManager,
+        onConnectionAvailable: () -> Unit,
+        onConnectionUnavailable: () -> Unit
+    ) {
         if (connectivityManager.allNetworks.isNotEmpty()) {
             connectivityManager.allNetworks.forEach { network ->
                 connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
-                    return setupInternetConnectionChecking(networkCapabilities)
+                    if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                        when {
+                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ->
+                                onConnectionAvailable.invoke()
+                        }
+                    }
                 }
             }
-        } else return disconnected
-
-        return generic
-    }
-
-    private fun setupInternetConnectionChecking(networkCapabilities: NetworkCapabilities): Int {
-        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-            when {
-                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return wifi
-                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return cellular
-            }
-        }
-        return generic
+        } else
+            onConnectionUnavailable.invoke()
     }
 }

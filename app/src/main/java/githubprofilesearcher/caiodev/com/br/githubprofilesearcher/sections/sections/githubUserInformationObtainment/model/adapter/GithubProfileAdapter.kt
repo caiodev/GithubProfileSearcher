@@ -21,7 +21,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 class GithubProfileAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var itemClicked: OnItemClicked
-    private var dataSource = listOf<ViewType>()
+    private lateinit var dataSource: List<ViewType>
 
     override fun getItemCount() = dataSource.size
 
