@@ -29,7 +29,7 @@ object RetrofitTestService {
             .baseUrl(mockWebServer.url("/"))
             .client(createOkHttpClient())
             .addConverterFactory(
-                Json(JsonConfiguration(strictMode = false)).asConverterFactory(
+                Json(JsonConfiguration(ignoreUnknownKeys = true)).asConverterFactory(
                     "application/json".toMediaType()
                 )
             )
