@@ -5,7 +5,7 @@
     android:id="@+id/parentConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".sections.sections.githubUserInformationObtainment.view.GithubProfileInfoObtainmentActivity">
+    tools:context=".sections.githubUserInformationObtainment.view.GithubProfileInfoObtainmentActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/githubProfileListSwipeRefreshLayout"

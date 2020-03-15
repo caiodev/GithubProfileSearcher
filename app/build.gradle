@@ -70,6 +70,9 @@ dependencies {
     //Coil
     implementation "io.coil-kt:coil:$coil"
 
+    //Espresso
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
+
     //Layouts
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
@@ -130,7 +133,6 @@ dependencies {
 
     //Mockito
     testImplementation "org.mockito:mockito-core:$mockito"
-    testImplementation "org.mockito:mockito-inline:$mockito"
 
     //MockWebServer
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
@@ -138,23 +140,37 @@ dependencies {
     //Test core
     testImplementation "androidx.test:core-ktx:$testCore"
 
+    //Truth
+    testImplementation "com.google.truth:truth:$truth"
+
     /*AndroidTest source set*/
+    //ArchTestCore
+    androidTestImplementation "androidx.arch.core:core-testing:$archTest"
+
     //Espresso
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
 
     //JUnit
-    androidTestImplementation "androidx.test.ext:junit:$junitAndroidX"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$junitAndroidX"
 
     //Mockito
-    androidTestImplementation "org.mockito:mockito-android:$mockito"
+    androidTestImplementation "org.mockito:mockito-core:$mockito"
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMaker"
+
+    //MockWebServer
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
+
+    //Runner
+    androidTestImplementation "androidx.test:runner:$runner"
 
     //Test core
     androidTestImplementation "androidx.test:core-ktx:$testCore"
-    androidTestImplementation "androidx.test:runner:$runner"
+
+    //Truth
+    androidTestImplementation "com.google.truth:truth:$truth"
 }
 
 jacoco {
@@ -174,18 +190,20 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
     ]
 
     def fileFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/BuildConfig.*',
-            '**/Manifest*.*',
-            '**/*Test*.*',
-            'android/**/*.*',
-            'androidx/**/*.*',
             '**/*Activity.*',
             '**/*Adapter.*',
-            '**/*Adapter*.*',
+            '**/BuildConfig.*',
             '**/*Constants.*',
-            '**/*ViewHolder*.*'
+            '**/Manifest*.*',
+            '**/R.class',
+            '**/R$*.class',
+            '**/*Test*.*',
+            '**/*ViewHolder*.*',
+            'android/**/*.*',
+            'androidx/**/*.*',
+            '**/*delay/**/*.*',
+            '**/*init/**/*.*',
+            '**/*model/**/*.*'
     ]
 
     def javaClasses = fileTree(dir: "$buildDir/intermediates/classes/debug", excludes: fileFilter)

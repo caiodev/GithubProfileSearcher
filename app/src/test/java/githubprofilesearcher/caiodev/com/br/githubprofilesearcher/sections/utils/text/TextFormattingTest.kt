@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text
 
-import base.TestSteps
+import utils.base.TestSteps
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.app.Application
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.sections.githubUserInformationObtainment.model.koin.githubProfileInfoObtainmentViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.diModules.githubProfileViewModel
 import kotlinx.serialization.UnstableDefault
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,7 +19,7 @@ class App : Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(githubProfileInfoObtainmentViewModel)
+            modules(githubProfileViewModel)
         }
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
