@@ -41,7 +41,7 @@ object Retrofit {
             .baseUrl(baseUrl)
             .client(provideOkHttpClient())
             .addConverterFactory(
-                Json(JsonConfiguration(strictMode = false)).asConverterFactory(
+                Json(JsonConfiguration(ignoreUnknownKeys = true)).asConverterFactory(
                     mediaType
                 )
             )

@@ -1,10 +1,10 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay
 
-import base.TestSteps
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import utils.base.TestSteps
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.MILLISECONDS

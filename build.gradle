@@ -3,28 +3,28 @@ buildscript {
     ext {
 
         //AndroidXCore
-        androidXCore = '1.2.0-rc01'
+        androidXCore = '1.3.0-alpha02'
 
         //AppCompat
         appCompat = '1.1.0'
 
         //Coil
-        coil = '0.9.1'
+        coil = '0.9.5'
 
         //ConstraintLayout
         constraintLayout = '2.0.0-beta4'
 
         //Gradle
-        gradleVersion = '3.5.3'
+        gradleVersion = '3.6.1'
 
         //Koin
-        koin = '2.1.0-alpha-3'
+        koin = '2.1.4'
 
         //Kotlin
-        kotlin = '1.3.61'
+        kotlin = '1.3.70'
 
         //Ktx
-        ktxCore = '1.2.0-rc01'
+        ktxCore = '1.3.0-alpha02'
 
         //LeakCanary
         leakCanary = '2.0-beta-3'
@@ -33,27 +33,27 @@ buildscript {
         arch = '2.2.0'
 
         //Material design
-        materialDesign = '1.2.0-alpha04'
+        materialDesign = '1.2.0-alpha05'
 
         //OkHttp
-        okHttp = '4.3.1'
+        okHttp = '4.4.0'
 
         //Retrofit
-        retrofit = '2.7.1'
-        serializationConverter = '0.4.0'
+        retrofit = '2.7.2'
+        serializationConverter = '0.5.0'
 
         //Serialization
-        serialization = '0.14.0'
+        serialization = '0.20.0'
 
         //SwipeRefreshLayout
-        swipeRefreshLayout = '1.1.0-alpha03'
+        swipeRefreshLayout = '1.1.0-beta01'
 
         //Timber
         timber = '4.7.1'
 
         //Test dependency versions
         archTest = '2.1.0'
-        espresso = '3.3.0-alpha02'
+        espresso = '3.3.0-alpha04'
         coroutineTest = '1.2.1'
         jacocoVersion = '0.8.5'
         junitAndroidX = '1.1.2-alpha02'
@@ -63,8 +63,9 @@ buildscript {
         mockito = '2.28.2'
         dexMaker = '2.12.1'
 
-        runner = '1.3.0-alpha02'
+        runner = '1.3.0-alpha04'
         testCore = '1.3.0-alpha03'
+        truth = '1.0.1'
     }
 
     dependencies {
@@ -102,10 +103,13 @@ allprojects {
                 includeGroupByRegex "junit.*"
                 includeGroup "com.google.android.apps.common.testing.accessibility.framework"
                 includeGroup "com.google.auto"
+                includeGroup "com.google.auto.value"
                 includeGroup "com.google.code.findbugs"
                 includeGroup "com.google.errorprone"
                 includeGroup "com.google.guava"
                 includeGroup "com.google.j2objc"
+                includeGroup "com.google.truth"
+                includeGroup "com.googlecode.java-diff-utils"
                 includeGroup "com.linkedin.dexmaker"
                 includeGroup "net.bytebuddy"
                 includeGroup "net.sf.kxml"

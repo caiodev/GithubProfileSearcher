@@ -2,6 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 object Constants {
 
+    //Intent id
     const val githubProfileUrl = "githubProfileUrl"
 
     //RecyclerView view types
@@ -35,16 +36,4 @@ object Constants {
 
     //Pagination
     const val numberOfItemsPerPage = 20
-
-    //Internet connection variants
-
-    //Connected
-    const val wifi = 0
-    const val cellular = 1
-
-    //Disconnected
-    const val disconnected = 2
-
-    //Generic
-    const val generic = 3
 }

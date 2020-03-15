@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 object NetworkChecking {
@@ -35,14 +36,13 @@ object NetworkChecking {
         handleInternetConnectionAvailability(
             (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager),
             onConnectionAvailable,
-            onConnectionUnavailable)
+            onConnectionUnavailable
+        )
 
     //Returns a LiveData so internet connection related state changes can be observed
-    fun internetConnectionAvailabilityObservable(applicationContext: Context): MutableLiveData<Boolean> {
+    fun internetConnectionAvailabilityObservable(applicationContext: Context): LiveData<Boolean> {
         (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
-            requestNetwork(
-                networkRequest.build(), connectivityCallback
-            )
+            requestNetwork(networkRequest.build(), connectivityCallback)
         }
         return networkState
     }
@@ -55,13 +55,7 @@ object NetworkChecking {
         if (connectivityManager.allNetworks.isNotEmpty()) {
             connectivityManager.allNetworks.forEach { network ->
                 connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
-                    if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                        when {
-                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ->
-                                onConnectionAvailable.invoke()
-                        }
-                    }
+                    if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) onConnectionAvailable.invoke()
                 }
             }
         } else
