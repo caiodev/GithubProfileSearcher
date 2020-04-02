@@ -98,7 +98,7 @@ dependencies {
 
     //Lifecycle section
     implementation "androidx.lifecycle:lifecycle-viewmodel:$arch"
-    implementation "androidx.lifecycle:lifecycle-extensions:$arch"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$arch"
     implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
 

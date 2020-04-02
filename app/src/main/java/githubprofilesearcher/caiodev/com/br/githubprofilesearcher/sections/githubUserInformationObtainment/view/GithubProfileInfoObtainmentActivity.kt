@@ -38,6 +38,7 @@ class GithubProfileInfoObtainmentActivity :
 
     private var shouldRecyclerViewAnimationBeExecuted = true
     private var hasBackToTopButtonBeenClicked = false
+
     private lateinit var countingIdlingResource: CountingIdlingResource
 
     private lateinit var customSnackBar: CustomSnackBar
@@ -59,8 +60,8 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     override fun setupView() {
-        bindViewModelDataToUIInCaseOfOrientationChanges()
         setupDarkMode()
+        bindViewModelDataToUIInCaseOfOrientationChanges()
         setupCustomSnackBar()
         setupImageViews()
         setupSwipeRefreshLayout()
