@@ -1,4 +1,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dce16c6f362b4319887525ea214fdb05)](https://app.codacy.com/manual/caiodev/GithubProfileSearcher?utm_source=github.com&utm_medium=referral&utm_content=caiodev/GithubProfileSearcher&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dce16c6f362b4319887525ea214fdb05)](https://app.codacy.com/manual/caiodev/GithubProfileSearcher?utm_source=github.com&utm_medium=referral&utm_content=caiodev/GithubProfileSearcher&utm_campaign=Badge_Grade_Dashboard)
 [![CodeFactor](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher/badge/develop)](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher/overview/develop)
 
 # GithubProfileSearcher
