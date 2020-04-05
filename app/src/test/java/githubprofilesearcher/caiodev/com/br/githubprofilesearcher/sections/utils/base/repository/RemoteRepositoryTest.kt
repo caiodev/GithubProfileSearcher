@@ -98,7 +98,7 @@ class RemoteRepositoryTest : TestSteps {
             if (response is APICallResult.Success<*>) isSuccess = true
 
             assertEquals(true, isSuccess)
-            assertEquals(1, ((response as APICallResult.Success<Int>).data))
+            assertEquals(1, (response as APICallResult.Success<Int>).data)
         }
     }
 
@@ -130,7 +130,7 @@ class RemoteRepositoryTest : TestSteps {
             if (response is APICallResult.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(7, ((response as APICallResult.Error).error))
+            assertEquals(7, (response as APICallResult.Error).error)
         }
     }
 
@@ -162,7 +162,7 @@ class RemoteRepositoryTest : TestSteps {
             if (response is APICallResult.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(9, ((response as APICallResult.Error).error))
+            assertEquals(9, (response as APICallResult.Error).error)
         }
     }
 
@@ -195,7 +195,7 @@ class RemoteRepositoryTest : TestSteps {
             if (response is APICallResult.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(8, ((response as APICallResult.Error).error))
+            assertEquals(8, (response as APICallResult.Error).error)
         }
     }
 
@@ -227,7 +227,7 @@ class RemoteRepositoryTest : TestSteps {
             if (response is APICallResult.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(10, ((response as APICallResult.Error).error))
+            assertEquals(10, (response as APICallResult.Error).error)
         }
     }
 

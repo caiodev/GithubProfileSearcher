@@ -18,8 +18,8 @@ class CustomSnackBar(
 ) : BaseTransientBottomBar<CustomSnackBar>(parent, content, callback) {
 
     private val snackBarParentLayout =
-        (getView().findViewById(R.id.snackBarParentLinearLayout) as LinearLayout)
-    private val snackBarText = (getView().findViewById(R.id.snackBarTextView) as TextView)
+        getView().findViewById(R.id.snackBarParentLinearLayout) as LinearLayout
+    private val snackBarText = getView().findViewById(R.id.snackBarTextView) as TextView
     private var hasSnackBarBeenRequestedToBeDismissed = false
 
     fun setText(text: CharSequence): CustomSnackBar {

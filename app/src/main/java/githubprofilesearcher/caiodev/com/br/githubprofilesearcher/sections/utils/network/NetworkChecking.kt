@@ -34,7 +34,7 @@ object NetworkChecking {
         onConnectionUnavailable: () -> Unit
     ) =
         handleInternetConnectionAvailability(
-            (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager),
+            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager,
             onConnectionAvailable,
             onConnectionUnavailable
         )

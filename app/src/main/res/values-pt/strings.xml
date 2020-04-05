@@ -15,7 +15,6 @@
     <string name="null_user_name_message">Não há</string>
     <string name="github_user_list_header">Perfis</string>
     <string name="login">Usuário: %s</string>
-    <string name="score">Pontuação do Github: %s</string>
     <string name="server_side_error">Nossos servidores estão sobrecarregados no momento. Por favor, tente novamente mais tarde</string>
     <string name="ssl_handshake_exception">A rede na qual você está, não é segura. Por favor, mude de rede e tente novamente mais tarde</string>
     <string name="client_side_error">Não conseguimos obter o que você está procurando. Por favor, tente novamente mais tarde</string>

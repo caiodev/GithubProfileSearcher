@@ -54,26 +54,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_8dp"
                 android:layout_marginEnd="@dimen/margin_8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@+id/userScore"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/userAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/userId" />
-
-            <TextView
-                android:id="@+id/userScore"
-                style="@style/ViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_8dp"
-                android:layout_marginEnd="@dimen/margin_8dp"
-                android:fontFamily="@font/nunito_regular"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/userAvatar"
-                app:layout_constraintTop_toBottomOf="@+id/userLogin" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
