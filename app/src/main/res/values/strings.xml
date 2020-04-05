@@ -5,7 +5,6 @@
     <string name="text_input_layout_hint">Type a profile e.g: torvalds</string>
     <string name="user_id" translatable="false">ID: %s</string>
     <string name="login">User: %s</string>
-    <string name="score">Github score: %s</string>
     <string name="user_name">Name:</string>
     <string name="null_user_name_message">None</string>
     <string name="user_bio">Bio:</string>

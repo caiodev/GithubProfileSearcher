@@ -431,7 +431,7 @@ class GithubProfileInfoObtainmentActivity :
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val total = recyclerView.layoutManager?.itemCount
                 val currentLastItem =
-                    ((recyclerView.layoutManager) as LinearLayoutManager).findLastVisibleItemPosition()
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
 
                 viewModel.flags.lastVisibleItem = currentLastItem
 

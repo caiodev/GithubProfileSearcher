@@ -7,9 +7,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.ImageLoader.loadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.concatenateStrings
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.text.TextFormatting.formatNumber
 import kotlinx.android.synthetic.main.github_profile_view_holder_layout.view.*
+import okhttp3.internal.format
 
 class GithubProfileInformationViewHolder(
     itemView: View,
@@ -27,18 +26,12 @@ class GithubProfileInformationViewHolder(
 
         model.userId.let {
             itemView.userId.text =
-                concatenateStrings(itemView.context.getString(R.string.user_id), it.toString())
+                format(itemView.context.getString(R.string.user_id), it.toString())
         }
 
         model.login.let {
             itemView.userLogin.text =
-                concatenateStrings(itemView.context.getString(R.string.login), it)
-        }
-
-        model.score?.let {
-            itemView.userScore.text = concatenateStrings(
-                itemView.context.getString(R.string.score), formatNumber(it)
-            )
+                format(itemView.context.getString(R.string.login), it)
         }
 
         loadImage(
