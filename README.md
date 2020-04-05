@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher/badge/develop)](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher/overview/develop)
+
 # GithubProfileSearcher
 This app basically gets information about a given github profile and shows its info on the screen. Only compatible with API 21(Lollipop) and above
 
