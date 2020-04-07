@@ -5,7 +5,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dce16c6f362b4319887525ea214fdb05)](https://app.codacy.com/manual/caiodev/GithubProfileSearcher?utm_source=github.com&utm_medium=referral&utm_content=caiodev/GithubProfileSearcher&utm_campaign=Badge_Grade_Dashboard)
 
 # GithubProfileSearcher
-This app basically gets information about a given github profile and shows its info on the screen. Only compatible with API 21(Lollipop) and above
+This app basically gets information about a given github profile - API 21+
 
 License
 =======
