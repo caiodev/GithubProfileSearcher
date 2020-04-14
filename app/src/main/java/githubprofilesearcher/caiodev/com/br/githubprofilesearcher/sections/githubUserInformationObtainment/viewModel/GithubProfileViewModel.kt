@@ -29,14 +29,32 @@ import kotlinx.serialization.UnstableDefault
 
 class GithubProfileViewModel(
     private val repository:
-    GenericGithubProfileRepository,
-    val flags: GithubProfileViewModelFlags
+    GenericGithubProfileRepository
 ) : ViewModel() {
 
+    //Information cache variables
+    private var temporaryCurrentProfile = ""
+    private var currentProfile = ""
+    private var pageNumber = 1
+
+    //Call related flags
+    internal var hasFirstSuccessfulCallBeenMade = false
+    internal var isThereAnOngoingCall = false
+    internal var hasUserTriggeredANewRequest = false
+    internal var hasAnyUserRequestedUpdatedData = false
+    internal var shouldASearchBePerformed = true
+    internal var isThereAnyProfileToBeSearched = false
+    internal var isTheNumberOfItemsOfTheLastCallLessThanTwenty = false
+
+    //Transient list item view flags
+    private var isEndOfResultsItemVisible = false
+    private var isPaginationLoadingItemVisible = false
+    internal var isRetryItemVisible = false
+
     //Success LiveDatas
-    private val mainListMutableLiveData = MutableLiveData<List<ViewType>>()
-    internal val mainListLiveData: LiveData<List<ViewType>>
-        get() = mainListMutableLiveData
+    private val successMutableLiveData = MutableLiveData<List<ViewType>>()
+    internal val successLiveData: LiveData<List<ViewType>>
+        get() = successMutableLiveData
 
     //Error LiveDatas
     private val errorSingleMutableLiveDataEvent =
@@ -49,34 +67,34 @@ class GithubProfileViewModel(
     private var githubProfilesInfoList: List<ViewType> = githubProfilesInfoMutableList
 
     @UnstableDefault
-    internal fun requestUpdatedGithubProfiles(profile: String = flags.temporaryCurrentProfile) {
-        flags.hasAnyUserRequestedUpdatedData = true
-        flags.temporaryCurrentProfile = profile
+    internal fun requestUpdatedGithubProfiles(profile: String = temporaryCurrentProfile) {
+        hasAnyUserRequestedUpdatedData = true
+        temporaryCurrentProfile = profile
         requestGithubProfiles(profile, true)
     }
 
     @UnstableDefault
     internal fun requestMoreGithubProfiles() {
-        requestGithubProfiles(flags.currentProfile, false)
+        requestGithubProfiles(currentProfile, false)
     }
 
-    //This method is where all the utils.utils.network request process starts. First, when it is called,
+    //This method is where all the network request process starts. First, when it is called,
     @UnstableDefault
-    internal fun requestGithubProfiles(
+    private fun requestGithubProfiles(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
 
-        flags.isThereAnOngoingCall = true
+        isThereAnOngoingCall = true
 
-        if (flags.hasAnyUserRequestedUpdatedData || shouldListItemsBeRemoved || flags.hasUserTriggeredANewRequest) flags.pageNumber =
+        if (hasAnyUserRequestedUpdatedData || shouldListItemsBeRemoved || hasUserTriggeredANewRequest) pageNumber =
             1
 
         viewModelScope.launch {
             if (shouldListItemsBeRemoved) {
                 handleCallResult(profile, shouldListItemsBeRemoved)
             } else
-                handleCallResult(flags.currentProfile, shouldListItemsBeRemoved)
+                handleCallResult(currentProfile, shouldListItemsBeRemoved)
         }
     }
 
@@ -87,39 +105,39 @@ class GithubProfileViewModel(
         shouldListItemsBeRemoved: Boolean = false
     ) {
 
-        if (!flags.hasUserTriggeredANewRequest) insertTransientItemIntoTheResultsList(loading, true)
+        if (!hasUserTriggeredANewRequest) insertTransientItemIntoTheResultsList(loading, true)
 
         when (val value =
             repository.provideGithubUserInformation(
                 user,
-                flags.pageNumber,
+                pageNumber,
                 numberOfItemsPerPage
             )) {
 
             //Success state handling
             is APICallResult.Success<*> -> {
-                if (!hasLastCallBeenSuccessful()) flags.hasFirstSuccessfulCallBeenMade = true
-                flags.currentProfile = flags.temporaryCurrentProfile
-                flags.isThereAnOngoingCall = false
+                if (!hasLastCallBeenSuccessful()) hasFirstSuccessfulCallBeenMade = true
+                currentProfile = temporaryCurrentProfile
+                isThereAnOngoingCall = false
                 with(value.data as GithubProfilesList) {
 
-                    flags.isTheNumberOfItemsOfTheLastCallLessThanTwenty =
+                    isTheNumberOfItemsOfTheLastCallLessThanTwenty =
                         githubProfileInformationList.size < 20
 
                     if (shouldListItemsBeRemoved)
                         setupList(githubProfileInformationList)
                     else {
-                        if (hasLastCallBeenSuccessful() && flags.isPaginationLoadingItemVisible) {
+                        if (hasLastCallBeenSuccessful() && isPaginationLoadingItemVisible) {
                             dropLast()
                         }
                         githubProfilesInfoMutableList.addAll(githubProfileInformationList)
-                        if (flags.isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertTransientItemIntoTheResultsList(
+                        if (isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertTransientItemIntoTheResultsList(
                             endOfResults, true
                         )
                         githubProfilesInfoList = githubProfilesInfoMutableList
-                        mainListMutableLiveData.postValue(githubProfilesInfoList)
+                        successMutableLiveData.postValue(githubProfilesInfoList)
                     }
-                    flags.pageNumber++
+                    pageNumber++
                 }
             }
 
@@ -130,8 +148,8 @@ class GithubProfileViewModel(
     private fun handleErrorResult(errorValue: APICallResult.Error) {
 
         //Error state handling
-        flags.isThereAnOngoingCall = false
-        flags.hasAnyUserRequestedUpdatedData = false
+        isThereAnOngoingCall = false
+        hasAnyUserRequestedUpdatedData = false
 
         insertTransientItemIntoTheResultsList(retry, true)
 
@@ -170,7 +188,6 @@ class GithubProfileViewModel(
                 )
             }
         }
-
     }
 
     /* This method sets up the list with all default RecyclerViewItems it will need. In the first call, a Header is added at the top of the list and following it,
@@ -179,19 +196,21 @@ class GithubProfileViewModel(
         githubUserInformationList: List<GithubProfileInformation>
     ) {
         githubProfilesInfoMutableList.clear()
-        flags.isPaginationLoadingItemVisible = false
-        flags.isRetryItemVisible = false
-        flags.isEndOfResultsItemVisible = false
+        isPaginationLoadingItemVisible = false
+        isRetryItemVisible = false
+        isEndOfResultsItemVisible = false
+
         githubProfilesInfoMutableList.add(Header(R.string.github_user_list_header))
+
         githubUserInformationList.forEach {
             populateList(it)
         }
 
-        if (flags.isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertTransientItemIntoTheResultsList(
+        if (isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertTransientItemIntoTheResultsList(
             endOfResults
         )
         githubProfilesInfoList = githubProfilesInfoMutableList
-        mainListMutableLiveData.postValue(githubProfilesInfoList)
+        successMutableLiveData.postValue(githubProfilesInfoList)
     }
 
     //This method populates the GithubUserProfile related information list which in this case is githubProfilesInfoMutableList
@@ -200,7 +219,6 @@ class GithubProfileViewModel(
             GithubProfileInformation(
                 githubInfo.login,
                 githubInfo.profileUrl,
-                githubInfo.score,
                 githubInfo.userId,
                 githubInfo.userImage
             )
@@ -224,35 +242,35 @@ class GithubProfileViewModel(
             when (state) {
 
                 loading -> {
-                    flags.isThereAnOngoingCall = true
-                    if (flags.isRetryItemVisible) dropLast()
+                    isThereAnOngoingCall = true
+                    if (isRetryItemVisible) dropLast()
                     githubProfilesInfoMutableList.add(Loading())
-                    flags.isPaginationLoadingItemVisible = true
-                    flags.isRetryItemVisible = false
-                    flags.isEndOfResultsItemVisible = false
+                    isPaginationLoadingItemVisible = true
+                    isRetryItemVisible = false
+                    isEndOfResultsItemVisible = false
                 }
 
                 retry -> {
-                    if (flags.isPaginationLoadingItemVisible) dropLast()
+                    if (isPaginationLoadingItemVisible) dropLast()
                     githubProfilesInfoMutableList.add(Retry())
-                    flags.isRetryItemVisible = true
-                    flags.isPaginationLoadingItemVisible = false
-                    flags.isEndOfResultsItemVisible = false
+                    isRetryItemVisible = true
+                    isPaginationLoadingItemVisible = false
+                    isEndOfResultsItemVisible = false
                 }
 
                 else -> {
-                    if (flags.isPaginationLoadingItemVisible || flags.isRetryItemVisible) dropLast()
+                    if (isPaginationLoadingItemVisible || isRetryItemVisible) dropLast()
                     githubProfilesInfoMutableList.add(EndOfResults())
-                    flags.isEndOfResultsItemVisible = true
-                    flags.isPaginationLoadingItemVisible = false
-                    flags.isRetryItemVisible = false
+                    isEndOfResultsItemVisible = true
+                    isPaginationLoadingItemVisible = false
+                    isRetryItemVisible = false
                 }
             }
         }
 
         githubProfilesInfoList = githubProfilesInfoMutableList
 
-        if (shouldPostValue) mainListMutableLiveData.postValue(githubProfilesInfoList)
+        if (shouldPostValue) successMutableLiveData.postValue(githubProfilesInfoList)
     }
 
     private fun dropLast() {
