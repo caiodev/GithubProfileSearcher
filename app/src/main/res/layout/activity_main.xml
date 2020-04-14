@@ -87,7 +87,7 @@
         android:rotation="-90"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_back_to_top"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="ContentDescription" />

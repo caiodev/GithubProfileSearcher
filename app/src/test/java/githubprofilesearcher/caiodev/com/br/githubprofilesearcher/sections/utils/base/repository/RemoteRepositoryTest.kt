@@ -12,11 +12,15 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import retrofit2.Response
 import utils.base.TestSteps
 import utils.base.network.MockedAPIResponsesProvider.profileInfoCallResult
 import utils.base.network.factory.RetrofitTestService.createRetrofitService
 import utils.base.network.factory.RetrofitTestService.setup
-import java.util.concurrent.TimeUnit
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import javax.net.ssl.SSLHandshakeException
 
 class RemoteRepositoryTest : TestSteps {
 
@@ -31,6 +35,11 @@ class RemoteRepositoryTest : TestSteps {
         mockWebServer = setup()
         userProfile = createRetrofitService()
         remoteRepository = RemoteRepository()
+    }
+
+    @AfterEach
+    fun teardown() {
+        mockWebServer.shutdown()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -62,10 +71,6 @@ class RemoteRepositoryTest : TestSteps {
             if (response is APICallResult.Success<*>) isSuccess = true
 
             assertEquals(true, isSuccess)
-            assertEquals(
-                1624,
-                (response as APICallResult.Success<GithubProfilesList>).data.githubProfileInformationList[0].score?.toInt()
-            )
         }
     }
 
@@ -104,38 +109,6 @@ class RemoteRepositoryTest : TestSteps {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun callApi__returnsAnUnsuccessfulResponse400Till402And404Till450() {
-
-        var response = Any()
-
-        given {
-            mockWebServer.enqueue(
-                MockResponse()
-                    .setResponseCode(404)
-                    .setBody(
-                        ""
-                    )
-            )
-        }
-
-        doWhen {
-            runBlocking {
-                val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = remoteRepository.callApi { userProfile }
-            }
-        }
-
-        then {
-            var isSuccessful = false
-            if (response is APICallResult.Error) isSuccessful = false
-
-            assertEquals(false, isSuccessful)
-            assertEquals(7, (response as APICallResult.Error).error)
-        }
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
     fun callApi__returnsAnUnsuccessfulResponse403Forbidden() {
 
         var response = Any()
@@ -168,6 +141,38 @@ class RemoteRepositoryTest : TestSteps {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun callApi__returnsAnUnsuccessfulResponse400Till402And404Till494() {
+
+        var response = Any()
+
+        given {
+            mockWebServer.enqueue(
+                MockResponse()
+                    .setResponseCode(451)
+                    .setBody(
+                        ""
+                    )
+            )
+        }
+
+        doWhen {
+            runBlocking {
+                val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
+                response = remoteRepository.callApi { userProfile }
+            }
+        }
+
+        then {
+            var isSuccessful = false
+            if (response is APICallResult.Error) isSuccessful = false
+
+            assertEquals(false, isSuccessful)
+            assertEquals(7, (response as APICallResult.Error).error)
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun callApi__returnsAnUnsuccessfulResponse500Till598() {
 
         var response = Any()
@@ -175,11 +180,10 @@ class RemoteRepositoryTest : TestSteps {
         given {
             mockWebServer.enqueue(
                 MockResponse()
-                    .setResponseCode(550)
+                    .setResponseCode(530)
                     .setBody(
                         ""
-//                        getJson("sharedTest/resources/mockedJsonResponses/github_user_profile_response.json")
-                    ).throttleBody(1024, 1, TimeUnit.SECONDS)
+                    )
             )
         }
 
@@ -211,7 +215,7 @@ class RemoteRepositoryTest : TestSteps {
                     .setResponseCode(750)
                     .setBody(
                         ""
-                    ).throttleBody(1024, 1, TimeUnit.SECONDS)
+                    )
             )
         }
 
@@ -231,8 +235,96 @@ class RemoteRepositoryTest : TestSteps {
         }
     }
 
-    @AfterEach
-    fun teardown() {
-        mockWebServer.shutdown()
+    @Test
+    fun callApi__connectException() {
+
+        var response = Any()
+
+        doWhen {
+            runBlocking {
+                response =
+                    remoteRepository.callApi { throwException(ConnectException()) }
+            }
+        }
+
+        then {
+            assertEquals(2, (response as APICallResult.Error).error)
+        }
+    }
+
+    @Test
+    fun callApi__genericException() {
+
+        var response = Any()
+
+        doWhen {
+            runBlocking {
+                response =
+                    remoteRepository.callApi { throwException() }
+            }
+        }
+
+        then {
+            assertEquals(3, (response as APICallResult.Error).error)
+        }
+    }
+
+    @Test
+    fun callApi__socketTimeoutException() {
+
+        var response = Any()
+
+        doWhen {
+            runBlocking {
+                response =
+                    remoteRepository.callApi { throwException(SocketTimeoutException()) }
+            }
+        }
+
+        then {
+            assertEquals(4, (response as APICallResult.Error).error)
+        }
+    }
+
+    @Test
+    fun callApi__sslHandshakeException() {
+
+        var response = Any()
+
+        doWhen {
+            runBlocking {
+                response =
+                    remoteRepository.callApi { throwException(SSLHandshakeException("")) }
+            }
+        }
+
+        then {
+            assertEquals(5, (response as APICallResult.Error).error)
+        }
+    }
+
+    @Test
+    fun callApi__unknownHostException() {
+
+        var response = Any()
+
+        doWhen {
+            runBlocking {
+                response =
+                    remoteRepository.callApi { throwException(UnknownHostException()) }
+            }
+        }
+
+        then {
+            assertEquals(6, (response as APICallResult.Error).error)
+        }
+    }
+
+    @Suppress("UNREACHABLE_CODE", "CAST_NEVER_SUCCEEDS")
+    fun throwException(
+        exception: Exception = Exception()
+    ): Response<GithubProfilesList> {
+        throw exception
+        return exception as Response<GithubProfilesList> //Code will never be reached, that's why i'm making this cast that will never succeed
     }
 }

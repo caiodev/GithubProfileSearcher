@@ -24,37 +24,48 @@ class RemoteRepository {
         call: suspend () -> Response<T>
     ): Any {
 
-        try {
+        return try {
 
             val response = call.invoke()
 
             if (response.isSuccessful) {
-                response.body()?.let { apiResponse ->
-                    return APICallResult.Success(apiResponse)
-                } ?: run {
-                    return APICallResult.Success(successWithoutBody) // a.k.a 204 - No content
-                }
-            } else {
-
-                Timber.d("ErrorCode: ${response.code()}")
-
-                return when (response.code()) {
-                    in 400..402, in 404..450 -> APICallResult.Error(clientSideError)
-                    403 -> APICallResult.Error(forbidden)
-                    in 500..598 -> APICallResult.Error(serverSideError)
-                    else -> APICallResult.Error(genericError)
-                }
-            }
+                handleSuccess(response)
+            } else
+                handleError(response.code())
         } catch (exception: Exception) {
-            return when (exception) {
-                is ConnectException -> APICallResult.Error(connectException)
-                is SocketTimeoutException -> APICallResult.Error(socketTimeoutException)
-                is SSLHandshakeException -> APICallResult.Error(sslHandshakeException)
-                is UnknownHostException -> APICallResult.Error(
-                    unknownHostException
-                )
-                else -> APICallResult.Error(genericException)
-            }
+            handleException(exception)
+        }
+    }
+
+    private fun handleSuccess(response: Response<*>): Any {
+        response.body()?.let { apiResponse ->
+            return APICallResult.Success(apiResponse)
+        } ?: run {
+            return APICallResult.Success(successWithoutBody) // a.k.a 204 - No content
+        }
+    }
+
+    private fun handleError(responseCode: Int): Any {
+
+        Timber.d("ErrorCode: $responseCode")
+
+        return when (responseCode) {
+            in 400..402, in 404..499 -> APICallResult.Error(clientSideError)
+            403 -> APICallResult.Error(forbidden)
+            in 500..598 -> APICallResult.Error(serverSideError)
+            else -> APICallResult.Error(genericError)
+        }
+    }
+
+    private fun handleException(exception: Exception): Any {
+        return when (exception) {
+            is ConnectException -> APICallResult.Error(connectException)
+            is SocketTimeoutException -> APICallResult.Error(socketTimeoutException)
+            is SSLHandshakeException -> APICallResult.Error(sslHandshakeException)
+            is UnknownHostException -> APICallResult.Error(
+                unknownHostException
+            )
+            else -> APICallResult.Error(genericException)
         }
     }
 }

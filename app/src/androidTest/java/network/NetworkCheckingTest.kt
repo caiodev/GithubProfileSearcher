@@ -14,13 +14,14 @@ import utils.base.liveData.LiveDataTestUtil
 @RunWith(AndroidJUnit4::class)
 class NetworkCheckingTest {
 
-    // Executes each task synchronously using Architecture Components.
+    //Executes each task synchronously using Architecture Components
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
     @Test
-    fun online() {
+    fun checkIfInternetConnectionIsAvailable_applicationContext_isOnlineEqualsTrue() {
         var isOnline = false
+
         checkIfInternetConnectionIsAvailable(
             InstrumentationRegistry.getInstrumentation().targetContext,
             { isOnline = true },
@@ -29,12 +30,18 @@ class NetworkCheckingTest {
     }
 
     @Test
-    fun observableOnline() {
-        assertThat(LiveDataTestUtil.getValue(internetConnectionAvailabilityObservable(InstrumentationRegistry.getInstrumentation().targetContext))).isTrue()
+    fun internetConnectionAvailabilityObservable_applicationContext_liveDataValueEqualsTrue() {
+        assertThat(
+            LiveDataTestUtil.getValue(
+                internetConnectionAvailabilityObservable(
+                    InstrumentationRegistry.getInstrumentation().targetContext
+                )
+            )
+        ).isTrue()
     }
 
     @Test
-    fun offline() {
+    fun checkIfInternetConnectionIsAvailable_applicationContext_inOfflineEqualsTrue() {
         var isOffline = false
         checkIfInternetConnectionIsAvailable(
             InstrumentationRegistry.getInstrumentation().targetContext,
@@ -44,7 +51,13 @@ class NetworkCheckingTest {
     }
 
     @Test
-    fun observableOffline() {
-        assertThat(LiveDataTestUtil.getValue(internetConnectionAvailabilityObservable(InstrumentationRegistry.getInstrumentation().targetContext))).isNull()
+    fun internetConnectionAvailabilityObservable_applicationContext_liveDataValueEqualsNull() {
+        assertThat(
+            LiveDataTestUtil.getValue(
+                internetConnectionAvailabilityObservable(
+                    InstrumentationRegistry.getInstrumentation().targetContext
+                )
+            )
+        ).isNull()
     }
 }
