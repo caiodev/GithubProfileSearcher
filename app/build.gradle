@@ -70,13 +70,12 @@ dependencies {
     //Coil
     implementation "io.coil-kt:coil:$coil"
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
-
     //Espresso
     implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
 
-    //Layouts
+    //Layouts/Views
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    implementation "androidx.recyclerview:recyclerview:$recyclerView"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
 
     //Koin

@@ -123,10 +123,14 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     private fun setupSwipeRefreshLayout() {
-        githubProfileListSwipeRefreshLayout.setOnRefreshListener {
-            viewModel.hasAnyUserRequestedUpdatedData = true
-            viewModel.hasUserTriggeredANewRequest = true
-            swipeRefreshCall()
+        githubProfileListSwipeRefreshLayout.apply {
+            isEnabled = false
+            isRefreshing = false
+            setOnRefreshListener {
+                viewModel.hasAnyUserRequestedUpdatedData = true
+                viewModel.hasUserTriggeredANewRequest = true
+                swipeRefreshCall()
+            }
         }
     }
 
@@ -211,7 +215,6 @@ class GithubProfileInfoObtainmentActivity :
 
             setupUpperViewsInteraction(true)
             viewModel.shouldASearchBePerformed = false
-            applyViewVisibility(githubProfileListSwipeRefreshLayout)
 
             shouldRecyclerViewAnimationBeExecuted =
                 if (!viewModel.hasFirstSuccessfulCallBeenMade || viewModel.hasUserTriggeredANewRequest) {
@@ -237,6 +240,8 @@ class GithubProfileInfoObtainmentActivity :
                 runLayoutAnimation(profileInfoRecyclerView)
             else
                 shouldRecyclerViewAnimationBeExecuted = true
+
+            applyViewVisibility(githubProfileListSwipeRefreshLayout)
         }
     }
 
@@ -249,14 +254,15 @@ class GithubProfileInfoObtainmentActivity :
 
             if (viewModel.hasUserTriggeredANewRequest) viewModel.hasUserTriggeredANewRequest = false
 
-            if (!shouldRecyclerViewAnimationBeExecuted)
-                shouldRecyclerViewAnimationBeExecuted = true
-
             setupUpperViewsInteraction(true)
-
-            viewModel.shouldASearchBePerformed = true
+            applyViewVisibility(githubProfileListSwipeRefreshLayout)
             changeDrawable(actionIconImageView, R.drawable.ic_search)
             showErrorMessages(error)
+
+            viewModel.shouldASearchBePerformed = true
+
+            if (!shouldRecyclerViewAnimationBeExecuted)
+                shouldRecyclerViewAnimationBeExecuted = true
         }
     }
 

@@ -3,7 +3,7 @@ buildscript {
     ext {
 
         //AndroidXCore
-        androidXCore = '1.3.0-beta01'
+        androidXCore = '1.3.0-rc01'
 
         //AppCompat
         appCompat = '1.2.0-beta01'
@@ -11,20 +11,27 @@ buildscript {
         //Coil
         coil = '0.9.5'
 
-        //ConstraintLayout
-        constraintLayout = '2.0.0-beta4'
-
         //Gradle
-        gradleVersion = '3.6.2'
+        gradleVersion = '3.6.3'
 
         //Koin
         koin = '2.1.5'
 
         //Kotlin
-        kotlin = '1.3.71'
+        kotlin = '1.3.72'
 
         //Ktx
-        ktxCore = '1.3.0-beta01'
+        ktxCore = '1.3.0-rc01'
+
+        //Layouts/Views
+        //ConstraintLayout
+        constraintLayout = '2.0.0-beta4'
+
+        //RecyclerView
+        recyclerView = "1.2.0-alpha02"
+
+        //SwipeRefreshLayout
+        swipeRefreshLayout = '1.1.0-rc01'
 
         //LeakCanary
         leakCanary = '2.2'
@@ -34,7 +41,7 @@ buildscript {
         arch = '2.3.0-alpha01'
 
         //Material design
-        materialDesign = '1.2.0-alpha05'
+        materialDesign = '1.2.0-alpha06'
 
         //OkHttp
         okHttp = '4.4.1'
@@ -45,9 +52,6 @@ buildscript {
 
         //Serialization
         serialization = '0.20.0'
-
-        //SwipeRefreshLayout
-        swipeRefreshLayout = '1.1.0-beta01'
 
         //Timber
         timber = '4.7.1'
