@@ -150,8 +150,8 @@ class GithubProfileViewModel(
         //Error state handling
         isThereAnOngoingCall = false
         hasAnyUserRequestedUpdatedData = false
-
-        insertTransientItemIntoTheResultsList(retry, true)
+        if (!isRetryItemVisible)
+            insertTransientItemIntoTheResultsList(retry, true)
 
         with(errorSingleMutableLiveDataEvent) {
 

@@ -2,7 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.content.Context
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -17,8 +16,8 @@ fun Context.applyViewVisibility(view: View, visibility: Int? = null) {
     when (view) {
 
         is SwipeRefreshLayout -> {
-            if (view.visibility != VISIBLE) view.visibility = VISIBLE
             if (view.isRefreshing) view.isRefreshing = false
+            if (!view.isEnabled) view.isEnabled = true
         }
 
         else -> visibility?.let {
