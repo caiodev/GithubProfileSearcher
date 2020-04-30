@@ -6,13 +6,14 @@ object Constants {
     const val githubProfileUrl = "githubProfileUrl"
 
     //RecyclerView view types
-    const val header = 0
+    const val empty = 0
     const val githubProfileCell = 1
 
     //Subtypes of Generic
     const val loading = 2
     const val retry = 3
     const val endOfResults = 4
+    const val header = 5
 
     //Call states
     //Success

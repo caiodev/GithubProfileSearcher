@@ -1,6 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolders.transientItemViews
 
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
@@ -11,7 +12,7 @@ class RetryViewHolder(itemView: View, private val onItemClicked: OnItemClicked?)
 
     init {
         itemView.retryTextViewParentLayout.retryTextView.setOnClickListener {
-            onItemClicked?.onItemClick(adapterPosition, retry)
+            onItemClicked?.onItemClick(layoutPosition, retry)
         }
     }
 }

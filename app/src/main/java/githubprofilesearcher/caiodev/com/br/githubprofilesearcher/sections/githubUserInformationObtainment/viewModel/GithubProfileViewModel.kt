@@ -7,21 +7,16 @@ import androidx.lifecycle.viewModelScope
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.GenericGithubProfileRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItemsPerPage
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.dropLast
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.viewTypes.ViewType
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.SingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.launch
@@ -44,7 +39,6 @@ class GithubProfileViewModel(
     internal var hasAnyUserRequestedUpdatedData = false
     internal var shouldASearchBePerformed = true
     internal var isThereAnyProfileToBeSearched = false
-    internal var isTheNumberOfItemsOfTheLastCallLessThanTwenty = false
 
     //Transient list item view flags
     private var isEndOfResultsItemVisible = false
@@ -52,8 +46,8 @@ class GithubProfileViewModel(
     internal var isRetryItemVisible = false
 
     //Success LiveDatas
-    private val successMutableLiveData = MutableLiveData<List<ViewType>>()
-    internal val successLiveData: LiveData<List<ViewType>>
+    private val successMutableLiveData = MutableLiveData<List<GithubProfileInformation>>()
+    internal val successLiveData: LiveData<List<GithubProfileInformation>>
         get() = successMutableLiveData
 
     //Error LiveDatas
@@ -63,8 +57,9 @@ class GithubProfileViewModel(
         get() = errorSingleMutableLiveDataEvent.toImmutableSingleLiveEvent()
 
     //Result lists
-    private val githubProfilesInfoMutableList = mutableListOf<ViewType>()
-    private var githubProfilesInfoList: List<ViewType> = githubProfilesInfoMutableList
+    private val githubProfilesInfoMutableList = mutableListOf<GithubProfileInformation>()
+    var githubProfilesInfoList: List<GithubProfileInformation> =
+        githubProfilesInfoMutableList
 
     @UnstableDefault
     internal fun requestUpdatedGithubProfiles(profile: String = temporaryCurrentProfile) {
@@ -91,9 +86,9 @@ class GithubProfileViewModel(
             1
 
         viewModelScope.launch {
-            if (shouldListItemsBeRemoved) {
+            if (shouldListItemsBeRemoved)
                 handleCallResult(profile, shouldListItemsBeRemoved)
-            } else
+            else
                 handleCallResult(currentProfile, shouldListItemsBeRemoved)
         }
     }
@@ -105,7 +100,7 @@ class GithubProfileViewModel(
         shouldListItemsBeRemoved: Boolean = false
     ) {
 
-        if (!hasUserTriggeredANewRequest) insertTransientItemIntoTheResultsList(loading, true)
+//        if (!hasUserTriggeredANewRequest)
 
         when (val value =
             repository.provideGithubUserInformation(
@@ -121,19 +116,15 @@ class GithubProfileViewModel(
                 isThereAnOngoingCall = false
                 with(value.data as GithubProfilesList) {
 
-                    isTheNumberOfItemsOfTheLastCallLessThanTwenty =
-                        githubProfileInformationList.size < 20
-
                     if (shouldListItemsBeRemoved)
                         setupList(githubProfileInformationList)
                     else {
-                        if (hasLastCallBeenSuccessful() && isPaginationLoadingItemVisible) {
-                            dropLast()
-                        }
+
+//                        if (hasLastCallBeenSuccessful() && isPaginationLoadingItemVisible)
+
                         githubProfilesInfoMutableList.addAll(githubProfileInformationList)
-                        if (isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertTransientItemIntoTheResultsList(
-                            endOfResults, true
-                        )
+
+
                         githubProfilesInfoList = githubProfilesInfoMutableList
                         successMutableLiveData.postValue(githubProfilesInfoList)
                     }
@@ -150,39 +141,39 @@ class GithubProfileViewModel(
         //Error state handling
         isThereAnOngoingCall = false
         hasAnyUserRequestedUpdatedData = false
-        if (!isRetryItemVisible)
-            insertTransientItemIntoTheResultsList(retry, true)
+
+//        if (!isRetryItemVisible)
 
         with(errorSingleMutableLiveDataEvent) {
 
             when (errorValue.error) {
 
-                unknownHostException, socketTimeoutException, connectException -> errorPairProvider(
+                unknownHostException, socketTimeoutException, connectException -> errorProvider(
                     R.string.unknown_host_exception_and_socket_timeout_exception,
                     this
                 )
 
-                sslHandshakeException -> errorPairProvider(
+                sslHandshakeException -> errorProvider(
                     R.string.ssl_handshake_exception,
                     this
                 )
 
-                clientSideError -> errorPairProvider(
+                clientSideError -> errorProvider(
                     R.string.client_side_error,
                     this
                 )
 
-                serverSideError -> errorPairProvider(
+                serverSideError -> errorProvider(
                     R.string.server_side_error,
                     this
                 )
 
-                forbidden -> errorPairProvider(
+                forbidden -> errorProvider(
                     R.string.api_query_limit_exceeded_error,
                     this
                 )
 
-                else -> errorPairProvider(
+                else -> errorProvider(
                     R.string.generic_exception_and_generic_error,
                     this
                 )
@@ -196,19 +187,14 @@ class GithubProfileViewModel(
         githubUserInformationList: List<GithubProfileInformation>
     ) {
         githubProfilesInfoMutableList.clear()
-        isPaginationLoadingItemVisible = false
-        isRetryItemVisible = false
-        isEndOfResultsItemVisible = false
-
-        githubProfilesInfoMutableList.add(Header(R.string.github_user_list_header))
+//        isPaginationLoadingItemVisible = false
+//        isRetryItemVisible = false
+//        isEndOfResultsItemVisible = false
 
         githubUserInformationList.forEach {
             populateList(it)
         }
 
-        if (isTheNumberOfItemsOfTheLastCallLessThanTwenty) insertTransientItemIntoTheResultsList(
-            endOfResults
-        )
         githubProfilesInfoList = githubProfilesInfoMutableList
         successMutableLiveData.postValue(githubProfilesInfoList)
     }
@@ -225,61 +211,54 @@ class GithubProfileViewModel(
         )
     }
 
-    private fun errorPairProvider(
+    private fun errorProvider(
         error: Int,
         state: SingleLiveEvent<Int>
     ) {
         state.postValue(error)
     }
 
-    private fun insertTransientItemIntoTheResultsList(
-        state: Int,
-        shouldPostValue: Boolean = false
-    ) {
-
-        if (hasLastCallBeenSuccessful()) {
-
-            when (state) {
-
-                loading -> {
-                    isThereAnOngoingCall = true
-                    if (isRetryItemVisible) dropLast()
-                    githubProfilesInfoMutableList.add(Loading())
-                    isPaginationLoadingItemVisible = true
-                    isRetryItemVisible = false
-                    isEndOfResultsItemVisible = false
-                }
-
-                retry -> {
-                    if (isPaginationLoadingItemVisible) dropLast()
-                    githubProfilesInfoMutableList.add(Retry())
-                    isRetryItemVisible = true
-                    isPaginationLoadingItemVisible = false
-                    isEndOfResultsItemVisible = false
-                }
-
-                else -> {
-                    if (isPaginationLoadingItemVisible || isRetryItemVisible) dropLast()
-                    githubProfilesInfoMutableList.add(EndOfResults())
-                    isEndOfResultsItemVisible = true
-                    isPaginationLoadingItemVisible = false
-                    isRetryItemVisible = false
-                }
-            }
-        }
-
-        githubProfilesInfoList = githubProfilesInfoMutableList
-
-        if (shouldPostValue) successMutableLiveData.postValue(githubProfilesInfoList)
-    }
-
-    private fun dropLast() {
-        dropLast(githubProfilesInfoMutableList)
-    }
+//    private fun insertTransientItemIntoTheResultsList(
+//        state: Int,
+//        shouldPostValue: Boolean = false
+//    ) {
+//
+//        if (hasLastCallBeenSuccessful()) {
+//
+//            when (state) {
+//
+//                loading -> {
+//                    isThereAnOngoingCall = true
+//                    if (isRetryItemVisible) dropLast()
+//                    isPaginationLoadingItemVisible = true
+//                    isRetryItemVisible = false
+//                    isEndOfResultsItemVisible = false
+//                }
+//
+//                retry -> {
+//                    if (isPaginationLoadingItemVisible) dropLast()
+//                    isRetryItemVisible = true
+//                    isPaginationLoadingItemVisible = false
+//                    isEndOfResultsItemVisible = false
+//                }
+//
+//                else -> {
+//                    if (isPaginationLoadingItemVisible || isRetryItemVisible) dropLast()
+//                    isEndOfResultsItemVisible = true
+//                    isPaginationLoadingItemVisible = false
+//                    isRetryItemVisible = false
+//                }
+//            }
+//        }
+//
+//        githubProfilesInfoList = githubProfilesInfoMutableList
+//
+//        if (shouldPostValue) successMutableLiveData.postValue(githubProfilesInfoList)
+//    }
 
     private fun hasLastCallBeenSuccessful() = githubProfilesInfoList.isNotEmpty()
 
     //This method provides a URL to the profile a user clicks on a List item
     internal fun provideProfileUrlThroughViewModel(index: Int) =
-        (githubProfilesInfoMutableList[index] as GithubProfileInformation).profileUrl
+        githubProfilesInfoMutableList[index].profileUrl
 }
