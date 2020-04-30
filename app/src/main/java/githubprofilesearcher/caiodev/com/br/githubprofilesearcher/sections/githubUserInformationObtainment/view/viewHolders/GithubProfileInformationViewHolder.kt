@@ -18,7 +18,7 @@ class GithubProfileInformationViewHolder(
 
     init {
         itemView.parentLayout.setOnClickListener {
-            onItemClicked?.onItemClick(adapterPosition, githubProfileCell)
+            onItemClicked?.onItemClick(layoutPosition, githubProfileCell)
         }
     }
 

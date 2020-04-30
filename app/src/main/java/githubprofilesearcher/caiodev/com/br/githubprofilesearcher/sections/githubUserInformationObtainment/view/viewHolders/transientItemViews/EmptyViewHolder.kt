@@ -3,4 +3,4 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class EndOfResultsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

@@ -13,16 +13,18 @@ import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.GithubProfileAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.HeaderAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.TransientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileCell
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
@@ -31,6 +33,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.UnstableDefault
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
@@ -44,8 +47,12 @@ class GithubProfileInfoObtainmentActivity :
 
     private val viewModel by viewModel<GithubProfileViewModel>()
 
-    private val githubUserAdapter by lazy {
-        GithubProfileAdapter()
+    private val mergeAdapter by lazy {
+        MergeAdapter(
+            HeaderAdapter(R.string.github_user_list_header),
+            GithubProfileAdapter(),
+            TransientViewsAdapter()
+        )
     }
 
     @UnstableDefault
@@ -94,12 +101,11 @@ class GithubProfileInfoObtainmentActivity :
 
         //Setting true black because in my case what was applied way actually a dark grey shade
         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_YES -> {
+            Configuration.UI_MODE_NIGHT_YES ->
                 applyBackgroundColor(
                     parentConstraintLayout,
                     android.R.color.black
                 )
-            }
         }
     }
 
@@ -138,7 +144,7 @@ class GithubProfileInfoObtainmentActivity :
     private fun setupRecyclerView() {
         profileInfoRecyclerView.apply {
             setHasFixedSize(true)
-            adapter = githubUserAdapter
+            adapter = mergeAdapter
             setupRecyclerViewAddOnScrollListener()
         }
     }
@@ -171,32 +177,33 @@ class GithubProfileInfoObtainmentActivity :
     @UnstableDefault
     private fun adapterCallback() {
 
-        githubUserAdapter.setOnItemClicked(object : OnItemClicked {
+        (mergeAdapter.adapters[1] as GithubProfileAdapter).setOnItemClicked(object : OnItemClicked {
 
             override fun onItemClick(adapterPosition: Int, id: Int) {
 
-                when (id) {
-                    githubProfileCell -> {
-                        checkIfInternetConnectionIsAvailableCaller(
-                            onConnectionAvailable = {
-                                startActivity(
-                                    Intent(
-                                        applicationContext,
-                                        ShowRepositoryInfoActivity::class.java
+                checkIfInternetConnectionIsAvailableCaller(
+                    onConnectionAvailable = {
+                        startActivity(
+                            Intent(
+                                applicationContext,
+                                ShowRepositoryInfoActivity::class.java
+                            )
+                                .putExtra(
+                                    Constants.githubProfileUrl,
+                                    viewModel.provideProfileUrlThroughViewModel(
+                                        adapterPosition
                                     )
-                                        .putExtra(
-                                            Constants.githubProfileUrl,
-                                            viewModel.provideProfileUrlThroughViewModel(
-                                                adapterPosition
-                                            )
-                                        )
                                 )
-                            },
-                            onConnectionUnavailable = { showInternetConnectionStatusSnackBar(false) })
-                    }
+                        )
+                    },
+                    onConnectionUnavailable = { showInternetConnectionStatusSnackBar(false) })
+            }
+        })
 
-                    retry -> paginationCall()
-                }
+        (mergeAdapter.adapters[2] as TransientViewsAdapter).setOnItemClicked(object :
+            OnItemClicked {
+            override fun onItemClick(adapterPosition: Int, id: Int) {
+                paginationCall()
             }
         })
     }
@@ -216,12 +223,16 @@ class GithubProfileInfoObtainmentActivity :
             setupUpperViewsInteraction(true)
             viewModel.shouldASearchBePerformed = false
 
+            (mergeAdapter.adapters[1] as GithubProfileAdapter).apply {
+                updateDataSource(githubUsersList)
+                notifyDataSetChanged()
+            }
+
             shouldRecyclerViewAnimationBeExecuted =
                 if (!viewModel.hasFirstSuccessfulCallBeenMade || viewModel.hasUserTriggeredANewRequest) {
-                    githubUserAdapter.updateDataSource(githubUsersList)
+                    (mergeAdapter.adapters[0] as HeaderAdapter).updateViewType(header)
                     true
                 } else {
-                    githubUserAdapter.updateDataSource(githubUsersList)
                     profileInfoRecyclerView.adapter?.notifyDataSetChanged()
                     applyViewVisibility(repositoryLoadingProgressBar, GONE)
                     false
@@ -231,7 +242,7 @@ class GithubProfileInfoObtainmentActivity :
 
             if (viewModel.hasAnyUserRequestedUpdatedData) {
                 applyViewVisibility(githubProfileListSwipeRefreshLayout)
-                githubUserAdapter.updateDataSource(githubUsersList)
+                (mergeAdapter.adapters[1] as GithubProfileAdapter).updateDataSource(githubUsersList)
                 shouldRecyclerViewAnimationBeExecuted = true
                 viewModel.hasAnyUserRequestedUpdatedData = false
             }
@@ -281,7 +292,7 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     private fun paginationCall() {
-        viewModel.requestMoreGithubProfiles()
+        callApiThroughViewModel { viewModel.requestMoreGithubProfiles() }
     }
 
     @UnstableDefault
@@ -313,6 +324,7 @@ class GithubProfileInfoObtainmentActivity :
                 context,
                 R.anim.layout_animation_fall_down
             )
+
             adapter?.notifyDataSetChanged()
 
             // For some reason, when a call that removes all previous items from the result list is made
@@ -382,6 +394,7 @@ class GithubProfileInfoObtainmentActivity :
                         showInternetConnectionStatusSnackBar(true)
                         if (viewModel.hasFirstSuccessfulCallBeenMade) {
                             if (!viewModel.isThereAnOngoingCall && viewModel.isRetryItemVisible) {
+                                Timber.d("AQUI2")
                                 paginationCall()
                             }
                         } else
@@ -431,8 +444,11 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     private fun setupRecyclerViewAddOnScrollListener() {
+
         profileInfoRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
                 val total = recyclerView.layoutManager?.itemCount
                 val recyclerViewLayoutManager = provideRecyclerViewLayoutManager()
 
@@ -445,7 +461,7 @@ class GithubProfileInfoObtainmentActivity :
                     backToTopButton.isClickable = true
                 }
 
-                if (recyclerViewLayoutManager.findLastVisibleItemPosition() == total?.minus(1) && !viewModel.isTheNumberOfItemsOfTheLastCallLessThanTwenty) {
+                if (recyclerViewLayoutManager.findLastVisibleItemPosition() == total?.minus(1) && viewModel.hasFirstSuccessfulCallBeenMade) {
                     shouldRecyclerViewAnimationBeExecuted = false
                     if (!viewModel.isThereAnOngoingCall && !viewModel.isRetryItemVisible) {
                         paginationCall()
