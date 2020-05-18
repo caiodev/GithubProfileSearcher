@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlinx-serialization'
-apply plugin: 'jacoco'
+apply from: "${toolsPath}coverage.gradle"
 
 android {
     compileSdkVersion 29
@@ -98,10 +98,11 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
 
     //Lifecycle section
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$arch"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$arch"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$arch"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$arch"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
@@ -132,9 +133,6 @@ dependencies {
     //JUnit
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5"
 
-    //Mockito
-    testImplementation "org.mockito:mockito-core:$mockito"
-
     //MockWebServer
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
 
@@ -157,69 +155,15 @@ dependencies {
     //JUnit
     androidTestImplementation "androidx.test.ext:junit-ktx:$junitAndroidX"
 
-    //Mockito
-    androidTestImplementation "org.mockito:mockito-core:$mockito"
-    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMaker"
-
     //MockWebServer
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
 
     //Runner
-    androidTestImplementation "androidx.test:runner:$runner"
+    androidTestImplementation "androidx.test:runner:$testCore"
 
     //Test core
     androidTestImplementation "androidx.test:core-ktx:$testCore"
 
     //Truth
     androidTestImplementation "com.google.truth:truth:$truth"
-}
-
-jacoco {
-    toolVersion = "$jacocoVersion"
-    reportsDir = file("$buildDir")
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-
-    def coverageSourceDirs = [
-            "src/main/java"
-    ]
-
-    def fileFilter = [
-            '**/*Activity.*',
-            '**/*Adapter.*',
-            '**/BuildConfig.*',
-            '**/*Constants.*',
-            '**/Manifest*.*',
-            '**/R.class',
-            '**/R$*.class',
-            '**/*Test*.*',
-            '**/*ViewHolder*.*',
-            'android/**/*.*',
-            'androidx/**/*.*',
-            '**/*delay/**/*.*',
-            '**/*init/**/*.*',
-            '**/*model/**/*.*'
-    ]
-
-    def javaClasses = fileTree(dir: "$buildDir/intermediates/classes/debug", excludes: fileFilter)
-    def kotlinClasses = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-
-    classDirectories.setFrom files([javaClasses, kotlinClasses])
-    additionalSourceDirs.setFrom files(coverageSourceDirs)
-
-    sourceDirectories.setFrom files([
-            "$project.projectDir/src/main/java"
-    ])
-
-    executionData.setFrom fileTree(dir: project.projectDir, includes: ["**/*.exec"])
-
-    reports {
-        html.enabled true
-    }
 }

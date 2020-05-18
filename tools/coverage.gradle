@@ -1,0 +1,51 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "$jacocoVersion"
+    reportsDir = file("$buildDir")
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+
+    def coverageSourceDirs = [
+            "src/main/java"
+    ]
+
+    def fileFilter = [
+            '**/*Activity.*',
+            '**/*Adapter.*',
+            '**/BuildConfig.*',
+            '**/*Constants.*',
+            '**/Manifest*.*',
+            '**/R.class',
+            '**/R$*.class',
+            '**/*Test*.*',
+            '**/*ViewHolder*.*',
+            'android/**/*.*',
+            'androidx/**/*.*',
+            '**/*delay/**/*.*',
+            '**/*init/**/*.*',
+            '**/*model/**/*.*'
+    ]
+
+    def javaClasses = fileTree(dir: "$buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def kotlinClasses = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+
+    classDirectories.setFrom files([javaClasses, kotlinClasses])
+    additionalSourceDirs.setFrom files(coverageSourceDirs)
+
+    sourceDirectories.setFrom files([
+            "$project.projectDir/src/main/java"
+    ])
+
+    executionData.setFrom fileTree(dir: project.projectDir, includes: ["**/*.exec"])
+
+    reports {
+        html.enabled true
+    }
+}

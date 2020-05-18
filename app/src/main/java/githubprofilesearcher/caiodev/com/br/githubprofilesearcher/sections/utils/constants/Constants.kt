@@ -37,4 +37,18 @@ object Constants {
 
     //Pagination
     const val numberOfItemsPerPage = 20
+
+    //HandleSavedState properties
+    //Call related
+    const val hasFirstSuccessfulCallBeenMade = "hasFirstSuccessfulCallBeenMade"
+    const val isThereAnOngoingCall = "isThereAnOngoingCall"
+    const val hasUserTriggeredANewRequest = "hasUserTriggeredANewRequest"
+    const val hasAnyUserRequestedUpdatedData = "hasAnyUserRequestedUpdatedData"
+    const val shouldASearchBePerformed = "shouldASearchBePerformed"
+    const val isThereAnyProfileToBeSearched = "isThereAnyProfileToBeSearched"
+
+    //Transient Views
+    const val isEndOfResultsItemVisible = "isEndOfResultsItemVisible"
+    const val isPaginationLoadingItemVisible = "isPaginationLoadingItemVisible"
+    const val isRetryItemVisible = "isRetryItemVisible"
 }
