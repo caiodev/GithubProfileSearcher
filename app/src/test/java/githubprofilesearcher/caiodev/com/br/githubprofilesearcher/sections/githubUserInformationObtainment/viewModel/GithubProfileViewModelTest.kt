@@ -1,5 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel
 
+import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.async.CoroutinesTestExtension
@@ -22,7 +23,8 @@ class GithubProfileViewModelTest : TestSteps {
     @ExperimentalCoroutinesApi
     @BeforeEach
     override fun setupDependencies() {
-        viewModel = GithubProfileViewModel(FakeGithubProfileInformationRepository())
+        viewModel =
+            GithubProfileViewModel(SavedStateHandle(), FakeGithubProfileInformationRepository())
     }
 
     @UnstableDefault
@@ -37,7 +39,7 @@ class GithubProfileViewModelTest : TestSteps {
 
         doWhen {
             githubInfo =
-                LiveDataTestUtil.getValue(viewModel.successLiveData)[1] as GithubProfileInformation
+                LiveDataTestUtil.getValue(viewModel.successLiveData)[0]
         }
 
         then {
@@ -70,7 +72,7 @@ class GithubProfileViewModelTest : TestSteps {
         }
 
         then {
-            assertThat(viewModel.provideProfileUrlThroughViewModel(1)).isEqualTo("https://github.com/torvalds")
+            assertThat(viewModel.provideProfileUrlThroughViewModel(0)).isEqualTo("https://github.com/torvalds")
         }
     }
 }
