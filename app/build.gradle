@@ -61,22 +61,17 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    //AppCompat
-    implementation "androidx.appcompat:appcompat:$appCompat"
-
     //AndroidXCore
     implementation "androidx.core:core:$androidXCore"
+
+    //AppCompat
+    implementation "androidx.appcompat:appcompat:$appCompat"
 
     //Coil
     implementation "io.coil-kt:coil:$coil"
 
     //Espresso
     implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
-
-    //Layouts/Views
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
-    implementation "androidx.recyclerview:recyclerview:$recyclerView"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
 
     //Koin
     //For Android
@@ -118,6 +113,11 @@ dependencies {
     //Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization"
 
+    //Views/ViewGroups
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    implementation "androidx.recyclerview:recyclerview:$recyclerView"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
+
     /*Testing section*/
 
     /*Test source set*/
@@ -125,7 +125,7 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:$archTest"
 
     //CoroutineTest
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineTest"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTest"
 
     //Jacoco
     testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
