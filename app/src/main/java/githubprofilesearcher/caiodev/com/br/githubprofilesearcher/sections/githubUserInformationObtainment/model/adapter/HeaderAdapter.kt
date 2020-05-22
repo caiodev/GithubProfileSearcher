@@ -12,7 +12,7 @@ class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<Recycler
 
     private var viewType = empty
 
-    internal fun updateViewType(viewType: Int) {
+    internal fun updateViewState(viewType: Int) {
         this.viewType = viewType
     }
 

@@ -115,6 +115,7 @@ allprojects {
                 includeGroup "com.googlecode.java-diff-utils"
                 includeGroup "com.linkedin.dexmaker"
                 includeGroup "net.bytebuddy"
+                includeGroup "net.java.dev.jna"
                 includeGroup "net.sf.kxml"
                 includeGroup "org.apiguardian"
                 includeGroup "org.checkerframework"

@@ -38,14 +38,21 @@ object Constants {
     //Pagination
     const val numberOfItemsPerPage = 20
 
+    //Adapter positions
+    //Header
+    const val headerAdapter = 0
+    const val githubProfileAdapter = 1
+    const val transientViewsAdapter = 2
+
     //HandleSavedState properties
     //Call related
-    const val hasFirstSuccessfulCallBeenMade = "hasFirstSuccessfulCallBeenMade"
+    const val hasASuccessfulCallAlreadyBeenMade = "hasFirstCallBeenSuccessful"
+    const val hasLastCallBeenUnsuccessful = "hasLastCallBeenUnsuccessful"
     const val isThereAnOngoingCall = "isThereAnOngoingCall"
-    const val hasUserTriggeredANewRequest = "hasUserTriggeredANewRequest"
-    const val hasAnyUserRequestedUpdatedData = "hasAnyUserRequestedUpdatedData"
+    const val hasUserRequestedUpdatedData = "hasAnyUserRequestedUpdatedData"
     const val shouldASearchBePerformed = "shouldASearchBePerformed"
-    const val isThereAnyProfileToBeSearched = "isThereAnyProfileToBeSearched"
+    const val isTextInputEditTextEmpty = "isTextInputEditTextEmpty"
+    const val numberOfItems = "numberOfItems"
 
     //Transient Views
     const val isEndOfResultsItemVisible = "isEndOfResultsItemVisible"

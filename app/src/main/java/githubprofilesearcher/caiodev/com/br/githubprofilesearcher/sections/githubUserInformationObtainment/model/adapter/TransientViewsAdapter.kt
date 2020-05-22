@@ -69,7 +69,7 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount() = 1
 
-    internal fun updateViewType(newState: Int) {
+    internal fun updateViewState(newState: Int) {
         viewType = newState
     }
 

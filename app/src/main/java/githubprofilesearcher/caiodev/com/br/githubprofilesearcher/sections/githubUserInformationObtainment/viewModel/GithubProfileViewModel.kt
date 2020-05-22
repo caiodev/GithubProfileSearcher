@@ -8,6 +8,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItems
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItemsPerPage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
@@ -46,6 +47,7 @@ class GithubProfileViewModel(
 
     @UnstableDefault
     internal fun requestUpdatedGithubProfiles(profile: String = temporaryCurrentProfile) {
+        pageNumber = 1
         temporaryCurrentProfile = profile
         requestGithubProfiles(profile, true)
     }
@@ -86,7 +88,10 @@ class GithubProfileViewModel(
             //Success state handling
             is APICallResult.Success<*> -> {
                 currentProfile = temporaryCurrentProfile
+
                 with(value.data as GithubProfilesList) {
+
+                    saveStateValue(numberOfItems, githubProfileInformationList.size)
 
                     if (shouldListItemsBeRemoved)
                         setupList(githubProfileInformationList)
@@ -97,6 +102,7 @@ class GithubProfileViewModel(
                     }
                     pageNumber++
                 }
+
             }
 
             else -> handleErrorResult(value as APICallResult.Error)
