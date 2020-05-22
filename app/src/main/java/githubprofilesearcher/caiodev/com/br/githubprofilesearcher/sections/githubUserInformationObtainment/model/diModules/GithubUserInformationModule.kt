@@ -5,14 +5,15 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.GithubProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.RemoteRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasAnyUserRequestedUpdatedData
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasFirstSuccessfulCallBeenMade
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasUserTriggeredANewRequest
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasUserRequestedUpdatedData
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasASuccessfulCallAlreadyBeenMade
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasLastCallBeenUnsuccessful
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isEndOfResultsItemVisible
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isPaginationLoadingItemVisible
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isRetryItemVisible
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isTextInputEditTextEmpty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isThereAnOngoingCall
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isThereAnyProfileToBeSearched
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItems
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.shouldASearchBePerformed
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory.Retrofit.provideRetrofitService
 import kotlinx.serialization.UnstableDefault
@@ -31,15 +32,16 @@ val githubProfileViewModel = module {
     single {
         SavedStateHandle(
             hashMapOf<String, Any>().apply {
-                set(hasFirstSuccessfulCallBeenMade, false)
-                set(isThereAnOngoingCall, false)
-                set(hasUserTriggeredANewRequest, false)
-                set(hasAnyUserRequestedUpdatedData, false)
-                set(shouldASearchBePerformed, true)
-                set(isThereAnyProfileToBeSearched, false)
+                set(hasASuccessfulCallAlreadyBeenMade, false)
+                set(hasLastCallBeenUnsuccessful, false)
+                set(hasUserRequestedUpdatedData, false)
                 set(isEndOfResultsItemVisible, false)
                 set(isPaginationLoadingItemVisible, false)
                 set(isRetryItemVisible, false)
+                set(isTextInputEditTextEmpty, true)
+                set(isThereAnOngoingCall, false)
+                set(numberOfItems, 0)
+                set(shouldASearchBePerformed, true)
             }
         )
     }

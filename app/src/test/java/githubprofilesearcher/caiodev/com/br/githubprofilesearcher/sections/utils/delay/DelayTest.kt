@@ -2,21 +2,14 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.base.TestSteps
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class DelayTest : TestSteps {
 
-    private lateinit var timer: Timer
-
-    @BeforeEach
-    override fun setupDependencies() {
-        timer = Timer()
-    }
+    override fun setupDependencies() {}
 
     @Test
     fun delay_timeAndInstructionToExecute_executeTheGenericOperation() {
@@ -28,11 +21,11 @@ class DelayTest : TestSteps {
         }
 
         doWhen {
-            delay(timer, 100) { countDownLatch?.countDown() }
+            delay(100) { countDownLatch?.countDown() }
         }
 
         then {
-            countDownLatch?.await(100, MILLISECONDS)
+            countDownLatch?.await(200, MILLISECONDS)
             assertEquals(0, countDownLatch?.count)
         }
     }

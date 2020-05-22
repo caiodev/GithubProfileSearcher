@@ -11,19 +11,19 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 
 @Suppress("unused")
-fun Context.applyViewVisibility(view: View, visibility: Int? = null) {
+fun Context.applyViewVisibility(view: View, visibility: Int) {
+    view.visibility = visibility
+}
 
-    when (view) {
-
-        is SwipeRefreshLayout -> {
-            if (view.isRefreshing) view.isRefreshing = false
-            if (!view.isEnabled) view.isEnabled = true
-        }
-
-        else -> visibility?.let {
-            view.visibility = it
-        }
-    }
+@Suppress("unused")
+fun Context.applySwipeRefreshVisibilityAttributes(
+    swipeRefreshLayout: SwipeRefreshLayout,
+    isRefreshing: Boolean = false,
+    isEnabled: Boolean = true
+) {
+    swipeRefreshLayout.isRefreshing = isRefreshing
+    if (!swipeRefreshLayout.isEnabled)
+        swipeRefreshLayout.isEnabled = isEnabled
 }
 
 fun Context.changeDrawable(target: ImageView, newDrawable: Int) {

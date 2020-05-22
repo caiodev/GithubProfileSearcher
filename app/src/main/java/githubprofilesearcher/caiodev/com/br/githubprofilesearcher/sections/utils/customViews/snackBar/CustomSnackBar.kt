@@ -10,7 +10,6 @@ import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
 import kotlinx.android.synthetic.main.custom_snackbar_layout.view.*
-import java.util.*
 
 class CustomSnackBar(
     parent: ViewGroup, content: View,
@@ -35,7 +34,7 @@ class CustomSnackBar(
     override fun dismiss() {
         if (!hasSnackBarBeenRequestedToBeDismissed) {
             hasSnackBarBeenRequestedToBeDismissed = true
-            delay(Timer(), 3000) {
+            delay(3000) {
                 super.dismiss()
                 hasSnackBarBeenRequestedToBeDismissed = false
             }
