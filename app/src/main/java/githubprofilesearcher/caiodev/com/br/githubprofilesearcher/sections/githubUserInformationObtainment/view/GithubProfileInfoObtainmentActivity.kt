@@ -25,6 +25,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showU
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasASuccessfulCallAlreadyBeenMade
@@ -487,7 +488,7 @@ class GithubProfileInfoObtainmentActivity :
                 viewModel.saveStateValue(hasUserRequestedUpdatedData, true)
                 textInputEditTextNotEmptyRequiredCall()
             } else {
-                searchProfileTextInputEditText.setText("")
+                searchProfileTextInputEditText.setText(emptyString)
                 changeDrawable(actionIconImageView, R.drawable.ic_search)
                 if (!viewModel.provideStateValue<Boolean>(shouldASearchBePerformed)) viewModel.saveStateValue(
                     shouldASearchBePerformed,

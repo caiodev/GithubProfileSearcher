@@ -46,7 +46,7 @@ object Constants {
 
     //HandleSavedState properties
     //Call related
-    const val hasASuccessfulCallAlreadyBeenMade = "hasFirstCallBeenSuccessful"
+    const val hasASuccessfulCallAlreadyBeenMade = "hasASuccessfulCallAlreadyBeenMade"
     const val hasLastCallBeenUnsuccessful = "hasLastCallBeenUnsuccessful"
     const val isThereAnOngoingCall = "isThereAnOngoingCall"
     const val hasUserRequestedUpdatedData = "hasAnyUserRequestedUpdatedData"
@@ -58,4 +58,7 @@ object Constants {
     const val isEndOfResultsItemVisible = "isEndOfResultsItemVisible"
     const val isPaginationLoadingItemVisible = "isPaginationLoadingItemVisible"
     const val isRetryItemVisible = "isRetryItemVisible"
+
+    //Others
+    const val emptyString = ""
 }
