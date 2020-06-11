@@ -5,14 +5,20 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.GenericGithubProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.currentProfile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItems
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItemsPerPage
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.pageNumber
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.temporaryCurrentProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.SingleLiveEvent
@@ -25,11 +31,6 @@ class GithubProfileViewModel(
     private val repository: GenericGithubProfileRepository
 ) : ViewModel() {
 
-    //Information cache variables
-    private var temporaryCurrentProfile = ""
-    private var currentProfile = ""
-    private var pageNumber = 1
-
     //Success LiveDatas
     private val _successLiveData = MutableLiveData<List<GithubProfileInformation>>()
     internal val successLiveData: LiveData<List<GithubProfileInformation>>
@@ -38,6 +39,7 @@ class GithubProfileViewModel(
     //Error LiveDatas
     private val _errorSingleLiveDataEvent =
         SingleLiveEvent<Int>()
+
     internal val errorSingleLiveDataEvent: LiveData<Int>
         get() = _errorSingleLiveDataEvent.toImmutableSingleLiveEvent()
 
@@ -46,15 +48,20 @@ class GithubProfileViewModel(
     private var githubProfilesInfoList = listOf<GithubProfileInformation>()
 
     @UnstableDefault
-    internal fun requestUpdatedGithubProfiles(profile: String = temporaryCurrentProfile) {
-        pageNumber = 1
-        temporaryCurrentProfile = profile
-        requestGithubProfiles(profile, true)
+    internal fun requestUpdatedGithubProfiles(profile: String = emptyString) {
+        saveStateValue(pageNumber, 1)
+
+        if (profile.isNotEmpty()) {
+            saveStateValue(temporaryCurrentProfile, profile)
+            requestGithubProfiles(profile, true)
+        } else {
+            requestGithubProfiles(provideStateValue(temporaryCurrentProfile), true)
+        }
     }
 
     @UnstableDefault
     internal fun requestMoreGithubProfiles() {
-        requestGithubProfiles(currentProfile, false)
+        requestGithubProfiles(provideStateValue(currentProfile), false)
     }
 
     @UnstableDefault
@@ -62,12 +69,11 @@ class GithubProfileViewModel(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
-
         viewModelScope.launch {
             if (shouldListItemsBeRemoved)
                 handleCallResult(profile, shouldListItemsBeRemoved)
             else
-                handleCallResult(currentProfile, shouldListItemsBeRemoved)
+                handleCallResult(provideStateValue(currentProfile), shouldListItemsBeRemoved)
         }
     }
 
@@ -81,28 +87,29 @@ class GithubProfileViewModel(
         when (val value =
             repository.provideGithubUserInformation(
                 user,
-                pageNumber,
+                provideStateValue(pageNumber),
                 numberOfItemsPerPage
             )) {
 
             //Success state handling
             is APICallResult.Success<*> -> {
-                currentProfile = temporaryCurrentProfile
+
+                saveStateValue(currentProfile, provideStateValue<String>(temporaryCurrentProfile))
 
                 with(value.data as GithubProfilesList) {
 
                     saveStateValue(numberOfItems, githubProfileInformationList.size)
 
-                    if (shouldListItemsBeRemoved)
-                        setupList(githubProfileInformationList)
-                    else {
-                        _githubProfilesInfoList.addAll(githubProfileInformationList)
-                        githubProfilesInfoList = _githubProfilesInfoList
-                        _successLiveData.postValue(githubProfilesInfoList)
-                    }
-                    pageNumber++
-                }
+                    if (!provideStateValue<Boolean>(Constants.hasASuccessfulCallAlreadyBeenMade))
+                        saveStateValue(Constants.hasASuccessfulCallAlreadyBeenMade, true)
 
+                    if (shouldListItemsBeRemoved)
+                        setupUpdatedList(githubProfileInformationList)
+                    else
+                        setupPaginationList(githubProfileInformationList)
+
+                    saveStateValue(pageNumber, provideStateValue<Int>(pageNumber).plus(1))
+                }
             }
 
             else -> handleErrorResult(value as APICallResult.Error)
@@ -150,12 +157,20 @@ class GithubProfileViewModel(
 
     /* This method sets up the list with all default RecyclerViewItems it will need. In the first call, a Header is added at the top of the list and following it,
     the ProfileInformation item is added which is responsible for showing the searched user related data */
-    private fun setupList(
-        githubUserInformationList: List<GithubProfileInformation>
+    private fun setupUpdatedList(
+        githubProfileInformationList: List<GithubProfileInformation>
     ) {
         _githubProfilesInfoList.clear()
-        _githubProfilesInfoList.addAll(githubUserInformationList)
+        _githubProfilesInfoList.addAll(githubProfileInformationList)
         githubProfilesInfoList = _githubProfilesInfoList
+        saveStateValue(githubProfilesList, githubProfilesInfoList)
+        _successLiveData.postValue(githubProfilesInfoList)
+    }
+
+    private fun setupPaginationList(githubProfileInformationList: List<GithubProfileInformation>) {
+        _githubProfilesInfoList.addAll(githubProfileInformationList)
+        githubProfilesInfoList = _githubProfilesInfoList
+        saveStateValue(githubProfilesList, githubProfilesInfoList)
         _successLiveData.postValue(githubProfilesInfoList)
     }
 

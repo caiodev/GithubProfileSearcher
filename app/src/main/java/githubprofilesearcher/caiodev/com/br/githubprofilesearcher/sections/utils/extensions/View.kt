@@ -22,7 +22,6 @@ fun Context.applySwipeRefreshVisibilityAttributes(
     isEnabled: Boolean = true
 ) {
     swipeRefreshLayout.isRefreshing = isRefreshing
-    if (!swipeRefreshLayout.isEnabled)
         swipeRefreshLayout.isEnabled = isEnabled
 }
 

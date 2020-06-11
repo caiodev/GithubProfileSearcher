@@ -1,5 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants
 
+import android.os.Bundle
+import androidx.core.os.bundleOf
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
+
 object Constants {
 
     //Intent id
@@ -45,6 +49,16 @@ object Constants {
     const val transientViewsAdapter = 2
 
     //HandleSavedState properties
+    //Layout related
+    const val hasUserDeletedProfileText = "hasUserDeletedProfileText"
+    const val textInputEditTextProfile = "textInputEditTextProfile"
+    const val shouldRecyclerViewAnimationBeExecuted = "shouldRecyclerViewAnimationBeExecuted"
+
+    //Information cache variables
+    const val temporaryCurrentProfile = "temporaryCurrentProfile"
+    const val currentProfile = "currentProfile"
+    const val pageNumber = "pageNumber"
+
     //Call related
     const val hasASuccessfulCallAlreadyBeenMade = "hasASuccessfulCallAlreadyBeenMade"
     const val hasLastCallBeenUnsuccessful = "hasLastCallBeenUnsuccessful"
@@ -53,6 +67,7 @@ object Constants {
     const val shouldASearchBePerformed = "shouldASearchBePerformed"
     const val isTextInputEditTextEmpty = "isTextInputEditTextEmpty"
     const val numberOfItems = "numberOfItems"
+    const val githubProfilesList = "githubProfilesList"
 
     //Transient Views
     const val isEndOfResultsItemVisible = "isEndOfResultsItemVisible"
@@ -61,4 +76,25 @@ object Constants {
 
     //Others
     const val emptyString = ""
+
+    //SavedStateHandle arguments bundle
+    val savedStateHandleArguments: Bundle = bundleOf(
+        hasUserDeletedProfileText to false,
+        textInputEditTextProfile to emptyString,
+        shouldRecyclerViewAnimationBeExecuted to true,
+        temporaryCurrentProfile to emptyString,
+        currentProfile to emptyString,
+        pageNumber to 0,
+        hasASuccessfulCallAlreadyBeenMade to false,
+        hasLastCallBeenUnsuccessful to false,
+        isThereAnOngoingCall to false,
+        hasUserRequestedUpdatedData to false,
+        shouldASearchBePerformed to true,
+        isTextInputEditTextEmpty to true,
+        numberOfItems to 0,
+        githubProfilesList to listOf<GithubProfileInformation>(),
+        isEndOfResultsItemVisible to false,
+        isPaginationLoadingItemVisible to false,
+        isRetryItemVisible to false
+    )
 }
