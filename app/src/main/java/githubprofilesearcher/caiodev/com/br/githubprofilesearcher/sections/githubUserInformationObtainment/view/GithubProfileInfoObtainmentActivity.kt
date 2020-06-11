@@ -20,6 +20,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.TransientViewsAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.ShowRepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
@@ -28,19 +29,23 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasASuccessfulCallAlreadyBeenMade
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasLastCallBeenUnsuccessful
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasUserDeletedProfileText
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasUserRequestedUpdatedData
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.headerAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isEndOfResultsItemVisible
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isPaginationLoadingItemVisible
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isRetryItemVisible
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isThereAnOngoingCall
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItems
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.savedStateHandleArguments
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.shouldASearchBePerformed
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.shouldRecyclerViewAnimationBeExecuted
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.textInputEditTextProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.transientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
@@ -49,17 +54,19 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.internetConnectionAvailabilityObservable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.UnstableDefault
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
     ActivityFlow {
 
-    private var shouldRecyclerViewAnimationBeExecuted = true
-
     private lateinit var countingIdlingResource: CountingIdlingResource
-    private lateinit var customSnackBar: CustomSnackBar
-    private val viewModel by viewModel<GithubProfileViewModel>()
+
+    private val customSnackBar by lazy {
+        CustomSnackBar.make(this.findViewById(android.R.id.content))
+    }
+
+    private val viewModel by stateViewModel<GithubProfileViewModel>(bundle = savedStateHandleArguments)
 
     private val mergeAdapter by lazy {
         MergeAdapter(
@@ -82,7 +89,6 @@ class GithubProfileInfoObtainmentActivity :
     override fun setupView() {
         setupDarkMode()
         bindViewModelDataToUIInCaseOfOrientationChanges()
-        setupCustomSnackBar()
         setupImageViews()
         setupSwipeRefreshLayout()
         setupRecyclerView()
@@ -91,35 +97,53 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     private fun bindViewModelDataToUIInCaseOfOrientationChanges() {
-        //Condition when users rotate the screen and the activity gets destroyed
-        if (viewModel.provideStateValue(isThereAnOngoingCall)) {
-            applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
-            setupUpperViewsInteraction(false)
-            viewModel.saveStateValue(shouldASearchBePerformed, false)
-            changeDrawable(actionIconImageView, R.drawable.ic_close)
-        }
 
-        if (viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade) && !viewModel.provideStateValue<Boolean>(
-                Constants.isTextInputEditTextEmpty
-            )
-        ) {
+        viewModel.successLiveData.value?.let {
 
-            changeDrawable(
-                actionIconImageView,
-                R.drawable.ic_close
+            searchProfileTextInputEditText.setText(
+                viewModel.provideStateValue<String>(
+                    textInputEditTextProfile
+                )
             )
 
-            applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
-        }
+            if (viewModel.provideStateValue(isThereAnOngoingCall)) {
+                applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+                setupUpperViewsInteraction(false)
+                viewModel.saveStateValue(shouldASearchBePerformed, false)
+                changeDrawable(actionIconImageView, R.drawable.ic_close)
+            }
 
-        if (provideRecyclerViewLayoutManager().findFirstVisibleItemPosition() >= 2) {
-            applyViewVisibility(backToTopButton, VISIBLE)
+            if (viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade) && !viewModel.provideStateValue<Boolean>(
+                    Constants.isTextInputEditTextEmpty
+                )
+            ) {
+
+                if (!viewModel.provideStateValue<Boolean>(hasUserDeletedProfileText))
+                    changeDrawable(
+                        actionIconImageView,
+                        R.drawable.ic_close
+                    )
+
+                applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
+            }
+
+            if (provideRecyclerViewLayoutManager().findFirstVisibleItemPosition() >= 2) {
+                applyViewVisibility(backToTopButton, VISIBLE)
+            }
+
+        } ?: run {
+            if (viewModel.provideStateValue<List<GithubProfileInformation>>(githubProfilesList)
+                    .isNotEmpty()
+            ) {
+                provideAdapter<GithubProfileAdapter>(githubProfileAdapter).apply {
+                    updateDataSource(viewModel.provideStateValue(githubProfilesList))
+                    notifyDataSetChanged()
+                }
+            }
         }
     }
 
     private fun setupDarkMode() {
-
-        //Setting true black because in my case what was applied way actually a dark grey shade
         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES ->
                 applyBackgroundColor(
@@ -127,10 +151,6 @@ class GithubProfileInfoObtainmentActivity :
                     android.R.color.black
                 )
         }
-    }
-
-    private fun setupCustomSnackBar() {
-        customSnackBar = CustomSnackBar.make(this.findViewById(android.R.id.content))
     }
 
     @UnstableDefault
@@ -151,13 +171,12 @@ class GithubProfileInfoObtainmentActivity :
     private fun setupSwipeRefreshLayout() {
 
         githubProfileListSwipeRefreshLayout.apply {
-
             if (!viewModel.provideStateValue<Boolean>(hasASuccessfulCallAlreadyBeenMade))
                 applySwipeRefreshVisibilityAttributes(this, isEnabled = false)
 
             setOnRefreshListener {
                 viewModel.saveStateValue(hasUserRequestedUpdatedData, true)
-                swipeRefreshCall()
+                updatedProfileCall()
             }
         }
     }
@@ -183,7 +202,8 @@ class GithubProfileInfoObtainmentActivity :
             })
 
             addTextChangedListener {
-                doOnTextChanged { _, _, _, _ ->
+                doOnTextChanged { text, _, _, _ ->
+
                     if (!viewModel.provideStateValue<Boolean>(shouldASearchBePerformed)) viewModel.saveStateValue(
                         shouldASearchBePerformed,
                         true
@@ -193,6 +213,11 @@ class GithubProfileInfoObtainmentActivity :
                         actionIconImageView,
                         R.drawable.ic_search
                     )
+
+                    text?.let {
+                        if (it.isEmpty())
+                            viewModel.saveStateValue(hasUserDeletedProfileText, true)
+                    }
                 }
             }
         }
@@ -250,10 +275,14 @@ class GithubProfileInfoObtainmentActivity :
 
             setupUpperViewsInteraction(true)
 
-            if (!viewModel.provideStateValue<Boolean>(hasASuccessfulCallAlreadyBeenMade))
-                viewModel.saveStateValue(hasASuccessfulCallAlreadyBeenMade, true)
-
-            viewModel.saveStateValue(shouldASearchBePerformed, false)
+            if (viewModel.provideStateValue(hasUserDeletedProfileText) && viewModel.provideStateValue<String>(
+                    textInputEditTextProfile
+                ).isNotEmpty()
+            ) {
+                viewModel.saveStateValue(shouldASearchBePerformed, true)
+            } else {
+                viewModel.saveStateValue(shouldASearchBePerformed, false)
+            }
 
             changeViewState(headerAdapter, header)
 
@@ -267,19 +296,10 @@ class GithubProfileInfoObtainmentActivity :
                 notifyDataSetChanged()
             }
 
-            shouldRecyclerViewAnimationBeExecuted =
-                if (!viewModel.provideStateValue<Boolean>(hasASuccessfulCallAlreadyBeenMade) || viewModel.provideStateValue(
-                        hasUserRequestedUpdatedData
-                    )
-                ) {
-                    true
-                } else {
-
-                    profileInfoRecyclerView.adapter?.notifyDataSetChanged()
-
-                    applyViewVisibility(repositoryLoadingProgressBar, GONE)
-                    false
-                }
+            viewModel.saveStateValue(
+                shouldRecyclerViewAnimationBeExecuted,
+                shouldRecyclerViewAnimationBeExecuted()
+            )
 
             if (viewModel.provideStateValue(hasUserRequestedUpdatedData)) viewModel.saveStateValue(
                 hasUserRequestedUpdatedData,
@@ -287,17 +307,21 @@ class GithubProfileInfoObtainmentActivity :
             )
 
             if (viewModel.provideStateValue(hasUserRequestedUpdatedData)) {
+
                 provideAdapter<GithubProfileAdapter>(githubProfileAdapter).updateDataSource(
                     githubUsersList
                 )
-                shouldRecyclerViewAnimationBeExecuted = true
-                viewModel.saveStateValue(hasUserRequestedUpdatedData, false)
+
+                viewModel.apply {
+                    saveStateValue(shouldRecyclerViewAnimationBeExecuted, true)
+                    saveStateValue(hasUserRequestedUpdatedData, false)
+                }
             }
 
-            if (shouldRecyclerViewAnimationBeExecuted)
+            if (viewModel.provideStateValue(shouldRecyclerViewAnimationBeExecuted))
                 runLayoutAnimation(profileInfoRecyclerView)
             else
-                shouldRecyclerViewAnimationBeExecuted = true
+                viewModel.saveStateValue(shouldRecyclerViewAnimationBeExecuted, true)
         }
     }
 
@@ -321,10 +345,8 @@ class GithubProfileInfoObtainmentActivity :
             changeDrawable(actionIconImageView, R.drawable.ic_search)
             showErrorMessages(error)
 
-            viewModel.saveStateValue(shouldASearchBePerformed, true)
-
-            if (!shouldRecyclerViewAnimationBeExecuted)
-                shouldRecyclerViewAnimationBeExecuted = true
+            if (!viewModel.provideStateValue<Boolean>(shouldRecyclerViewAnimationBeExecuted))
+                viewModel.saveStateValue(shouldASearchBePerformed, true)
 
             if (viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade))
                 changeViewState(transientViewsAdapter, retry)
@@ -340,8 +362,11 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     @UnstableDefault
-    private fun swipeRefreshCall() {
-        callApiThroughViewModel { viewModel.requestUpdatedGithubProfiles() }
+    private fun updatedProfileCall(profile: String = "") {
+        if (profile.isNotEmpty())
+            callApiThroughViewModel { viewModel.requestUpdatedGithubProfiles(profile) }
+        else
+            callApiThroughViewModel { viewModel.requestUpdatedGithubProfiles() }
     }
 
     @UnstableDefault
@@ -356,11 +381,8 @@ class GithubProfileInfoObtainmentActivity :
         if (!isTextInputEditTextEmpty()) {
             applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
             viewModel.saveStateValue(hasUserRequestedUpdatedData, true)
-            callApiThroughViewModel {
-                viewModel.requestUpdatedGithubProfiles(
-                    searchProfileTextInputEditText.text.toString()
-                )
-            }
+            viewModel.saveStateValue(hasUserDeletedProfileText, false)
+            updatedProfileCall(searchProfileTextInputEditText.text.toString())
         } else {
             showSnackBar(
                 this,
@@ -390,9 +412,13 @@ class GithubProfileInfoObtainmentActivity :
     private inline fun callApiThroughViewModel(crossinline genericFunction: () -> Unit) {
         checkIfInternetConnectionIsAvailableCaller(
             onConnectionAvailable = {
-                setupUpperViewsInteraction(false)
+
+                if (!viewModel.provideStateValue<Boolean>(hasUserDeletedProfileText)) {
+                    setupUpperViewsInteraction(false)
+                    changeDrawable(actionIconImageView, R.drawable.ic_close)
+                }
+
                 viewModel.saveStateValue(shouldASearchBePerformed, false)
-                changeDrawable(actionIconImageView, R.drawable.ic_close)
 
                 if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall))
                     viewModel.saveStateValue(isThereAnOngoingCall, true)
@@ -494,6 +520,7 @@ class GithubProfileInfoObtainmentActivity :
                     shouldASearchBePerformed,
                     true
                 )
+                viewModel.saveStateValue(hasUserDeletedProfileText, true)
             }
         }
     }
@@ -520,7 +547,7 @@ class GithubProfileInfoObtainmentActivity :
                 if (recyclerViewLayoutManager.findLastVisibleItemPosition() == total?.minus(2) &&
                     viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade)
                 ) {
-                    shouldRecyclerViewAnimationBeExecuted = false
+                    viewModel.saveStateValue(shouldRecyclerViewAnimationBeExecuted, false)
                     if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall) &&
                         !viewModel.provideStateValue<Boolean>(isRetryItemVisible) &&
                         !viewModel.provideStateValue<Boolean>(isEndOfResultsItemVisible)
@@ -567,52 +594,53 @@ class GithubProfileInfoObtainmentActivity :
         profileInfoRecyclerView.layoutManager as LinearLayoutManager
 
     private fun changeViewState(adapterPosition: Int, viewState: Int) {
+
         if (adapterPosition == headerAdapter) {
+
             (mergeAdapter.adapters[adapterPosition] as HeaderAdapter).apply {
                 updateViewState(viewState)
                 notifyDataSetChanged()
             }
+
         } else {
+
             (mergeAdapter.adapters[adapterPosition] as TransientViewsAdapter).apply {
+
                 updateViewState(viewState)
+                notifyDataSetChanged()
 
                 when (viewState) {
-
-                    endOfResults -> {
-                        viewModel.apply {
-                            saveStateValue(isEndOfResultsItemVisible, true)
-                            saveStateValue(isPaginationLoadingItemVisible, false)
-                            saveStateValue(isRetryItemVisible, false)
-                        }
-                    }
-
-                    loading -> {
-                        viewModel.apply {
-                            saveStateValue(isEndOfResultsItemVisible, false)
-                            saveStateValue(isPaginationLoadingItemVisible, true)
-                            saveStateValue(isRetryItemVisible, false)
-                        }
-                    }
-
-                    retry -> {
-                        viewModel.apply {
-                            saveStateValue(isEndOfResultsItemVisible, false)
-                            saveStateValue(isPaginationLoadingItemVisible, false)
-                            saveStateValue(isRetryItemVisible, true)
-                        }
-                    }
-
-                    else -> {
-                        viewModel.apply {
-                            saveStateValue(isEndOfResultsItemVisible, false)
-                            saveStateValue(isPaginationLoadingItemVisible, false)
-                            saveStateValue(isRetryItemVisible, false)
-                        }
-                    }
+                    endOfResults -> saveStateValue(isEndOfResultsItemVisible = true)
+                    loading -> saveStateValue(isPaginationLoadingItemVisible = true)
+                    retry -> saveStateValue(isRetryItemVisible = true)
+                    else -> saveStateValue()
                 }
-
-                notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun saveStateValue(
+        isEndOfResultsItemVisible: Boolean = false,
+        isPaginationLoadingItemVisible: Boolean = false,
+        isRetryItemVisible: Boolean = false
+    ) {
+        viewModel.apply {
+            saveStateValue(Constants.isEndOfResultsItemVisible, isEndOfResultsItemVisible)
+            saveStateValue(Constants.isPaginationLoadingItemVisible, isPaginationLoadingItemVisible)
+            saveStateValue(Constants.isRetryItemVisible, isRetryItemVisible)
+        }
+    }
+
+    private fun shouldRecyclerViewAnimationBeExecuted(): Boolean {
+        return if (!viewModel.provideStateValue<Boolean>(hasASuccessfulCallAlreadyBeenMade) || viewModel.provideStateValue(
+                hasUserRequestedUpdatedData
+            )
+        ) {
+            true
+        } else {
+            profileInfoRecyclerView.adapter?.notifyDataSetChanged()
+            applyViewVisibility(repositoryLoadingProgressBar, GONE)
+            false
         }
     }
 
@@ -624,8 +652,16 @@ class GithubProfileInfoObtainmentActivity :
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.saveStateValue(Constants.isTextInputEditTextEmpty, isTextInputEditTextEmpty())
+    override fun onPause() {
+        super.onPause()
+        viewModel.apply {
+            saveStateValue(Constants.isTextInputEditTextEmpty, isTextInputEditTextEmpty())
+            if (!isTextInputEditTextEmpty()) {
+                viewModel.saveStateValue(
+                    textInputEditTextProfile,
+                    searchProfileTextInputEditText.text.toString()
+                )
+            }
+        }
     }
 }
