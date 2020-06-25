@@ -22,7 +22,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.TransientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.ShowRepositoryInfoActivity
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.RepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
@@ -56,6 +56,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.UnstableDefault
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
+
 class GithubProfileInfoObtainmentActivity :
     AppCompatActivity(R.layout.activity_main),
     ActivityFlow {
@@ -66,7 +67,7 @@ class GithubProfileInfoObtainmentActivity :
         CustomSnackBar.make(this.findViewById(android.R.id.content))
     }
 
-    private val viewModel by stateViewModel<GithubProfileViewModel>(bundle = savedStateHandleArguments)
+    private val viewModel by stateViewModel<GithubProfileViewModel>(bundle = { savedStateHandleArguments })
 
     private val mergeAdapter by lazy {
         MergeAdapter(
@@ -89,22 +90,28 @@ class GithubProfileInfoObtainmentActivity :
     override fun setupView() {
         setupDarkMode()
         bindViewModelDataToUIInCaseOfOrientationChanges()
-        setupImageViews()
+        setupActionViews()
         setupSwipeRefreshLayout()
         setupRecyclerView()
         setupTextInputEditText()
-        adapterCallback()
+        initializeAdapterCallback()
     }
 
     private fun bindViewModelDataToUIInCaseOfOrientationChanges() {
 
-        viewModel.successLiveData.value?.let {
-
-            searchProfileTextInputEditText.setText(
-                viewModel.provideStateValue<String>(
-                    textInputEditTextProfile
+        viewModel.provideStateValue<String>(
+            textInputEditTextProfile
+        ).apply {
+            if (isNotEmpty()) {
+                searchProfileTextInputEditText.setText(this)
+                viewModel.saveStateValue(
+                    shouldASearchBePerformed,
+                    true
                 )
-            )
+            }
+        }
+
+        viewModel.successLiveData.value?.let {
 
             if (viewModel.provideStateValue(isThereAnOngoingCall)) {
                 applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
@@ -154,7 +161,7 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     @UnstableDefault
-    private fun setupImageViews() {
+    private fun setupActionViews() {
 
         actionIconImageView.setOnClickListener {
             handleActionIconClick()
@@ -224,7 +231,7 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     @UnstableDefault
-    private fun adapterCallback() {
+    private fun initializeAdapterCallback() {
 
         provideAdapter<GithubProfileAdapter>(githubProfileAdapter).setOnItemClicked(object :
             OnItemClicked {
@@ -236,7 +243,7 @@ class GithubProfileInfoObtainmentActivity :
                         startActivity(
                             Intent(
                                 applicationContext,
-                                ShowRepositoryInfoActivity::class.java
+                                RepositoryInfoActivity::class.java
                             )
                                 .putExtra(
                                     Constants.githubProfileUrl,

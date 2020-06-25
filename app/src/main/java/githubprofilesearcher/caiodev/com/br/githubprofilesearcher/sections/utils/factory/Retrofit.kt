@@ -1,10 +1,12 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.mediaType
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retrofitTimeout
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.timberTag
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,14 +14,6 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 object Retrofit {
-
-    @PublishedApi
-    internal val baseUrl = "https://api.github.com/"
-
-    private const val timberTag = "OkHttp"
-
-    @PublishedApi
-    internal val mediaType = "application/json".toMediaType()
 
     private val httpLoggingInterceptor =
         HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
@@ -32,11 +26,12 @@ object Retrofit {
 
     @UnstableDefault
     @PublishedApi
-    internal inline fun <reified T> provideRetrofitService(): T = createRetrofitService()
+    internal inline fun <reified T> provideRetrofitService(baseUrl: String): T =
+        createRetrofitService(baseUrl)
 
     @UnstableDefault
     @PublishedApi
-    internal inline fun <reified T> createRetrofitService() =
+    internal inline fun <reified T> createRetrofitService(baseUrl: String) =
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(provideOkHttpClient())
@@ -53,8 +48,8 @@ object Retrofit {
     private fun createOkHttpClient() =
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(retrofitTimeout, TimeUnit.SECONDS)
+            .readTimeout(retrofitTimeout, TimeUnit.SECONDS)
+            .writeTimeout(retrofitTimeout, TimeUnit.SECONDS)
             .build()
 }

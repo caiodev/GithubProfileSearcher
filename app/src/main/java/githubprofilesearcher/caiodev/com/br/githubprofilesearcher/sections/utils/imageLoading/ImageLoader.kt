@@ -1,17 +1,31 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading
 
+import android.content.Context
 import android.widget.ImageView
+import coil.ImageLoader
 import coil.api.load
 import coil.request.CachePolicy
 
 object ImageLoader {
 
-    fun loadImage(imageUrl: String, placeholder: Int, targetImageView: ImageView) {
-        targetImageView.load(imageUrl) {
-            crossfade(true)
-            placeholder(placeholder)
+    private lateinit var imageLoader: ImageLoader
+
+    fun loadImage(
+        context: Context,
+        imageUrl: String,
+        placeholder: Int,
+        targetImageView: ImageView
+    ) {
+
+        if (!this::imageLoader.isInitialized) {
+            imageLoader = ImageLoader.Builder(context)
+                .crossfade(true)
+                .placeholder(placeholder)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .error(placeholder)
+                .build()
         }
+
+        targetImageView.load(imageUrl, imageLoader)
     }
 }

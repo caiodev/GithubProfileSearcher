@@ -72,6 +72,9 @@ dependencies {
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat"
 
+    //Browser
+    implementation "androidx.browser:browser:$browser"
+
     //Coil
     implementation "io.coil-kt:coil:$coil"
 
