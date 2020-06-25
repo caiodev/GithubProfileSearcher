@@ -5,6 +5,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.GithubProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.RemoteRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.baseUrl
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory.Retrofit.provideRetrofitService
 import kotlinx.serialization.UnstableDefault
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -23,7 +24,7 @@ val githubProfileViewModel = module {
     single<GenericGithubProfileRepository> {
         GithubProfileRepository(
             RemoteRepository(),
-            provideRetrofitService()
+            provideRetrofitService(baseUrl)
         )
     }
 }

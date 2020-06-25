@@ -37,9 +37,7 @@ class GithubProfileViewModel(
         get() = _successLiveData
 
     //Error LiveDatas
-    private val _errorSingleLiveDataEvent =
-        SingleLiveEvent<Int>()
-
+    private val _errorSingleLiveDataEvent = SingleLiveEvent<Int>()
     internal val errorSingleLiveDataEvent: LiveData<Int>
         get() = _errorSingleLiveDataEvent.toImmutableSingleLiveEvent()
 
@@ -49,6 +47,7 @@ class GithubProfileViewModel(
 
     @UnstableDefault
     internal fun requestUpdatedGithubProfiles(profile: String = emptyString) {
+
         saveStateValue(pageNumber, 1)
 
         if (profile.isNotEmpty()) {

@@ -3,6 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
+import okhttp3.MediaType.Companion.toMediaType
 
 object Constants {
 
@@ -73,6 +74,12 @@ object Constants {
     const val isEndOfResultsItemVisible = "isEndOfResultsItemVisible"
     const val isPaginationLoadingItemVisible = "isPaginationLoadingItemVisible"
     const val isRetryItemVisible = "isRetryItemVisible"
+
+    //Retrofit related
+    const val baseUrl = "https://api.github.com/"
+    const val timberTag = "OkHttp"
+    val mediaType = "application/json".toMediaType()
+    const val retrofitTimeout = 60L
 
     //Others
     const val emptyString = ""

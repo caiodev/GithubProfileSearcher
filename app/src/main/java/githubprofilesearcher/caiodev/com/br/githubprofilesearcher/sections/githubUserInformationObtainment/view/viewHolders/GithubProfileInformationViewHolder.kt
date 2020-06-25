@@ -9,7 +9,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import kotlinx.android.synthetic.main.github_profile_view_holder_layout.view.*
 import okhttp3.internal.format
-import timber.log.Timber
 
 class GithubProfileInformationViewHolder(
     itemView: View,
@@ -36,6 +35,7 @@ class GithubProfileInformationViewHolder(
         }
 
         loadImage(
+            itemView.context,
             model.userImage,
             R.mipmap.ic_launcher,
             itemView.userAvatar
