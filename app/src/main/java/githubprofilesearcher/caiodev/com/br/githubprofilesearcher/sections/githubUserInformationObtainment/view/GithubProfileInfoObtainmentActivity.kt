@@ -1,14 +1,13 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.View
 import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.observe
@@ -16,13 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
+import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.TransientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.RepositoryInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
@@ -37,6 +36,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.headerAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isEndOfResultsItemVisible
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isPaginationLoadingItemVisible
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isRetryItemVisible
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.isThereAnOngoingCall
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
@@ -63,8 +63,16 @@ class GithubProfileInfoObtainmentActivity :
 
     private lateinit var countingIdlingResource: CountingIdlingResource
 
-    private val customSnackBar by lazy {
-        CustomSnackBar.make(this.findViewById(android.R.id.content))
+    private val errorSnackBar by lazy {
+        Snackbar.make(
+            findViewById<View>(android.R.id.content),
+            R.string.generic_exception_and_generic_error,
+            Snackbar.LENGTH_SHORT
+        )
+    }
+
+    private val internetConnectivitySnackBar by lazy {
+        CustomSnackBar.make(findViewById(android.R.id.content))
     }
 
     private val viewModel by stateViewModel<GithubProfileViewModel>(bundle = { savedStateHandleArguments })
@@ -72,7 +80,7 @@ class GithubProfileInfoObtainmentActivity :
     private val mergeAdapter by lazy {
         MergeAdapter(
             HeaderAdapter(R.string.github_user_list_header),
-            GithubProfileAdapter(),
+            GithubProfileAdapter(errorSnackBar),
             TransientViewsAdapter()
         )
     }
@@ -232,31 +240,6 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     private fun initializeAdapterCallback() {
-
-        provideAdapter<GithubProfileAdapter>(githubProfileAdapter).setOnItemClicked(object :
-            OnItemClicked {
-
-            override fun onItemClick(adapterPosition: Int, id: Int) {
-
-                checkIfInternetConnectionIsAvailableCaller(
-                    onConnectionAvailable = {
-                        startActivity(
-                            Intent(
-                                applicationContext,
-                                RepositoryInfoActivity::class.java
-                            )
-                                .putExtra(
-                                    Constants.githubProfileUrl,
-                                    viewModel.provideProfileUrlThroughViewModel(
-                                        adapterPosition
-                                    )
-                                )
-                        )
-                    },
-                    onConnectionUnavailable = { showInternetConnectionStatusSnackBar(false) })
-            }
-        })
-
         provideAdapter<TransientViewsAdapter>(transientViewsAdapter).setOnItemClicked(object :
             OnItemClicked {
             override fun onItemClick(adapterPosition: Int, id: Int) {
@@ -355,7 +338,7 @@ class GithubProfileInfoObtainmentActivity :
             if (!viewModel.provideStateValue<Boolean>(shouldRecyclerViewAnimationBeExecuted))
                 viewModel.saveStateValue(shouldASearchBePerformed, true)
 
-            if (viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade))
+            if (viewModel.provideStateValue(isPaginationLoadingItemVisible))
                 changeViewState(transientViewsAdapter, retry)
         }
     }
@@ -364,7 +347,12 @@ class GithubProfileInfoObtainmentActivity :
     override fun setupExtras() {
         checkIfInternetConnectionIsAvailableCaller(
             onConnectionAvailable = {},
-            onConnectionUnavailable = { showInternetConnectionStatusSnackBar(false) })
+            onConnectionUnavailable = {
+                showInternetConnectionStatusSnackBar(
+                    internetConnectivitySnackBar,
+                    false
+                )
+            })
         setupInternetConnectionObserver()
     }
 
@@ -391,10 +379,10 @@ class GithubProfileInfoObtainmentActivity :
             viewModel.saveStateValue(hasUserDeletedProfileText, false)
             updatedProfileCall(searchProfileTextInputEditText.text.toString())
         } else {
-            showSnackBar(
-                this,
-                getString(R.string.empty_field_error)
-            ) {}
+            showErrorSnackBar(
+                errorSnackBar,
+                R.string.empty_field_error
+            )
         }
     }
 
@@ -436,6 +424,10 @@ class GithubProfileInfoObtainmentActivity :
                     countingIdlingResource.increment()
             },
             onConnectionUnavailable = {
+                viewModel.saveStateValue(hasLastCallBeenUnsuccessful, true)
+                applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
+                if (viewModel.provideStateValue(isPaginationLoadingItemVisible))
+                    changeViewState(transientViewsAdapter, retry)
                 showErrorMessages(R.string.no_connection_error)
             })
     }
@@ -444,19 +436,31 @@ class GithubProfileInfoObtainmentActivity :
         hideKeyboard(searchProfileTextInputEditText)
         applyViewVisibility(repositoryLoadingProgressBar, GONE)
         setupUpperViewsInteraction(true)
-        showSnackBar(
-            this,
-            getString(message),
+        showErrorSnackBar(
+            errorSnackBar,
+            message,
             onDismissed = {
-                checkIfInternetConnectionIsAvailableCaller(
-                    {},
-                    { showInternetConnectionStatusSnackBar(false) })
+                shouldRecallInternetConnectivitySnackBar()
             })
     }
 
+    private fun shouldRecallInternetConnectivitySnackBar(): Any {
+        if (!viewModel.provideStateValue<Boolean>(
+                isRetryItemVisible
+            )
+        ) return checkIfInternetConnectionIsAvailableCaller(
+            onConnectionUnavailable = {
+                showInternetConnectionStatusSnackBar(
+                    internetConnectivitySnackBar,
+                    false
+                )
+            })
+        return emptyString
+    }
+
     private fun checkIfInternetConnectionIsAvailableCaller(
-        onConnectionAvailable: () -> Unit,
-        onConnectionUnavailable: () -> Unit
+        onConnectionAvailable: () -> Unit = {},
+        onConnectionUnavailable: () -> Unit = {}
     ) {
         checkIfInternetConnectionIsAvailable(
             applicationContext,
@@ -471,47 +475,29 @@ class GithubProfileInfoObtainmentActivity :
             .observe(this) { isInternetAvailable ->
                 when (isInternetAvailable) {
                     true -> {
-                        showInternetConnectionStatusSnackBar(true)
-                        if (viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade)) {
-                            if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall) && viewModel.provideStateValue(
-                                    isRetryItemVisible
-                                )
-                            ) {
+                        showInternetConnectionStatusSnackBar(
+                            internetConnectivitySnackBar,
+                            true
+                        )
+
+                        if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall) && viewModel.provideStateValue(
+                                hasLastCallBeenUnsuccessful
+                            )
+                        ) {
+                            if (viewModel.provideStateValue(isRetryItemVisible)) {
                                 paginationCall()
-                            }
-                        } else
-                            if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall) &&
-                                !viewModel.provideStateValue<Boolean>(hasUserRequestedUpdatedData) &&
-                                viewModel.provideStateValue(hasLastCallBeenUnsuccessful)
-                            ) {
+                            } else {
                                 textInputEditTextNotEmptyRequiredCall()
                             }
+                        }
                     }
-                    false -> showInternetConnectionStatusSnackBar(false)
+
+                    false -> showInternetConnectionStatusSnackBar(
+                        internetConnectivitySnackBar,
+                        false
+                    )
                 }
             }
-    }
-
-    private fun showInternetConnectionStatusSnackBar(isInternetConnectionAvailable: Boolean) {
-        with(customSnackBar) {
-            if (isInternetConnectionAvailable) {
-                setText(getString(R.string.back_online_success_message)).setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.green_700
-                    )
-                )
-                if (isShown) dismiss()
-            } else {
-                setText(getString(R.string.no_connection_error)).setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.red_700
-                    )
-                )
-                show()
-            }
-        }
     }
 
     @UnstableDefault

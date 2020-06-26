@@ -19,10 +19,10 @@ class CustomSnackBar(
     private val snackBarParentLayout =
         getView().findViewById(R.id.snackBarParentLinearLayout) as LinearLayout
     private val snackBarText = getView().findViewById(R.id.snackBarTextView) as TextView
-    private var hasSnackBarBeenRequestedToBeDismissed = false
+    private var hasSnackBarBeenRequestedToDismiss = false
 
-    fun setText(text: CharSequence): CustomSnackBar {
-        snackBarText.text = text
+    fun setText(text: Int): CustomSnackBar {
+        snackBarText.text = snackBarParentLayout.context.getString(text)
         return this
     }
 
@@ -32,11 +32,11 @@ class CustomSnackBar(
     }
 
     override fun dismiss() {
-        if (!hasSnackBarBeenRequestedToBeDismissed) {
-            hasSnackBarBeenRequestedToBeDismissed = true
+        if (!hasSnackBarBeenRequestedToDismiss) {
+            hasSnackBarBeenRequestedToDismiss = true
             delay(3000) {
                 super.dismiss()
-                hasSnackBarBeenRequestedToBeDismissed = false
+                hasSnackBarBeenRequestedToDismiss = false
             }
         }
     }

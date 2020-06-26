@@ -90,14 +90,11 @@ class GithubProfileViewModel(
                 numberOfItemsPerPage
             )) {
 
-            //Success state handling
             is APICallResult.Success<*> -> {
 
                 saveStateValue(currentProfile, provideStateValue<String>(temporaryCurrentProfile))
 
                 with(value.data as GithubProfilesList) {
-
-                    saveStateValue(numberOfItems, githubProfileInformationList.size)
 
                     if (!provideStateValue<Boolean>(Constants.hasASuccessfulCallAlreadyBeenMade))
                         saveStateValue(Constants.hasASuccessfulCallAlreadyBeenMade, true)
@@ -107,6 +104,7 @@ class GithubProfileViewModel(
                     else
                         setupPaginationList(githubProfileInformationList)
 
+                    saveStateValue(numberOfItems, provideNumberOfItems())
                     saveStateValue(pageNumber, provideStateValue<Int>(pageNumber).plus(1))
                 }
             }
@@ -121,32 +119,32 @@ class GithubProfileViewModel(
 
             when (errorValue.error) {
 
-                unknownHostException, socketTimeoutException, connectException -> errorProvider(
+                unknownHostException, socketTimeoutException, connectException -> providerError(
                     R.string.unknown_host_exception_and_socket_timeout_exception,
                     this
                 )
 
-                sslHandshakeException -> errorProvider(
+                sslHandshakeException -> providerError(
                     R.string.ssl_handshake_exception,
                     this
                 )
 
-                clientSideError -> errorProvider(
+                clientSideError -> providerError(
                     R.string.client_side_error,
                     this
                 )
 
-                serverSideError -> errorProvider(
+                serverSideError -> providerError(
                     R.string.server_side_error,
                     this
                 )
 
-                forbidden -> errorProvider(
+                forbidden -> providerError(
                     R.string.api_query_limit_exceeded_error,
                     this
                 )
 
-                else -> errorProvider(
+                else -> providerError(
                     R.string.generic_exception_and_generic_error,
                     this
                 )
@@ -173,16 +171,14 @@ class GithubProfileViewModel(
         _successLiveData.postValue(githubProfilesInfoList)
     }
 
-    private fun errorProvider(
+    private fun providerError(
         error: Int,
         state: SingleLiveEvent<Int>
     ) {
         state.postValue(error)
     }
 
-    //This method provides a URL to the profile a user clicks on a List item
-    internal fun provideProfileUrlThroughViewModel(index: Int) =
-        _githubProfilesInfoList[index].profileUrl
+    private fun provideNumberOfItems() = githubProfilesInfoList.size
 
     internal inline fun <reified T : Any> provideStateValue(handleStateKey: String) =
         requireNotNull(savedStateHandle.get<T>(handleStateKey))

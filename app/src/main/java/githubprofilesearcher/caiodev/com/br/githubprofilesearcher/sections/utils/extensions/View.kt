@@ -6,23 +6,25 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 
-@Suppress("unused")
+@Suppress("UNUSED")
 fun Context.applyViewVisibility(view: View, visibility: Int) {
     view.visibility = visibility
 }
 
-@Suppress("unused")
+@Suppress("UNUSED")
 fun Context.applySwipeRefreshVisibilityAttributes(
     swipeRefreshLayout: SwipeRefreshLayout,
     isRefreshing: Boolean = false,
     isEnabled: Boolean = true
 ) {
     swipeRefreshLayout.isRefreshing = isRefreshing
-        swipeRefreshLayout.isEnabled = isEnabled
+    swipeRefreshLayout.isEnabled = isEnabled
 }
 
 fun Context.changeDrawable(target: ImageView, newDrawable: Int) {
@@ -38,20 +40,47 @@ fun Context.applyBackgroundColor(view: View, color: Int) {
     view.setBackgroundColor(ContextCompat.getColor(applicationContext, color))
 }
 
-@Suppress("unused")
-inline fun Context.showSnackBar(
-    fragmentActivity: FragmentActivity, message: String, crossinline onDismissed: () -> Unit
+@Suppress("UNUSED")
+inline fun Context.showErrorSnackBar(
+    snackBar: Snackbar, message: Int, crossinline onDismissed: (() -> Any) = { emptyString }
 ) {
-    Snackbar.make(
-        fragmentActivity.findViewById(android.R.id.content),
-        message,
-        Snackbar.LENGTH_SHORT
-    ).addCallback(object : Snackbar.Callback() {
-        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-            super.onDismissed(transientBottomBar, event)
-            onDismissed.invoke()
+    with(snackBar) {
+        setText(message)
+        if (onDismissed() is Unit) {
+            addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    onDismissed.invoke()
+                }
+            })
         }
-    }).show()
+        show()
+    }
+}
+
+fun Context.showInternetConnectionStatusSnackBar(
+    customSnackBar: CustomSnackBar,
+    isInternetConnectionAvailable: Boolean
+) {
+    with(customSnackBar) {
+        if (isInternetConnectionAvailable) {
+            setText(R.string.back_online_success_message).setBackgroundColor(
+                ContextCompat.getColor(
+                    applicationContext,
+                    R.color.green_700
+                )
+            )
+            if (isShown) dismiss()
+        } else {
+            setText(R.string.no_connection_error).setBackgroundColor(
+                ContextCompat.getColor(
+                    applicationContext,
+                    R.color.red_700
+                )
+            )
+            show()
+        }
+    }
 }
 
 fun Context.hideKeyboard(editText: EditText) {
@@ -60,7 +89,7 @@ fun Context.hideKeyboard(editText: EditText) {
     }
 }
 
-@Suppress("unused")
+@Suppress("UNUSED")
 fun Context.setViewXYScales(view: View, xAxis: Float, yAxis: Float) {
     view.scaleX = xAxis
     view.scaleY = yAxis

@@ -7,11 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.viewModel.UserRepositoryInformationViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileUrl
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.https
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RepositoryInfoActivity : AppCompatActivity() {
 
     private lateinit var browserIntent: Intent
+
+    private val viewModel by viewModel<UserRepositoryInformationViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +25,6 @@ class RepositoryInfoActivity : AppCompatActivity() {
     }
 
     private fun openWebView() {
-
         if (isChromeInstalled()) {
             launchChromeCustomTab()
         } else {
@@ -30,27 +35,17 @@ class RepositoryInfoActivity : AppCompatActivity() {
 
     private fun isChromeInstalled(): Boolean {
 
-        var isChromeInstalled = false
-
         val activityIntent =
             Intent().setAction(Intent.ACTION_VIEW).addCategory(Intent.CATEGORY_BROWSABLE).setData(
-                Uri.fromParts("http", "", null)
+                Uri.fromParts(https, emptyString, null)
             )
 
-        applicationContext.packageManager.queryIntentActivities(
-            activityIntent,
-            0
-        ).forEach {
-            if (it.activityInfo.packageName.contains("com.android.chrome") ||
-                it.activityInfo.packageName.contains("com.chrome.beta") ||
-                it.activityInfo.packageName.contains("com.chrome.dev") ||
-                it.activityInfo.packageName.contains("com.google.android.apps.chrome")
-            ) {
-                isChromeInstalled = true
-            }
-        }
-
-        return isChromeInstalled
+        return viewModel.isChromeInstalled(
+            applicationContext.packageManager.queryIntentActivities(
+                activityIntent,
+                0
+            )
+        )
     }
 
     private fun launchChromeCustomTab() {

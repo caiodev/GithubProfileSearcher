@@ -12,7 +12,6 @@ object Constants {
 
     //RecyclerView view types
     const val empty = 0
-    const val githubProfileCell = 1
 
     //Subtypes of Generic
     const val loading = 2
@@ -81,17 +80,23 @@ object Constants {
     val mediaType = "application/json".toMediaType()
     const val retrofitTimeout = 60L
 
+    //Chrome packages
+    const val stable = "com.android.chrome"
+    const val beta = "com.chrome.beta"
+    const val dev = "com.chrome.dev"
+    const val local = "com.google.android.apps.chrome"
+
     //Others
     const val emptyString = ""
+    const val https = "https"
 
-    //SavedStateHandle arguments bundle
     val savedStateHandleArguments: Bundle = bundleOf(
         hasUserDeletedProfileText to false,
         textInputEditTextProfile to emptyString,
         shouldRecyclerViewAnimationBeExecuted to true,
         temporaryCurrentProfile to emptyString,
         currentProfile to emptyString,
-        pageNumber to 0,
+        pageNumber to 1,
         hasASuccessfulCallAlreadyBeenMade to false,
         hasLastCallBeenUnsuccessful to false,
         isThereAnOngoingCall to false,
