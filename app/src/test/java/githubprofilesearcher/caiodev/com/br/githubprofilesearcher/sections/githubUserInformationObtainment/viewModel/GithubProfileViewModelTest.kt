@@ -62,17 +62,4 @@ class GithubProfileViewModelTest : TestSteps {
 
         }
     }
-
-    @UnstableDefault
-    @Test
-    fun provideProfileUrlThroughViewModel() = runBlocking {
-
-        doWhen {
-            viewModel.requestUpdatedGithubProfiles()
-        }
-
-        then {
-            assertThat(viewModel.provideProfileUrlThroughViewModel(0)).isEqualTo("https://github.com/torvalds")
-        }
-    }
 }
