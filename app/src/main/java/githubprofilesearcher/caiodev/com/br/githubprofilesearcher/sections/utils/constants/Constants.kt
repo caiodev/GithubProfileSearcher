@@ -69,10 +69,13 @@ object Constants {
     const val numberOfItems = "numberOfItems"
     const val githubProfilesList = "githubProfilesList"
 
+    //Header View
+    const val isHeaderVisible = "isHeaderItemVisible"
+
     //Transient Views
-    const val isEndOfResultsItemVisible = "isEndOfResultsItemVisible"
-    const val isPaginationLoadingItemVisible = "isPaginationLoadingItemVisible"
-    const val isRetryItemVisible = "isRetryItemVisible"
+    const val isEndOfResultsViewVisible = "isEndOfResultsItemVisible"
+    const val isPaginationLoadingViewVisible = "isPaginationLoadingItemVisible"
+    const val isRetryViewVisible = "isRetryItemVisible"
 
     //Retrofit related
     const val baseUrl = "https://api.github.com/"
@@ -105,8 +108,9 @@ object Constants {
         isTextInputEditTextEmpty to true,
         numberOfItems to 0,
         githubProfilesList to listOf<GithubProfileInformation>(),
-        isEndOfResultsItemVisible to false,
-        isPaginationLoadingItemVisible to false,
-        isRetryItemVisible to false
+        isHeaderVisible to false,
+        isEndOfResultsViewVisible to false,
+        isPaginationLoadingViewVisible to false,
+        isRetryViewVisible to false
     )
 }

@@ -43,7 +43,7 @@ class GithubProfileViewModel(
 
     //Result lists
     private val _githubProfilesInfoList = mutableListOf<GithubProfileInformation>()
-    private var githubProfilesInfoList = listOf<GithubProfileInformation>()
+    private var githubProfilesInfoList: List<GithubProfileInformation> = _githubProfilesInfoList
 
     @UnstableDefault
     internal fun requestUpdatedGithubProfiles(profile: String = emptyString) {
@@ -69,10 +69,11 @@ class GithubProfileViewModel(
         shouldListItemsBeRemoved: Boolean
     ) {
         viewModelScope.launch {
-            if (shouldListItemsBeRemoved)
+            if (shouldListItemsBeRemoved) {
                 handleCallResult(profile, shouldListItemsBeRemoved)
-            else
+            } else {
                 handleCallResult(provideStateValue(currentProfile), shouldListItemsBeRemoved)
+            }
         }
     }
 
@@ -102,7 +103,7 @@ class GithubProfileViewModel(
                     if (shouldListItemsBeRemoved)
                         setupUpdatedList(githubProfileInformationList)
                     else
-                        setupPaginationList(githubProfileInformationList)
+                        setupPaginationList(githubProfileInformationList = githubProfileInformationList)
 
                     saveStateValue(numberOfItems, provideNumberOfItems())
                     saveStateValue(pageNumber, provideStateValue<Int>(pageNumber).plus(1))
@@ -152,22 +153,31 @@ class GithubProfileViewModel(
         }
     }
 
-    /* This method sets up the list with all default RecyclerViewItems it will need. In the first call, a Header is added at the top of the list and following it,
-    the ProfileInformation item is added which is responsible for showing the searched user related data */
     private fun setupUpdatedList(
         githubProfileInformationList: List<GithubProfileInformation>
     ) {
         _githubProfilesInfoList.clear()
-        _githubProfilesInfoList.addAll(githubProfileInformationList)
-        githubProfilesInfoList = _githubProfilesInfoList
+        addContentToGithubProfilesInfoList(githubProfileInformationList)
         saveStateValue(githubProfilesList, githubProfilesInfoList)
         _successLiveData.postValue(githubProfilesInfoList)
     }
 
-    private fun setupPaginationList(githubProfileInformationList: List<GithubProfileInformation>) {
-        _githubProfilesInfoList.addAll(githubProfileInformationList)
-        githubProfilesInfoList = _githubProfilesInfoList
-        saveStateValue(githubProfilesList, githubProfilesInfoList)
+    private fun setupPaginationList(
+        shouldUseSavedList: Boolean = false,
+        githubProfileInformationList: List<GithubProfileInformation> = listOf()
+    ) {
+
+        if (!shouldUseSavedList) {
+            addContentToGithubProfilesInfoList(githubProfileInformationList)
+            saveStateValue(githubProfilesList, githubProfilesInfoList)
+        } else {
+            addContentToGithubProfilesInfoList(
+                provideStateValue(
+                    githubProfilesList
+                )
+            )
+        }
+
         _successLiveData.postValue(githubProfilesInfoList)
     }
 
@@ -185,5 +195,13 @@ class GithubProfileViewModel(
 
     internal fun <T> saveStateValue(handleStateKey: String, value: T) {
         savedStateHandle.set(handleStateKey, value)
+    }
+
+    private fun addContentToGithubProfilesInfoList(list: List<GithubProfileInformation>) {
+        _githubProfilesInfoList.addAll(list)
+    }
+
+    internal fun updateUIInCaseOfSystemInitiatedProcessDeath() {
+        setupPaginationList(shouldUseSavedList = true)
     }
 }
