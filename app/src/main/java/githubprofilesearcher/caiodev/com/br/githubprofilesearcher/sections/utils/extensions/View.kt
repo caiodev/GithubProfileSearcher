@@ -18,13 +18,14 @@ fun Context.applyViewVisibility(view: View, visibility: Int) {
 }
 
 @Suppress("UNUSED")
-fun Context.applySwipeRefreshVisibilityAttributes(
-    swipeRefreshLayout: SwipeRefreshLayout,
-    isRefreshing: Boolean = false,
-    isEnabled: Boolean = true
+fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
+    isSwipeRefreshing: Boolean = false,
+    isSwipeEnabled: Boolean = true
 ) {
-    swipeRefreshLayout.isRefreshing = isRefreshing
-    swipeRefreshLayout.isEnabled = isEnabled
+    this.apply {
+        isRefreshing = isSwipeRefreshing
+        isEnabled = isSwipeEnabled
+    }
 }
 
 fun Context.changeDrawable(target: ImageView, newDrawable: Int) {

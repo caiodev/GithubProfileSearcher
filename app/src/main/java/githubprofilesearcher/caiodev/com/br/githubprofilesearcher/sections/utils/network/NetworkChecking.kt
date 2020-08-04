@@ -15,7 +15,7 @@ object NetworkChecking {
     private val networkRequest = NetworkRequest.Builder().apply {
         addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-    }
+    }.build()
 
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
 
@@ -42,7 +42,7 @@ object NetworkChecking {
     //Returns a LiveData so internet connection related state changes can be observed
     fun internetConnectionAvailabilityObservable(applicationContext: Context): LiveData<Boolean> {
         (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
-            requestNetwork(networkRequest.build(), connectivityCallback)
+            requestNetwork(networkRequest, connectivityCallback)
         }
         return networkState
     }
@@ -52,6 +52,9 @@ object NetworkChecking {
         onConnectionAvailable: () -> Unit,
         onConnectionUnavailable: () -> Unit
     ) {
+
+
+
         if (connectivityManager.allNetworks.isNotEmpty()) {
             connectivityManager.allNetworks.forEach { network ->
                 connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->

@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme.Launcher"
         tools:ignore="AllowBackup">
         <activity
-            android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.GithubProfileInfoObtainmentActivity"
+            android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.GithubProfileListingActivity"
             android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.RepositoryInfoActivity"
+            android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.GithubProfileInfoActivity"
             android:theme="@style/AppTheme"
             android:configChanges="uiMode" />
     </application>

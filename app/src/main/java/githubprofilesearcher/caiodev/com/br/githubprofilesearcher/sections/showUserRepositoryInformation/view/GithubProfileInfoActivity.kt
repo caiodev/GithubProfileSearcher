@@ -13,7 +13,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.https
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RepositoryInfoActivity : AppCompatActivity() {
+class GithubProfileInfoActivity : AppCompatActivity() {
 
     private lateinit var browserIntent: Intent
 

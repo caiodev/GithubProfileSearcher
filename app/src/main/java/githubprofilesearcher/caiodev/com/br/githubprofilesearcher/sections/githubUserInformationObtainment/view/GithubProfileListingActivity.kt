@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.snackbar.Snackbar
@@ -20,15 +20,14 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.adapter.TransientViewsAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.ActivityFlow
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ActivityFlow
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasASuccessfulCallAlreadyBeenMade
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasLastCallBeenUnsuccessful
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.hasUserDeletedProfileText
@@ -43,21 +42,20 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItems
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.savedStateHandleArguments
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.shouldASearchBePerformed
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.shouldRecyclerViewAnimationBeExecuted
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.textInputEditTextProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.transientViewsAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.zero
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.internetConnectionAvailabilityObservable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.UnstableDefault
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GithubProfileInfoObtainmentActivity :
+class GithubProfileListingActivity :
     AppCompatActivity(R.layout.activity_main),
     ActivityFlow {
 
@@ -75,10 +73,10 @@ class GithubProfileInfoObtainmentActivity :
         CustomSnackBar.make(findViewById(android.R.id.content))
     }
 
-    private val viewModel by stateViewModel<GithubProfileViewModel>(bundle = { savedStateHandleArguments })
+    private val viewModel by viewModel<GithubProfileViewModel>()
 
-    private val mergeAdapter by lazy {
-        MergeAdapter(
+    private val concatAdapter by lazy {
+        ConcatAdapter(
             HeaderAdapter(R.string.github_user_list_header),
             GithubProfileAdapter(errorSnackBar),
             TransientViewsAdapter()
@@ -107,36 +105,37 @@ class GithubProfileInfoObtainmentActivity :
 
     private fun bindViewModelDataToUIInCaseOfOrientationChanges() {
 
-        viewModel.provideStateValue<String>(
-            textInputEditTextProfile
-        ).apply {
-            if (isNotEmpty()) {
-                searchProfileTextInputEditText.setText(this)
-                viewModel.saveStateValue(
-                    shouldASearchBePerformed,
-                    true
-                )
-            }
-        }
-
         viewModel.successLiveData.value?.let {
 
-            changeViewState(headerAdapter, header)
-            applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
+            viewModel.retrieveFromSharedPreferences(
+                textInputEditTextProfile, emptyString
+            ).apply {
+                if (isNotEmpty()) {
+                    searchProfileTextInputEditText.setText(this)
+                    viewModel.saveToSharedPreferences(
+                        shouldASearchBePerformed,
+                        true
+                    )
+                }
+            }
 
-            if (viewModel.provideStateValue(isThereAnOngoingCall)) {
+            changeViewState(headerAdapter, header)
+
+            if (viewModel.retrieveFromSharedPreferences(isThereAnOngoingCall, false)) {
                 applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
                 setupUpperViewsInteraction(false)
-                viewModel.saveStateValue(shouldASearchBePerformed, false)
+                viewModel.saveToSharedPreferences(shouldASearchBePerformed, false)
                 changeDrawable(actionIconImageView, R.drawable.ic_close)
             }
 
-            if (viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade) && !viewModel.provideStateValue<Boolean>(
-                    Constants.isTextInputEditTextEmpty
+            if (viewModel.retrieveFromSharedPreferences(
+                    hasASuccessfulCallAlreadyBeenMade,
+                    false
+                ) && !viewModel.retrieveFromSharedPreferences(
+                    Constants.isTextInputEditTextEmpty, true
                 )
             ) {
-
-                if (!viewModel.provideStateValue<Boolean>(hasUserDeletedProfileText))
+                if (!viewModel.retrieveFromSharedPreferences(hasUserDeletedProfileText, false))
                     changeDrawable(
                         actionIconImageView,
                         R.drawable.ic_close
@@ -146,17 +145,26 @@ class GithubProfileInfoObtainmentActivity :
             if (provideRecyclerViewLayoutManager().findFirstVisibleItemPosition() >= 2) {
                 applyViewVisibility(backToTopButton, VISIBLE)
             }
-
         } ?: run {
-            if (viewModel.provideStateValue<List<GithubProfileInformation>>(githubProfilesList)
-                    .isNotEmpty()
-            ) {
+            bindViewModelDataToUIInCaseOfSystemInitiatedProcessDeath()
+        }
+    }
+
+    private fun bindViewModelDataToUIInCaseOfSystemInitiatedProcessDeath() {
+
+        if (viewModel.retrieveFromSharedPreferences(
+                Constants.hasOnSaveInstanceStateBeenCalled,
+                false
+            )
+        ) {
+            if (viewModel.retrieveFromSharedPreferences(Constants.hasOnDestroyBeenCalled, false)) {
+                viewModel.clearSharedPreferences()
+            } else {
                 viewModel.updateUIInCaseOfSystemInitiatedProcessDeath()
                 changeViewState(headerAdapter, header)
-                if (viewModel.provideStateValue(isRetryViewVisible)) {
+                if (viewModel.retrieveFromSharedPreferences(isRetryViewVisible, false)) {
                     changeViewState(transientViewsAdapter, retry)
                 }
-                applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
             }
         }
     }
@@ -189,11 +197,16 @@ class GithubProfileInfoObtainmentActivity :
     private fun setupSwipeRefreshLayout() {
 
         githubProfileListSwipeRefreshLayout.apply {
-            if (!viewModel.provideStateValue<Boolean>(hasASuccessfulCallAlreadyBeenMade))
-                applySwipeRefreshVisibilityAttributes(this, isEnabled = false)
+            if (!viewModel.retrieveFromSharedPreferences(
+                    hasASuccessfulCallAlreadyBeenMade,
+                    false
+                )
+            ) {
+                applySwipeRefreshVisibilityAttributes(isSwipeEnabled = false)
+            }
 
             setOnRefreshListener {
-                viewModel.saveStateValue(hasUserRequestedUpdatedData, true)
+                viewModel.saveToSharedPreferences(hasUserRequestedUpdatedData, true)
                 updatedProfileCall()
             }
         }
@@ -203,7 +216,7 @@ class GithubProfileInfoObtainmentActivity :
     private fun setupRecyclerView() {
         profileInfoRecyclerView.apply {
             setHasFixedSize(true)
-            adapter = mergeAdapter
+            adapter = concatAdapter
             setupRecyclerViewAddOnScrollListener()
         }
     }
@@ -222,7 +235,11 @@ class GithubProfileInfoObtainmentActivity :
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
 
-                    if (!viewModel.provideStateValue<Boolean>(shouldASearchBePerformed)) viewModel.saveStateValue(
+                    if (!viewModel.retrieveFromSharedPreferences(
+                            shouldASearchBePerformed,
+                            true
+                        )
+                    ) viewModel.saveToSharedPreferences(
                         shouldASearchBePerformed,
                         true
                     )
@@ -234,7 +251,7 @@ class GithubProfileInfoObtainmentActivity :
 
                     text?.let {
                         if (it.isEmpty())
-                            viewModel.saveStateValue(hasUserDeletedProfileText, true)
+                            viewModel.saveToSharedPreferences(hasUserDeletedProfileText, true)
                     }
                 }
             }
@@ -260,28 +277,31 @@ class GithubProfileInfoObtainmentActivity :
 
         viewModel.successLiveData.observe(this) { githubUsersList ->
 
-            viewModel.saveStateValue(hasLastCallBeenUnsuccessful, false)
-            viewModel.saveStateValue(isThereAnOngoingCall, false)
+            viewModel.saveToSharedPreferences(hasLastCallBeenUnsuccessful, false)
+            viewModel.saveToSharedPreferences(isThereAnOngoingCall, false)
 
             if (this::countingIdlingResource.isInitialized)
                 countingIdlingResource.decrement()
 
             setupUpperViewsInteraction(true)
 
-            if (viewModel.provideStateValue(hasUserDeletedProfileText) && viewModel.provideStateValue<String>(
-                    textInputEditTextProfile
+            if (viewModel.retrieveFromSharedPreferences(
+                    hasUserDeletedProfileText,
+                    false
+                ) && viewModel.retrieveFromSharedPreferences(
+                    textInputEditTextProfile, emptyString
                 ).isNotEmpty()
             ) {
-                viewModel.saveStateValue(shouldASearchBePerformed, true)
+                viewModel.saveToSharedPreferences(shouldASearchBePerformed, true)
             } else {
-                viewModel.saveStateValue(shouldASearchBePerformed, false)
+                viewModel.saveToSharedPreferences(shouldASearchBePerformed, false)
             }
 
-            if (!viewModel.provideStateValue<Boolean>(isHeaderVisible)) {
+            if (!viewModel.retrieveFromSharedPreferences(isHeaderVisible, false)) {
                 changeViewState(headerAdapter, header)
             }
 
-            if (viewModel.provideStateValue<Int>(numberOfItems) < 20)
+            if (viewModel.retrieveFromSharedPreferences(numberOfItems, zero) < 20)
                 changeViewState(transientViewsAdapter, endOfResults)
             else
                 changeViewState(transientViewsAdapter, empty)
@@ -291,32 +311,40 @@ class GithubProfileInfoObtainmentActivity :
                 notifyDataSetChanged()
             }
 
-            viewModel.saveStateValue(
+            viewModel.saveToSharedPreferences(
                 shouldRecyclerViewAnimationBeExecuted,
                 shouldRecyclerViewAnimationBeExecuted()
             )
 
-            if (viewModel.provideStateValue(hasUserRequestedUpdatedData)) viewModel.saveStateValue(
+            if (viewModel.retrieveFromSharedPreferences(
+                    hasUserRequestedUpdatedData,
+                    false
+                )
+            ) viewModel.saveToSharedPreferences(
                 hasUserRequestedUpdatedData,
                 false
             )
 
-            if (viewModel.provideStateValue(hasUserRequestedUpdatedData)) {
+            if (viewModel.retrieveFromSharedPreferences(hasUserRequestedUpdatedData, false)) {
 
                 provideAdapter<GithubProfileAdapter>(githubProfileAdapter).updateDataSource(
                     githubUsersList
                 )
 
                 viewModel.apply {
-                    saveStateValue(shouldRecyclerViewAnimationBeExecuted, true)
-                    saveStateValue(hasUserRequestedUpdatedData, false)
+                    saveToSharedPreferences(shouldRecyclerViewAnimationBeExecuted, true)
+                    saveToSharedPreferences(hasUserRequestedUpdatedData, false)
                 }
             }
 
-            if (viewModel.provideStateValue(shouldRecyclerViewAnimationBeExecuted))
+            if (viewModel.retrieveFromSharedPreferences(
+                    shouldRecyclerViewAnimationBeExecuted,
+                    true
+                )
+            )
                 runLayoutAnimation(profileInfoRecyclerView)
             else
-                viewModel.saveStateValue(shouldRecyclerViewAnimationBeExecuted, true)
+                viewModel.saveToSharedPreferences(shouldRecyclerViewAnimationBeExecuted, true)
         }
     }
 
@@ -324,26 +352,34 @@ class GithubProfileInfoObtainmentActivity :
 
         viewModel.errorSingleLiveDataEvent.observe(this) { error ->
 
-            viewModel.saveStateValue(hasLastCallBeenUnsuccessful, true)
-            viewModel.saveStateValue(isThereAnOngoingCall, false)
+            viewModel.saveToSharedPreferences(hasLastCallBeenUnsuccessful, true)
+            viewModel.saveToSharedPreferences(isThereAnOngoingCall, false)
 
             if (this::countingIdlingResource.isInitialized)
                 countingIdlingResource.decrement()
 
-            if (viewModel.provideStateValue(hasUserRequestedUpdatedData)) viewModel.saveStateValue(
+            if (viewModel.retrieveFromSharedPreferences(
+                    hasUserRequestedUpdatedData,
+                    false
+                )
+            ) viewModel.saveToSharedPreferences(
                 hasUserRequestedUpdatedData,
                 false
             )
 
             setupUpperViewsInteraction(true)
-            applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
+            githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(isSwipeEnabled = true)
             changeDrawable(actionIconImageView, R.drawable.ic_search)
             showErrorMessages(error)
 
-            if (!viewModel.provideStateValue<Boolean>(shouldRecyclerViewAnimationBeExecuted))
-                viewModel.saveStateValue(shouldASearchBePerformed, true)
+            if (!viewModel.retrieveFromSharedPreferences(
+                    shouldRecyclerViewAnimationBeExecuted,
+                    true
+                )
+            )
+                viewModel.saveToSharedPreferences(shouldASearchBePerformed, true)
 
-            if (viewModel.provideStateValue(isPaginationLoadingViewVisible))
+            if (viewModel.retrieveFromSharedPreferences(isPaginationLoadingViewVisible, false))
                 changeViewState(transientViewsAdapter, retry)
         }
     }
@@ -380,8 +416,8 @@ class GithubProfileInfoObtainmentActivity :
         hideKeyboard(searchProfileTextInputEditText)
         if (!isTextInputEditTextEmpty()) {
             applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
-            viewModel.saveStateValue(hasUserRequestedUpdatedData, true)
-            viewModel.saveStateValue(hasUserDeletedProfileText, false)
+            viewModel.saveToSharedPreferences(hasUserRequestedUpdatedData, true)
+            viewModel.saveToSharedPreferences(hasUserDeletedProfileText, false)
             updatedProfileCall(searchProfileTextInputEditText.text.toString())
         } else {
             showErrorSnackBar(
@@ -399,10 +435,9 @@ class GithubProfileInfoObtainmentActivity :
             )
 
             adapter?.notifyDataSetChanged()
-
             scrollToTop(false)
             scheduleLayoutAnimation()
-            applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
+            githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
 
             if (repositoryLoadingProgressBar.visibility == VISIBLE)
                 applyViewVisibility(repositoryLoadingProgressBar, GONE)
@@ -412,15 +447,15 @@ class GithubProfileInfoObtainmentActivity :
     private inline fun callApiThroughViewModel(crossinline genericFunction: () -> Unit) {
         checkIfInternetConnectionIsAvailableCaller(
             onConnectionAvailable = {
-                if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall))
-                    viewModel.saveStateValue(isThereAnOngoingCall, true)
+                if (!viewModel.retrieveFromSharedPreferences(isThereAnOngoingCall, false))
+                    viewModel.saveToSharedPreferences(isThereAnOngoingCall, true)
 
-                if (!viewModel.provideStateValue<Boolean>(hasUserDeletedProfileText)) {
+                if (!viewModel.retrieveFromSharedPreferences(hasUserDeletedProfileText, false)) {
                     setupUpperViewsInteraction(false)
                     changeDrawable(actionIconImageView, R.drawable.ic_close)
                 }
 
-                viewModel.saveStateValue(shouldASearchBePerformed, false)
+                viewModel.saveToSharedPreferences(shouldASearchBePerformed, false)
 
                 genericFunction.invoke()
 
@@ -428,9 +463,9 @@ class GithubProfileInfoObtainmentActivity :
                     countingIdlingResource.increment()
             },
             onConnectionUnavailable = {
-                viewModel.saveStateValue(hasLastCallBeenUnsuccessful, true)
-                applySwipeRefreshVisibilityAttributes(githubProfileListSwipeRefreshLayout)
-                if (viewModel.provideStateValue(isPaginationLoadingViewVisible))
+                viewModel.saveToSharedPreferences(hasLastCallBeenUnsuccessful, true)
+                githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
+                if (viewModel.retrieveFromSharedPreferences(isPaginationLoadingViewVisible, false))
                     changeViewState(transientViewsAdapter, retry)
                 showErrorMessages(R.string.no_connection_error)
             })
@@ -449,8 +484,8 @@ class GithubProfileInfoObtainmentActivity :
     }
 
     private fun shouldRecallInternetConnectivitySnackBar(): Any {
-        if (!viewModel.provideStateValue<Boolean>(
-                isRetryViewVisible
+        if (!viewModel.retrieveFromSharedPreferences(
+                isRetryViewVisible, false
             )
         ) return checkIfInternetConnectionIsAvailableCaller(
             onConnectionUnavailable = {
@@ -484,15 +519,18 @@ class GithubProfileInfoObtainmentActivity :
                             true
                         )
 
-                        if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall) && viewModel.provideStateValue(
-                                hasLastCallBeenUnsuccessful
+                        if (!viewModel.retrieveFromSharedPreferences(
+                                isThereAnOngoingCall,
+                                false
+                            ) && viewModel.retrieveFromSharedPreferences(
+                                hasLastCallBeenUnsuccessful, false
                             )
                         ) {
-                            if (viewModel.provideStateValue(isRetryViewVisible)) {
+                            if (viewModel.retrieveFromSharedPreferences(isRetryViewVisible, false))
                                 paginationCall()
-                            } else {
+                            else
                                 textInputEditTextNotEmptyRequiredCall()
-                            }
+
                         }
                     }
 
@@ -506,18 +544,22 @@ class GithubProfileInfoObtainmentActivity :
 
     @UnstableDefault
     private fun handleActionIconClick() {
-        if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall)) {
-            if (viewModel.provideStateValue(shouldASearchBePerformed)) {
-                viewModel.saveStateValue(hasUserRequestedUpdatedData, true)
+        if (!viewModel.retrieveFromSharedPreferences(isThereAnOngoingCall, false)) {
+            if (viewModel.retrieveFromSharedPreferences(shouldASearchBePerformed, true)) {
+                viewModel.saveToSharedPreferences(hasUserRequestedUpdatedData, true)
                 textInputEditTextNotEmptyRequiredCall()
             } else {
                 searchProfileTextInputEditText.setText(emptyString)
                 changeDrawable(actionIconImageView, R.drawable.ic_search)
-                if (!viewModel.provideStateValue<Boolean>(shouldASearchBePerformed)) viewModel.saveStateValue(
+                if (!viewModel.retrieveFromSharedPreferences(
+                        shouldASearchBePerformed,
+                        true
+                    )
+                ) viewModel.saveToSharedPreferences(
                     shouldASearchBePerformed,
                     true
                 )
-                viewModel.saveStateValue(hasUserDeletedProfileText, true)
+                viewModel.saveToSharedPreferences(hasUserDeletedProfileText, true)
             }
         }
     }
@@ -542,12 +584,15 @@ class GithubProfileInfoObtainmentActivity :
                 }
 
                 if (recyclerViewLayoutManager.findLastVisibleItemPosition() == total?.minus(2) &&
-                    viewModel.provideStateValue(hasASuccessfulCallAlreadyBeenMade)
+                    viewModel.retrieveFromSharedPreferences(
+                        hasASuccessfulCallAlreadyBeenMade,
+                        false
+                    )
                 ) {
-                    viewModel.saveStateValue(shouldRecyclerViewAnimationBeExecuted, false)
-                    if (!viewModel.provideStateValue<Boolean>(isThereAnOngoingCall) &&
-                        !viewModel.provideStateValue<Boolean>(isRetryViewVisible) &&
-                        !viewModel.provideStateValue<Boolean>(isEndOfResultsViewVisible)
+                    viewModel.saveToSharedPreferences(shouldRecyclerViewAnimationBeExecuted, false)
+                    if (!viewModel.retrieveFromSharedPreferences(isThereAnOngoingCall, false) &&
+                        !viewModel.retrieveFromSharedPreferences(isRetryViewVisible, false) &&
+                        !viewModel.retrieveFromSharedPreferences(isEndOfResultsViewVisible, false)
                     ) {
                         paginationCall()
                     }
@@ -594,14 +639,14 @@ class GithubProfileInfoObtainmentActivity :
 
         if (adapterPosition == headerAdapter) {
 
-            (mergeAdapter.adapters[adapterPosition] as HeaderAdapter).apply {
+            (concatAdapter.adapters[adapterPosition] as HeaderAdapter).apply {
                 updateViewState(viewState)
-                viewModel.saveStateValue(isHeaderVisible, true)
+                viewModel.saveToSharedPreferences(isHeaderVisible, true)
             }
 
         } else {
 
-            (mergeAdapter.adapters[adapterPosition] as TransientViewsAdapter).apply {
+            (concatAdapter.adapters[adapterPosition] as TransientViewsAdapter).apply {
 
                 updateViewState(viewState)
                 notifyDataSetChanged()
@@ -612,8 +657,8 @@ class GithubProfileInfoObtainmentActivity :
                     retry -> {
                         saveItemView(isRetryItemVisible = true)
 //                        profileInfoRecyclerView.smoothScrollToPosition(
-//                            viewModel.provideStateValue<Int>(
-//                                numberOfItems
+//                            viewModel.retrieveFromSharedPreferences(
+//                                numberOfItems, Constants.zero
 //                            ).plus(2)
 //                        )
                     }
@@ -629,15 +674,18 @@ class GithubProfileInfoObtainmentActivity :
         isRetryItemVisible: Boolean = false
     ) {
         viewModel.apply {
-            saveStateValue(isEndOfResultsViewVisible, isEndOfResultsItemVisible)
-            saveStateValue(isPaginationLoadingViewVisible, isPaginationLoadingItemVisible)
-            saveStateValue(isRetryViewVisible, isRetryItemVisible)
+            saveToSharedPreferences(isEndOfResultsViewVisible, isEndOfResultsItemVisible)
+            saveToSharedPreferences(isPaginationLoadingViewVisible, isPaginationLoadingItemVisible)
+            saveToSharedPreferences(isRetryViewVisible, isRetryItemVisible)
         }
     }
 
     private fun shouldRecyclerViewAnimationBeExecuted(): Boolean {
-        return if (!viewModel.provideStateValue<Boolean>(hasASuccessfulCallAlreadyBeenMade) || viewModel.provideStateValue(
-                hasUserRequestedUpdatedData
+        return if (!viewModel.retrieveFromSharedPreferences(
+                hasASuccessfulCallAlreadyBeenMade,
+                false
+            ) || viewModel.retrieveFromSharedPreferences(
+                hasUserRequestedUpdatedData, false
             )
         ) {
             true
@@ -650,22 +698,30 @@ class GithubProfileInfoObtainmentActivity :
 
     private inline fun <reified T> provideAdapter(adapterPosition: Int): T {
         return when (adapterPosition) {
-            0 -> (mergeAdapter.adapters[adapterPosition] as T)
-            1 -> (mergeAdapter.adapters[adapterPosition] as T)
-            else -> (mergeAdapter.adapters[adapterPosition] as T)
+            0 -> (concatAdapter.adapters[adapterPosition] as T)
+            1 -> (concatAdapter.adapters[adapterPosition] as T)
+            else -> (concatAdapter.adapters[adapterPosition] as T)
         }
     }
 
-    override fun onPause() {
-        super.onPause()
+    //        viewModel.saveToSharedPreferences(Constants.hasOnSaveInstanceStateBeenCalled, false)
+    //viewModel.saveToSharedPreferences(Constants.hasOnDestroyBeenCalled, false)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         viewModel.apply {
-            saveStateValue(Constants.isTextInputEditTextEmpty, isTextInputEditTextEmpty())
+            saveToSharedPreferences(Constants.isTextInputEditTextEmpty, isTextInputEditTextEmpty())
             if (!isTextInputEditTextEmpty()) {
-                viewModel.saveStateValue(
+                viewModel.saveToSharedPreferences(
                     textInputEditTextProfile,
                     searchProfileTextInputEditText.text.toString()
                 )
             }
+            saveToSharedPreferences(Constants.hasOnSaveInstanceStateBeenCalled, true)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.saveToSharedPreferences(Constants.hasOnDestroyBeenCalled, true)
     }
 }

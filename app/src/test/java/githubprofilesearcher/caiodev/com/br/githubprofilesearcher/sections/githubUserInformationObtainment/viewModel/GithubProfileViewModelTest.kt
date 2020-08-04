@@ -1,8 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel
 
-import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.fakes.repository.local.FakeLocalRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.fakes.repository.remote.FakeGithubProfileInformationRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.async.CoroutinesTestExtension
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.async.LiveDataTestExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,11 +21,10 @@ class GithubProfileViewModelTest : TestSteps {
 
     private lateinit var viewModel: GithubProfileViewModel
 
-    @ExperimentalCoroutinesApi
     @BeforeEach
     override fun setupDependencies() {
         viewModel =
-            GithubProfileViewModel(SavedStateHandle(), FakeGithubProfileInformationRepository())
+            GithubProfileViewModel(FakeLocalRepository(), FakeGithubProfileInformationRepository())
     }
 
     @UnstableDefault
