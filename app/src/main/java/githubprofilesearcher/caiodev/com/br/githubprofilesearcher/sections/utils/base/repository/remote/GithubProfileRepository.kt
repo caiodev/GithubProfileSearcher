@@ -1,6 +1,5 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.RemoteRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.callInterface.UserProfile
 import kotlinx.serialization.UnstableDefault
 

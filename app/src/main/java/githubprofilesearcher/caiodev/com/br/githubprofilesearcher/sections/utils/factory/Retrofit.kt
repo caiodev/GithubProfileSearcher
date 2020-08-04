@@ -2,8 +2,8 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.mediaType
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retrofitTimeout
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.timberTag
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.timeout
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.responseTag
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -18,7 +18,7 @@ object Retrofit {
     private val httpLoggingInterceptor =
         HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
-                Timber.tag(timberTag).d(message)
+                Timber.tag(responseTag).d(message)
             }
         }).apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -48,8 +48,8 @@ object Retrofit {
     private fun createOkHttpClient() =
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .connectTimeout(retrofitTimeout, TimeUnit.SECONDS)
-            .readTimeout(retrofitTimeout, TimeUnit.SECONDS)
-            .writeTimeout(retrofitTimeout, TimeUnit.SECONDS)
+            .connectTimeout(timeout, TimeUnit.SECONDS)
+            .readTimeout(timeout, TimeUnit.SECONDS)
+            .writeTimeout(timeout, TimeUnit.SECONDS)
             .build()
 }

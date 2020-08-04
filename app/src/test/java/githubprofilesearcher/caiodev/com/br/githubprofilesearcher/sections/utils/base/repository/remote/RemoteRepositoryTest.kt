@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.callInterface.UserProfile
@@ -34,7 +34,8 @@ class RemoteRepositoryTest : TestSteps {
     override fun setupDependencies() {
         mockWebServer = setup()
         userProfile = createRetrofitService()
-        remoteRepository = RemoteRepository()
+        remoteRepository =
+            RemoteRepository()
     }
 
     @AfterEach
@@ -325,6 +326,6 @@ class RemoteRepositoryTest : TestSteps {
         exception: Exception = Exception()
     ): Response<GithubProfilesList> {
         throw exception
-        return exception as Response<GithubProfilesList> //Code will never be reached, that's why i'm making this cast that will never succeed
+        return exception as Response<GithubProfilesList>
     }
 }

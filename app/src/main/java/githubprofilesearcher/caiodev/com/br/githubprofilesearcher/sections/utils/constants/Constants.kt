@@ -1,8 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants
 
-import android.os.Bundle
-import androidx.core.os.bundleOf
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.viewTypes.GithubProfileInformation
 import okhttp3.MediaType.Companion.toMediaType
 
 object Constants {
@@ -67,7 +64,10 @@ object Constants {
     const val shouldASearchBePerformed = "shouldASearchBePerformed"
     const val isTextInputEditTextEmpty = "isTextInputEditTextEmpty"
     const val numberOfItems = "numberOfItems"
-    const val githubProfilesList = "githubProfilesList"
+
+    //Lifecycle related
+    const val hasOnDestroyBeenCalled = "hasOnDestroyBeenCalled"
+    const val hasOnSaveInstanceStateBeenCalled = "hasOnSaveInstanceStateBeenCalled"
 
     //Header View
     const val isHeaderVisible = "isHeaderItemVisible"
@@ -79,9 +79,9 @@ object Constants {
 
     //Retrofit related
     const val baseUrl = "https://api.github.com/"
-    const val timberTag = "OkHttp"
+    const val responseTag = "OkHttp"
     val mediaType = "application/json".toMediaType()
-    const val retrofitTimeout = 60L
+    const val timeout = 60L
 
     //Chrome packages
     const val stable = "com.android.chrome"
@@ -89,28 +89,12 @@ object Constants {
     const val dev = "com.chrome.dev"
     const val local = "com.google.android.apps.chrome"
 
+    //Database names
+    const val appDb = "app-db"
+
     //Others
     const val emptyString = ""
     const val https = "https"
-
-    val savedStateHandleArguments: Bundle = bundleOf(
-        hasUserDeletedProfileText to false,
-        textInputEditTextProfile to emptyString,
-        shouldRecyclerViewAnimationBeExecuted to true,
-        temporaryCurrentProfile to emptyString,
-        currentProfile to emptyString,
-        pageNumber to 1,
-        hasASuccessfulCallAlreadyBeenMade to false,
-        hasLastCallBeenUnsuccessful to false,
-        isThereAnOngoingCall to false,
-        hasUserRequestedUpdatedData to false,
-        shouldASearchBePerformed to true,
-        isTextInputEditTextEmpty to true,
-        numberOfItems to 0,
-        githubProfilesList to listOf<GithubProfileInformation>(),
-        isHeaderVisible to false,
-        isEndOfResultsViewVisible to false,
-        isPaginationLoadingViewVisible to false,
-        isRetryViewVisible to false
-    )
+    const val sharedPreferences = "sharedPreferences"
+    const val zero = 0
 }

@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
@@ -12,7 +12,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import retrofit2.Response
-import timber.log.Timber
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -46,9 +45,6 @@ class RemoteRepository {
     }
 
     private fun handleError(responseCode: Int): Any {
-
-        Timber.d("ErrorCode: $responseCode")
-
         return when (responseCode) {
             in 400..402, in 404..499 -> APICallResult.Error(clientSideError)
             403 -> APICallResult.Error(forbidden)
@@ -62,9 +58,7 @@ class RemoteRepository {
             is ConnectException -> APICallResult.Error(connectException)
             is SocketTimeoutException -> APICallResult.Error(socketTimeoutException)
             is SSLHandshakeException -> APICallResult.Error(sslHandshakeException)
-            is UnknownHostException -> APICallResult.Error(
-                unknownHostException
-            )
+            is UnknownHostException -> APICallResult.Error(unknownHostException)
             else -> APICallResult.Error(genericException)
         }
     }

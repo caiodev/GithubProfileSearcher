@@ -19,7 +19,8 @@ class NetworkCheckingTest {
     var instantExecutorRule = InstantTaskExecutorRule()
 
     @Test
-    fun checkIfInternetConnectionIsAvailable_applicationContext_isOnlineEqualsTrue() {
+    fun checkIfInternetConnectionIsAvailable_applicationContext_isOnline() {
+
         var isOnline = false
 
         checkIfInternetConnectionIsAvailable(
@@ -30,7 +31,19 @@ class NetworkCheckingTest {
     }
 
     @Test
-    fun internetConnectionAvailabilityObservable_applicationContext_liveDataValueEqualsTrue() {
+    fun checkIfInternetConnectionIsAvailable_applicationContext_isOffline() {
+
+        var isOffline = false
+
+        checkIfInternetConnectionIsAvailable(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            {},
+            { isOffline = true })
+        assertThat(isOffline).isTrue()
+    }
+
+    @Test
+    fun internetConnectionAvailabilityObservable_applicationContext_isOnline() {
         assertThat(
             LiveDataTestUtil.getValue(
                 internetConnectionAvailabilityObservable(
@@ -41,23 +54,13 @@ class NetworkCheckingTest {
     }
 
     @Test
-    fun checkIfInternetConnectionIsAvailable_applicationContext_inOfflineEqualsTrue() {
-        var isOffline = false
-        checkIfInternetConnectionIsAvailable(
-            InstrumentationRegistry.getInstrumentation().targetContext,
-            {},
-            { isOffline = true })
-        assertThat(isOffline).isTrue()
-    }
-
-    @Test
-    fun internetConnectionAvailabilityObservable_applicationContext_liveDataValueEqualsNull() {
+    fun internetConnectionAvailabilityObservable_applicationContext_isOffline() {
         assertThat(
             LiveDataTestUtil.getValue(
                 internetConnectionAvailabilityObservable(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             )
-        ).isNull()
+        ).isFalse()
     }
 }

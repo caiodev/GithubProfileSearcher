@@ -4,6 +4,7 @@ import android.app.Application
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.diModules.githubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.model.diModules.githubUserRepositoryViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.diModules.globalModule
 import kotlinx.serialization.UnstableDefault
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -20,7 +21,7 @@ class App : Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(githubProfileViewModel, githubUserRepositoryViewModel)
+            modules(githubProfileViewModel, githubUserRepositoryViewModel, globalModule)
         }
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
