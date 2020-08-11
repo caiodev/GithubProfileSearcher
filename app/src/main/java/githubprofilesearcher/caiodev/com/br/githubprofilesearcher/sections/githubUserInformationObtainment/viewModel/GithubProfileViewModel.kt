@@ -3,12 +3,11 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericGithubProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.GenericLocalRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericGithubProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
@@ -24,10 +23,10 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.temporaryCurrentProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.zero
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.SingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
-import kotlinx.coroutines.launch
 import kotlinx.serialization.UnstableDefault
 
 class GithubProfileViewModel(
@@ -77,7 +76,7 @@ class GithubProfileViewModel(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
-        viewModelScope.launch {
+        runTaskOnBackground {
             if (shouldListItemsBeRemoved) {
                 handleCallResult(profile, shouldListItemsBeRemoved)
             } else {
@@ -105,10 +104,7 @@ class GithubProfileViewModel(
 
             is APICallResult.Success<*> -> {
 
-                saveToSharedPreferences(
-                    currentProfile,
-                    retrieveFromSharedPreferences(temporaryCurrentProfile, emptyString)
-                )
+                saveToSharedPreferences(currentProfile, emptyString)
 
                 with(value.data as GithubProfilesList) {
 
@@ -124,7 +120,7 @@ class GithubProfileViewModel(
                     else
                         setupPaginationList(githubProfileInformationList = githubProfileInformationList)
 
-                    saveToSharedPreferences(numberOfItems, provideNumberOfItems())
+                    saveToSharedPreferences(numberOfItems, githubProfilesInfoList.size)
                     saveToSharedPreferences(
                         pageNumber,
                         retrieveFromSharedPreferences(pageNumber, zero).plus(1)
@@ -180,7 +176,11 @@ class GithubProfileViewModel(
     ) {
         _githubProfilesInfoList.clear()
         addContentToGithubProfilesInfoList(githubProfileInformationList)
-//        saveStateValue(githubProfilesList, githubProfilesInfoList)
+        runTaskOnBackground {
+            localRepository.insertGithubProfilesIntoDb(
+                githubProfileInformationList
+            )
+        }
         _successLiveData.postValue(githubProfilesInfoList)
     }
 
@@ -188,17 +188,14 @@ class GithubProfileViewModel(
         shouldSavedListBeUsed: Boolean = false,
         githubProfileInformationList: List<GithubProfileInformation> = listOf()
     ) {
-        if (!shouldSavedListBeUsed) {
-            addContentToGithubProfilesInfoList(githubProfileInformationList)
-//            saveStateValue(githubProfilesList, githubProfilesInfoList)
-        } else {
-//            addContentToGithubProfilesInfoList(
-//                provideStateValue(
-//                    githubProfilesList
-//                )
-//            )
+        runTaskOnBackground {
+            if (!shouldSavedListBeUsed) {
+                addContentToGithubProfilesInfoList(githubProfileInformationList)
+                localRepository.insertGithubProfilesIntoDb(githubProfilesInfoList)
+            } else
+                addContentToGithubProfilesInfoList(localRepository.getGithubProfilesFromDb())
+            _successLiveData.postValue(githubProfilesInfoList)
         }
-        _successLiveData.postValue(githubProfilesInfoList)
     }
 
     private fun providerError(
@@ -207,15 +204,6 @@ class GithubProfileViewModel(
     ) {
         state.postValue(error)
     }
-
-    private fun provideNumberOfItems() = githubProfilesInfoList.size
-
-//    internal inline fun <reified T : Any> provideStateValue(handleStateKey: String) =
-//        requireNotNull(savedStateHandle.get<T>(handleStateKey))
-//
-//    private fun <T> saveStateValue(handleStateKey: String, value: T) {
-//        savedStateHandle.set(handleStateKey, value)
-//    }
 
     internal fun <T> retrieveFromSharedPreferences(key: String, defaultValue: T) =
         localRepository.retrieveValueFromSharedPreferences(key, defaultValue)

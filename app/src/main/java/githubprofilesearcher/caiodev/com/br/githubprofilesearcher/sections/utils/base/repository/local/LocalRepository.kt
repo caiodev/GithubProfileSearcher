@@ -43,8 +43,16 @@ class LocalRepository(
         }
     }
 
-    override suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation> =
-        appDatabase.githubProfilesDao().getGithubProfilesFromDb()
+    override suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation> {
+
+        var list = listOf<GithubProfileInformation>()
+
+        appDatabase.githubProfilesDao().getGithubProfilesFromDb()?.let {
+            list = it
+        }
+
+        return list
+    }
 
     override suspend fun insertGithubProfilesIntoDb(githubProfilesList: List<GithubProfileInformation>) {
         appDatabase.githubProfilesDao()
