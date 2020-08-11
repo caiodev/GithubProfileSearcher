@@ -10,7 +10,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 interface GithubProfilesDao {
 
     @Query("SELECT * " + "FROM GithubProfileInformation LIMIT 20")
-    suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation>
+    suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation>?
 
     @Insert
     suspend fun insertGithubProfilesIntoDb(githubProfilesList: List<GithubProfileInformation>)
