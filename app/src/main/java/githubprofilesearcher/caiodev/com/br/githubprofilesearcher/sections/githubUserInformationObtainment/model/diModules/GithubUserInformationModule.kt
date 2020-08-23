@@ -30,7 +30,8 @@ val githubProfileViewModel = module {
             androidContext().getSharedPreferences(
                 sharedPreferences,
                 Context.MODE_PRIVATE
-            ), get()
+            ),
+            get()
         )
     }
 

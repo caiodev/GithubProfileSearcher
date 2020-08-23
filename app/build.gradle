@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 apply plugin: "io.gitlab.arturbosch.detekt"
 apply from: "${toolsPath}coverage.gradle"
+apply from: "${toolsPath}lint.gradle"
 apply from: "${toolsPath}codeChecking.gradle"
 
 android {

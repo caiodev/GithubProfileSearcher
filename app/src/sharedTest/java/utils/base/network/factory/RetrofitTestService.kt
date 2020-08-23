@@ -39,13 +39,17 @@ object RetrofitTestService {
     @PublishedApi
     internal fun createOkHttpClient() =
         OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
-                override fun log(message: String) {
-                    Timber.tag("OkHttp").d(message)
+            .addInterceptor(
+                HttpLoggingInterceptor(
+                    object : HttpLoggingInterceptor.Logger {
+                        override fun log(message: String) {
+                            Timber.tag("OkHttp").d(message)
+                        }
+                    }
+                ).apply {
+                    level = HttpLoggingInterceptor.Level.BODY
                 }
-            }).apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            )
             .connectTimeout(2, TimeUnit.SECONDS)
             .readTimeout(2, TimeUnit.SECONDS)
             .writeTimeout(2, TimeUnit.SECONDS)

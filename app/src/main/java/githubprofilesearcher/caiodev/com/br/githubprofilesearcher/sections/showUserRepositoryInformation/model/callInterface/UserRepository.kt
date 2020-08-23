@@ -13,5 +13,5 @@ interface UserRepository {
 
     @GET("users/{user}/repos")
     suspend fun provideGithubUserRepositoriesInformationAsync(@Path("user") user: String):
-            Response<GithubProfileRepositoryInformation>
+        Response<GithubProfileRepositoryInformation>
 }

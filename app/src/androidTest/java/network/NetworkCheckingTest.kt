@@ -26,7 +26,8 @@ class NetworkCheckingTest {
         checkIfInternetConnectionIsAvailable(
             InstrumentationRegistry.getInstrumentation().targetContext,
             { isOnline = true },
-            {})
+            {}
+        )
         assertEquals(true, isOnline)
     }
 
@@ -38,7 +39,8 @@ class NetworkCheckingTest {
         checkIfInternetConnectionIsAvailable(
             InstrumentationRegistry.getInstrumentation().targetContext,
             {},
-            { isOffline = true })
+            { isOffline = true }
+        )
         assertEquals(true, isOffline)
     }
 

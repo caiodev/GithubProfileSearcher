@@ -56,7 +56,8 @@ class GithubProfileViewModel(
                 retrieveFromSharedPreferences(
                     temporaryCurrentProfile,
                     emptyString
-                ), true
+                ),
+                true
             )
         }
     }
@@ -86,12 +87,14 @@ class GithubProfileViewModel(
         shouldListItemsBeRemoved: Boolean = false
     ) {
 
-        when (val value =
-            remoteRepository.provideGithubUserInformation(
-                user,
-                retrieveFromSharedPreferences(pageNumber, zero),
-                numberOfItemsPerPage
-            )) {
+        when (
+            val value =
+                remoteRepository.provideGithubUserInformation(
+                    user,
+                    retrieveFromSharedPreferences(pageNumber, zero),
+                    numberOfItemsPerPage
+                )
+        ) {
 
             is APICallResult.Success<*> -> {
 

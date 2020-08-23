@@ -11,11 +11,13 @@ class GithubProfileRepository(
         user: String,
         pageNumber: Int,
         maxResultsPerPage: Int
-    ) = remoteRepository.callApi(call = {
-        retrofitService.provideGithubUsersListAsync(
-            user,
-            pageNumber,
-            maxResultsPerPage
-        )
-    })
+    ) = remoteRepository.callApi(
+        call = {
+            retrofitService.provideGithubUsersListAsync(
+                user,
+                pageNumber,
+                maxResultsPerPage
+            )
+        }
+    )
 }

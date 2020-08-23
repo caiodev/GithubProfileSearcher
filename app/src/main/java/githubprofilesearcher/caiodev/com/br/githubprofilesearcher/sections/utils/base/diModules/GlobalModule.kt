@@ -11,7 +11,8 @@ val globalModule = module {
     single<Database> {
         Room.databaseBuilder(
             androidContext(),
-            AppDatabase::class.java, Constants.appDb
+            AppDatabase::class.java,
+            Constants.appDb
         ).build()
     }
 }

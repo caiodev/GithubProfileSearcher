@@ -35,8 +35,13 @@ class GithubProfileInformationViewHolder(
                             ).putExtra(Constants.githubProfileUrl, githubProfileUrl)
                         )
                     },
-                    onConnectionUnavailable = { this.context.showErrorSnackBar(
-                        snackBar, R.string.no_connection_error) })
+                    onConnectionUnavailable = {
+                        this.context.showErrorSnackBar(
+                            snackBar,
+                            R.string.no_connection_error
+                        )
+                    }
+                )
             }
         }
     }
