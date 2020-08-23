@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delay
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delayTask
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import utils.base.TestSteps
@@ -9,7 +9,9 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class DelayTest : TestSteps {
 
-    override fun setupDependencies() {}
+    override fun setupDependencies() {
+        //
+    }
 
     @Test
     fun delay_timeAndInstructionToExecute_executeTheGenericOperation() {
@@ -21,7 +23,7 @@ class DelayTest : TestSteps {
         }
 
         doWhen {
-            delay(100) { countDownLatch?.countDown() }
+            delayTask(100) { countDownLatch?.countDown() }
         }
 
         then {

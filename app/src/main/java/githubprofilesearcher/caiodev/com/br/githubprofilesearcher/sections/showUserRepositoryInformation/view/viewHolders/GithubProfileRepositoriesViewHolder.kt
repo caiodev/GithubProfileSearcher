@@ -2,5 +2,4 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.show
 
 class GithubProfileRepositoriesViewHolder {
 
-
 }

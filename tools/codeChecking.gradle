@@ -1,0 +1,2 @@
+
+task codeChecking(dependsOn: ['detekt', 'jacocoReport'])

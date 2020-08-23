@@ -27,28 +27,23 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.SingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
-import kotlinx.serialization.UnstableDefault
 
 class GithubProfileViewModel(
     private val localRepository: GenericLocalRepository,
     private val remoteRepository: GenericGithubProfileRepository
 ) : ViewModel() {
 
-    //Success LiveDatas
     private val _successLiveData = MutableLiveData<List<GithubProfileInformation>>()
     internal val successLiveData: LiveData<List<GithubProfileInformation>>
         get() = _successLiveData
 
-    //Error LiveDatas
     private val _errorSingleLiveDataEvent = SingleLiveEvent<Int>()
     internal val errorSingleLiveDataEvent: LiveData<Int>
         get() = _errorSingleLiveDataEvent.toImmutableSingleLiveEvent()
 
-    //Result lists
     private val _githubProfilesInfoList = mutableListOf<GithubProfileInformation>()
     private var githubProfilesInfoList: List<GithubProfileInformation> = _githubProfilesInfoList
 
-    @UnstableDefault
     internal fun requestUpdatedGithubProfiles(profile: String = emptyString) {
 
         saveToSharedPreferences(pageNumber, 1)
@@ -66,12 +61,10 @@ class GithubProfileViewModel(
         }
     }
 
-    @UnstableDefault
     internal fun requestMoreGithubProfiles() {
         requestGithubProfiles(retrieveFromSharedPreferences(currentProfile, emptyString), false)
     }
 
-    @UnstableDefault
     private fun requestGithubProfiles(
         profile: String,
         shouldListItemsBeRemoved: Boolean
@@ -88,8 +81,6 @@ class GithubProfileViewModel(
         }
     }
 
-    //This method handles both Success an Error states and delivers the result through a LiveData post to the view. Which in this case is GithubProfileListingActivity
-    @UnstableDefault
     private suspend fun handleCallResult(
         user: String,
         shouldListItemsBeRemoved: Boolean = false
@@ -112,13 +103,15 @@ class GithubProfileViewModel(
                             Constants.hasASuccessfulCallAlreadyBeenMade,
                             false
                         )
-                    )
+                    ) {
                         saveToSharedPreferences(Constants.hasASuccessfulCallAlreadyBeenMade, true)
+                    }
 
-                    if (shouldListItemsBeRemoved)
+                    if (shouldListItemsBeRemoved) {
                         setupUpdatedList(githubProfileInformationList)
-                    else
+                    } else {
                         setupPaginationList(githubProfileInformationList = githubProfileInformationList)
+                    }
 
                     saveToSharedPreferences(numberOfItems, githubProfilesInfoList.size)
                     saveToSharedPreferences(
@@ -192,8 +185,9 @@ class GithubProfileViewModel(
             if (!shouldSavedListBeUsed) {
                 addContentToGithubProfilesInfoList(githubProfileInformationList)
                 localRepository.insertGithubProfilesIntoDb(githubProfilesInfoList)
-            } else
+            } else {
                 addContentToGithubProfilesInfoList(localRepository.getGithubProfilesFromDb())
+            }
             _successLiveData.postValue(githubProfilesInfoList)
         }
     }
@@ -220,7 +214,7 @@ class GithubProfileViewModel(
         _githubProfilesInfoList.addAll(list)
     }
 
-    internal fun updateUIInCaseOfSystemInitiatedProcessDeath() {
+    internal fun updateUIWithCache() {
         setupPaginationList(shouldSavedListBeUsed = true)
     }
 }

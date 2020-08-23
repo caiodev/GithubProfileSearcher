@@ -2,7 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
 import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
@@ -10,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,13 +44,13 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.shouldRecyclerViewAnimationBeExecuted
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.textInputEditTextProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.transientViewsAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.twenty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.zero
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.internetConnectionAvailabilityObservable
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.serialization.UnstableDefault
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GithubProfileListingActivity :
@@ -63,7 +61,7 @@ class GithubProfileListingActivity :
 
     private val errorSnackBar by lazy {
         Snackbar.make(
-            findViewById<View>(android.R.id.content),
+            findViewById(android.R.id.content),
             R.string.generic_exception_and_generic_error,
             Snackbar.LENGTH_SHORT
         )
@@ -83,7 +81,6 @@ class GithubProfileListingActivity :
         )
     }
 
-    @UnstableDefault
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -92,7 +89,6 @@ class GithubProfileListingActivity :
         setupExtras()
     }
 
-    @UnstableDefault
     override fun setupView() {
         setupDarkMode()
         bindViewModelDataToUIInCaseOfOrientationChanges()
@@ -135,36 +131,25 @@ class GithubProfileListingActivity :
                     Constants.isTextInputEditTextEmpty, true
                 )
             ) {
-                if (!viewModel.retrieveFromSharedPreferences(hasUserDeletedProfileText, false))
+                if (!viewModel.retrieveFromSharedPreferences(hasUserDeletedProfileText, false)) {
                     changeDrawable(
                         actionIconImageView,
                         R.drawable.ic_close
                     )
+                }
             }
 
             if (provideRecyclerViewLayoutManager().findFirstVisibleItemPosition() >= 2) {
                 applyViewVisibility(backToTopButton, VISIBLE)
             }
         } ?: run {
-            bindViewModelDataToUIInCaseOfSystemInitiatedProcessDeath()
-        }
-    }
 
-    private fun bindViewModelDataToUIInCaseOfSystemInitiatedProcessDeath() {
+            viewModel.clearSharedPreferences()
 
-        if (viewModel.retrieveFromSharedPreferences(
-                Constants.hasOnSaveInstanceStateBeenCalled,
-                false
-            )
-        ) {
-            if (viewModel.retrieveFromSharedPreferences(Constants.hasOnDestroyBeenCalled, false)) {
-                viewModel.clearSharedPreferences()
-            } else {
-                viewModel.updateUIInCaseOfSystemInitiatedProcessDeath()
-                changeViewState(headerAdapter, header)
-                if (viewModel.retrieveFromSharedPreferences(isRetryViewVisible, false)) {
-                    changeViewState(transientViewsAdapter, retry)
-                }
+            viewModel.updateUIWithCache()
+            changeViewState(headerAdapter, header)
+            if (viewModel.retrieveFromSharedPreferences(isRetryViewVisible, false)) {
+                changeViewState(transientViewsAdapter, retry)
             }
         }
     }
@@ -179,7 +164,6 @@ class GithubProfileListingActivity :
         }
     }
 
-    @UnstableDefault
     private fun setupActionViews() {
 
         actionIconImageView.setOnClickListener {
@@ -193,7 +177,6 @@ class GithubProfileListingActivity :
         }
     }
 
-    @UnstableDefault
     private fun setupSwipeRefreshLayout() {
 
         githubProfileListSwipeRefreshLayout.apply {
@@ -212,7 +195,6 @@ class GithubProfileListingActivity :
         }
     }
 
-    @UnstableDefault
     private fun setupRecyclerView() {
         profileInfoRecyclerView.apply {
             setHasFixedSize(true)
@@ -221,7 +203,6 @@ class GithubProfileListingActivity :
         }
     }
 
-    @UnstableDefault
     private fun setupTextInputEditText() {
         with(searchProfileTextInputEditText) {
             setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
@@ -250,15 +231,15 @@ class GithubProfileListingActivity :
                     )
 
                     text?.let {
-                        if (it.isEmpty())
+                        if (it.isEmpty()) {
                             viewModel.saveToSharedPreferences(hasUserDeletedProfileText, true)
+                        }
                     }
                 }
             }
         }
     }
 
-    @UnstableDefault
     private fun initializeAdapterCallback() {
         provideAdapter<TransientViewsAdapter>(transientViewsAdapter).setOnItemClicked(object :
             OnItemClicked {
@@ -275,13 +256,14 @@ class GithubProfileListingActivity :
 
     private fun onSuccess() {
 
-        viewModel.successLiveData.observe(this) { githubUsersList ->
+        viewModel.successLiveData.observe(this, { githubUsersList ->
 
             viewModel.saveToSharedPreferences(hasLastCallBeenUnsuccessful, false)
             viewModel.saveToSharedPreferences(isThereAnOngoingCall, false)
 
-            if (this::countingIdlingResource.isInitialized)
+            if (this::countingIdlingResource.isInitialized) {
                 countingIdlingResource.decrement()
+            }
 
             setupUpperViewsInteraction(true)
 
@@ -301,10 +283,11 @@ class GithubProfileListingActivity :
                 changeViewState(headerAdapter, header)
             }
 
-            if (viewModel.retrieveFromSharedPreferences(numberOfItems, zero) < 20)
+            if (viewModel.retrieveFromSharedPreferences(numberOfItems, zero) < twenty) {
                 changeViewState(transientViewsAdapter, endOfResults)
-            else
+            } else {
                 changeViewState(transientViewsAdapter, empty)
+            }
 
             provideAdapter<GithubProfileAdapter>(githubProfileAdapter).apply {
                 updateDataSource(githubUsersList)
@@ -341,22 +324,24 @@ class GithubProfileListingActivity :
                     shouldRecyclerViewAnimationBeExecuted,
                     true
                 )
-            )
+            ) {
                 runLayoutAnimation(profileInfoRecyclerView)
-            else
+            } else {
                 viewModel.saveToSharedPreferences(shouldRecyclerViewAnimationBeExecuted, true)
-        }
+            }
+        })
     }
 
     private fun onError() {
 
-        viewModel.errorSingleLiveDataEvent.observe(this) { error ->
+        viewModel.errorSingleLiveDataEvent.observe(this, { error ->
 
             viewModel.saveToSharedPreferences(hasLastCallBeenUnsuccessful, true)
             viewModel.saveToSharedPreferences(isThereAnOngoingCall, false)
 
-            if (this::countingIdlingResource.isInitialized)
+            if (this::countingIdlingResource.isInitialized) {
                 countingIdlingResource.decrement()
+            }
 
             if (viewModel.retrieveFromSharedPreferences(
                     hasUserRequestedUpdatedData,
@@ -376,15 +361,16 @@ class GithubProfileListingActivity :
                     shouldRecyclerViewAnimationBeExecuted,
                     true
                 )
-            )
+            ) {
                 viewModel.saveToSharedPreferences(shouldASearchBePerformed, true)
+            }
 
-            if (viewModel.retrieveFromSharedPreferences(isPaginationLoadingViewVisible, false))
+            if (viewModel.retrieveFromSharedPreferences(isPaginationLoadingViewVisible, false)) {
                 changeViewState(transientViewsAdapter, retry)
-        }
+            }
+        })
     }
 
-    @UnstableDefault
     override fun setupExtras() {
         checkIfInternetConnectionIsAvailableCaller(
             onConnectionAvailable = {},
@@ -397,21 +383,19 @@ class GithubProfileListingActivity :
         setupInternetConnectionObserver()
     }
 
-    @UnstableDefault
     private fun updatedProfileCall(profile: String = "") {
-        if (profile.isNotEmpty())
+        if (profile.isNotEmpty()) {
             callApiThroughViewModel { viewModel.requestUpdatedGithubProfiles(profile) }
-        else
+        } else {
             callApiThroughViewModel { viewModel.requestUpdatedGithubProfiles() }
+        }
     }
 
-    @UnstableDefault
     private fun paginationCall() {
         changeViewState(transientViewsAdapter, loading)
         callApiThroughViewModel { viewModel.requestMoreGithubProfiles() }
     }
 
-    @UnstableDefault
     private fun textInputEditTextNotEmptyRequiredCall() {
         hideKeyboard(searchProfileTextInputEditText)
         if (!isTextInputEditTextEmpty()) {
@@ -439,16 +423,18 @@ class GithubProfileListingActivity :
             scheduleLayoutAnimation()
             githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
 
-            if (repositoryLoadingProgressBar.visibility == VISIBLE)
+            if (repositoryLoadingProgressBar.visibility == VISIBLE) {
                 applyViewVisibility(repositoryLoadingProgressBar, GONE)
+            }
         }
     }
 
     private inline fun callApiThroughViewModel(crossinline genericFunction: () -> Unit) {
         checkIfInternetConnectionIsAvailableCaller(
             onConnectionAvailable = {
-                if (!viewModel.retrieveFromSharedPreferences(isThereAnOngoingCall, false))
+                if (!viewModel.retrieveFromSharedPreferences(isThereAnOngoingCall, false)) {
                     viewModel.saveToSharedPreferences(isThereAnOngoingCall, true)
+                }
 
                 if (!viewModel.retrieveFromSharedPreferences(hasUserDeletedProfileText, false)) {
                     setupUpperViewsInteraction(false)
@@ -459,14 +445,20 @@ class GithubProfileListingActivity :
 
                 genericFunction.invoke()
 
-                if (this::countingIdlingResource.isInitialized)
+                if (this::countingIdlingResource.isInitialized) {
                     countingIdlingResource.increment()
+                }
             },
             onConnectionUnavailable = {
                 viewModel.saveToSharedPreferences(hasLastCallBeenUnsuccessful, true)
                 githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
-                if (viewModel.retrieveFromSharedPreferences(isPaginationLoadingViewVisible, false))
+                if (viewModel.retrieveFromSharedPreferences(
+                        isPaginationLoadingViewVisible,
+                        false
+                    )
+                ) {
                     changeViewState(transientViewsAdapter, retry)
+                }
                 showErrorMessages(R.string.no_connection_error)
             })
     }
@@ -508,10 +500,9 @@ class GithubProfileListingActivity :
         )
     }
 
-    @UnstableDefault
     private fun setupInternetConnectionObserver() {
         internetConnectionAvailabilityObservable(applicationContext)
-            .observe(this) { isInternetAvailable ->
+            .observe(this, { isInternetAvailable ->
                 when (isInternetAvailable) {
                     true -> {
                         showInternetConnectionStatusSnackBar(
@@ -526,11 +517,15 @@ class GithubProfileListingActivity :
                                 hasLastCallBeenUnsuccessful, false
                             )
                         ) {
-                            if (viewModel.retrieveFromSharedPreferences(isRetryViewVisible, false))
+                            if (viewModel.retrieveFromSharedPreferences(
+                                    isRetryViewVisible,
+                                    false
+                                )
+                            ) {
                                 paginationCall()
-                            else
+                            } else {
                                 textInputEditTextNotEmptyRequiredCall()
-
+                            }
                         }
                     }
 
@@ -539,10 +534,9 @@ class GithubProfileListingActivity :
                         false
                     )
                 }
-            }
+            })
     }
 
-    @UnstableDefault
     private fun handleActionIconClick() {
         if (!viewModel.retrieveFromSharedPreferences(isThereAnOngoingCall, false)) {
             if (viewModel.retrieveFromSharedPreferences(shouldASearchBePerformed, true)) {
@@ -564,7 +558,6 @@ class GithubProfileListingActivity :
         }
     }
 
-    @UnstableDefault
     private fun setupRecyclerViewAddOnScrollListener() {
 
         profileInfoRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -575,11 +568,13 @@ class GithubProfileListingActivity :
                 val recyclerViewLayoutManager = provideRecyclerViewLayoutManager()
 
                 if (recyclerViewLayoutManager.findFirstVisibleItemPosition() >= 2) {
-                    if (backToTopButton.visibility != VISIBLE && backToTopButton.isClickable)
+                    if (backToTopButton.visibility != VISIBLE && backToTopButton.isClickable) {
                         applyViewVisibility(backToTopButton, VISIBLE)
+                    }
                 } else {
-                    if (backToTopButton.visibility != INVISIBLE)
+                    if (backToTopButton.visibility != INVISIBLE) {
                         applyViewVisibility(backToTopButton, INVISIBLE)
+                    }
                     backToTopButton.isClickable = true
                 }
 
@@ -619,10 +614,11 @@ class GithubProfileListingActivity :
     }
 
     private fun scrollToTop(shouldScrollBeSmooth: Boolean) {
-        if (shouldScrollBeSmooth)
+        if (shouldScrollBeSmooth) {
             profileInfoRecyclerView.smoothScrollToPosition(0)
-        else
+        } else {
             profileInfoRecyclerView.scrollToPosition(0)
+        }
     }
 
     private fun isTextInputEditTextEmpty() =
@@ -638,14 +634,11 @@ class GithubProfileListingActivity :
     private fun changeViewState(adapterPosition: Int, viewState: Int) {
 
         if (adapterPosition == headerAdapter) {
-
             (concatAdapter.adapters[adapterPosition] as HeaderAdapter).apply {
                 updateViewState(viewState)
                 viewModel.saveToSharedPreferences(isHeaderVisible, true)
             }
-
         } else {
-
             (concatAdapter.adapters[adapterPosition] as TransientViewsAdapter).apply {
 
                 updateViewState(viewState)
@@ -704,8 +697,6 @@ class GithubProfileListingActivity :
         }
     }
 
-    //        viewModel.saveToSharedPreferences(Constants.hasOnSaveInstanceStateBeenCalled, false)
-    //viewModel.saveToSharedPreferences(Constants.hasOnDestroyBeenCalled, false)
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.apply {
@@ -716,12 +707,6 @@ class GithubProfileListingActivity :
                     searchProfileTextInputEditText.text.toString()
                 )
             }
-            saveToSharedPreferences(Constants.hasOnSaveInstanceStateBeenCalled, true)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.saveToSharedPreferences(Constants.hasOnDestroyBeenCalled, true)
     }
 }

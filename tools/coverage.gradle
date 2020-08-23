@@ -10,7 +10,7 @@ tasks.withType(Test) {
     jacoco.excludes = ['jdk.internal.*']
 }
 
-task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'connectedAndroidTest']) {
 
     def coverageSourceDirs = [
             "src/main/java"
@@ -21,6 +21,7 @@ task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
             '**/*Adapter.*',
             '**/BuildConfig.*',
             '**/*Constants.*',
+            '**/*Fragment.*',
             '**/Manifest*.*',
             '**/R.class',
             '**/R$*.class',

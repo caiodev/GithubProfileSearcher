@@ -43,7 +43,9 @@ fun Context.applyBackgroundColor(view: View, color: Int) {
 
 @Suppress("UNUSED")
 inline fun Context.showErrorSnackBar(
-    snackBar: Snackbar, message: Int, crossinline onDismissed: (() -> Any) = { emptyString }
+    snackBar: Snackbar,
+    message: Int,
+    crossinline onDismissed: (() -> Any) = { emptyString }
 ) {
     with(snackBar) {
         setText(message)

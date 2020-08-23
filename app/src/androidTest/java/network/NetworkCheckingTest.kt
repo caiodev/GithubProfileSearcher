@@ -3,9 +3,9 @@ package network
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.common.truth.Truth.assertThat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.internetConnectionAvailabilityObservable
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,7 +14,7 @@ import utils.base.liveData.LiveDataTestUtil
 @RunWith(AndroidJUnit4::class)
 class NetworkCheckingTest {
 
-    //Executes each task synchronously using Architecture Components
+    // Executes each task synchronously using Architecture Components
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
@@ -27,7 +27,7 @@ class NetworkCheckingTest {
             InstrumentationRegistry.getInstrumentation().targetContext,
             { isOnline = true },
             {})
-        assertThat(isOnline).isTrue()
+        assertEquals(true, isOnline)
     }
 
     @Test
@@ -39,28 +39,30 @@ class NetworkCheckingTest {
             InstrumentationRegistry.getInstrumentation().targetContext,
             {},
             { isOffline = true })
-        assertThat(isOffline).isTrue()
+        assertEquals(true, isOffline)
     }
 
     @Test
     fun internetConnectionAvailabilityObservable_applicationContext_isOnline() {
-        assertThat(
+        assertEquals(
+            true,
             LiveDataTestUtil.getValue(
                 internetConnectionAvailabilityObservable(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             )
-        ).isTrue()
+        )
     }
 
     @Test
     fun internetConnectionAvailabilityObservable_applicationContext_isOffline() {
-        assertThat(
+        assertEquals(
+            false,
             LiveDataTestUtil.getValue(
                 internetConnectionAvailabilityObservable(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             )
-        ).isFalse()
+        )
     }
 }

@@ -1,13 +1,15 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent
 
 import androidx.annotation.MainThread
+import androidx.collection.ArraySet
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 
 class SingleLiveEvent<T> : MediatorLiveData<T>() {
 
-    private val observers = androidx.collection.ArraySet<githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.ObserverWrapper<in T>>()
+    private val observers = ArraySet<githubprofilesearcher.caiodev.com.br
+    .githubprofilesearcher.sections.utils.liveEvent.ObserverWrapper<in T>>()
 
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
@@ -31,7 +33,7 @@ class SingleLiveEvent<T> : MediatorLiveData<T>() {
 
     @MainThread
     override fun removeObserver(observer: Observer<in T>) {
-        if (observers.remove(observer)) {
+        if (observers.remove<Observer<in T>?>(observer)) {
             super.removeObserver(observer)
             return
         }

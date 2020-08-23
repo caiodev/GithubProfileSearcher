@@ -3,16 +3,19 @@ buildscript {
     ext {
 
         //AndroidXCore
-        androidXCore = '1.5.0-alpha01'
+        androidXCore = '1.5.0-alpha02'
 
         //AppCompat
-        appCompat = '1.3.0-alpha01'
+        appCompat = '1.3.0-alpha02'
 
         //Browser
         browser = "1.3.0-alpha05"
 
         //Coil
-        coil = '0.11.0'
+        coil = '1.0.0-rc1'
+
+        //Detekt
+        detekt = '1.11.2'
 
         //Gradle
         gradleVersion = '4.0.1'
@@ -21,33 +24,32 @@ buildscript {
         koin = '2.1.6'
 
         //Kotlin
-        kotlin = '1.3.72'
+        kotlin = '1.4.0'
 
         //Ktx
-        ktxCore = '1.5.0-alpha01'
+        ktxCore = '1.5.0-alpha02'
 
         //LeakCanary
-        leakCanary = '2.3'
+        leakCanary = '2.4'
 
         //Lifecycle Architecture components
-        lifecycleExtensions = '2.2.0'
-        arch = '2.3.0-alpha06'
+        arch = '2.3.0-alpha07'
 
         //Material design
         materialDesign = '1.3.0-alpha02'
 
         //OkHttp
-        okHttp = '4.7.0'
+        okHttp = '4.8.1'
 
         //Retrofit
-        retrofit = '2.8.1'
-        serializationConverter = '0.5.0'
+        retrofit = '2.9.0'
+        serializationConverter = '0.6.0'
 
         //Room
         room = '2.3.0-alpha02'
 
         //Serialization
-        serialization = '0.20.0'
+        serialization = '1.0-M1-1.4.0-rc'
 
         //Timber
         timber = '4.7.1'
@@ -60,20 +62,18 @@ buildscript {
         recyclerView = "1.2.0-alpha05"
 
         //SwipeRefreshLayout
-        swipeRefreshLayout = '1.1.0'
+        swipeRefreshLayout = '1.2.0-alpha01'
 
         //Test dependency versions
         archTest = '2.1.0'
         espresso = '3.3.0-rc03'
-        coroutinesTest = '1.3.6'
+        coroutinesTest = '1.3.9'
         jacocoVersion = '0.8.5'
         junitAndroidX = '1.1.2-rc03'
-        junit5 = '5.7.0-M1'
+        junit5 = '5.7.0-RC1'
         testCore = '1.3.0-rc03'
-        truth = '1.0.1'
 
-        //Others
-        toolsPath = "$rootDir${File.separatorChar}tools${File.separatorChar}"
+        toolsPath = "$project.projectDir/tools/"
     }
 
     dependencies {
@@ -86,6 +86,22 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+    }
+}
+
+plugins {
+    id("io.gitlab.arturbosch.detekt").version("$detekt")
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    failFast = true
+    input = files("$project.projectDir/app/src/")
+    parallel = true
+    reports {
+        html.enabled = true
+        txt.enabled = false
+        xml.enabled = false
     }
 }
 

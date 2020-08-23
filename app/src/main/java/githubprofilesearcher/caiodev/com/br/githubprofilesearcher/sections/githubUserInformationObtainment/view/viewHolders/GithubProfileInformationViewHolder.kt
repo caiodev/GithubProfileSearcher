@@ -9,13 +9,14 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.GithubProfileInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showErrorSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.ImageLoader.loadImage
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.ImageLoading.loadImage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.android.synthetic.main.github_profile_view_holder_layout.view.*
 import okhttp3.internal.format
 
 class GithubProfileInformationViewHolder(
-    itemView: View, snackBar: Snackbar
+    itemView: View,
+    snackBar: Snackbar
 ) :
     RecyclerView.ViewHolder(itemView) {
 
@@ -34,7 +35,8 @@ class GithubProfileInformationViewHolder(
                             ).putExtra(Constants.githubProfileUrl, githubProfileUrl)
                         )
                     },
-                    onConnectionUnavailable = { this.context.showErrorSnackBar(snackBar, R.string.no_connection_error) })
+                    onConnectionUnavailable = { this.context.showErrorSnackBar(
+                        snackBar, R.string.no_connection_error) })
             }
         }
     }
