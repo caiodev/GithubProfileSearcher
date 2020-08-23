@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 class SingleLiveEvent<T> : MediatorLiveData<T>() {
 
     private val observers = ArraySet<githubprofilesearcher.caiodev.com.br
-    .githubprofilesearcher.sections.utils.liveEvent.ObserverWrapper<in T>>()
+        .githubprofilesearcher.sections.utils.liveEvent.ObserverWrapper<in T>>()
 
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {

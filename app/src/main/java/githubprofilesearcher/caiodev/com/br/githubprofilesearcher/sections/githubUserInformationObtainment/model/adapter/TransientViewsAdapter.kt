@@ -43,7 +43,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         R.layout.retry_view_holder_layout,
                         parent,
                         false
-                    ), itemClicked
+                    ),
+                    itemClicked
                 )
             }
 

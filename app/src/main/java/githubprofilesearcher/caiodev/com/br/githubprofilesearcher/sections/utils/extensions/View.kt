@@ -50,12 +50,14 @@ inline fun Context.showErrorSnackBar(
     with(snackBar) {
         setText(message)
         if (onDismissed() is Unit) {
-            addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    super.onDismissed(transientBottomBar, event)
-                    onDismissed.invoke()
+            addCallback(
+                object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        super.onDismissed(transientBottomBar, event)
+                        onDismissed.invoke()
+                    }
                 }
-            })
+            )
         }
         show()
     }
