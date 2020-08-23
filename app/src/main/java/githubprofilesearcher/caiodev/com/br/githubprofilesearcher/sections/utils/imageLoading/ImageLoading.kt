@@ -3,10 +3,10 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 import android.content.Context
 import android.widget.ImageView
 import coil.ImageLoader
-import coil.api.load
+import coil.load
 import coil.request.CachePolicy
 
-object ImageLoader {
+object ImageLoading {
 
     private lateinit var imageLoader: ImageLoader
 

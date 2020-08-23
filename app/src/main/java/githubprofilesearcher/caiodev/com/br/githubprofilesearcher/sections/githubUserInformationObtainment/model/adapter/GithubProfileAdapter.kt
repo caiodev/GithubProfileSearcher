@@ -20,8 +20,7 @@ class GithubProfileAdapter(private val snackBar: Snackbar) : RecyclerView.Adapte
                 R.layout.github_profile_view_holder_layout,
                 parent,
                 false
-            )
-        , snackBar)
+            ), snackBar)
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {

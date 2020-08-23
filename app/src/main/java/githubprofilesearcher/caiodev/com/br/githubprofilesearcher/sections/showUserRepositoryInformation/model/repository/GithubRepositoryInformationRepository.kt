@@ -2,17 +2,19 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.show
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.model.callInterface.UserRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.RemoteRepository
-import kotlinx.serialization.UnstableDefault
 
-class GithubRepositoryInformationRepository(private val remoteRepository: RemoteRepository, private val retrofitService: UserRepository) : IGithubRepositoryInformationRepository {
+class GithubRepositoryInformationRepository(
+    private val remoteRepository: RemoteRepository,
+    private val retrofitService: UserRepository
+) : IGithubRepositoryInformationRepository {
 
-    @UnstableDefault
-    override suspend fun provideGithubUserInformation(user: String) = remoteRepository.callApi(call = {
-        retrofitService.provideGithubUserInformationAsync(user)
-    })
+    override suspend fun provideGithubUserInformation(user: String) =
+        remoteRepository.callApi(call = {
+            retrofitService.provideGithubUserInformationAsync(user)
+        })
 
-    @UnstableDefault
-    override suspend fun provideGithubUserRepositoriesInformation(user: String) = remoteRepository.callApi(call = {
-        retrofitService.provideGithubUserRepositoriesInformationAsync(user)
-    })
+    override suspend fun provideGithubUserRepositoriesInformation(user: String) =
+        remoteRepository.callApi(call = {
+            retrofitService.provideGithubUserRepositoriesInformationAsync(user)
+        })
 }

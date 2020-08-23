@@ -1,6 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel
 
-import com.google.common.truth.Truth.assertThat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.fakes.repository.local.FakeLocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.fakes.repository.remote.FakeGithubProfileInformationRepository
@@ -8,7 +7,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.async.LiveDataTestExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.UnstableDefault
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -27,7 +26,6 @@ class GithubProfileViewModelTest : TestSteps {
             GithubProfileViewModel(FakeLocalRepository(), FakeGithubProfileInformationRepository())
     }
 
-    @UnstableDefault
     @Test
     fun requestUpdatedGithubProfiles() = runBlocking {
 
@@ -43,7 +41,7 @@ class GithubProfileViewModelTest : TestSteps {
         }
 
         then {
-            assertThat(githubInfo?.login).isEqualTo("torvalds")
+            assertEquals("torvalds", githubInfo?.login)
         }
     }
 
@@ -51,15 +49,15 @@ class GithubProfileViewModelTest : TestSteps {
     fun requestMoreGithubProfiles() = runBlocking {
 
         given {
-
+            //
         }
 
         doWhen {
-
+            //
         }
 
         then {
-
+            //
         }
     }
 }

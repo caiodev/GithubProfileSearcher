@@ -16,12 +16,30 @@ class LocalRepository(
         key: String,
         defaultValue: T
     ): T {
-        when (defaultValue) {
-            is Boolean -> return sharedPreferences.getBoolean(key, defaultValue) as T
-            is Int -> return sharedPreferences.getInt(key, defaultValue) as T
-            is String -> return sharedPreferences.getString(key, defaultValue) as T
+        return when (defaultValue) {
+            is Boolean -> sharedPreferences.getBoolean(key, defaultValue) as T
+            else -> returnSharedPreferenceValues(key, defaultValue)
         }
-        return defaultValue
+    }
+
+    private fun <T> returnSharedPreferenceValues(
+        key: String,
+        defaultValue: T
+    ): T {
+        return when (defaultValue) {
+            is Int -> sharedPreferences.getInt(key, defaultValue) as T
+            else -> returnSharedPreferenceStringValues(key, defaultValue)
+        }
+    }
+
+    private fun <T> returnSharedPreferenceStringValues(
+        key: String,
+        defaultValue: T
+    ): T {
+        return when (defaultValue) {
+            is String -> sharedPreferences.getString(key, defaultValue) as T
+            else -> defaultValue
+        }
     }
 
     override fun <T> saveValueToSharedPreferences(

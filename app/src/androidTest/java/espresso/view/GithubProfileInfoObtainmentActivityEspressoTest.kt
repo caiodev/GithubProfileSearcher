@@ -1,4 +1,4 @@
-package view
+package espresso.view
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry

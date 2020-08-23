@@ -3,7 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
+apply plugin: "io.gitlab.arturbosch.detekt"
 apply from: "${toolsPath}coverage.gradle"
+apply from: "${toolsPath}codeChecking.gradle"
 
 android {
     compileSdkVersion 29
@@ -18,10 +20,10 @@ android {
     }
 
     buildTypes {
-
         release {
             minifyEnabled true
             debuggable = false
+            testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -56,11 +58,6 @@ android {
         test {
             java.srcDirs += "src/sharedTest/java"
         }
-    }
-
-    packagingOptions {
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/LGPL2.1'
     }
 }
 
@@ -103,10 +100,8 @@ dependencies {
 
     //Lifecycle section
     implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$arch"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$arch"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$arch"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
@@ -153,9 +148,6 @@ dependencies {
     //Test core
     testImplementation "androidx.test:core-ktx:$testCore"
 
-    //Truth
-    testImplementation "com.google.truth:truth:$truth"
-
     /*AndroidTest source set*/
     //ArchTestCore
     androidTestImplementation "androidx.arch.core:core-testing:$archTest"
@@ -177,7 +169,4 @@ dependencies {
 
     //Test core
     androidTestImplementation "androidx.test:core-ktx:$testCore"
-
-    //Truth
-    androidTestImplementation "com.google.truth:truth:$truth"
 }

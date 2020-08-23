@@ -2,7 +2,14 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fiveHundred
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fiveHundredAndNinetyEight
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fourHundred
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fourHundredAndFour
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fourHundredAndNinetyNine
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fourHundredAndThree
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.fourHundredAndTwo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.genericException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
@@ -29,8 +36,9 @@ class RemoteRepository {
 
             if (response.isSuccessful) {
                 handleSuccess(response)
-            } else
+            } else {
                 handleError(response.code())
+            }
         } catch (exception: Exception) {
             handleException(exception)
         }
@@ -46,9 +54,10 @@ class RemoteRepository {
 
     private fun handleError(responseCode: Int): Any {
         return when (responseCode) {
-            in 400..402, in 404..499 -> APICallResult.Error(clientSideError)
-            403 -> APICallResult.Error(forbidden)
-            in 500..598 -> APICallResult.Error(serverSideError)
+            in fourHundred..fourHundredAndTwo,
+            in fourHundredAndFour..fourHundredAndNinetyNine -> APICallResult.Error(clientSideError)
+            fourHundredAndThree -> APICallResult.Error(forbidden)
+            in fiveHundred..fiveHundredAndNinetyEight -> APICallResult.Error(serverSideError)
             else -> APICallResult.Error(genericError)
         }
     }

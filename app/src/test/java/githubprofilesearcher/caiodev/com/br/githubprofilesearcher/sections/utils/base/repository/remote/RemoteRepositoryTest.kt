@@ -5,7 +5,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.ExperimentalSerializationApi
+
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
@@ -29,7 +30,7 @@ class RemoteRepositoryTest : TestSteps {
     private lateinit var userProfile: UserProfile
     private lateinit var remoteRepository: RemoteRepository
 
-    @UnstableDefault
+    @ExperimentalSerializationApi
     @BeforeEach
     override fun setupDependencies() {
         mockWebServer = setup()

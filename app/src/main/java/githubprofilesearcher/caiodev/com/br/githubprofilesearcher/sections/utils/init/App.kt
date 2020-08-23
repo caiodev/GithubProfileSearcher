@@ -5,7 +5,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.diModules.githubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.model.diModules.githubUserRepositoryViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.diModules.globalModule
-import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -14,8 +14,7 @@ import timber.log.Timber
 
 @Suppress("UNUSED")
 class App : Application() {
-
-    @UnstableDefault
+    @ExperimentalSerializationApi
     override fun onCreate() {
         super.onCreate()
         startKoin {

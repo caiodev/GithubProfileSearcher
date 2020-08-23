@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData
 object NetworkChecking {
 
     private val networkState = MutableLiveData<Boolean>()
+    private val networkStateLiveData: LiveData<Boolean>
+        get() = networkState
 
     private val networkRequest = NetworkRequest.Builder().apply {
         addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -28,9 +30,10 @@ object NetworkChecking {
         }
     }
 
-    //Checks whether or not there is internet connection
+    // Checks whether or not there is internet connection
     fun checkIfInternetConnectionIsAvailable(
-        applicationContext: Context, onConnectionAvailable: () -> Unit,
+        applicationContext: Context,
+        onConnectionAvailable: () -> Unit,
         onConnectionUnavailable: () -> Unit
     ) =
         handleInternetConnectionAvailability(
@@ -39,29 +42,36 @@ object NetworkChecking {
             onConnectionUnavailable
         )
 
-    //Returns a LiveData so internet connection related state changes can be observed
+    // Returns a LiveData so internet connection related state changes can be observed
     fun internetConnectionAvailabilityObservable(applicationContext: Context): LiveData<Boolean> {
         (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
             requestNetwork(networkRequest, connectivityCallback)
         }
-        return networkState
+        return networkStateLiveData
     }
 
-    private inline fun handleInternetConnectionAvailability(
+    private fun handleInternetConnectionAvailability(
         connectivityManager: ConnectivityManager,
         onConnectionAvailable: () -> Unit,
         onConnectionUnavailable: () -> Unit
     ) {
-
-
-
         if (connectivityManager.allNetworks.isNotEmpty()) {
-            connectivityManager.allNetworks.forEach { network ->
-                connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
-                    if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) onConnectionAvailable.invoke()
+            iterateOverTheListOfNetworks(connectivityManager, onConnectionAvailable)
+        } else {
+            onConnectionUnavailable.invoke()
+        }
+    }
+
+    private fun iterateOverTheListOfNetworks(
+        connectivityManager: ConnectivityManager,
+        onConnectionAvailable: () -> Unit
+    ) {
+        connectivityManager.allNetworks.forEach { network ->
+            connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
+                if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                    onConnectionAvailable.invoke()
                 }
             }
-        } else
-            onConnectionUnavailable.invoke()
+        }
     }
 }

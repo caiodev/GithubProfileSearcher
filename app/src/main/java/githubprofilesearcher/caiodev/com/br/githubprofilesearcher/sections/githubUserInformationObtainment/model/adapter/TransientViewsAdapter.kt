@@ -8,11 +8,11 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolders.transientItemViews.EndOfResultsViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolders.transientItemViews.LoadingViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolders.transientItemViews.RetryViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
 
 class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -43,8 +43,7 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         R.layout.retry_view_holder_layout,
                         parent,
                         false
-                    )
-                    , itemClicked
+                    ), itemClicked
                 )
             }
 
@@ -78,6 +77,6 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
+        //
     }
 }

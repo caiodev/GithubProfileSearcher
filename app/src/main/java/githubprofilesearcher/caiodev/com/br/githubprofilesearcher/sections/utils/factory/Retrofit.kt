@@ -2,11 +2,10 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.mediaType
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.timeout
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.responseTag
-import kotlinx.serialization.UnstableDefault
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.timeout
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -24,21 +23,19 @@ object Retrofit {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-    @UnstableDefault
+    @ExperimentalSerializationApi
     @PublishedApi
     internal inline fun <reified T> provideRetrofitService(baseUrl: String): T =
         createRetrofitService(baseUrl)
 
-    @UnstableDefault
+    @ExperimentalSerializationApi
     @PublishedApi
     internal inline fun <reified T> createRetrofitService(baseUrl: String) =
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(provideOkHttpClient())
             .addConverterFactory(
-                Json(JsonConfiguration(ignoreUnknownKeys = true)).asConverterFactory(
-                    mediaType
-                )
+                Json { ignoreUnknownKeys = true }.asConverterFactory(mediaType)
             )
             .build().create(T::class.java) as T
 

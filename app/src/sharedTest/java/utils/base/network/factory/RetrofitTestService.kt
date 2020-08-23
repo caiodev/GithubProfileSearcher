@@ -1,10 +1,9 @@
 package utils.base.network.factory
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.UnstableDefault
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.mediaType
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockWebServer
@@ -22,15 +21,17 @@ object RetrofitTestService {
         return mockWebServer
     }
 
-    @UnstableDefault
+    @ExperimentalSerializationApi
     @PublishedApi
     internal inline fun <reified T> createRetrofitService() =
         Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
             .client(createOkHttpClient())
             .addConverterFactory(
-                Json(JsonConfiguration(ignoreUnknownKeys = true)).asConverterFactory(
-                    "application/json".toMediaType()
+                Json {
+                    ignoreUnknownKeys = true
+                }.asConverterFactory(
+                    mediaType
                 )
             )
             .build().create(T::class.java) as T

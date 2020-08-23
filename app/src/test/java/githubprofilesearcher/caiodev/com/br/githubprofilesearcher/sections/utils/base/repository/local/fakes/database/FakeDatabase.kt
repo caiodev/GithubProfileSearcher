@@ -13,10 +13,10 @@ class FakeDatabase : Database, GithubProfilesDao {
     override suspend fun getGithubProfilesFromDb() = listOf<GithubProfileInformation>()
 
     override suspend fun insertGithubProfilesIntoDb(githubProfilesList: List<GithubProfileInformation>) {
-
+        //
     }
 
     override suspend fun dropGithubProfileInformationTable(githubProfilesList: List<GithubProfileInformation>) {
-
+        //
     }
 }
