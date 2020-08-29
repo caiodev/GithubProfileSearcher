@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.activity
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -100,9 +100,7 @@ class GithubProfileListingActivity :
     }
 
     private fun bindViewModelDataToUIInCaseOfOrientationChanges() {
-
         viewModel.successLiveData.value?.let {
-
             viewModel.retrieveFromSharedPreferences(
                 textInputEditTextProfile,
                 emptyString
@@ -145,7 +143,6 @@ class GithubProfileListingActivity :
                 applyViewVisibility(backToTopButton, VISIBLE)
             }
         } ?: run {
-
             viewModel.clearSharedPreferences()
 
             viewModel.updateUIWithCache()
@@ -167,7 +164,6 @@ class GithubProfileListingActivity :
     }
 
     private fun setupActionViews() {
-
         actionIconImageView.setOnClickListener {
             handleActionIconClick()
         }
@@ -180,7 +176,6 @@ class GithubProfileListingActivity :
     }
 
     private fun setupSwipeRefreshLayout() {
-
         githubProfileListSwipeRefreshLayout.apply {
             if (!viewModel.retrieveFromSharedPreferences(
                     hasASuccessfulCallAlreadyBeenMade,
@@ -261,7 +256,6 @@ class GithubProfileListingActivity :
     }
 
     private fun onSuccess() {
-
         viewModel.successLiveData.observe(
             this,
             { githubUsersList ->
@@ -318,7 +312,6 @@ class GithubProfileListingActivity :
                 )
 
                 if (viewModel.retrieveFromSharedPreferences(hasUserRequestedUpdatedData, false)) {
-
                     provideAdapter<GithubProfileAdapter>(githubProfileAdapter).updateDataSource(
                         githubUsersList
                     )
@@ -343,7 +336,6 @@ class GithubProfileListingActivity :
     }
 
     private fun onError() {
-
         viewModel.errorSingleLiveDataEvent.observe(
             this,
             { error ->
@@ -581,12 +573,10 @@ class GithubProfileListingActivity :
     }
 
     private fun setupRecyclerViewAddOnScrollListener() {
-
         profileInfoRecyclerView.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-
                     val total = recyclerView.layoutManager?.itemCount
                     val recyclerViewLayoutManager = provideRecyclerViewLayoutManager()
 
@@ -621,7 +611,6 @@ class GithubProfileListingActivity :
     }
 
     private fun setupUpperViewsInteraction(shouldUsersBeAbleToInteractWithTheUpperViews: Boolean) {
-
         actionIconImageView.apply {
             isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
             isFocusable = shouldUsersBeAbleToInteractWithTheUpperViews
@@ -656,7 +645,6 @@ class GithubProfileListingActivity :
         profileInfoRecyclerView.layoutManager as LinearLayoutManager
 
     private fun changeViewState(adapterPosition: Int, viewState: Int) {
-
         if (adapterPosition == headerAdapter) {
             (concatAdapter.adapters[adapterPosition] as HeaderAdapter).apply {
                 updateViewState(viewState)
@@ -664,7 +652,6 @@ class GithubProfileListingActivity :
             }
         } else {
             (concatAdapter.adapters[adapterPosition] as TransientViewsAdapter).apply {
-
                 updateViewState(viewState)
                 notifyDataSetChanged()
 

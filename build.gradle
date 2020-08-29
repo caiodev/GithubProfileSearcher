@@ -15,7 +15,8 @@ buildscript {
         //Detekt
         detektVersion = '1.11.2'
         //Ktlint
-        ktlintVersion = '0.38.0'
+        ktlintVersion = '0.38.1'
+        ktlintPluginVersion = '9.3.0'
 
         //Coil
         coil = '1.0.0-rc1'
@@ -93,6 +94,7 @@ buildscript {
 }
 
 plugins {
+    id "org.jlleitschuh.gradle.ktlint" version "$ktlintPluginVersion"
     id "io.gitlab.arturbosch.detekt" version "$detektVersion"
 }
 

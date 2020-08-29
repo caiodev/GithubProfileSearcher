@@ -62,7 +62,6 @@ class LocalRepository(
     }
 
     override suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation> {
-
         var list = listOf<GithubProfileInformation>()
 
         appDatabase.githubProfilesDao().getGithubProfilesFromDb()?.let {

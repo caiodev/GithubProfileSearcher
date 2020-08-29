@@ -9,7 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.GithubProfileListingActivity
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.activity.GithubProfileListingActivity
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -34,7 +34,6 @@ class GithubProfileInfoObtainmentActivityEspressoTest {
 
     @Test
     fun searchProfile() {
-
         onView(withId(R.id.searchProfileTextInputEditText))
             .perform(typeText("torvalds"))
 

@@ -1,2 +1,2 @@
 
-task codeChecking(dependsOn: ['ktlint', 'ktlintFormat', 'detekt', 'jacocoReport'])
+task codeChecking(dependsOn: ['clean', 'ktlintCheck', 'ktlintFormat', 'detekt', 'jacocoReport'])

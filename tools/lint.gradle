@@ -1,29 +1,18 @@
-repositories {
-    jcenter()
-}
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
-configurations {
-    ktlint
-}
-
-dependencies {
-    ktlint "com.pinterest:ktlint:$ktlintVersion"
-}
-
-task ktlint(type: JavaExec, group: "verification") {
-    description = "Check Kotlin code style."
-    main = "com.pinterest.ktlint.Main"
-    classpath = configurations.ktlint
-    args "src/**/*.kt"
-    args "--reporter=checkstyle,output=${project.buildDir}/reports/ktlint/ktlint-report.xml"
-    args "--reporter=checkstyle, output=ktlint.xml"
-}
-
-task ktlintFormat(type: JavaExec, group: "formatting") {
-    description = "Fix Kotlin code style deviations."
-    main = "com.pinterest.ktlint.Main"
-    classpath = configurations.ktlint
-    args "-F", "src/**/*.kt"
-    args "--reporter=checkstyle,output=${project.buildDir}/reports/ktlint/ktlint-report.xml"
-    args "--reporter=checkstyle, output=ktlint.xml"
+ktlint {
+    version = "$ktlintVersion"
+    debug = true
+    ignoreFailures = true
+    outputToConsole = true
+    verbose = true
+    enableExperimentalRules = true
+    reporters {
+        reporter "html"
+        reporter "json"
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
 }

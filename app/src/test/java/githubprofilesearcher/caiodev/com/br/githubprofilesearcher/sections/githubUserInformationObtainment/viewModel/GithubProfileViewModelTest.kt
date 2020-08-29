@@ -28,7 +28,6 @@ class GithubProfileViewModelTest : TestSteps {
 
     @Test
     fun requestUpdatedGithubProfiles() = runBlocking {
-
         var githubInfo: GithubProfileInformation? = null
 
         given {
@@ -47,7 +46,6 @@ class GithubProfileViewModelTest : TestSteps {
 
     @Test
     fun requestMoreGithubProfiles() = runBlocking {
-
         given {
             //
         }

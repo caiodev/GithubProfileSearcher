@@ -29,9 +29,7 @@ class RemoteRepository {
     suspend fun <T> callApi(
         call: suspend () -> Response<T>
     ): Any {
-
         return try {
-
             val response = call.invoke()
 
             if (response.isSuccessful) {

@@ -19,9 +19,7 @@ class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<Recycler
     override fun getItemViewType(position: Int) = viewType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         return when (viewType) {
-
             empty -> EmptyViewHolder(
                 LayoutInflater.from(parent.context).inflate(
                     R.layout.empty_view_holder_layout,

@@ -16,7 +16,6 @@ object ImageLoading {
         placeholder: Int,
         targetImageView: ImageView
     ) {
-
         if (!this::imageLoader.isInitialized) {
             imageLoader = ImageLoader.Builder(context)
                 .crossfade(true)

@@ -3,10 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
+apply from: "${toolsPath}codeChecking.gradle"
 apply from: "${toolsPath}lint.gradle"
 apply from: "${toolsPath}detekt.gradle"
 apply from: "${toolsPath}coverage.gradle"
-apply from: "${toolsPath}codeChecking.gradle"
 
 android {
     compileSdkVersion 29
