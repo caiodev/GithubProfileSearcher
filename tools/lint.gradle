@@ -18,7 +18,6 @@ task ktlint(type: JavaExec, group: "verification") {
     args "--reporter=checkstyle,output=${project.buildDir}/reports/ktlint/ktlint-report.xml"
     args "--reporter=checkstyle, output=ktlint.xml"
 }
-check.dependsOn ktlint
 
 task ktlintFormat(type: JavaExec, group: "formatting") {
     description = "Fix Kotlin code style deviations."
