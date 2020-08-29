@@ -8,7 +8,9 @@ class FakeRemoteRepository {
 
     fun provideFakeResponse() = APICallResult.Success(
         GithubProfilesList(
+
             listOf(
+
                 GithubProfileInformation(
                     "torvalds",
                     "https://github.com/torvalds",

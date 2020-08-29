@@ -33,7 +33,6 @@ class CustomSnackBar(
     }
 
     override fun dismiss() {
-
         if (!hasSnackBarBeenRequestedToDismiss) {
             hasSnackBarBeenRequestedToDismiss = true
             delayTask(3000) {
@@ -46,9 +45,9 @@ class CustomSnackBar(
     companion object {
 
         fun make(parent: ViewGroup): CustomSnackBar {
-
-            val content = LayoutInflater.from(parent.context)
-                .inflate(R.layout.custom_snackbar_layout, parent, false)
+            val content =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.custom_snackbar_layout, parent, false)
 
             return CustomSnackBar(
                 parent,

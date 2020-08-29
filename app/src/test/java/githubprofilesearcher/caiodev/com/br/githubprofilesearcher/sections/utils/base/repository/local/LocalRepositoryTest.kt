@@ -22,7 +22,6 @@ class LocalRepositoryTest : TestSteps {
 
     @Test
     fun retrieveValueFromSharedPreferences_valuesOfVariousTypes_returnExpectedValues() {
-
         var boolean = true
         var integer = -1
         var string = "dummy"
@@ -42,7 +41,6 @@ class LocalRepositoryTest : TestSteps {
 
     @Test
     fun retrieveValueFromSharedPreferences_valuesOfVariousTypes_returnUnexpectedValues() {
-
         var long = 20L
 
         doWhen {
@@ -56,7 +54,6 @@ class LocalRepositoryTest : TestSteps {
 
     @Test
     fun saveValueToSharedPreferences_valuesOfVariousTypes_saveAllOfThemLocally() {
-
         doWhen {
             localRepository.saveValueToSharedPreferences("boolean", true)
             localRepository.saveValueToSharedPreferences("integer", 42)
@@ -75,7 +72,6 @@ class LocalRepositoryTest : TestSteps {
 
     @Test
     fun clear_commandToClearAllValuesInsideTheObjectUsed_clearAllValuesInsideTheObjectUsed() {
-
         given {
             localRepository.saveValueToSharedPreferences("boolean", true)
             localRepository.saveValueToSharedPreferences("integer", 42)

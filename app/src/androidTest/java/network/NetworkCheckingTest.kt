@@ -20,7 +20,6 @@ class NetworkCheckingTest {
 
     @Test
     fun checkIfInternetConnectionIsAvailable_applicationContext_isOnline() {
-
         var isOnline = false
 
         checkIfInternetConnectionIsAvailable(
@@ -33,7 +32,6 @@ class NetworkCheckingTest {
 
     @Test
     fun checkIfInternetConnectionIsAvailable_applicationContext_isOffline() {
-
         var isOffline = false
 
         checkIfInternetConnectionIsAvailable(

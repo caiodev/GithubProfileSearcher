@@ -47,7 +47,6 @@ class RemoteRepositoryTest : TestSteps {
     @ExperimentalCoroutinesApi
     @Test
     fun callApi__returnsASuccessfulResponse200() {
-
         var response = Any()
 
         given {
@@ -79,7 +78,6 @@ class RemoteRepositoryTest : TestSteps {
     @ExperimentalCoroutinesApi
     @Test
     fun callApi__returnsASuccessfulResponse204NoContent() {
-
         var response = Any()
 
         given {
@@ -111,7 +109,6 @@ class RemoteRepositoryTest : TestSteps {
     @ExperimentalCoroutinesApi
     @Test
     fun callApi__returnsAnUnsuccessfulResponse403Forbidden() {
-
         var response = Any()
 
         given {
@@ -143,7 +140,6 @@ class RemoteRepositoryTest : TestSteps {
     @ExperimentalCoroutinesApi
     @Test
     fun callApi__returnsAnUnsuccessfulResponse400Till402And404Till494() {
-
         var response = Any()
 
         given {
@@ -175,7 +171,6 @@ class RemoteRepositoryTest : TestSteps {
     @ExperimentalCoroutinesApi
     @Test
     fun callApi__returnsAnUnsuccessfulResponse500Till598() {
-
         var response = Any()
 
         given {
@@ -207,7 +202,6 @@ class RemoteRepositoryTest : TestSteps {
     @ExperimentalCoroutinesApi
     @Test
     fun callApi__returnsAnUnsuccessfulResponseGenericError() {
-
         var response = Any()
 
         given {
@@ -238,7 +232,6 @@ class RemoteRepositoryTest : TestSteps {
 
     @Test
     fun callApi__connectException() {
-
         var response = Any()
 
         doWhen {
@@ -255,7 +248,6 @@ class RemoteRepositoryTest : TestSteps {
 
     @Test
     fun callApi__genericException() {
-
         var response = Any()
 
         doWhen {
@@ -272,7 +264,6 @@ class RemoteRepositoryTest : TestSteps {
 
     @Test
     fun callApi__socketTimeoutException() {
-
         var response = Any()
 
         doWhen {
@@ -289,7 +280,6 @@ class RemoteRepositoryTest : TestSteps {
 
     @Test
     fun callApi__sslHandshakeException() {
-
         var response = Any()
 
         doWhen {
@@ -306,7 +296,6 @@ class RemoteRepositoryTest : TestSteps {
 
     @Test
     fun callApi__unknownHostException() {
-
         var response = Any()
 
         doWhen {

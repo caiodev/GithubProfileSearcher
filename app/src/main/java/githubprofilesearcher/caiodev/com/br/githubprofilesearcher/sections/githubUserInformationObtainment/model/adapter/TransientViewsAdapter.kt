@@ -22,11 +22,9 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int) = viewType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val itemView = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-
             loading -> {
                 LoadingViewHolder(
                     itemView.inflate(

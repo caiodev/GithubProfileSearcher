@@ -45,7 +45,6 @@ class GithubProfileViewModel(
     private var githubProfilesInfoList: List<GithubProfileInformation> = _githubProfilesInfoList
 
     internal fun requestUpdatedGithubProfiles(profile: String = emptyString) {
-
         saveToSharedPreferences(pageNumber, 1)
 
         if (profile.isNotEmpty()) {
@@ -86,7 +85,6 @@ class GithubProfileViewModel(
         user: String,
         shouldListItemsBeRemoved: Boolean = false
     ) {
-
         when (
             val value =
                 remoteRepository.provideGithubUserInformation(
@@ -94,14 +92,11 @@ class GithubProfileViewModel(
                     retrieveFromSharedPreferences(pageNumber, zero),
                     numberOfItemsPerPage
                 )
-        ) {
-
+            ) {
             is APICallResult.Success<*> -> {
-
                 saveToSharedPreferences(currentProfile, emptyString)
 
                 with(value.data as GithubProfilesList) {
-
                     if (!retrieveFromSharedPreferences(
                             Constants.hasASuccessfulCallAlreadyBeenMade,
                             false
@@ -129,11 +124,8 @@ class GithubProfileViewModel(
     }
 
     private fun handleErrorResult(errorValue: APICallResult.Error) {
-
         with(_errorSingleLiveDataEvent) {
-
             when (errorValue.error) {
-
                 unknownHostException, socketTimeoutException, connectException -> providerError(
                     R.string.unknown_host_exception_and_socket_timeout_exception,
                     this

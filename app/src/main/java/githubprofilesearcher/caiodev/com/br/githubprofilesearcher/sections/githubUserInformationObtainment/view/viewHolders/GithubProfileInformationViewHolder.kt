@@ -47,7 +47,6 @@ class GithubProfileInformationViewHolder(
     }
 
     fun bind(model: GithubProfileInformation) {
-
         githubProfileUrl = model.profileUrl
 
         model.userId.let {

@@ -34,7 +34,6 @@ class GithubProfileInfoActivity : AppCompatActivity() {
     }
 
     private fun isChromeInstalled(): Boolean {
-
         val activityIntent =
             Intent().setAction(Intent.ACTION_VIEW).addCategory(Intent.CATEGORY_BROWSABLE).setData(
                 Uri.fromParts(https, emptyString, null)
@@ -49,7 +48,6 @@ class GithubProfileInfoActivity : AppCompatActivity() {
     }
 
     private fun launchChromeCustomTab() {
-
         CustomTabsIntent.Builder()
             .setToolbarColor(ContextCompat.getColor(applicationContext, R.color.black))
             .setShowTitle(true)

@@ -10,11 +10,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GithubProfileInformation(
     @ColumnInfo
-    @SerialName("login") val login: String = "",
+    @SerialName("login")
+    val login: String = "",
     @ColumnInfo
-    @SerialName("html_url") val profileUrl: String = "",
+    @SerialName("html_url")
+    val profileUrl: String = "",
     @PrimaryKey
-    @SerialName("id") val userId: Long = 0,
+    @SerialName("id")
+    val userId: Long = 0,
     @ColumnInfo
-    @SerialName("avatar_url") val userImage: String = ""
+    @SerialName("avatar_url")
+    val userImage: String = ""
 )
