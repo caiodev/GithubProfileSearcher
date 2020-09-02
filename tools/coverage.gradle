@@ -10,7 +10,7 @@ tasks.withType(Test) {
     jacoco.excludes = ['jdk.internal.*']
 }
 
-task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'connectedAndroidTest']) {
+task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     def coverageSourceDirs = [
             "src/main/java"
@@ -29,9 +29,21 @@ task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'connecte
             '**/*ViewHolder*.*',
             'android/**/*.*',
             'androidx/**/*.*',
-            '**/*delay/**/*.*',
             '**/*init/**/*.*',
-            '**/*model/**/*.*'
+            '**/*model/**/*.*',
+            '**/*view/**/*.*',
+            '**/*imageLoading/**/*.*',
+            '**/*diModules/**/*.*',
+            '**/*liveEvent/**/*.*',
+            '**/*customViews/**/*.*',
+            '**/*service/**/*.*',
+            '**/*network/**/*.*',
+            '**/*factory/**/*.*',
+            '**/GithubProfileRepository**',
+            '**/GenericGithubProfileRepository**',
+            '**/LiveDataKt**',
+            '**/ViewKt**',
+            '**/AppDatabase**'
     ]
 
     def javaClasses = fileTree(dir: "$buildDir/intermediates/classes/debug", excludes: fileFilter)

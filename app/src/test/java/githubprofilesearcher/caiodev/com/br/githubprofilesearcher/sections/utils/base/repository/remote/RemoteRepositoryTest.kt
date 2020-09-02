@@ -17,6 +17,7 @@ import utils.base.TestSteps
 import utils.base.network.MockedAPIResponsesProvider.profileInfoCallResult
 import utils.base.network.factory.RetrofitTestService.createRetrofitService
 import utils.base.network.factory.RetrofitTestService.setup
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -237,7 +238,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { throwException(ConnectException()) }
+                    remoteRepository.callApi { setupException(ConnectException()) }
             }
         }
 
@@ -253,7 +254,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { throwException() }
+                    remoteRepository.callApi { setupException() }
             }
         }
 
@@ -269,7 +270,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { throwException(SocketTimeoutException()) }
+                    remoteRepository.callApi { setupException(SocketTimeoutException()) }
             }
         }
 
@@ -285,7 +286,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { throwException(SSLHandshakeException("")) }
+                    remoteRepository.callApi { setupException(SSLHandshakeException("")) }
             }
         }
 
@@ -301,7 +302,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { throwException(UnknownHostException()) }
+                    remoteRepository.callApi { setupException(UnknownHostException()) }
             }
         }
 
@@ -310,11 +311,16 @@ class RemoteRepositoryTest : TestSteps {
         }
     }
 
-    @Suppress("UNREACHABLE_CODE", "CAST_NEVER_SUCCEEDS")
-    fun throwException(
-        exception: Exception = Exception()
+    private fun setupException(
+        exception: IOException = IOException()
     ): Response<GithubProfilesList> {
+        throwException(exception)
+        return listOf<Response<GithubProfilesList>>()[0]
+    }
+
+    private fun throwException(
+        exception: IOException
+    ) {
         throw exception
-        return exception as Response<GithubProfilesList>
     }
 }

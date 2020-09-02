@@ -14,7 +14,7 @@ class DelayTest : TestSteps {
     }
 
     @Test
-    fun delay_timeAndInstructionToExecute_executeTheGenericOperation() {
+    fun delay_timeAndInstructionToExecute_executeAGenericOperation() {
         var countDownLatch: CountDownLatch? = null
 
         given {
