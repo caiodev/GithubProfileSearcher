@@ -703,9 +703,9 @@ class GithubProfileListingActivity :
 
     private inline fun <reified T> provideAdapter(adapterPosition: Int): T {
         return when (adapterPosition) {
-            0 -> (concatAdapter.adapters[adapterPosition] as T)
-            1 -> (concatAdapter.adapters[adapterPosition] as T)
-            else -> (concatAdapter.adapters[adapterPosition] as T)
+            0 -> concatAdapter.adapters[adapterPosition] as T
+            1 -> concatAdapter.adapters[adapterPosition] as T
+            else -> concatAdapter.adapters[adapterPosition] as T
         }
     }
 
