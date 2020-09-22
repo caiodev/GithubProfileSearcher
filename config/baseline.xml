@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <CurrentIssues>
+    <ID>TooManyFunctions:GithubProfileListingActivity.kt$GithubProfileListingActivity$GithubProfileListingActivity</ID>
+    <ID>TooManyFunctions:GithubProfileViewModel.kt$GithubProfileViewModel$GithubProfileViewModel</ID>
+  </CurrentIssues>
+</SmellBaseline>
