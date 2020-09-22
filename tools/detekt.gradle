@@ -4,6 +4,7 @@ detekt {
     buildUponDefaultConfig = true
     failFast = true
     input = files(rootProject.rootDir)
+    baseline = file("${rootProject.projectDir}/config/baseline.xml")
     parallel = true
     reports {
         html.enabled = true
