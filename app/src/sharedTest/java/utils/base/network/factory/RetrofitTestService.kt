@@ -40,13 +40,7 @@ object RetrofitTestService {
     internal fun createOkHttpClient() =
         OkHttpClient.Builder()
             .addInterceptor(
-                HttpLoggingInterceptor(
-                    object : HttpLoggingInterceptor.Logger {
-                        override fun log(message: String) {
-                            Timber.tag("OkHttp").d(message)
-                        }
-                    }
-                ).apply {
+                HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }.apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 }
             )

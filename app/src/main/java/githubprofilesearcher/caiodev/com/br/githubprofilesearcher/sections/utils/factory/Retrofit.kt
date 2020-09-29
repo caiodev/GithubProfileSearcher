@@ -15,13 +15,7 @@ import java.util.concurrent.TimeUnit
 object Retrofit {
 
     private val httpLoggingInterceptor =
-        HttpLoggingInterceptor(
-            object : HttpLoggingInterceptor.Logger {
-                override fun log(message: String) {
-                    Timber.tag(responseTag).d(message)
-                }
-            }
-        ).apply {
+        HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }.apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 

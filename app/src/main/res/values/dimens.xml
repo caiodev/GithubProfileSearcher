@@ -13,9 +13,6 @@
     <!--Elevation sizes-->
     <dimen name="elevation_8dp">8dp</dimen>
 
-    <!--Corner values-->
-    <dimen name="corner_24dp">24dp</dimen>
-
     <!-- View sizes -->
     <dimen name="view_48dp">48dp</dimen>
     <dimen name="view_90dp">90dp</dimen>
