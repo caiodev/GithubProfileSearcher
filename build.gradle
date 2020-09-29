@@ -19,13 +19,16 @@ buildscript {
         ktlintPluginVersion = '9.3.0'
 
         //Coil
-        coil = '1.0.0-rc2'
+        coil = '1.0.0-rc3'
+
+        //DataStore
+        dataStore = '1.0.0-alpha01'
 
         //Gradle
         gradleVersion = '4.0.1'
 
         //Koin
-        koin = '2.1.6'
+        koin = '2.2.0-beta-2'
 
         //Kotlin
         kotlin = '1.4.10'
@@ -53,7 +56,7 @@ buildscript {
         room = '2.3.0-alpha02'
 
         //Serialization
-        serialization = '1.0-M1-1.4.0-rc'
+        serialization = '1.0.0-RC2'
 
         //Timber
         timber = '4.7.1'

@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="user_name">Usuário</string>
-    <string name="user_bio">Bio do usuário</string>
-    <string name="number_of_repositories">Repositórios</string>
-    <string name="number_of_followers">Seguidores</string>
-    <string name="null_user_bio_message">Não há</string>
     <string name="text_input_layout_hint">Digite um perfil ex: torvalds</string>
     <string name="empty_field_error">Campo vazio</string>
     <string name="no_connection_error">Não há conexão com a internet</string>
-    <string name="number_of_repositories_template">Repositórios: %s</string>
-    <string name="number_of_followers_template">Seguidores: %s</string>
-    <string name="user_name_template">" Nome: %s"</string>
-    <string name="user_bio_template">Bio: %s</string>
-    <string name="null_user_name_message">Não há</string>
     <string name="github_user_list_header">Perfis</string>
     <string name="login">Usuário: %s</string>
     <string name="server_side_error">Nossos servidores estão sobrecarregados no momento. Por favor, tente novamente mais tarde</string>

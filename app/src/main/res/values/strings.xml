@@ -5,16 +5,7 @@
     <string name="text_input_layout_hint">Type a profile e.g: torvalds</string>
     <string name="user_id" translatable="false">ID: %s</string>
     <string name="login">User: %s</string>
-    <string name="user_name">Name:</string>
-    <string name="null_user_name_message">None</string>
-    <string name="user_bio">Bio:</string>
-    <string name="null_user_bio_message">@string/null_user_name_message</string>
-    <string name="number_of_followers">Followers:</string>
-    <string name="number_of_repositories">Repositories:</string>
-    <string name="user_name_template">Name: %s</string>
-    <string name="user_bio_template">Bio: %s</string>
-    <string name="number_of_followers_template">Followers: %s</string>
-    <string name="number_of_repositories_template">Repositories: %s</string>
+
     <string name="github_user_list_header">Profiles</string>
     <string name="retry_button_message">Retry</string>
     <string name="end_of_results">End of results</string>
