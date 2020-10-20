@@ -71,7 +71,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //AndroidXCore
-    implementation "androidx.core:core:$androidXCore"
+    implementation "androidx.core:core-ktx:$androidXCore"
 
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat"
@@ -109,8 +109,8 @@ dependencies {
 
     //Lifecycle section
     implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
-    implementation "androidx.lifecycle:lifecycle-runtime:$arch"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$arch"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
