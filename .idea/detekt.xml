@@ -6,6 +6,5 @@
     <buildUponDefaultConfig>true</buildUponDefaultConfig>
     <enableAllRules>true</enableAllRules>
     <rulesPath>$PROJECT_DIR$/config/detekt/detekt.yml</rulesPath>
-    <baselinePath>$PROJECT_DIR$/config/baseline.xml</baselinePath>
   </component>
 </project>
