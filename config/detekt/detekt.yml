@@ -2,13 +2,14 @@ build:
   maxIssues: 0
   excludeCorrectable: false
   weights:
-    # complexity: 2
-    # LongParameterList: 1
-    # style: 1
-    # comments: 1
+  # complexity: 2
+  # LongParameterList: 1
+  # style: 1
+  # comments: 1
 
 config:
   validation: true
+  warningsAsErrors: false
   # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
   excludes: ''
 
@@ -25,11 +26,11 @@ processors:
 console-reports:
   active: true
   exclude:
-     - 'ProjectStatisticsReport'
-     - 'ComplexityReport'
-     - 'NotificationReport'
-  #  - 'FindingsReport'
-     - 'FileBasedFindingsReport'
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+    #  - 'FindingsReport'
+    - 'FileBasedFindingsReport'
 
 output-reports:
   active: true
@@ -100,6 +101,8 @@ complexity:
   NestedBlockDepth:
     active: true
     threshold: 4
+  ReplaceSafeCallChainWithRun:
+    active: false
   StringLiteralDuplication:
     active: false
     threshold: 3
@@ -122,6 +125,8 @@ coroutines:
   GlobalCoroutineUsage:
     active: false
   RedundantSuspendModifier:
+    active: false
+  SuspendFunWithFlowReturnType:
     active: false
 
 empty-blocks:
@@ -178,10 +183,10 @@ exceptions:
   SwallowedException:
     active: false
     ignoredExceptionTypes:
-     - InterruptedException
-     - NumberFormatException
-     - ParseException
-     - MalformedURLException
+      - InterruptedException
+      - NumberFormatException
+      - ParseException
+      - MalformedURLException
     allowedExceptionNameRegex: '_|(ignore|expected).*'
   ThrowingExceptionFromFinally:
     active: false
@@ -190,36 +195,42 @@ exceptions:
   ThrowingExceptionsWithoutMessageOrCause:
     active: false
     exceptions:
-     - IllegalArgumentException
-     - IllegalStateException
-     - IOException
+      - IllegalArgumentException
+      - IllegalStateException
+      - IOException
   ThrowingNewInstanceOfSameException:
     active: false
   TooGenericExceptionCaught:
     active: true
     exceptionNames:
-     - ArrayIndexOutOfBoundsException
-     - Error
-     - Exception
-     - IllegalMonitorStateException
-     - NullPointerException
-     - IndexOutOfBoundsException
-     - RuntimeException
-     - Throwable
+      - ArrayIndexOutOfBoundsException
+      - Error
+      - Exception
+      - IllegalMonitorStateException
+      - NullPointerException
+      - IndexOutOfBoundsException
+      - RuntimeException
+      - Throwable
     allowedExceptionNameRegex: '_|(ignore|expected).*'
   TooGenericExceptionThrown:
     active: true
     exceptionNames:
-     - Error
-     - Exception
-     - Throwable
-     - RuntimeException
+      - Error
+      - Exception
+      - Throwable
+      - RuntimeException
 
 formatting:
   active: true
   android: false
   autoCorrect: true
   AnnotationOnSeparateLine:
+    active: false
+    autoCorrect: true
+  AnnotationSpacing:
+    active: false
+    autoCorrect: true
+  ArgumentListWrapping:
     active: false
     autoCorrect: true
   ChainWrapping:
@@ -377,6 +388,8 @@ naming:
   MemberNameEqualsClassName:
     active: true
     ignoreOverridden: true
+  NonBooleanPropertyPrefixedWithIs:
+    active: false
   ObjectPropertyNaming:
     active: true
     constantPattern: '[A-Za-z][_A-Za-z0-9]*'
@@ -474,6 +487,8 @@ potential-bugs:
 
 style:
   active: true
+  ClassOrdering:
+    active: false
   CollapsibleIfStatements:
     active: false
   DataClassContainsFunctions:
@@ -613,6 +628,8 @@ style:
     allowedNames: '(_|ignored|expected|serialVersionUID)'
   UseArrayLiteralsInAnnotations:
     active: false
+  UseCheckNotNull:
+    active: false
   UseCheckOrError:
     active: false
   UseDataClass:
@@ -624,6 +641,8 @@ style:
   UseIfInsteadOfWhen:
     active: false
   UseRequire:
+    active: false
+  UseRequireNotNull:
     active: false
   UselessCallOnNotNull:
     active: true

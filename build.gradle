@@ -13,11 +13,11 @@ buildscript {
 
         //Code quality checking
         //Detekt
-        detektVersion = '1.11.2'
+        detektVersion = '1.14.2'
 
         //Ktlint
-        ktlintVersion = '0.38.1'
-        ktlintPluginVersion = '9.3.0'
+        ktlintVersion = '0.39.0'
+        ktlintPluginVersion = '9.4.1'
 
         //Coil
         coil = '1.0.0'
