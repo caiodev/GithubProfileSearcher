@@ -89,11 +89,8 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
 
     //Koin
-    //For Android
     implementation "org.koin:koin-android:$koin"
-    //For Lifecycle scoping
     implementation "org.koin:koin-androidx-scope:$koin"
-    //For Android Architecture ViewModel
     implementation "org.koin:koin-androidx-viewmodel:$koin"
 
     //Kotlin

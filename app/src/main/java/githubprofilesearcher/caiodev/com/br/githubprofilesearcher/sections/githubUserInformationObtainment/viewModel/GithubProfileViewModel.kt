@@ -92,7 +92,7 @@ class GithubProfileViewModel(
                     retrieveFromSharedPreferences(pageNumber, zero),
                     numberOfItemsPerPage
                 )
-            ) {
+        ) {
             is APICallResult.Success<*> -> {
                 saveToSharedPreferences(currentProfile, emptyString)
 
