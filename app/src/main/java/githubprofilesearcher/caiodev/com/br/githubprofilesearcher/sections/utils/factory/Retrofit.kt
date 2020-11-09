@@ -1,11 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.factory
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.mediaType
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.responseTag
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.timeout
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,6 +11,11 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 object Retrofit {
+
+    const val baseUrl = "https://api.github.com/"
+    private const val responseTag = "OkHttp"
+    val mediaType = "application/json".toMediaType()
+    private const val timeout = 60L
 
     private val httpLoggingInterceptor =
         HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }.apply {

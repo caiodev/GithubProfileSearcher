@@ -9,7 +9,7 @@ buildscript {
         appCompat = '1.3.0-alpha02'
 
         //Browser
-        browser = "1.3.0-alpha06"
+        browser = "1.3.0-beta01"
 
         //Code quality checking
         //Detekt
@@ -29,7 +29,7 @@ buildscript {
         gradleVersion = '4.1.0'
 
         //Koin
-        koin = '2.2.0-beta-2'
+        koin = '2.2.0-rc-4'
 
         //Kotlin
         kotlin = '1.4.10'
@@ -47,7 +47,7 @@ buildscript {
         materialDesign = '1.3.0-alpha03'
 
         //OkHttp
-        okHttp = '4.9.0'
+        okHttp = '4.10.0-RC1'
 
         //Retrofit
         retrofit = '2.9.0'
@@ -57,14 +57,14 @@ buildscript {
         room = '2.3.0-alpha03'
 
         //Serialization
-        serialization = '1.0.0'
+        serialization = '1.0.1'
 
         //Timber
         timber = '4.7.1'
 
         //Views/ViewGroups
         //ConstraintLayout
-        constraintLayout = '2.0.2'
+        constraintLayout = '2.0.4'
 
         //RecyclerView
         recyclerView = "1.2.0-alpha06"
@@ -74,12 +74,12 @@ buildscript {
 
         //Test dependency versions
         archTest = '2.1.0'
-        espresso = '3.3.0'
-        coroutinesTest = '1.3.9'
+        espresso = '3.4.0-alpha02'
+        coroutinesTest = '1.4.1'
         jacocoVersion = '0.8.6'
-        junitAndroidX = '1.1.2'
+        junitAndroidX = '1.1.3-alpha02'
         junit5 = '5.7.0'
-        testCore = '1.3.0'
+        testCore = '1.3.1-alpha02'
 
         toolsPath = "$project.projectDir/tools/"
     }

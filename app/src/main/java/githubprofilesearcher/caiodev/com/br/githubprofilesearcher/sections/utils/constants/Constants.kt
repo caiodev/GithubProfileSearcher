@@ -1,7 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants
 
-import okhttp3.MediaType.Companion.toMediaType
-
 object Constants {
 
     // Intent id
@@ -45,47 +43,7 @@ object Constants {
     const val githubProfileAdapter = 1
     const val transientViewsAdapter = 2
 
-    // HandleSavedState properties
-    // Layout related
-    const val hasUserDeletedProfileText = "hasUserDeletedProfileText"
-    const val textInputEditTextProfile = "textInputEditTextProfile"
-    const val shouldRecyclerViewAnimationBeExecuted = "shouldRecyclerViewAnimationBeExecuted"
-
-    // Information cache variables
-    const val temporaryCurrentProfile = "temporaryCurrentProfile"
-    const val currentProfile = "currentProfile"
-    const val pageNumber = "pageNumber"
-
-    // Call related
-    const val hasASuccessfulCallAlreadyBeenMade = "hasASuccessfulCallAlreadyBeenMade"
-    const val hasLastCallBeenUnsuccessful = "hasLastCallBeenUnsuccessful"
-    const val isThereAnOngoingCall = "isThereAnOngoingCall"
-    const val hasUserRequestedUpdatedData = "hasAnyUserRequestedUpdatedData"
-    const val shouldASearchBePerformed = "shouldASearchBePerformed"
-    const val isTextInputEditTextEmpty = "isTextInputEditTextEmpty"
-    const val numberOfItems = "numberOfItems"
-
-    // Header View
-    const val isHeaderVisible = "isHeaderItemVisible"
-
-    // Transient Views
-    const val isEndOfResultsViewVisible = "isEndOfResultsItemVisible"
-    const val isPaginationLoadingViewVisible = "isPaginationLoadingItemVisible"
-    const val isRetryViewVisible = "isRetryItemVisible"
-
-    // Retrofit related
-    const val baseUrl = "https://api.github.com/"
-    const val responseTag = "OkHttp"
-    val mediaType = "application/json".toMediaType()
-    const val timeout = 60L
-
-    // Chrome packages
-    const val stable = "com.android.chrome"
-    const val beta = "com.chrome.beta"
-    const val dev = "com.chrome.dev"
-    const val local = "com.google.android.apps.chrome"
-
-    // Database names
+    // Database name
     const val appDb = "app-db"
 
     // HTTP error codes
@@ -100,7 +58,5 @@ object Constants {
     // Others
     const val emptyString = ""
     const val https = "https"
-    const val sharedPreferences = "sharedPreferences"
-    const val zero = 0
     const val twenty = 20
 }

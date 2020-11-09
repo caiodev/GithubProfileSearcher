@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
@@ -49,7 +50,11 @@ class GithubProfileInfoActivity : AppCompatActivity() {
 
     private fun launchChromeCustomTab() {
         CustomTabsIntent.Builder()
-            .setToolbarColor(ContextCompat.getColor(applicationContext, R.color.black))
+            .setDefaultColorSchemeParams(
+                CustomTabColorSchemeParams.Builder()
+                    .setToolbarColor(ContextCompat.getColor(applicationContext, R.color.black))
+                    .build()
+            )
             .setShowTitle(true)
             .setStartAnimations(
                 applicationContext,

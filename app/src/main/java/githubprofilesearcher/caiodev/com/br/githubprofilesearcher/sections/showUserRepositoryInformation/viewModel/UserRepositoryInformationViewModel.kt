@@ -2,10 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.show
 
 import android.content.pm.ResolveInfo
 import androidx.lifecycle.ViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.beta
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.dev
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.local
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.stable
 
 class UserRepositoryInformationViewModel : ViewModel() {
 
@@ -13,16 +9,24 @@ class UserRepositoryInformationViewModel : ViewModel() {
 
         var isChromeInstalled = false
 
-        resolveInfoList.forEach {
-            if (it.activityInfo.packageName.contains(stable) ||
+        val packageCount = resolveInfoList.count {
+            it.activityInfo.packageName.contains(stable) ||
                 it.activityInfo.packageName.contains(beta) ||
                 it.activityInfo.packageName.contains(dev) ||
                 it.activityInfo.packageName.contains(local)
-            ) {
-                isChromeInstalled = true
-            }
+        }
+
+        if (packageCount >= 1) {
+            isChromeInstalled = true
         }
 
         return isChromeInstalled
+    }
+
+    companion object {
+        private const val stable = "com.android.chrome"
+        private const val beta = "com.chrome.beta"
+        private const val dev = "com.chrome.dev"
+        private const val local = "com.google.android.apps.chrome"
     }
 }
