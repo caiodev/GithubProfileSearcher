@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delayTask
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delayTaskBy
 import kotlinx.android.synthetic.main.custom_snackbar_layout.view.*
 
 class CustomSnackBar(
@@ -35,7 +35,7 @@ class CustomSnackBar(
     override fun dismiss() {
         if (!hasSnackBarBeenRequestedToDismiss) {
             hasSnackBarBeenRequestedToDismiss = true
-            delayTask(3000) {
+            delayTaskBy(taskDelay) {
                 super.dismiss()
                 hasSnackBarBeenRequestedToDismiss = false
             }
@@ -43,6 +43,8 @@ class CustomSnackBar(
     }
 
     companion object {
+
+        private const val taskDelay = 3000L
 
         fun make(parent: ViewGroup): CustomSnackBar {
             val content =

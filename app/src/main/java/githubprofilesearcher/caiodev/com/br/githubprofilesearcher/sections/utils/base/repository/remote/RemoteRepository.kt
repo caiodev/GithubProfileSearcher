@@ -19,7 +19,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
 import retrofit2.Response
-import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -38,7 +37,7 @@ class RemoteRepository {
             } else {
                 handleError(response.code())
             }
-        } catch (exception: IOException) {
+        } catch (exception: Exception) {
             handleException(exception)
         }
     }
@@ -61,7 +60,7 @@ class RemoteRepository {
         }
     }
 
-    private fun handleException(exception: IOException): Any {
+    private fun handleException(exception: Exception): Any {
         return when (exception) {
             is ConnectException -> APICallResult.Error(connectException)
             is SocketTimeoutException -> APICallResult.Error(socketTimeoutException)

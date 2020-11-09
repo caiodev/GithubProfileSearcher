@@ -146,6 +146,7 @@ dependencies {
     testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
 
     //JUnit
+    testImplementation "androidx.test.ext:junit-ktx:$junitAndroidX"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5"
 
     //MockWebServer
@@ -163,6 +164,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
+
+    androidTestImplementation 'androidx.test:rules:1.3.1-alpha02'
 
     //JUnit
     androidTestImplementation "androidx.test.ext:junit-ktx:$junitAndroidX"

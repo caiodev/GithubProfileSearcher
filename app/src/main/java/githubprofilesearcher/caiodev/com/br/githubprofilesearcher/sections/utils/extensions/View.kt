@@ -6,11 +6,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
+import kotlinx.coroutines.launch
 
 @Suppress("UNUSED")
 fun Context.applyViewVisibility(view: View, visibility: Int) {
@@ -94,8 +97,8 @@ fun Context.hideKeyboard(editText: EditText) {
     }
 }
 
-@Suppress("UNUSED")
-fun Context.setViewXYScales(view: View, xAxis: Float, yAxis: Float) {
-    view.scaleX = xAxis
-    view.scaleY = yAxis
+fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
+    lifecycleScope.launch {
+        task.invoke()
+    }
 }

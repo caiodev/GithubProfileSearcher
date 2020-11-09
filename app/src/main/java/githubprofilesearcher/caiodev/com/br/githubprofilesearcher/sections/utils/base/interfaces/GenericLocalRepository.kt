@@ -2,21 +2,11 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dao.GithubProfilesDao
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.datastore.manager.IProtoDataStoreManager
 
-interface GenericLocalRepository :
-    GithubProfilesDao {
+interface GenericLocalRepository : GithubProfilesDao {
 
-    fun <T> retrieveValueFromSharedPreferences(
-        key: String,
-        defaultValue: T
-    ): T
-
-    fun <T> saveValueToSharedPreferences(
-        key: String,
-        value: T
-    )
-
-    fun clearSharedPreferences()
+    fun obtainProtoDataStore(): IProtoDataStoreManager
 
     /* GithubProfilesDao */
     override suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation>

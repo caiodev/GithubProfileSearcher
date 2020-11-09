@@ -35,9 +35,8 @@ console-reports:
 output-reports:
   active: true
   exclude:
-  # - 'TxtOutputReport'
-  # - 'XmlOutputReport'
-  # - 'HtmlOutputReport'
+  - 'TxtOutputReport'
+  - 'XmlOutputReport'
 
 comments:
   active: true
@@ -201,7 +200,7 @@ exceptions:
   ThrowingNewInstanceOfSameException:
     active: false
   TooGenericExceptionCaught:
-    active: true
+    active: false
     exceptionNames:
       - ArrayIndexOutOfBoundsException
       - Error

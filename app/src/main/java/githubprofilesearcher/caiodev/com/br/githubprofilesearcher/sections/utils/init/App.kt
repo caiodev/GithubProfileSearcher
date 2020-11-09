@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.app.Application
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.diModules.githubProfileViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.di.githubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.model.diModules.githubUserRepositoryViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.diModules.globalModule
 import kotlinx.serialization.ExperimentalSerializationApi

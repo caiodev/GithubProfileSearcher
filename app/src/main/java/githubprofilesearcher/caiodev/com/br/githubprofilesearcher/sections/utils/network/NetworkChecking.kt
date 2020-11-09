@@ -31,10 +31,10 @@ object NetworkChecking {
     }
 
     // Checks whether or not there is internet connection
-    fun checkIfInternetConnectionIsAvailable(
+    suspend fun checkIfInternetConnectionIsAvailable(
         applicationContext: Context,
-        onConnectionAvailable: () -> Unit,
-        onConnectionUnavailable: () -> Unit
+        onConnectionAvailable: suspend () -> Unit,
+        onConnectionUnavailable: suspend () -> Unit
     ) =
         handleInternetConnectionAvailability(
             applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager,
@@ -50,10 +50,10 @@ object NetworkChecking {
         return networkStateLiveData
     }
 
-    private fun handleInternetConnectionAvailability(
+    private suspend fun handleInternetConnectionAvailability(
         connectivityManager: ConnectivityManager,
-        onConnectionAvailable: () -> Unit,
-        onConnectionUnavailable: () -> Unit
+        onConnectionAvailable: suspend () -> Unit,
+        onConnectionUnavailable: suspend () -> Unit
     ) {
         if (connectivityManager.allNetworks.isNotEmpty()) {
             iterateOverTheListOfNetworks(connectivityManager, onConnectionAvailable)
@@ -62,9 +62,9 @@ object NetworkChecking {
         }
     }
 
-    private fun iterateOverTheListOfNetworks(
+    private suspend fun iterateOverTheListOfNetworks(
         connectivityManager: ConnectivityManager,
-        onConnectionAvailable: () -> Unit
+        onConnectionAvailable: suspend () -> Unit
     ) {
         connectivityManager.allNetworks.forEach { network ->
             connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->

@@ -7,22 +7,17 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.GenericLocalRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.datastore.model.UserPreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericGithubProfileRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.clientSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.connectException
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.currentProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.forbidden
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItems
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.numberOfItemsPerPage
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.pageNumber
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.serverSideError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.temporaryCurrentProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.zero
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.SingleLiveEvent
@@ -45,39 +40,38 @@ class GithubProfileViewModel(
     private var githubProfilesInfoList: List<GithubProfileInformation> = _githubProfilesInfoList
 
     internal fun requestUpdatedGithubProfiles(profile: String = emptyString) {
-        saveToSharedPreferences(pageNumber, 1)
+        runTaskOnBackground {
+            saveValueToDataStore(obtainValueFromDataStore().copy(pageNumber = 1))
 
-        if (profile.isNotEmpty()) {
-            saveToSharedPreferences(temporaryCurrentProfile, profile)
-            requestGithubProfiles(profile, true)
-        } else {
-            requestGithubProfiles(
-                retrieveFromSharedPreferences(
-                    temporaryCurrentProfile,
-                    emptyString
-                ),
-                true
-            )
+            if (profile.isNotEmpty()) {
+                saveValueToDataStore(obtainValueFromDataStore().copy(temporaryCurrentProfile = profile))
+                requestGithubProfiles(profile, true)
+            } else {
+                requestGithubProfiles(
+                    obtainValueFromDataStore().temporaryCurrentProfile,
+                    true
+                )
+            }
         }
     }
 
     internal fun requestMoreGithubProfiles() {
-        requestGithubProfiles(retrieveFromSharedPreferences(currentProfile, emptyString), false)
+        runTaskOnBackground {
+            requestGithubProfiles(obtainValueFromDataStore().currentProfile, false)
+        }
     }
 
-    private fun requestGithubProfiles(
+    private suspend fun requestGithubProfiles(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
-        runTaskOnBackground {
-            if (shouldListItemsBeRemoved) {
-                handleCallResult(profile, shouldListItemsBeRemoved)
-            } else {
-                handleCallResult(
-                    retrieveFromSharedPreferences(currentProfile, emptyString),
-                    shouldListItemsBeRemoved
-                )
-            }
+        if (shouldListItemsBeRemoved) {
+            handleCallResult(profile, shouldListItemsBeRemoved)
+        } else {
+            handleCallResult(
+                profile,
+                shouldListItemsBeRemoved
+            )
         }
     }
 
@@ -89,20 +83,21 @@ class GithubProfileViewModel(
             val value =
                 remoteRepository.provideGithubUserInformation(
                     user,
-                    retrieveFromSharedPreferences(pageNumber, zero),
+                    obtainValueFromDataStore().pageNumber,
                     numberOfItemsPerPage
                 )
         ) {
             is APICallResult.Success<*> -> {
-                saveToSharedPreferences(currentProfile, emptyString)
+                saveValueToDataStore(obtainValueFromDataStore().copy(currentProfile = emptyString))
 
                 with(value.data as GithubProfilesList) {
-                    if (!retrieveFromSharedPreferences(
-                            Constants.hasASuccessfulCallAlreadyBeenMade,
-                            false
-                        )
+                    if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
                     ) {
-                        saveToSharedPreferences(Constants.hasASuccessfulCallAlreadyBeenMade, true)
+                        saveValueToDataStore(
+                            obtainValueFromDataStore().copy(
+                                hasASuccessfulCallAlreadyBeenMade = true
+                            )
+                        )
                     }
 
                     if (shouldListItemsBeRemoved) {
@@ -111,10 +106,13 @@ class GithubProfileViewModel(
                         setupPaginationList(githubProfileInformationList = githubProfileInformationList)
                     }
 
-                    saveToSharedPreferences(numberOfItems, githubProfilesInfoList.size)
-                    saveToSharedPreferences(
-                        pageNumber,
-                        retrieveFromSharedPreferences(pageNumber, zero).plus(1)
+                    saveValueToDataStore(obtainValueFromDataStore().copy(numberOfItems = githubProfilesInfoList.size))
+                    saveValueToDataStore(
+                        obtainValueFromDataStore().copy(
+                            pageNumber = obtainValueFromDataStore().pageNumber.plus(
+                                1
+                            )
+                        )
                     )
                 }
             }
@@ -194,15 +192,13 @@ class GithubProfileViewModel(
         state.postValue(error)
     }
 
-    internal fun <T> retrieveFromSharedPreferences(key: String, defaultValue: T) =
-        localRepository.retrieveValueFromSharedPreferences(key, defaultValue)
+    internal suspend fun obtainValueFromDataStore() =
+        localRepository.obtainProtoDataStore().obtainDataStoreValue()
 
-    internal fun <T> saveToSharedPreferences(key: String, value: T) {
-        localRepository.saveValueToSharedPreferences(key, value)
-    }
-
-    internal fun clearSharedPreferences() {
-        localRepository.clearSharedPreferences()
+    internal suspend fun saveValueToDataStore(
+        userPreferences: UserPreferences = UserPreferences()
+    ) {
+        localRepository.obtainProtoDataStore().updateDataStoreValue(userPreferences)
     }
 
     private fun addContentToGithubProfilesInfoList(list: List<GithubProfileInformation>) {
