@@ -3,9 +3,9 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View.VISIBLE
 import android.view.View.GONE
 import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -23,6 +23,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.TransientViewsAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.GithubProfileInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
@@ -36,8 +38,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.transientViewsAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.twenty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyBackgroundColor
@@ -523,7 +523,8 @@ class GithubProfileListingActivity : AppCompatActivity(), ActivityFlow {
         binding.searchProfileTextInputEditText.hideKeyboard()
         binding.repositoryLoadingProgressBar.applyViewVisibility(GONE)
         setupUpperViewsInteraction(true)
-        errorSnackBar.showErrorSnackBar(message,
+        errorSnackBar.showErrorSnackBar(
+            message,
             onDismissed = {
                 runTaskOnBackground {
                     shouldRecallInternetConnectivitySnackBar()
@@ -631,9 +632,7 @@ class GithubProfileListingActivity : AppCompatActivity(), ActivityFlow {
                     }
 
                     runTaskOnBackground {
-                        if (recyclerViewLayoutManager.findLastVisibleItemPosition() == total?.minus(
-                                2
-                            ) &&
+                        if (recyclerViewLayoutManager.findLastVisibleItemPosition() == total?.minus(2) &&
                             viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
                         ) {
                             viewModel.saveValueToDataStore(

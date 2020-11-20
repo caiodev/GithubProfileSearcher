@@ -45,7 +45,8 @@ fun View.applyBackgroundColor(color: Int) {
 }
 
 @Suppress("UNUSED")
-inline fun Snackbar.showErrorSnackBar(message: Int,
+inline fun Snackbar.showErrorSnackBar(
+    message: Int,
     crossinline onDismissed: (() -> Any) = { emptyString }
 ) {
     with(this) {

@@ -2,7 +2,6 @@ apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 ktlint {
     version = "$ktlintVersion"
-    debug = true
     ignoreFailures = true
     outputToConsole = true
     verbose = true

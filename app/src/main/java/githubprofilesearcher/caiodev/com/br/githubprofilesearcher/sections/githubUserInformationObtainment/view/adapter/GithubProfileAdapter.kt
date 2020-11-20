@@ -17,9 +17,11 @@ class GithubProfileAdapter(private val onItemSelectedListener: OnItemSelectedLis
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return GithubProfileInformationViewHolder(
-            GithubProfileViewHolderLayoutBinding.inflate(LayoutInflater.from(parent.context),
+            GithubProfileViewHolderLayoutBinding.inflate(
+                LayoutInflater.from(parent.context),
                 parent,
-                false),
+                false
+            ),
             onItemSelectedListener
         )
     }
