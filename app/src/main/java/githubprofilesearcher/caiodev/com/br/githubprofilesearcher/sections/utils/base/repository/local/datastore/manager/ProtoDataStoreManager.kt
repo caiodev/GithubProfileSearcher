@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.datastore.manager
 
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.datastore.model.UserPreferences
 import kotlinx.coroutines.flow.first
 

@@ -3,7 +3,8 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.EmptyViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.HeaderViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.HeaderViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.transientItemViews.EmptyViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
@@ -19,18 +20,19 @@ class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<Recycler
     override fun getItemViewType(position: Int) = viewType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             empty -> EmptyViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                    R.layout.empty_view_holder_layout,
+                EmptyViewHolderLayoutBinding.inflate(
+                    inflater,
                     parent,
                     false
                 )
             )
 
             else -> HeaderViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                    R.layout.header_view_holder_layout,
+                HeaderViewHolderLayoutBinding.inflate(
+                    inflater,
                     parent,
                     false
                 )

@@ -1,6 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.transientItemViews
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.EndOfResultsViewHolderLayoutBinding
 
-class EndOfResultsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+class EndOfResultsViewHolder(itemBinding: EndOfResultsViewHolderLayoutBinding) :
+    RecyclerView.ViewHolder(itemBinding.root)

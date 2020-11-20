@@ -3,13 +3,13 @@ buildscript {
     ext {
 
         //AndroidXCore
-        androidXCore = '1.5.0-alpha04'
+        androidXCore = '1.5.0-alpha05'
 
         //AppCompat
         appCompat = '1.3.0-alpha02'
 
         //Browser
-        browser = "1.3.0-beta01"
+        browser = "1.3.0-rc01"
 
         //Code quality checking
         //Detekt
@@ -23,10 +23,10 @@ buildscript {
         coil = '1.0.0'
 
         //DataStore
-        dataStore = '1.0.0-alpha02'
+        dataStore = '1.0.0-alpha04'
 
         //Gradle
-        gradleVersion = '4.1.0'
+        gradleVersion = '4.1.1'
 
         //Koin
         koin = '2.2.0-rc-4'
@@ -35,7 +35,7 @@ buildscript {
         kotlin = '1.4.10'
 
         //Ktx
-        ktxCore = '1.5.0-alpha04'
+        ktxCore = '1.5.0-alpha05'
 
         //LeakCanary
         leakCanary = '2.5'

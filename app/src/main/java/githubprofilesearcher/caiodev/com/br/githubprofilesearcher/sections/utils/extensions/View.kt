@@ -16,8 +16,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import kotlinx.coroutines.launch
 
 @Suppress("UNUSED")
-fun Context.applyViewVisibility(view: View, visibility: Int) {
-    view.visibility = visibility
+fun View.applyViewVisibility(visibility: Int) {
+    this.visibility = visibility
 }
 
 @Suppress("UNUSED")
@@ -31,26 +31,24 @@ fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
     }
 }
 
-fun Context.changeDrawable(target: ImageView, newDrawable: Int) {
-    target.setImageDrawable(
+fun ImageView.changeDrawable(newDrawable: Int) {
+    this.setImageDrawable(
         ContextCompat.getDrawable(
-            applicationContext,
+            this.context,
             newDrawable
         )
     )
 }
 
-fun Context.applyBackgroundColor(view: View, color: Int) {
-    view.setBackgroundColor(ContextCompat.getColor(applicationContext, color))
+fun View.applyBackgroundColor(color: Int) {
+    this.setBackgroundColor(ContextCompat.getColor(this.context, color))
 }
 
 @Suppress("UNUSED")
-inline fun Context.showErrorSnackBar(
-    snackBar: Snackbar,
-    message: Int,
+inline fun Snackbar.showErrorSnackBar(message: Int,
     crossinline onDismissed: (() -> Any) = { emptyString }
 ) {
-    with(snackBar) {
+    with(this) {
         setText(message)
         if (onDismissed() is Unit) {
             addCallback(
@@ -66,15 +64,14 @@ inline fun Context.showErrorSnackBar(
     }
 }
 
-fun Context.showInternetConnectionStatusSnackBar(
-    customSnackBar: CustomSnackBar,
+fun CustomSnackBar.showInternetConnectionStatusSnackBar(
     isInternetConnectionAvailable: Boolean
 ) {
-    with(customSnackBar) {
+    with(this) {
         if (isInternetConnectionAvailable) {
             setText(R.string.back_online_success_message).setBackgroundColor(
                 ContextCompat.getColor(
-                    applicationContext,
+                    this.context,
                     R.color.green_700
                 )
             )
@@ -82,7 +79,7 @@ fun Context.showInternetConnectionStatusSnackBar(
         } else {
             setText(R.string.no_connection_error).setBackgroundColor(
                 ContextCompat.getColor(
-                    applicationContext,
+                    this.context,
                     R.color.red_700
                 )
             )
@@ -91,9 +88,9 @@ fun Context.showInternetConnectionStatusSnackBar(
     }
 }
 
-fun Context.hideKeyboard(editText: EditText) {
-    with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
-        hideSoftInputFromWindow(editText.applicationWindowToken, 0)
+fun EditText.hideKeyboard() {
+    with(this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
+        hideSoftInputFromWindow(this@hideKeyboard.applicationWindowToken, 0)
     }
 }
 
