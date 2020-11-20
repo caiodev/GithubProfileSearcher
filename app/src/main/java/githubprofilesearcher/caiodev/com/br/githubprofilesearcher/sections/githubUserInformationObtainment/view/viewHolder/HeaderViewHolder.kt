@@ -1,14 +1,13 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.header_view_holder_layout.view.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.HeaderViewHolderLayoutBinding
 
-class HeaderViewHolder(itemView: View) :
-    RecyclerView.ViewHolder(itemView) {
+class HeaderViewHolder(private val itemBinding: HeaderViewHolderLayoutBinding) :
+    RecyclerView.ViewHolder(itemBinding.root) {
 
     internal fun bind(model: Int) {
-        itemView.githubUsersListHeader.text =
+        itemBinding.githubUsersListHeader.text =
             itemView.context.getString(model)
     }
 }

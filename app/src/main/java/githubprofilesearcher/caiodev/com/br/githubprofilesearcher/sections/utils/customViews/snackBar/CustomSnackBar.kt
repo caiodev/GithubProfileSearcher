@@ -1,34 +1,26 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.CustomSnackbarLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.delay.Delay.delayTaskBy
-import kotlinx.android.synthetic.main.custom_snackbar_layout.view.*
 
 class CustomSnackBar(
-    parent: ViewGroup,
-    content: View,
+    content: ViewGroup,
+    private val viewBinding: CustomSnackbarLayoutBinding,
     callback: com.google.android.material.snackbar.ContentViewCallback
-) : BaseTransientBottomBar<CustomSnackBar>(parent, content, callback) {
-
-    private val snackBarParentLayout =
-        getView().findViewById(R.id.snackBarParentLinearLayout) as LinearLayout
-    private val snackBarText = getView().findViewById(R.id.snackBarTextView) as TextView
+) : BaseTransientBottomBar<CustomSnackBar>(content, viewBinding.root, callback) {
     private var hasSnackBarBeenRequestedToDismiss = false
 
     fun setText(text: Int): CustomSnackBar {
-        snackBarText.text = snackBarParentLayout.context.getString(text)
+        viewBinding.snackBarTextView.text = viewBinding.root.context.getString(text)
         return this
     }
 
     fun setBackgroundColor(backgroundColor: Int): CustomSnackBar {
-        snackBarParentLayout.snackBarParentLinearLayout.setBackgroundColor(backgroundColor)
+        viewBinding.snackBarParentLinearLayout.setBackgroundColor(backgroundColor)
         return this
     }
 
@@ -43,14 +35,14 @@ class CustomSnackBar(
     }
 
     companion object {
-
         private const val taskDelay = 3000L
 
         fun make(parent: ViewGroup): CustomSnackBar {
-            val content =
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.custom_snackbar_layout, parent, false)
-
+            val content = CustomSnackbarLayoutBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
             return CustomSnackBar(
                 parent,
                 content,

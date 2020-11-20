@@ -3,9 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View.VISIBLE
-import android.view.View.GONE
-import android.view.View.INVISIBLE
+import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -18,10 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ActivityGithubProfileListingBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.TransientViewsAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.showUserRepositoryInformation.view.GithubProfileInfoActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ActivityFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
@@ -35,31 +36,16 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.transientViewsAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.twenty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyBackgroundColor
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applySwipeRefreshVisibilityAttributes
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyViewVisibility
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.changeDrawable
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showErrorSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showInternetConnectionStatusSnackBar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.internetConnectionAvailabilityObservable
-import kotlinx.android.synthetic.main.activity_main.actionIconImageView
-import kotlinx.android.synthetic.main.activity_main.backToTopButton
-import kotlinx.android.synthetic.main.activity_main.githubProfileListSwipeRefreshLayout
-import kotlinx.android.synthetic.main.activity_main.parentConstraintLayout
-import kotlinx.android.synthetic.main.activity_main.profileInfoRecyclerView
-import kotlinx.android.synthetic.main.activity_main.repositoryLoadingProgressBar
-import kotlinx.android.synthetic.main.activity_main.searchProfileTextInputEditText
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GithubProfileListingActivity :
-    AppCompatActivity(R.layout.activity_main), ActivityFlow {
+class GithubProfileListingActivity : AppCompatActivity(), ActivityFlow {
+
+    private lateinit var binding: ActivityGithubProfileListingBinding
 
     private lateinit var countingIdlingResource: CountingIdlingResource
 
@@ -94,6 +80,8 @@ class GithubProfileListingActivity :
     }
 
     override fun setupView() {
+        binding = ActivityGithubProfileListingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupDarkMode()
         bindViewModelDataToUIInCaseOfOrientationChanges()
         setupActionViews()
@@ -109,7 +97,7 @@ class GithubProfileListingActivity :
                 this?.let {
                     viewModel.obtainValueFromDataStore().textInputEditTextProfile.apply {
                         if (isNotEmpty()) {
-                            searchProfileTextInputEditText.setText(this)
+                            binding.searchProfileTextInputEditText.setText(this)
                             viewModel.saveValueToDataStore(
                                 viewModel.obtainValueFromDataStore()
                                     .copy(shouldASearchBePerformed = true)
@@ -120,32 +108,28 @@ class GithubProfileListingActivity :
                     changeViewState(headerAdapter, header)
 
                     if (viewModel.obtainValueFromDataStore().isThereAnOngoingCall) {
-                        applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+                        binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
                         setupUpperViewsInteraction(false)
                         viewModel.saveValueToDataStore(
                             viewModel.obtainValueFromDataStore()
                                 .copy(shouldASearchBePerformed = false)
                         )
-                        changeDrawable(actionIconImageView, R.drawable.ic_close)
+                        binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
                     }
 
                     if (viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade &&
                         !viewModel.obtainValueFromDataStore().isTextInputEditTextEmpty
                     ) {
                         if (!viewModel.obtainValueFromDataStore().hasUserDeletedProfileText) {
-                            changeDrawable(
-                                actionIconImageView,
-                                R.drawable.ic_close
-                            )
+                            binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
                         }
                     }
 
                     if (provideRecyclerViewLayoutManager().findFirstVisibleItemPosition() >= 2) {
-                        applyViewVisibility(backToTopButton, VISIBLE)
+                        binding.backToTopButton.applyViewVisibility(VISIBLE)
                     }
                 } ?: run {
                     viewModel.saveValueToDataStore()
-
                     viewModel.updateUIWithCache()
                     changeViewState(headerAdapter, header)
                     if (viewModel.obtainValueFromDataStore().isRetryViewVisible) {
@@ -159,27 +143,24 @@ class GithubProfileListingActivity :
     private fun setupDarkMode() {
         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES ->
-                applyBackgroundColor(
-                    parentConstraintLayout,
-                    android.R.color.black
-                )
+                binding.parentConstraintLayout.applyBackgroundColor(android.R.color.black)
         }
     }
 
     private fun setupActionViews() {
-        actionIconImageView.setOnClickListener {
+        binding.actionIconImageView.setOnClickListener {
             handleActionIconClick()
         }
 
-        backToTopButton.setOnClickListener {
-            backToTopButton.isClickable = false
-            applyViewVisibility(backToTopButton, INVISIBLE)
+        binding.backToTopButton.setOnClickListener {
+            it.isClickable = false
+            it.applyViewVisibility(INVISIBLE)
             scrollToTop(true)
         }
     }
 
     private fun setupSwipeRefreshLayout() {
-        githubProfileListSwipeRefreshLayout.apply {
+        binding.githubProfileListSwipeRefreshLayout.apply {
             runTaskOnBackground {
                 if (!viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
                 ) {
@@ -200,7 +181,7 @@ class GithubProfileListingActivity :
     }
 
     private fun setupRecyclerView() {
-        profileInfoRecyclerView.apply {
+        binding.profileInfoRecyclerView.apply {
             setHasFixedSize(true)
             adapter = concatAdapter
             setupRecyclerViewAddOnScrollListener()
@@ -208,7 +189,7 @@ class GithubProfileListingActivity :
     }
 
     private fun setupTextInputEditText() {
-        with(searchProfileTextInputEditText) {
+        with(binding.searchProfileTextInputEditText) {
             setOnEditorActionListener(
                 TextView.OnEditorActionListener { _, actionId, _ ->
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -218,7 +199,6 @@ class GithubProfileListingActivity :
                     false
                 }
             )
-
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
                     runTaskOnBackground {
@@ -229,10 +209,7 @@ class GithubProfileListingActivity :
                             )
                         }
 
-                        changeDrawable(
-                            actionIconImageView,
-                            R.drawable.ic_search
-                        )
+                        binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
 
                         text?.let {
                             if (it.isEmpty()) {
@@ -274,8 +251,7 @@ class GithubProfileListingActivity :
                             )
                         },
                         onConnectionUnavailable = {
-                            showErrorSnackBar(
-                                errorSnackBar,
+                            errorSnackBar.showErrorSnackBar(
                                 R.string.no_connection_error
                             )
                         }
@@ -296,7 +272,8 @@ class GithubProfileListingActivity :
             { githubUsersList ->
                 runTaskOnBackground {
                     viewModel.saveValueToDataStore(
-                        viewModel.obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = false)
+                        viewModel.obtainValueFromDataStore()
+                            .copy(hasLastCallBeenUnsuccessful = false)
                     )
                     viewModel.saveValueToDataStore(
                         viewModel.obtainValueFromDataStore().copy(isThereAnOngoingCall = false)
@@ -312,11 +289,13 @@ class GithubProfileListingActivity :
                         viewModel.obtainValueFromDataStore().textInputEditTextProfile.isNotEmpty()
                     ) {
                         viewModel.saveValueToDataStore(
-                            viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                            viewModel.obtainValueFromDataStore()
+                                .copy(shouldASearchBePerformed = true)
                         )
                     } else {
                         viewModel.saveValueToDataStore(
-                            viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false)
+                            viewModel.obtainValueFromDataStore()
+                                .copy(shouldASearchBePerformed = false)
                         )
                     }
 
@@ -371,7 +350,7 @@ class GithubProfileListingActivity :
 
         if (viewModel.obtainValueFromDataStore().shouldRecyclerViewAnimationBeExecuted
         ) {
-            runLayoutAnimation(profileInfoRecyclerView)
+            runLayoutAnimation(binding.profileInfoRecyclerView)
         } else {
             viewModel.saveValueToDataStore(
                 viewModel.obtainValueFromDataStore()
@@ -386,7 +365,8 @@ class GithubProfileListingActivity :
             { error ->
                 runTaskOnBackground {
                     viewModel.saveValueToDataStore(
-                        viewModel.obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = true)
+                        viewModel.obtainValueFromDataStore()
+                            .copy(hasLastCallBeenUnsuccessful = true)
                     )
                     viewModel.saveValueToDataStore(
                         viewModel.obtainValueFromDataStore().copy(isThereAnOngoingCall = false)
@@ -404,15 +384,16 @@ class GithubProfileListingActivity :
                     }
 
                     setupUpperViewsInteraction(true)
-                    githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
+                    binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
                         isSwipeEnabled = true
                     )
-                    changeDrawable(actionIconImageView, R.drawable.ic_search)
+                    binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
                     showErrorMessages(error)
 
                     if (!viewModel.obtainValueFromDataStore().shouldRecyclerViewAnimationBeExecuted) {
                         viewModel.saveValueToDataStore(
-                            viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                            viewModel.obtainValueFromDataStore()
+                                .copy(shouldASearchBePerformed = true)
                         )
                     }
 
@@ -427,16 +408,14 @@ class GithubProfileListingActivity :
     override fun setupExtras() {
         runTaskOnBackground {
             callToCheckIfInternetConnectionIsAvailable(
-                onConnectionAvailable = {},
                 onConnectionUnavailable = {
-                    showInternetConnectionStatusSnackBar(
-                        internetConnectivitySnackBar,
+                    internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
                         false
                     )
                 }
             )
+            setupInternetConnectionObserver()
         }
-        setupInternetConnectionObserver()
     }
 
     private fun updatedProfileCall(profile: String = "") {
@@ -454,19 +433,18 @@ class GithubProfileListingActivity :
 
     private fun textInputEditTextNotEmptyRequiredCall() {
         runTaskOnBackground {
-            hideKeyboard(searchProfileTextInputEditText)
+            binding.searchProfileTextInputEditText.hideKeyboard()
             if (!isTextInputEditTextEmpty()) {
-                applyViewVisibility(repositoryLoadingProgressBar, VISIBLE)
+                binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = true)
                 )
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().copy(hasUserDeletedProfileText = false)
                 )
-                updatedProfileCall(searchProfileTextInputEditText.text.toString())
+                updatedProfileCall(binding.searchProfileTextInputEditText.text.toString())
             } else {
-                showErrorSnackBar(
-                    errorSnackBar,
+                errorSnackBar.showErrorSnackBar(
                     R.string.empty_field_error
                 )
             }
@@ -483,10 +461,10 @@ class GithubProfileListingActivity :
             adapter?.notifyDataSetChanged()
             scrollToTop(false)
             scheduleLayoutAnimation()
-            githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
+            binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
 
-            if (repositoryLoadingProgressBar.visibility == VISIBLE) {
-                applyViewVisibility(repositoryLoadingProgressBar, GONE)
+            if (binding.repositoryLoadingProgressBar.visibility == VISIBLE) {
+                binding.repositoryLoadingProgressBar.applyViewVisibility(GONE)
             }
         }
     }
@@ -503,7 +481,7 @@ class GithubProfileListingActivity :
 
                     if (!viewModel.obtainValueFromDataStore().hasUserDeletedProfileText) {
                         setupUpperViewsInteraction(false)
-                        changeDrawable(actionIconImageView, R.drawable.ic_close)
+                        binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
                     }
 
                     viewModel.saveValueToDataStore(
@@ -521,7 +499,7 @@ class GithubProfileListingActivity :
                         viewModel.obtainValueFromDataStore()
                             .copy(hasLastCallBeenUnsuccessful = true)
                     )
-                    githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
+                    binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
                     if (viewModel.obtainValueFromDataStore().isPaginationLoadingViewVisible
                     ) {
                         changeViewState(transientViewsAdapter, retry)
@@ -533,12 +511,10 @@ class GithubProfileListingActivity :
     }
 
     private fun showErrorMessages(message: Int) {
-        hideKeyboard(searchProfileTextInputEditText)
-        applyViewVisibility(repositoryLoadingProgressBar, GONE)
+        binding.searchProfileTextInputEditText.hideKeyboard()
+        binding.repositoryLoadingProgressBar.applyViewVisibility(GONE)
         setupUpperViewsInteraction(true)
-        showErrorSnackBar(
-            errorSnackBar,
-            message,
+        errorSnackBar.showErrorSnackBar(message,
             onDismissed = {
                 runTaskOnBackground {
                     shouldRecallInternetConnectivitySnackBar()
@@ -551,10 +527,7 @@ class GithubProfileListingActivity :
         if (!viewModel.obtainValueFromDataStore().isRetryViewVisible) {
             return callToCheckIfInternetConnectionIsAvailable(
                 onConnectionUnavailable = {
-                    showInternetConnectionStatusSnackBar(
-                        internetConnectivitySnackBar,
-                        false
-                    )
+                    internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(false)
                 }
             )
         }
@@ -579,11 +552,9 @@ class GithubProfileListingActivity :
                 { isInternetAvailable ->
                     when (isInternetAvailable) {
                         true -> {
-                            showInternetConnectionStatusSnackBar(
-                                internetConnectivitySnackBar,
+                            internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
                                 true
                             )
-
                             runTaskOnBackground {
                                 if (!viewModel.obtainValueFromDataStore().isThereAnOngoingCall &&
                                     viewModel.obtainValueFromDataStore().hasLastCallBeenUnsuccessful
@@ -596,9 +567,7 @@ class GithubProfileListingActivity :
                                 }
                             }
                         }
-
-                        false -> showInternetConnectionStatusSnackBar(
-                            internetConnectivitySnackBar,
+                        false -> internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
                             false
                         )
                     }
@@ -616,8 +585,8 @@ class GithubProfileListingActivity :
                     )
                     textInputEditTextNotEmptyRequiredCall()
                 } else {
-                    searchProfileTextInputEditText.setText(emptyString)
-                    changeDrawable(actionIconImageView, R.drawable.ic_search)
+                    binding.searchProfileTextInputEditText.setText(emptyString)
+                    binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
                     if (!viewModel.obtainValueFromDataStore().shouldASearchBePerformed
                     ) viewModel.saveValueToDataStore(
                         viewModel.obtainValueFromDataStore().copy(
@@ -633,21 +602,23 @@ class GithubProfileListingActivity :
     }
 
     private fun setupRecyclerViewAddOnScrollListener() {
-        profileInfoRecyclerView.addOnScrollListener(
+        binding.profileInfoRecyclerView.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     val total = recyclerView.layoutManager?.itemCount
                     val recyclerViewLayoutManager = provideRecyclerViewLayoutManager()
 
-                    if (recyclerViewLayoutManager.findFirstVisibleItemPosition() >= 2) {
-                        if (backToTopButton.visibility != VISIBLE && backToTopButton.isClickable) {
-                            applyViewVisibility(backToTopButton, VISIBLE)
+                    binding.backToTopButton.apply {
+                        if (recyclerViewLayoutManager.findFirstVisibleItemPosition() >= 2) {
+                            if (visibility != VISIBLE && isClickable) {
+                                binding.backToTopButton.applyViewVisibility(VISIBLE)
+                            }
+                        } else {
+                            if (visibility != INVISIBLE) {
+                                this.applyViewVisibility(INVISIBLE)
+                            }
+                            isClickable = true
                         }
-                    } else {
-                        if (backToTopButton.visibility != INVISIBLE) {
-                            applyViewVisibility(backToTopButton, INVISIBLE)
-                        }
-                        backToTopButton.isClickable = true
                     }
 
                     runTaskOnBackground {
@@ -674,12 +645,12 @@ class GithubProfileListingActivity :
     }
 
     private fun setupUpperViewsInteraction(shouldUsersBeAbleToInteractWithTheUpperViews: Boolean) {
-        actionIconImageView.apply {
+        binding.actionIconImageView.apply {
             isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
             isFocusable = shouldUsersBeAbleToInteractWithTheUpperViews
         }
 
-        with(searchProfileTextInputEditText) {
+        with(binding.searchProfileTextInputEditText) {
             isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
             isCursorVisible = shouldUsersBeAbleToInteractWithTheUpperViews
             isFocusable = shouldUsersBeAbleToInteractWithTheUpperViews
@@ -691,21 +662,21 @@ class GithubProfileListingActivity :
 
     private fun scrollToTop(shouldScrollBeSmooth: Boolean) {
         if (shouldScrollBeSmooth) {
-            profileInfoRecyclerView.smoothScrollToPosition(0)
+            binding.profileInfoRecyclerView.smoothScrollToPosition(0)
         } else {
-            profileInfoRecyclerView.scrollToPosition(0)
+            binding.profileInfoRecyclerView.scrollToPosition(0)
         }
     }
 
     private fun isTextInputEditTextEmpty() =
-        searchProfileTextInputEditText.text.toString().isEmpty()
+        binding.searchProfileTextInputEditText.text.toString().isEmpty()
 
     fun bindIdlingResource(receivedCountingIdlingResource: CountingIdlingResource) {
         countingIdlingResource = receivedCountingIdlingResource
     }
 
     private fun provideRecyclerViewLayoutManager() =
-        profileInfoRecyclerView.layoutManager as LinearLayoutManager
+        binding.profileInfoRecyclerView.layoutManager as LinearLayoutManager
 
     private fun changeViewState(adapterPosition: Int, viewState: Int) {
         runTaskOnBackground {
@@ -761,8 +732,8 @@ class GithubProfileListingActivity :
         ) {
             true
         } else {
-            profileInfoRecyclerView.adapter?.notifyDataSetChanged()
-            applyViewVisibility(repositoryLoadingProgressBar, GONE)
+            binding.profileInfoRecyclerView.adapter?.notifyDataSetChanged()
+            binding.repositoryLoadingProgressBar.applyViewVisibility(GONE)
             false
         }
     }
@@ -787,7 +758,7 @@ class GithubProfileListingActivity :
                 if (!isTextInputEditTextEmpty()) {
                     saveValueToDataStore(
                         obtainValueFromDataStore().copy(
-                            textInputEditTextProfile = searchProfileTextInputEditText.text.toString()
+                            textInputEditTextProfile = binding.searchProfileTextInputEditText.text.toString()
                         )
                     )
                 }

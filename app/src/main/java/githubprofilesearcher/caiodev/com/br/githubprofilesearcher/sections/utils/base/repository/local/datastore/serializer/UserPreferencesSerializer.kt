@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.datastore.serializer
 
-import androidx.datastore.Serializer
+import androidx.datastore.core.Serializer
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.datastore.model.UserPreferences
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -61,4 +61,6 @@ object UserPreferencesSerializer : Serializer<UserPreferences> {
             writeBoolean(t.isRetryViewVisible)
         }
     }
+
+    override val defaultValue = UserPreferences()
 }

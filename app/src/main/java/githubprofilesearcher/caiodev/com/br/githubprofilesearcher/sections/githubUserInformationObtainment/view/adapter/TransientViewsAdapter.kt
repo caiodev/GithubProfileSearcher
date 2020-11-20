@@ -3,7 +3,10 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.EmptyViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.EndOfResultsViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.LoadingViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.RetryViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.transientItemViews.EmptyViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.transientItemViews.EndOfResultsViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.transientItemViews.LoadingViewHolder
@@ -22,13 +25,12 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int) = viewType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             loading -> {
                 LoadingViewHolder(
-                    itemView.inflate(
-                        R.layout.loading_view_holder_layout,
+                    LoadingViewHolderLayoutBinding.inflate(
+                        inflater,
                         parent,
                         false
                     )
@@ -37,8 +39,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             retry -> {
                 RetryViewHolder(
-                    itemView.inflate(
-                        R.layout.retry_view_holder_layout,
+                    RetryViewHolderLayoutBinding.inflate(
+                        inflater,
                         parent,
                         false
                     ),
@@ -47,8 +49,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
 
             endOfResults -> EndOfResultsViewHolder(
-                itemView.inflate(
-                    R.layout.end_of_results_view_holder_layout,
+                EndOfResultsViewHolderLayoutBinding.inflate(
+                    inflater,
                     parent,
                     false
                 )
@@ -56,8 +58,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             else ->
                 EmptyViewHolder(
-                    itemView.inflate(
-                        R.layout.empty_view_holder_layout,
+                    EmptyViewHolderLayoutBinding.inflate(
+                        inflater,
                         parent,
                         false
                     )
@@ -76,6 +78,6 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        //
+        // detekt : Empty block
     }
 }

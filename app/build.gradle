@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 apply from: "${toolsPath}codeChecking.gradle"
@@ -9,17 +8,19 @@ apply from: "${toolsPath}detekt.gradle"
 apply from: "${toolsPath}coverage.gradle"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
-
+    buildFeatures {
+        viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -29,6 +30,7 @@ android {
         }
 
         debug {
+            minifyEnabled false
             debuggable = true
             testCoverageEnabled = true
             signingConfig signingConfigs.debug
@@ -83,7 +85,7 @@ dependencies {
     implementation "io.coil-kt:coil:$coil"
 
     //DataStore
-    implementation "androidx.datastore:datastore-core:$dataStore"
+    implementation "androidx.datastore:datastore:$dataStore"
 
     //Espresso
     implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
