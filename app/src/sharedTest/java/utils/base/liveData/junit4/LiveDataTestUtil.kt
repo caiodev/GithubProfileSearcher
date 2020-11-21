@@ -1,4 +1,4 @@
-package utils.base.liveData
+package utils.base.liveData.junit4
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

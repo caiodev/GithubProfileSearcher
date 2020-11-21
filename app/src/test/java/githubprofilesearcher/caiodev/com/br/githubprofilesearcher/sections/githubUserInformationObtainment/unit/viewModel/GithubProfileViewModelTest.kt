@@ -13,9 +13,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import utils.base.TestSteps
-import utils.base.coroutines.CoroutinesTestExtension
-import utils.base.liveData.LiveDataTestExtension
-import utils.base.liveData.LiveDataTestUtil
+import utils.base.coroutines.junit5.CoroutinesTestExtension
+import utils.base.liveData.junit5.LiveDataTestExtension
+import utils.base.liveData.junit4.LiveDataTestUtil
 import java.io.Writer
 
 @ExperimentalCoroutinesApi

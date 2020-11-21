@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.instrumented.network
+package instrumented.network
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -11,11 +11,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import utils.base.coroutines.CoroutinesTestRule
-import utils.base.liveData.LiveDataTestUtil
+import utils.base.coroutines.junit4.CoroutinesTestRule
+import utils.base.liveData.junit4.LiveDataTestUtil
 
 @RunWith(AndroidJUnit4::class)
-class NetworkCheckingTest {
+class NetworkChecking {
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
