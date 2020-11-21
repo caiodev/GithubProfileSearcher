@@ -39,7 +39,6 @@ class GithubProfileInfoActivity : AppCompatActivity() {
             Intent().setAction(Intent.ACTION_VIEW).addCategory(Intent.CATEGORY_BROWSABLE).setData(
                 Uri.fromParts(https, emptyString, null)
             )
-
         return viewModel.isChromeInstalled(
             applicationContext.packageManager.queryIntentActivities(
                 activityIntent,

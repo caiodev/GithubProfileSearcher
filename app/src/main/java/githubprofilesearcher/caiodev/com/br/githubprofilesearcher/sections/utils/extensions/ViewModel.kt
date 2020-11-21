@@ -3,6 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Suppress("UNUSED")
 inline fun <reified T> ViewModel.castValue(attribute: Any?) =
@@ -10,6 +11,13 @@ inline fun <reified T> ViewModel.castValue(attribute: Any?) =
 
 fun ViewModel.runTaskOnBackground(task: suspend () -> Unit) {
     viewModelScope.launch {
+        task.invoke()
+    }
+}
+
+@Suppress("UNUSED")
+fun ViewModel.runDataStoreTask(task: suspend () -> Unit) {
+    runBlocking {
         task.invoke()
     }
 }

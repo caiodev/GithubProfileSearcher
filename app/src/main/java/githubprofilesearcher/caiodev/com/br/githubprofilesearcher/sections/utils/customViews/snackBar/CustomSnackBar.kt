@@ -35,6 +35,7 @@ class CustomSnackBar(
     }
 
     companion object {
+        internal var shouldSnackBarBeShownIfUserIsOnline = false
         private const val taskDelay = 3000L
 
         fun make(parent: ViewGroup): CustomSnackBar {

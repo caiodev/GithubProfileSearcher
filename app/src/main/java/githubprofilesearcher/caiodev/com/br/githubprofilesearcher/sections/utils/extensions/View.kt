@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar.Companion.shouldSnackBarBeShownIfUserIsOnline
 import kotlinx.coroutines.launch
 
 @Suppress("UNUSED")
@@ -85,7 +86,11 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
                     R.color.red_700
                 )
             )
-            show()
+            if (shouldSnackBarBeShownIfUserIsOnline) {
+                show()
+            } else {
+                shouldSnackBarBeShownIfUserIsOnline = true
+            }
         }
     }
 }
@@ -96,10 +101,10 @@ fun EditText.hideKeyboard() {
     }
 }
 
-fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
-    lifecycleScope.launch {
-        task.invoke()
-    }
+@Suppress("UNUSED")
+fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) = lifecycleScope.launch {
+    task.invoke()
 }
 
+@Suppress("UNUSED")
 inline fun <reified T> AppCompatActivity.castValue(value: Any?) = value as T
