@@ -5,6 +5,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -100,3 +101,5 @@ fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
         task.invoke()
     }
 }
+
+inline fun <reified T> AppCompatActivity.castValue(value: Any?) = value as T

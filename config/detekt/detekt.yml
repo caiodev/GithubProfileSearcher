@@ -35,8 +35,7 @@ console-reports:
 output-reports:
   active: true
   exclude:
-  - 'TxtOutputReport'
-  - 'XmlOutputReport'
+  - 'HtmlOutputReport'
 
 comments:
   active: true
@@ -97,6 +96,9 @@ complexity:
   MethodOverloading:
     active: false
     threshold: 6
+  NamedArguments:
+    active: false
+    threshold: 3
   NestedBlockDepth:
     active: true
     threshold: 4
@@ -463,6 +465,7 @@ potential-bugs:
     active: false
   MissingWhenCase:
     active: true
+    allowElseExpression: true
   NullableToStringCall:
     active: false
   RedundantElseInWhen:
@@ -580,6 +583,8 @@ style:
     active: true
   RedundantExplicitType:
     active: false
+  RedundantHigherOrderMapUsage:
+    active: false
   RedundantVisibilityModifierRule:
     active: false
   ReturnCount:
@@ -605,7 +610,6 @@ style:
     acceptableDecimalLength: 5
   UnnecessaryAbstractClass:
     active: true
-    excludeAnnotatedClasses: ['dagger.Module']
   UnnecessaryAnnotationUseSiteTarget:
     active: false
   UnnecessaryApply:
@@ -632,15 +636,17 @@ style:
   UseCheckOrError:
     active: false
   UseDataClass:
-    active: false
+    active: true
     excludeAnnotatedClasses: []
     allowVars: false
   UseEmptyCounterpart:
     active: false
+  UseIfEmptyOrIfBlank:
+    active: true
   UseIfInsteadOfWhen:
-    active: false
+    active: true
   UseRequire:
-    active: false
+    active: true
   UseRequireNotNull:
     active: false
   UselessCallOnNotNull:
@@ -648,7 +654,6 @@ style:
   UtilityClassWithPublicConstructor:
     active: true
   VarCouldBeVal:
-    active: false
+    active: true
   WildcardImport:
     active: true
-    excludeImports: ['java.util.*', 'kotlinx.android.synthetic.*']

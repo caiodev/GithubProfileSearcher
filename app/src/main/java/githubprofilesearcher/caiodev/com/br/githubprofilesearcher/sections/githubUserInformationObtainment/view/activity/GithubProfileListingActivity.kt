@@ -43,6 +43,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyBackgroundColor
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applySwipeRefreshVisibilityAttributes
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyViewVisibility
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.changeDrawable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
@@ -684,19 +685,19 @@ class GithubProfileListingActivity : AppCompatActivity(), ActivityFlow {
     }
 
     private fun provideRecyclerViewLayoutManager() =
-        binding.profileInfoRecyclerView.layoutManager as LinearLayoutManager
+        castValue<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
 
     private fun changeViewState(adapterPosition: Int, viewState: Int) {
         runTaskOnBackground {
             if (adapterPosition == headerAdapter) {
-                (concatAdapter.adapters[adapterPosition] as HeaderAdapter).apply {
+                (castValue<HeaderAdapter>(concatAdapter.adapters[adapterPosition])).apply {
                     updateViewState(viewState)
                     viewModel.saveValueToDataStore(
                         viewModel.obtainValueFromDataStore().copy(isHeaderVisible = true)
                     )
                 }
             } else {
-                (concatAdapter.adapters[adapterPosition] as TransientViewsAdapter).apply {
+                (castValue<TransientViewsAdapter>(concatAdapter.adapters[adapterPosition])).apply {
                     updateViewState(viewState)
                     notifyDataSetChanged()
 
@@ -746,13 +747,8 @@ class GithubProfileListingActivity : AppCompatActivity(), ActivityFlow {
         }
     }
 
-    private inline fun <reified T> provideAdapter(adapterPosition: Int): T {
-        return when (adapterPosition) {
-            0 -> concatAdapter.adapters[adapterPosition] as T
-            1 -> concatAdapter.adapters[adapterPosition] as T
-            else -> concatAdapter.adapters[adapterPosition] as T
-        }
-    }
+    private inline fun <reified T> provideAdapter(adapterPosition: Int) =
+        castValue<T>(concatAdapter.adapters[adapterPosition])
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

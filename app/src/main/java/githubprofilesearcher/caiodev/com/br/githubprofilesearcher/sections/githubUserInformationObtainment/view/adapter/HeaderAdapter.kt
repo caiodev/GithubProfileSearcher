@@ -21,16 +21,16 @@ class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<Recycler
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            empty -> EmptyViewHolder(
+        return if (viewType == empty) {
+            EmptyViewHolder(
                 EmptyViewHolderLayoutBinding.inflate(
                     inflater,
                     parent,
                     false
                 )
             )
-
-            else -> HeaderViewHolder(
+        } else {
+            HeaderViewHolder(
                 HeaderViewHolderLayoutBinding.inflate(
                     inflater,
                     parent,
