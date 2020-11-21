@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 @Suppress("UNUSED")
-inline fun <reified T> ViewModel.castAttributeThroughViewModel(attribute: Any?) =
+inline fun <reified T> ViewModel.castValue(attribute: Any?) =
     attribute as T
 
 fun ViewModel.runTaskOnBackground(task: suspend () -> Unit) {

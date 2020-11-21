@@ -13,7 +13,7 @@ buildscript {
 
         //Code quality checking
         //Detekt
-        detektVersion = '1.14.2'
+        detektVersion = '1.15.0-RC1'
 
         //Ktlint
         ktlintVersion = '0.39.0'

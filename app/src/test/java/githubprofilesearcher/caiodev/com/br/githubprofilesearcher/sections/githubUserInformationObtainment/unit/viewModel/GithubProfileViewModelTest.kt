@@ -4,7 +4,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.local.FakeLocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.remote.FakeGithubProfileInformationRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castAttributeThroughViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -85,7 +85,7 @@ class GithubProfileViewModelTest : TestSteps {
         val text: CharSequence = "blah"
 
         doWhen {
-            viewModel.castAttributeThroughViewModel<String>(text)
+            viewModel.castValue<String>(text)
         }
 
         then {

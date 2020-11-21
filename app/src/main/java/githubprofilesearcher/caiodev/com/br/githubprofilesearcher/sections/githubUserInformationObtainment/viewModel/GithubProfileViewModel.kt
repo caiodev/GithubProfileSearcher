@@ -18,6 +18,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.socketTimeoutException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.SingleLiveEvent
@@ -79,45 +80,42 @@ class GithubProfileViewModel(
         user: String,
         shouldListItemsBeRemoved: Boolean = false
     ) {
-        when (
-            val value =
-                remoteRepository.provideGithubUserInformation(
-                    user,
-                    obtainValueFromDataStore().pageNumber,
-                    numberOfItemsPerPage
-                )
-        ) {
-            is APICallResult.Success<*> -> {
-                saveValueToDataStore(obtainValueFromDataStore().copy(currentProfile = emptyString))
+        val value =
+            remoteRepository.provideGithubUserInformation(
+                user,
+                obtainValueFromDataStore().pageNumber,
+                numberOfItemsPerPage
+            )
 
-                with(value.data as GithubProfilesList) {
-                    if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
-                    ) {
-                        saveValueToDataStore(
-                            obtainValueFromDataStore().copy(
-                                hasASuccessfulCallAlreadyBeenMade = true
-                            )
-                        )
-                    }
-
-                    if (shouldListItemsBeRemoved) {
-                        setupUpdatedList(githubProfileInformationList)
-                    } else {
-                        setupPaginationList(githubProfileInformationList = githubProfileInformationList)
-                    }
-
-                    saveValueToDataStore(obtainValueFromDataStore().copy(numberOfItems = githubProfilesInfoList.size))
+        if (value is APICallResult.Success<*>) {
+            saveValueToDataStore(obtainValueFromDataStore().copy(currentProfile = emptyString))
+            with(castValue<GithubProfilesList>(value.data)) {
+                if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
+                ) {
                     saveValueToDataStore(
                         obtainValueFromDataStore().copy(
-                            pageNumber = obtainValueFromDataStore().pageNumber.plus(
-                                1
-                            )
+                            hasASuccessfulCallAlreadyBeenMade = true
                         )
                     )
                 }
-            }
 
-            else -> handleErrorResult(value as APICallResult.Error)
+                if (shouldListItemsBeRemoved) {
+                    setupUpdatedList(githubProfileInformationList)
+                } else {
+                    setupPaginationList(githubProfileInformationList = githubProfileInformationList)
+                }
+
+                saveValueToDataStore(obtainValueFromDataStore().copy(numberOfItems = githubProfilesInfoList.size))
+                saveValueToDataStore(
+                    obtainValueFromDataStore().copy(
+                        pageNumber = obtainValueFromDataStore().pageNumber.plus(
+                            1
+                        )
+                    )
+                )
+            }
+        } else {
+            handleErrorResult(castValue(value))
         }
     }
 
