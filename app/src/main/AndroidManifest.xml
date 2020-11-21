@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="githubprofilesearcher.caiodev.com.br.githubprofilesearcher">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="githubprofilesearcher.caiodev.com.br.githubprofilesearcher">
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <!--suppress AndroidElementNotAllowed -->
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
-        android:name=".sections.utils.init.App"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme.Launcher"
-        tools:ignore="AllowBackup">
+            android:name=".sections.utils.init.App"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme.Launcher"
+            tools:ignore="AllowBackup">
         <activity
-            android:name=".sections.githubUserInformationObtainment.view.activity.GithubProfileListingActivity"
-            android:configChanges="uiMode">
+                android:name=".sections.githubUserInformationObtainment.view.activity.GithubProfileListingActivity"
+                android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,9 +38,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".sections.showUserRepositoryInformation.view.GithubProfileInfoActivity"
-            android:theme="@style/AppTheme"
-            android:configChanges="uiMode" />
+                android:name=".sections.showUserRepositoryInformation.view.GithubProfileInfoActivity"
+                android:configChanges="uiMode"
+                android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

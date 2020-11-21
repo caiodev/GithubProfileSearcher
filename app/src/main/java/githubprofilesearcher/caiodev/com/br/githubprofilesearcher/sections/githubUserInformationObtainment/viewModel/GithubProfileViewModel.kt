@@ -19,6 +19,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.sslHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.unknownHostException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castValue
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runDataStoreTask
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.toImmutableSingleLiveEvent
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.liveEvent.SingleLiveEvent
@@ -41,28 +42,24 @@ class GithubProfileViewModel(
     private var githubProfilesInfoList: List<GithubProfileInformation> = _githubProfilesInfoList
 
     internal fun requestUpdatedGithubProfiles(profile: String = emptyString) {
-        runTaskOnBackground {
-            saveValueToDataStore(obtainValueFromDataStore().copy(pageNumber = 1))
+        saveValueToDataStore(obtainValueFromDataStore().copy(pageNumber = 1))
 
-            if (profile.isNotEmpty()) {
-                saveValueToDataStore(obtainValueFromDataStore().copy(temporaryCurrentProfile = profile))
-                requestGithubProfiles(profile, true)
-            } else {
-                requestGithubProfiles(
-                    obtainValueFromDataStore().temporaryCurrentProfile,
-                    true
-                )
-            }
+        if (profile.isNotEmpty()) {
+            saveValueToDataStore(obtainValueFromDataStore().copy(temporaryCurrentProfile = profile))
+            requestGithubProfiles(profile, true)
+        } else {
+            requestGithubProfiles(
+                obtainValueFromDataStore().temporaryCurrentProfile,
+                true
+            )
         }
     }
 
     internal fun requestMoreGithubProfiles() {
-        runTaskOnBackground {
-            requestGithubProfiles(obtainValueFromDataStore().currentProfile, false)
-        }
+        requestGithubProfiles(obtainValueFromDataStore().currentProfile, false)
     }
 
-    private suspend fun requestGithubProfiles(
+    private fun requestGithubProfiles(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
@@ -76,46 +73,48 @@ class GithubProfileViewModel(
         }
     }
 
-    private suspend fun handleCallResult(
+    private fun handleCallResult(
         user: String,
         shouldListItemsBeRemoved: Boolean = false
     ) {
-        val value =
-            remoteRepository.provideGithubUserInformation(
-                user,
-                obtainValueFromDataStore().pageNumber,
-                numberOfItemsPerPage
-            )
+        runTaskOnBackground {
+            val value =
+                remoteRepository.provideGithubUserInformation(
+                    user,
+                    obtainValueFromDataStore().pageNumber,
+                    numberOfItemsPerPage
+                )
 
-        if (value is APICallResult.Success<*>) {
-            saveValueToDataStore(obtainValueFromDataStore().copy(currentProfile = emptyString))
-            with(castValue<GithubProfilesList>(value.data)) {
-                if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
-                ) {
+            if (value is APICallResult.Success<*>) {
+                saveValueToDataStore(obtainValueFromDataStore().copy(currentProfile = emptyString))
+                with(castValue<GithubProfilesList>(value.data)) {
+                    if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
+                    ) {
+                        saveValueToDataStore(
+                            obtainValueFromDataStore().copy(
+                                hasASuccessfulCallAlreadyBeenMade = true
+                            )
+                        )
+                    }
+
+                    if (shouldListItemsBeRemoved) {
+                        setupUpdatedList(githubProfileInformationList)
+                    } else {
+                        setupPaginationList(githubProfileInformationList = githubProfileInformationList)
+                    }
+
+                    saveValueToDataStore(obtainValueFromDataStore().copy(numberOfItems = githubProfilesInfoList.size))
                     saveValueToDataStore(
                         obtainValueFromDataStore().copy(
-                            hasASuccessfulCallAlreadyBeenMade = true
+                            pageNumber = obtainValueFromDataStore().pageNumber.plus(
+                                1
+                            )
                         )
                     )
                 }
-
-                if (shouldListItemsBeRemoved) {
-                    setupUpdatedList(githubProfileInformationList)
-                } else {
-                    setupPaginationList(githubProfileInformationList = githubProfileInformationList)
-                }
-
-                saveValueToDataStore(obtainValueFromDataStore().copy(numberOfItems = githubProfilesInfoList.size))
-                saveValueToDataStore(
-                    obtainValueFromDataStore().copy(
-                        pageNumber = obtainValueFromDataStore().pageNumber.plus(
-                            1
-                        )
-                    )
-                )
+            } else {
+                handleErrorResult(castValue(value))
             }
-        } else {
-            handleErrorResult(castValue(value))
         }
     }
 
@@ -158,14 +157,15 @@ class GithubProfileViewModel(
     private fun setupUpdatedList(
         githubProfileInformationList: List<GithubProfileInformation>
     ) {
-        _githubProfilesInfoList.clear()
-        addContentToGithubProfilesInfoList(githubProfileInformationList)
         runTaskOnBackground {
+            localRepository.dropGithubProfileInformationTable(localRepository.getGithubProfilesFromDb())
+            _githubProfilesInfoList.clear()
+            addContentToGithubProfilesInfoList(githubProfileInformationList)
             localRepository.insertGithubProfilesIntoDb(
                 githubProfileInformationList
             )
+            _successLiveData.postValue(githubProfilesInfoList)
         }
-        _successLiveData.postValue(githubProfilesInfoList)
     }
 
     private fun setupPaginationList(
@@ -190,13 +190,20 @@ class GithubProfileViewModel(
         state.postValue(error)
     }
 
-    internal suspend fun obtainValueFromDataStore() =
-        localRepository.obtainProtoDataStore().obtainDataStoreValue()
+    internal fun obtainValueFromDataStore(): UserPreferences {
+        var userPreferences: UserPreferences? = null
+        runDataStoreTask {
+            userPreferences = localRepository.obtainProtoDataStore().obtainDataStoreValue()
+        }
+        return userPreferences ?: UserPreferences()
+    }
 
-    internal suspend fun saveValueToDataStore(
+    internal fun saveValueToDataStore(
         userPreferences: UserPreferences = UserPreferences()
     ) {
-        localRepository.obtainProtoDataStore().updateDataStoreValue(userPreferences)
+        runDataStoreTask {
+            localRepository.obtainProtoDataStore().updateDataStoreValue(userPreferences)
+        }
     }
 
     private fun addContentToGithubProfilesInfoList(list: List<GithubProfileInformation>) {

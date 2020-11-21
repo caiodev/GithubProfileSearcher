@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.internetConnectionAvailabilityObservable
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.observeInternetConnectionAvailability
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -59,7 +59,7 @@ class NetworkChecking {
         assertEquals(
             true,
             LiveDataTestUtil.getValue(
-                internetConnectionAvailabilityObservable(
+                observeInternetConnectionAvailability(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             )
@@ -71,7 +71,7 @@ class NetworkChecking {
         assertEquals(
             false,
             LiveDataTestUtil.getValue(
-                internetConnectionAvailabilityObservable(
+                observeInternetConnectionAvailability(
                     InstrumentationRegistry.getInstrumentation().targetContext
                 )
             )

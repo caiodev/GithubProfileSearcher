@@ -15,7 +15,7 @@
 
     <!-- Error messages -->
     <string name="empty_field_error">Empty field</string>
-    <string name="no_connection_error">Well&#8230;, there\'s no internet connection. Check it and try again</string>
+    <string name="no_connection_error">No internet connection</string>
     <string name="client_side_error">We couldn\'t get what you\'re looking for. Please, try again later</string>
     <string name="server_side_error">Our servers are overloaded at the moment. Please, try again later</string>
     <string name="api_query_limit_exceeded_error">The API query limit has been exceeded. Please, try again later</string>

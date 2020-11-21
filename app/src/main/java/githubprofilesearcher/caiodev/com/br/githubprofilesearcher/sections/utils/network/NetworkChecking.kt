@@ -5,14 +5,15 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.emitValue
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 object NetworkChecking {
 
-    private val networkState = MutableLiveData<Boolean>()
-    private val networkStateLiveData: LiveData<Boolean>
-        get() = networkState
+    private val mutableNetworkState = MutableStateFlow(false)
+    private val networkState: StateFlow<Boolean>
+        get() = mutableNetworkState
 
     private val networkRequest = NetworkRequest.Builder().apply {
         addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -22,19 +23,19 @@ object NetworkChecking {
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
-            networkState.postValue(true)
+            mutableNetworkState.emitValue(true)
         }
 
         override fun onLost(network: Network) {
-            networkState.postValue(false)
+            mutableNetworkState.emitValue(false)
         }
     }
 
     // Checks whether or not there is internet connection
-    suspend fun checkIfInternetConnectionIsAvailable(
+    fun checkIfInternetConnectionIsAvailable(
         applicationContext: Context,
-        onConnectionAvailable: suspend () -> Unit,
-        onConnectionUnavailable: suspend () -> Unit
+        onConnectionAvailable: () -> Unit,
+        onConnectionUnavailable: () -> Unit
     ) =
         handleInternetConnectionAvailability(
             applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager,
@@ -42,18 +43,10 @@ object NetworkChecking {
             onConnectionUnavailable
         )
 
-    // Returns a LiveData so internet connection related state changes can be observed
-    fun internetConnectionAvailabilityObservable(applicationContext: Context): LiveData<Boolean> {
-        (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
-            requestNetwork(networkRequest, connectivityCallback)
-        }
-        return networkStateLiveData
-    }
-
-    private suspend fun handleInternetConnectionAvailability(
+    private fun handleInternetConnectionAvailability(
         connectivityManager: ConnectivityManager,
-        onConnectionAvailable: suspend () -> Unit,
-        onConnectionUnavailable: suspend () -> Unit
+        onConnectionAvailable: () -> Unit,
+        onConnectionUnavailable: () -> Unit
     ) {
         if (connectivityManager.allNetworks.isNotEmpty()) {
             iterateOverTheListOfNetworks(connectivityManager, onConnectionAvailable)
@@ -62,9 +55,9 @@ object NetworkChecking {
         }
     }
 
-    private suspend fun iterateOverTheListOfNetworks(
+    private fun iterateOverTheListOfNetworks(
         connectivityManager: ConnectivityManager,
-        onConnectionAvailable: suspend () -> Unit
+        onConnectionAvailable: () -> Unit
     ) {
         connectivityManager.allNetworks.forEach { network ->
             connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
@@ -73,5 +66,13 @@ object NetworkChecking {
                 }
             }
         }
+    }
+
+    // Returns a StateFlow so internet connection related state changes can be observed
+    fun observeInternetConnectionAvailability(applicationContext: Context): StateFlow<Boolean> {
+        (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
+            requestNetwork(networkRequest, connectivityCallback)
+        }
+        return networkState
     }
 }
