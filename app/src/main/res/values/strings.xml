@@ -20,7 +20,7 @@
     <string name="server_side_error">Our servers are overloaded at the moment. Please, try again later</string>
     <string name="api_query_limit_exceeded_error">The API query limit has been exceeded. Please, try again later</string>
     <string name="unknown_host_exception_and_socket_timeout_exception">Please, check your internet connection and try again later</string>
-    <string name="ssl_handshake_exception">The utils.utils.githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.instrumented.network you\'re connected to is unsafe. Please, change it and try again later</string>
+    <string name="ssl_handshake_exception">The network you\'re connected to is unsafe. Please, change it and try again later</string>
     <string name="generic_exception_and_generic_error">An error occurred. Please, try again later</string>
 
 </resources>

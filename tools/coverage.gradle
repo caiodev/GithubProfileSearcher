@@ -37,7 +37,7 @@ task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
             '**/*liveEvent/**/*.*',
             '**/*customViews/**/*.*',
             '**/*service/**/*.*',
-            '**/*githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.instrumented.network/**/*.*',
+            '**/*network/**/*.*',
             '**/*factory/**/*.*',
             '**/GithubProfileRepository**',
             '**/GenericGithubProfileRepository**',

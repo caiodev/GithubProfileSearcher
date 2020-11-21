@@ -1,4 +1,4 @@
-package utils.base.coroutines
+package utils.base.coroutines.junit4
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

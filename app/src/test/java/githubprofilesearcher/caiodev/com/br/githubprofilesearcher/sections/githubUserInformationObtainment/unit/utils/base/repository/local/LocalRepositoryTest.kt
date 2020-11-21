@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import utils.base.TestSteps
-import utils.base.coroutines.CoroutinesTestExtension
+import utils.base.coroutines.junit5.CoroutinesTestExtension
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
