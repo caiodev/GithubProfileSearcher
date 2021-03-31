@@ -1,0 +1,3 @@
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.userRepositoryInformationObtainment.view.viewHolders
+
+class GithubProfileRepositoriesViewHolder

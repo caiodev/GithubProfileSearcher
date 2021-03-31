@@ -11,13 +11,13 @@ inline fun <reified T> ViewModel.castValue(attribute: Any?) =
 
 fun ViewModel.runTaskOnBackground(task: suspend () -> Unit) {
     viewModelScope.launch {
-        task.invoke()
+        task()
     }
 }
 
 @Suppress("UNUSED")
 fun ViewModel.runDataStoreTask(task: suspend () -> Unit) {
     runBlocking {
-        task.invoke()
+        task()
     }
 }

@@ -13,7 +13,7 @@ class GithubProfileRepository(
         maxResultsPerPage: Int
     ) = remoteRepository.callApi(
         call = {
-            retrofitService.provideGithubUsersListAsync(
+            retrofitService.provideUsers(
                 user,
                 pageNumber,
                 maxResultsPerPage

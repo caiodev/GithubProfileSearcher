@@ -1,9 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.utils.base.repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.callInterface.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.RemoteRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -70,7 +70,7 @@ class RemoteRepositoryTest : TestSteps {
 
         then {
             var isSuccess = false
-            if (response is APICallResult.Success<*>) isSuccess = true
+            if (response is States.Success<*>) isSuccess = true
 
             assertEquals(true, isSuccess)
         }
@@ -101,10 +101,10 @@ class RemoteRepositoryTest : TestSteps {
 
         then {
             var isSuccess = false
-            if (response is APICallResult.Success<*>) isSuccess = true
+            if (response is States.Success<*>) isSuccess = true
 
             assertEquals(true, isSuccess)
-            assertEquals(1, (response as APICallResult.Success<Int>).data)
+            assertEquals(1, (response as States.Success<Int>).data)
         }
     }
 
@@ -132,10 +132,10 @@ class RemoteRepositoryTest : TestSteps {
 
         then {
             var isSuccessful = false
-            if (response is APICallResult.Error) isSuccessful = false
+            if (response is States.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(9, (response as APICallResult.Error).error)
+            assertEquals(9, (response as States.Error).error)
         }
     }
 
@@ -163,10 +163,10 @@ class RemoteRepositoryTest : TestSteps {
 
         then {
             var isSuccessful = false
-            if (response is APICallResult.Error) isSuccessful = false
+            if (response is States.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(7, (response as APICallResult.Error).error)
+            assertEquals(7, (response as States.Error).error)
         }
     }
 
@@ -194,10 +194,10 @@ class RemoteRepositoryTest : TestSteps {
 
         then {
             var isSuccessful = false
-            if (response is APICallResult.Error) isSuccessful = false
+            if (response is States.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(8, (response as APICallResult.Error).error)
+            assertEquals(8, (response as States.Error).error)
         }
     }
 
@@ -225,10 +225,10 @@ class RemoteRepositoryTest : TestSteps {
 
         then {
             var isSuccessful = false
-            if (response is APICallResult.Error) isSuccessful = false
+            if (response is States.Error) isSuccessful = false
 
             assertEquals(false, isSuccessful)
-            assertEquals(10, (response as APICallResult.Error).error)
+            assertEquals(10, (response as States.Error).error)
         }
     }
 
@@ -244,7 +244,7 @@ class RemoteRepositoryTest : TestSteps {
         }
 
         then {
-            assertEquals(2, (response as APICallResult.Error).error)
+            assertEquals(2, (response as States.Error).error)
         }
     }
 
@@ -260,7 +260,7 @@ class RemoteRepositoryTest : TestSteps {
         }
 
         then {
-            assertEquals(3, (response as APICallResult.Error).error)
+            assertEquals(3, (response as States.Error).error)
         }
     }
 
@@ -276,7 +276,7 @@ class RemoteRepositoryTest : TestSteps {
         }
 
         then {
-            assertEquals(4, (response as APICallResult.Error).error)
+            assertEquals(4, (response as States.Error).error)
         }
     }
 
@@ -292,7 +292,7 @@ class RemoteRepositoryTest : TestSteps {
         }
 
         then {
-            assertEquals(5, (response as APICallResult.Error).error)
+            assertEquals(5, (response as States.Error).error)
         }
     }
 
@@ -308,15 +308,15 @@ class RemoteRepositoryTest : TestSteps {
         }
 
         then {
-            assertEquals(6, (response as APICallResult.Error).error)
+            assertEquals(6, (response as States.Error).error)
         }
     }
 
     private fun setupException(
         exception: IOException = IOException()
-    ): Response<GithubProfilesList> {
+    ): Response<Profile> {
         throwException(exception)
-        return listOf<Response<GithubProfilesList>>()[0]
+        return listOf<Response<Profile>>()[0]
     }
 
     private fun throwException(
