@@ -5,14 +5,14 @@ interface TestSteps {
     fun setupDependencies()
 
     fun given(given: () -> Unit) {
-        given.invoke()
+        given()
     }
 
     fun doWhen(doWhen: () -> Unit) {
-        doWhen.invoke()
+        doWhen()
     }
 
     fun then(then: () -> Unit) {
-        then.invoke()
+        then()
     }
 }

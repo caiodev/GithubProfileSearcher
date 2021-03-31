@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 object NetworkChecking {
 
-    private val mutableNetworkState = MutableStateFlow(false)
-    private val networkState: StateFlow<Boolean>
-        get() = mutableNetworkState
+    private val mutableNetworkStateFlow = MutableStateFlow(false)
+    private val networkStateFlow: StateFlow<Boolean>
+        get() = mutableNetworkStateFlow
 
     private val networkRequest = NetworkRequest.Builder().apply {
         addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -23,11 +23,11 @@ object NetworkChecking {
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
-            mutableNetworkState.emitValue(true)
+            mutableNetworkStateFlow.emitValue(true)
         }
 
         override fun onLost(network: Network) {
-            mutableNetworkState.emitValue(false)
+            mutableNetworkStateFlow.emitValue(false)
         }
     }
 
@@ -51,7 +51,7 @@ object NetworkChecking {
         if (connectivityManager.allNetworks.isNotEmpty()) {
             iterateOverTheListOfNetworks(connectivityManager, onConnectionAvailable)
         } else {
-            onConnectionUnavailable.invoke()
+            onConnectionUnavailable()
         }
     }
 
@@ -62,7 +62,7 @@ object NetworkChecking {
         connectivityManager.allNetworks.forEach { network ->
             connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
                 if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                    onConnectionAvailable.invoke()
+                    onConnectionAvailable()
                 }
             }
         }
@@ -73,6 +73,6 @@ object NetworkChecking {
         (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
             requestNetwork(networkRequest, connectivityCallback)
         }
-        return networkState
+        return networkStateFlow
     }
 }

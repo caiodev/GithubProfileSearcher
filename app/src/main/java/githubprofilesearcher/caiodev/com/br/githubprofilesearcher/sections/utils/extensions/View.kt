@@ -12,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar.Companion.shouldSnackBarBeShownIfUserIsOnline
 import kotlinx.coroutines.launch
@@ -49,20 +48,18 @@ fun View.applyBackgroundColor(color: Int) {
 @Suppress("UNUSED")
 inline fun Snackbar.showErrorSnackBar(
     message: Int,
-    crossinline onDismissed: (() -> Any) = { emptyString }
+    crossinline onDismissed: (() -> Any) = {}
 ) {
     with(this) {
         setText(message)
-        if (onDismissed() is Unit) {
-            addCallback(
-                object : Snackbar.Callback() {
-                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                        super.onDismissed(transientBottomBar, event)
-                        onDismissed.invoke()
-                    }
+        addCallback(
+            object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    onDismissed()
                 }
-            )
-        }
+            }
+        )
         show()
     }
 }
@@ -103,7 +100,7 @@ fun EditText.hideKeyboard() {
 
 @Suppress("UNUSED")
 fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) = lifecycleScope.launch {
-    task.invoke()
+    task()
 }
 
 @Suppress("UNUSED")

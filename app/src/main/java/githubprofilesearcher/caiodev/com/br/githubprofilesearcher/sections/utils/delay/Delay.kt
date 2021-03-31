@@ -6,6 +6,6 @@ import kotlin.concurrent.schedule
 object Delay {
 
     inline fun delayTaskBy(milliseconds: Long, crossinline action: () -> Unit) {
-        Timer().schedule(milliseconds) { action.invoke() }
+        Timer().schedule(milliseconds) { action() }
     }
 }

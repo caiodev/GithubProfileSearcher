@@ -1,13 +1,13 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfilesList
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.service.APICallResult
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.Profile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
 
 class FakeRemoteRepository {
 
-    fun provideFakeResponse() = APICallResult.Success(
-        GithubProfilesList(
+    fun provideFakeResponse() = States.Success(
+        Profile(
 
             listOf(
 

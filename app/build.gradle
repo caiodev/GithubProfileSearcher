@@ -1,14 +1,19 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlinx-serialization'
+plugins {
+    id 'com.android.application'
+    id "com.google.protobuf" version "$protobufPlugin"
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlinx-serialization'
+}
 apply from: "${toolsPath}codeChecking.gradle"
-apply from: "${toolsPath}lint.gradle"
-apply from: "${toolsPath}detekt.gradle"
 apply from: "${toolsPath}coverage.gradle"
+apply from: "${toolsPath}detekt.gradle"
+apply from: "${toolsPath}lint.gradle"
+apply from: "${toolsPath}protobuf.gradle"
 
 android {
     compileSdkVersion 30
+    buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 21
@@ -18,49 +23,41 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
-    buildFeatures {
-        viewBinding true
-    }
     buildTypes {
-        release {
-            minifyEnabled true
-            debuggable = false
-            testCoverageEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
         debug {
             minifyEnabled false
             debuggable = true
             testCoverageEnabled = true
             signingConfig signingConfigs.debug
         }
+
+        release {
+            minifyEnabled true
+            debuggable = false
+            testCoverageEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
+
+    android.buildFeatures.viewBinding = true
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+        useIR = true
     }
 
     testOptions {
-        unitTests.all {
-            useJUnitPlatform()
-        }
+        unitTests.all { useJUnitPlatform() }
     }
 
     sourceSets {
-        androidTest {
-            java.srcDirs += "src/sharedTest/java"
-        }
-        test {
-            java.srcDirs += "src/sharedTest/java"
-        }
+        androidTest { java.srcDirs += "$sharedTestCodePath" }
+        test { java.srcDirs += "$sharedTestCodePath" }
     }
 
     packagingOptions {
@@ -93,12 +90,7 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
 
     //Koin
-    implementation "org.koin:koin-android:$koin"
-    implementation "org.koin:koin-androidx-scope:$koin"
-    implementation "org.koin:koin-androidx-viewmodel:$koin"
-
-    //Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin"
+    implementation "io.insert-koin:koin-android:$koin"
 
     //Ktx
     implementation "androidx.core:core-ktx:$ktxCore"
@@ -120,7 +112,10 @@ dependencies {
     //Material design
     implementation "com.google.android.material:material:$materialDesign"
 
-    //Retrofit
+    //Protobuf
+    implementation  "com.google.protobuf:protobuf-javalite:$protobufVersion"
+
+    //RestConnector
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
 
@@ -142,9 +137,6 @@ dependencies {
     /*Test source set*/
     //ArchTestCore
     testImplementation "androidx.arch.core:core-testing:$archTest"
-
-    //CoroutineTest
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTest"
 
     //Jacoco
     testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
