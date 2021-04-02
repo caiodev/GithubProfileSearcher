@@ -7,14 +7,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.addRepeatingJob
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar.Companion.shouldSnackBarBeShownIfUserIsOnline
-import kotlinx.coroutines.launch
 
 @Suppress("UNUSED")
 fun View.applyViewVisibility(visibility: Int) {
@@ -99,9 +99,10 @@ fun EditText.hideKeyboard() {
 }
 
 @Suppress("UNUSED")
-fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) = lifecycleScope.launch {
-    task()
-}
+fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) =
+    this@runTaskOnBackground.addRepeatingJob(Lifecycle.State.STARTED) {
+        task()
+    }
 
 @Suppress("UNUSED")
 inline fun <reified T> AppCompatActivity.castValue(value: Any?) = value as T
