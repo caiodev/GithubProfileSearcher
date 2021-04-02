@@ -20,7 +20,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ProfilePrefere
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ActivityGithubProfileListingBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dataStore.serializer.ProfilePreferencesSerializer
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dataStore.serializer.ProfileSerializer
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.TransientViewsAdapter
@@ -51,8 +51,6 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
     private lateinit var binding: ActivityGithubProfileListingBinding
     private lateinit var countingIdlingResource: CountingIdlingResource
-    private lateinit var internetConnectionStateFlow: Job
-    private lateinit var errorStateFlow: Job
 
     private val errorSnackBar by lazy {
         Snackbar.make(
@@ -76,27 +74,16 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         )
     }
 
-    val settingsDataStore: DataStore<ProfilePreferences> by dataStore(
-        fileName = "settings.pb",
-        serializer = ProfilePreferencesSerializer
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setupView()
         handleViewModel()
         setupExtras()
-        settingsDataStore.data.first()
-        settingsDataStore.updateData {
-            it.toBuilder().setIsPaginationLoadingViewVisible(true).build()
-        }
-    }
-
-    override fun onStop() {
-        internetConnectionStateFlow.cancel()
-        errorStateFlow.cancel()
-        super.onStop()
+//        settingsDataStore.data.first()
+//        settingsDataStore.updateData {
+//            it.toBuilder().setIsPaginationLoadingViewVisible(true).build()
+//        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -378,7 +365,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun onError() {
-        errorStateFlow = runTaskOnBackground {
+        runTaskOnBackground {
             viewModel.errorStateFlow.collect { error ->
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore()
@@ -563,7 +550,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun setupInternetConnectionObserver() {
-        internetConnectionStateFlow = runTaskOnBackground {
+        runTaskOnBackground {
             observeInternetConnectionAvailability(applicationContext).collect { isInternetAvailable ->
                 if (isInternetAvailable) {
                     internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(

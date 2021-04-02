@@ -113,7 +113,7 @@ dependencies {
     implementation "com.google.android.material:material:$materialDesign"
 
     //Protobuf
-    implementation  "com.google.protobuf:protobuf-javalite:$protobufVersion"
+    implementation "com.google.protobuf:protobuf-javalite:$protobufVersion"
 
     //RestConnector
     implementation "com.squareup.retrofit2:retrofit:$retrofit"

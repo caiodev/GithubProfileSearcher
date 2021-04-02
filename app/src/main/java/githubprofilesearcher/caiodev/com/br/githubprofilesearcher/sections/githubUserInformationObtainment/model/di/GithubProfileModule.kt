@@ -23,7 +23,7 @@ val githubProfileViewModel = module {
 //        var dataStore: DataStore<ProfilePreferences>
 //
 //        dataStore(fileName = profilePreferencesProtoFileName,
-//            serializer = ProfilePreferencesSerializer)
+//            serializer = ProfileSerializer)
 //
 //        ProtoDataStoreManager<ProfilePreferences>()
 //    }
