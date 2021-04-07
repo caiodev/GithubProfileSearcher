@@ -3,23 +3,21 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.Database
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.GenericLocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.IProtoDataStoreManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.IKeyValueStorageManager
 
 @Suppress("UNCHECKED_CAST")
 class LocalRepository(
-    private val protoDataStoreManager: IProtoDataStoreManager,
+    private val keyValueStorageManager: IKeyValueStorageManager,
     private val appDatabase: Database
 ) : GenericLocalRepository {
 
-    override fun obtainProtoDataStore() = protoDataStoreManager
+    override fun obtainProtoDataStore() = keyValueStorageManager
 
     override suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation> {
         var list = listOf<GithubProfileInformation>()
-
         appDatabase.githubProfilesDao().getGithubProfilesFromDb()?.let {
             list = it
         }
-
         return list
     }
 

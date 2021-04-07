@@ -1,7 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.utils.base.repository.local
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.utils.base.repository.local.fakes.database.FakeDatabase
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.utils.base.repository.local.fakes.protoDataStore.manager.FakeProtoDataStoreManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.utils.base.repository.local.fakes.protoDataStore.manager.FakeKeyValueStorageManager
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.LocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dataStore.model.ProfilePreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,13 +17,13 @@ import utils.base.coroutines.junit5.CoroutinesTestExtension
 @ExtendWith(CoroutinesTestExtension::class)
 class LocalRepositoryTest : TestSteps {
 
-    private lateinit var fakeProtoDataStore: FakeProtoDataStoreManager
+    private lateinit var fakeProtoDataStore: FakeKeyValueStorageManager
     private lateinit var fakeDatabase: FakeDatabase
     private lateinit var localRepository: LocalRepository
 
     @BeforeEach
     override fun setupDependencies() {
-        fakeProtoDataStore = FakeProtoDataStoreManager()
+        fakeProtoDataStore = FakeKeyValueStorageManager()
         fakeDatabase = FakeDatabase()
         localRepository = LocalRepository(fakeProtoDataStore, fakeDatabase)
     }
@@ -34,15 +34,15 @@ class LocalRepositoryTest : TestSteps {
             runBlockingTest {
                 assertEquals(
                     0,
-                    localRepository.obtainProtoDataStore().obtainValue().pageNumber
+                    localRepository.obtainProtoDataStore().obtainData().pageNumber
                 )
                 assertEquals(
                     false,
-                    localRepository.obtainProtoDataStore().obtainValue().isHeaderVisible
+                    localRepository.obtainProtoDataStore().obtainData().isHeaderVisible
                 )
                 assertEquals(
                     "",
-                    localRepository.obtainProtoDataStore().obtainValue().currentProfile
+                    localRepository.obtainProtoDataStore().obtainData().currentProfile
                 )
             }
         }
@@ -53,9 +53,9 @@ class LocalRepositoryTest : TestSteps {
         doWhen {
             localRepository.obtainProtoDataStore().apply {
                 runBlockingTest {
-                    updateValue(ProfilePreferences(pageNumber = 7))
-                    updateValue(obtainValue().copy(isHeaderVisible = true))
-                    updateValue(obtainValue().copy(currentProfile = "torvalds"))
+                    updateData(ProfilePreferences(pageNumber = 7))
+                    updateData(obtainData().copy(isHeaderVisible = true))
+                    updateData(obtainData().copy(currentProfile = "torvalds"))
                 }
             }
         }
@@ -64,15 +64,15 @@ class LocalRepositoryTest : TestSteps {
             runBlockingTest {
                 assertEquals(
                     7,
-                    localRepository.obtainProtoDataStore().obtainValue().pageNumber
+                    localRepository.obtainProtoDataStore().obtainData().pageNumber
                 )
                 assertEquals(
                     true,
-                    localRepository.obtainProtoDataStore().obtainValue().isHeaderVisible
+                    localRepository.obtainProtoDataStore().obtainData().isHeaderVisible
                 )
                 assertEquals(
                     "torvalds",
-                    localRepository.obtainProtoDataStore().obtainValue().currentProfile
+                    localRepository.obtainProtoDataStore().obtainData().currentProfile
                 )
             }
         }
@@ -82,19 +82,19 @@ class LocalRepositoryTest : TestSteps {
     fun saveValueToDataStore_commandToClearAllValuesInsideProtoDataStore_clearAllValuesInsideProtoDataStore() {
         given {
             runBlockingTest {
-                localRepository.obtainProtoDataStore().updateValue(ProfilePreferences(pageNumber = 7))
+                localRepository.obtainProtoDataStore().updateData(ProfilePreferences(pageNumber = 7))
             }
         }
 
         doWhen {
             runBlockingTest {
-                localRepository.obtainProtoDataStore().updateValue(ProfilePreferences())
+                localRepository.obtainProtoDataStore().updateData(ProfilePreferences())
             }
         }
 
         then {
             runBlockingTest {
-                assertEquals(0, localRepository.obtainProtoDataStore().obtainValue().pageNumber)
+                assertEquals(0, localRepository.obtainProtoDataStore().obtainData().pageNumber)
             }
         }
     }

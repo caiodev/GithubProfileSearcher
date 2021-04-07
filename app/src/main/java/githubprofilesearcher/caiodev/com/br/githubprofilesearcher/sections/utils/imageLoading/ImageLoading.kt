@@ -2,6 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.content.Context
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import coil.ImageLoader
 import coil.load
 import coil.request.CachePolicy
@@ -13,7 +14,7 @@ object ImageLoading {
     fun loadImage(
         context: Context,
         imageUrl: String,
-        placeholder: Int,
+        @DrawableRes placeholder: Int,
         targetImageView: ImageView
     ) {
         if (!this::imageLoader.isInitialized) {

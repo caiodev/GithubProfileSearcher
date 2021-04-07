@@ -18,7 +18,7 @@ val globalModule = module {
         ).build()
     }
 
-    single<GenericLocalRepository> {
+    factory<GenericLocalRepository> {
         LocalRepository(
             get(),
             get()

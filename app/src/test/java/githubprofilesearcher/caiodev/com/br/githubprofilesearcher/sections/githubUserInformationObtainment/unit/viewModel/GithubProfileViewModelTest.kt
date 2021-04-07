@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.local.FakeLocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.remote.FakeGithubProfileInformationRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.remote.FakeProfileInformationRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
@@ -27,7 +27,7 @@ class GithubProfileViewModelTest : TestSteps {
     @BeforeEach
     override fun setupDependencies() {
         viewModel =
-            GithubProfileViewModel(FakeLocalRepository(), FakeGithubProfileInformationRepository())
+            GithubProfileViewModel(FakeLocalRepository(), FakeProfileInformationRepository())
     }
 
     @Test

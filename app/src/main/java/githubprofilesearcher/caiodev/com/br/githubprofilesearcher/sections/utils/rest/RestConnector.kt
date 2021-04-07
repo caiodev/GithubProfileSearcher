@@ -1,6 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -24,19 +25,21 @@ object RestConnector {
 
     @ExperimentalSerializationApi
     @PublishedApi
-    internal inline fun <reified T> provideRetrofitService(): T =
+    internal inline fun <reified T> provideRestConnector(): T =
         createRetrofitService(baseUrl)
 
     @ExperimentalSerializationApi
     @PublishedApi
     internal inline fun <reified T> createRetrofitService(baseUrl: String) =
-        Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(provideOkHttpClient())
-            .addConverterFactory(
-                Json { ignoreUnknownKeys = true }.asConverterFactory(mediaType)
-            )
-            .build().create(T::class.java) as T
+        castValue<T>(
+            Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(provideOkHttpClient())
+                .addConverterFactory(
+                    Json { ignoreUnknownKeys = true }.asConverterFactory(mediaType)
+                )
+                .build().create(T::class.java)
+        )
 
     @PublishedApi
     internal fun provideOkHttpClient(): OkHttpClient = createOkHttpClient()

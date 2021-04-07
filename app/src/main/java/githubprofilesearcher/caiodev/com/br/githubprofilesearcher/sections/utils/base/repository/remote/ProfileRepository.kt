@@ -2,10 +2,10 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.callInterface.UserProfile
 
-class GithubProfileRepository(
+class ProfileRepository(
     private val remoteRepository: RemoteRepository,
-    private val retrofitService: UserProfile
-) : GenericGithubProfileRepository {
+    private val apiService: UserProfile
+) : GenericProfileRepository {
 
     override suspend fun provideGithubUserInformation(
         user: String,
@@ -13,7 +13,7 @@ class GithubProfileRepository(
         maxResultsPerPage: Int
     ) = remoteRepository.callApi(
         call = {
-            retrofitService.provideUsers(
+            apiService.provideUsers(
                 user,
                 pageNumber,
                 maxResultsPerPage
