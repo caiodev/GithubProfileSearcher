@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.emitValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +39,7 @@ object NetworkChecking {
         onConnectionUnavailable: () -> Unit
     ) =
         handleInternetConnectionAvailability(
-            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager,
+            castValue(applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)),
             onConnectionAvailable,
             onConnectionUnavailable
         )
@@ -70,7 +71,7 @@ object NetworkChecking {
 
     // Returns a StateFlow so internet connection related state changes can be observed
     fun observeInternetConnectionAvailability(applicationContext: Context): StateFlow<Boolean> {
-        (applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
+        castValue<ConnectivityManager>(applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)).apply {
             requestNetwork(networkRequest, connectivityCallback)
         }
         return networkStateFlow

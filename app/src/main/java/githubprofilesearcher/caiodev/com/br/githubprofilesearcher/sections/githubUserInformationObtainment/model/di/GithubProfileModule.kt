@@ -1,10 +1,17 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.di
 
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.dataStoreFile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dataStore.serializer.ProfileSerializer
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericGithubProfileRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GithubProfileRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.RestConnector.provideRetrofitService
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.IKeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.KeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.KeyValueStorageManager.Companion.profilePreferencesProtoFileName
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.ProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.RestConnector.provideRestConnector
 import kotlinx.serialization.ExperimentalSerializationApi
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -18,20 +25,17 @@ val githubProfileViewModel = module {
         )
     }
 
-//    single<IProtoDataStoreManager> {
-//
-//        var dataStore: DataStore<ProfilePreferences>
-//
-//        dataStore(fileName = profilePreferencesProtoFileName,
-//            serializer = ProfileSerializer)
-//
-//        ProtoDataStoreManager<ProfilePreferences>()
-//    }
+    single<IKeyValueStorageManager> {
+        KeyValueStorageManager(
+            DataStoreFactory.create(serializer = ProfileSerializer,
+                produceFile = { androidContext().dataStoreFile(profilePreferencesProtoFileName) })
+        )
+    }
 
-    single<GenericGithubProfileRepository> {
-        GithubProfileRepository(
+    single<GenericProfileRepository> {
+        ProfileRepository(
             get(),
-            provideRetrofitService()
+            provideRestConnector()
         )
     }
 }

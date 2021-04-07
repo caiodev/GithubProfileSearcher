@@ -7,6 +7,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.Gi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.GithubProfileInformationViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
 
 class GithubProfileAdapter(private val onItemSelectedListener: OnItemSelectedListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -27,7 +28,7 @@ class GithubProfileAdapter(private val onItemSelectedListener: OnItemSelectedLis
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        (viewHolder as GithubProfileInformationViewHolder).bind(dataSource[position])
+        castValue<GithubProfileInformationViewHolder>(viewHolder).bind(dataSource[position])
     }
 
     internal fun updateDataSource(newDataSource: List<GithubProfileInformation>) {

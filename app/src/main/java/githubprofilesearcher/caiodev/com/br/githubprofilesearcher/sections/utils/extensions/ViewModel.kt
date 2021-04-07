@@ -5,10 +5,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-@Suppress("UNUSED")
-inline fun <reified T> ViewModel.castValue(attribute: Any?) =
-    attribute as T
-
 fun ViewModel.runTaskOnBackground(task: suspend () -> Unit) {
     viewModelScope.launch {
         task()
@@ -16,7 +12,7 @@ fun ViewModel.runTaskOnBackground(task: suspend () -> Unit) {
 }
 
 @Suppress("UNUSED")
-fun ViewModel.runDataStoreTask(task: suspend () -> Unit) {
+fun ViewModel.runTaskOnForeground(task: suspend () -> Unit) {
     runBlocking {
         task()
     }

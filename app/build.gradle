@@ -74,6 +74,9 @@ dependencies {
     //AndroidXCore
     implementation "androidx.core:core-ktx:$androidXCore"
 
+    //Annotation
+    implementation "androidx.annotation:annotation:$annotation"
+
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat"
 

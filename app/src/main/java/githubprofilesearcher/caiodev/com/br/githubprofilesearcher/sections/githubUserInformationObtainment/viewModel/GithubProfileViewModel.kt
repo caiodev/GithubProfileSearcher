@@ -7,17 +7,17 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ProfilePrefere
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.GenericLocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericGithubProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castValue
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runDataStoreTask
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnForeground
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 internal class GithubProfileViewModel(
     private val localRepository: GenericLocalRepository,
-    private val remoteRepository: GenericGithubProfileRepository
+    private val remoteRepository: GenericProfileRepository
 ) : ViewModel() {
 
     private val _successLiveData = MutableLiveData<List<GithubProfileInformation>>()
@@ -32,10 +32,14 @@ internal class GithubProfileViewModel(
     private var githubProfilesInfoList: List<GithubProfileInformation> = _githubProfilesInfoList
 
     fun requestUpdatedGithubProfiles(profile: String = emptyString) {
-        saveValueToDataStore(obtainValueFromDataStore().copy(pageNumber = 1))
+        saveValueToDataStore(
+            obtainValueFromDataStore().toBuilder().setPageNumber(initialPageNumber).build()
+        )
 
         if (profile.isNotEmpty()) {
-            saveValueToDataStore(obtainValueFromDataStore().copy(temporaryCurrentProfile = profile))
+            saveValueToDataStore(
+                obtainValueFromDataStore().toBuilder().setTemporaryCurrentProfile(profile).build()
+            )
             requestGithubProfiles(profile, true)
         } else {
             requestGithubProfiles(
@@ -80,13 +84,15 @@ internal class GithubProfileViewModel(
 
     private suspend fun handleSuccess(value: Any, shouldListItemsBeRemoved: Boolean) {
         if (value is States.Success<*>) {
-            saveValueToDataStore(obtainValueFromDataStore().copy(currentProfile = emptyString))
+            saveValueToDataStore(
+                obtainValueFromDataStore().toBuilder().setCurrentProfile(emptyString).build()
+            )
+
             if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
             ) {
                 saveValueToDataStore(
-                    obtainValueFromDataStore().copy(
-                        hasASuccessfulCallAlreadyBeenMade = true
-                    )
+                    obtainValueFromDataStore().toBuilder()
+                        .setHasASuccessfulCallAlreadyBeenMade(true).build()
                 )
             }
 
@@ -98,14 +104,20 @@ internal class GithubProfileViewModel(
                 }
             }
 
-            saveValueToDataStore(obtainValueFromDataStore().copy(numberOfItems = githubProfilesInfoList.size))
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(
-                    pageNumber = obtainValueFromDataStore().pageNumber.plus(
-                        1
-                    )
-                )
+                obtainValueFromDataStore().toBuilder().setNumberOfItems(githubProfilesInfoList.size)
+                    .build()
             )
+
+            obtainValueFromDataStore().apply {
+                saveValueToDataStore(
+                    toBuilder().setPageNumber(
+                        pageNumber.plus(
+                            initialPageNumber
+                        )
+                    ).build()
+                )
+            }
         } else {
             handleError(castValue(value))
         }
@@ -146,19 +158,18 @@ internal class GithubProfileViewModel(
 
     fun obtainValueFromDataStore(): ProfilePreferences {
         var profilePreferences: ProfilePreferences? = null
-        runDataStoreTask {
-            profilePreferences =
-                localRepository.obtainProtoDataStore().obtainValue<ProfilePreferences>()
+        runTaskOnForeground {
+            profilePreferences = castValue(localRepository.obtainProtoDataStore().obtainData())
         }
         return profilePreferences ?: ProfilePreferences.getDefaultInstance()
     }
 
-    fun saveValueToDataStore(
-        profilePreferences: ProfilePreferences = ProfilePreferences.getDefaultInstance()
-    ) {
-        runDataStoreTask {
-            localRepository.obtainProtoDataStore().updateValue(profilePreferences)
-            profilePreferences.toBuilder().setPageNumber(2).build()        }
+    fun saveValueToDataStore(profilePreferences: ProfilePreferences = ProfilePreferences.getDefaultInstance()) {
+        runTaskOnForeground {
+            localRepository.obtainProtoDataStore().updateData(
+                castValue<ProfilePreferences>(profilePreferences)
+            )
+        }
     }
 
     private fun addContentToGithubProfilesInfoList(list: List<GithubProfileInformation>) {
@@ -172,5 +183,6 @@ internal class GithubProfileViewModel(
     companion object {
         const val emptyString = ""
         const val numberOfItemsPerPage = 20
+        private const val initialPageNumber = 1
     }
 }

@@ -2,6 +2,8 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.CustomSnackbarLayoutBinding
@@ -14,12 +16,12 @@ class CustomSnackBar(
 ) : BaseTransientBottomBar<CustomSnackBar>(content, viewBinding.root, callback) {
     private var hasSnackBarBeenRequestedToDismiss = false
 
-    fun setText(text: Int): CustomSnackBar {
+    fun setText(@StringRes text: Int): CustomSnackBar {
         viewBinding.snackBarTextView.text = viewBinding.root.context.getString(text)
         return this
     }
 
-    fun setBackgroundColor(backgroundColor: Int): CustomSnackBar {
+    fun setBackgroundColor(@ColorInt backgroundColor: Int): CustomSnackBar {
         viewBinding.snackBarParentLinearLayout.setBackgroundColor(backgroundColor)
         return this
     }
