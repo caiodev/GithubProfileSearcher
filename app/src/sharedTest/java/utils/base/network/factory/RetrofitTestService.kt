@@ -1,7 +1,7 @@
 package utils.base.network.factory
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.RestConnector.mediaType
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.APIConnector.mediaType
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient

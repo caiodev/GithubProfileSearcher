@@ -2,14 +2,14 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
 import retrofit2.Response
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 class RemoteRepository {
-
-    // HTTP error codes
+    
     private val fourHundred = 400
     private val fourHundredAndTwo = 402
     private val fourHundredAndThree = 403
@@ -19,7 +19,6 @@ class RemoteRepository {
     private val fiveHundred = 500
     private val fiveHundredAndNinetyEight = 598
 
-    //Header
     private val headerParameterName = "link"
     private val headerParameterPattern = "[0-9]+".toPattern().toString()
     private val headerListIndex = 2
@@ -32,9 +31,9 @@ class RemoteRepository {
             if (response.isSuccessful) {
                 handleSuccess(response)
             } else {
-                handleError(response.code())
+                handleHttpError(response.code())
             }
-        } catch (exception: Exception) {
+        } catch (exception: IOException) {
             handleException(exception)
         }
     }
@@ -44,12 +43,12 @@ class RemoteRepository {
             body()?.let { apiResponse ->
                 return States.Success(apiResponse, obtainTotalPages(headers()))
             } ?: run {
-                return States.SuccessWithoutBody // a.k.a 204 - No content
+                return States.SuccessWithoutBody
             }
         }
     }
 
-    private fun handleError(responseCode: Int): Any {
+    private fun handleHttpError(responseCode: Int): Any {
         return when (responseCode) {
             in fourHundred..fourHundredAndTwo,
             in fourHundredAndFour..fourHundredAndNinetyNine -> States.ClientSide
@@ -59,7 +58,7 @@ class RemoteRepository {
         }
     }
 
-    private fun handleException(exception: Exception): Any {
+    private fun handleException(exception: IOException): Any {
         return when (exception) {
             is ConnectException -> States.Connect
             is SocketTimeoutException -> States.SocketTimeout

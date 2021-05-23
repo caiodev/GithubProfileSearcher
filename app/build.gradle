@@ -98,7 +98,6 @@ dependencies {
     //Ktx
     implementation "androidx.core:core-ktx:$ktxCore"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$arch"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch"
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
@@ -118,7 +117,7 @@ dependencies {
     //Protobuf
     implementation "com.google.protobuf:protobuf-javalite:$protobufVersion"
 
-    //RestConnector
+    //APIConnector
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
 
@@ -137,7 +136,7 @@ dependencies {
 
     /*Testing section*/
 
-    /*Test source set*/
+    //JVM
     //ArchTestCore
     testImplementation "androidx.arch.core:core-testing:$archTest"
 
@@ -147,13 +146,18 @@ dependencies {
     //JUnit
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5"
 
+    //Kotest
+    testImplementation "io.kotest:kotest-assertions-core:$kotest"
+    testImplementation "io.kotest:kotest-property:$kotest"
+    testImplementation "io.kotest:kotest-runner-junit5:$kotest"
+
     //MockWebServer
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
 
     //Test core
     testImplementation "androidx.test:core-ktx:$testCore"
 
-    /*AndroidTest source set*/
+    //Instrumented/UI
     //ArchTestCore
     androidTestImplementation "androidx.arch.core:core-testing:$archTest"
 

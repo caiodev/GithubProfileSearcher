@@ -11,40 +11,36 @@ import retrofit2.Retrofit
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-object RestConnector {
+object APIConnector {
 
-    val mediaType = "application/json".toMediaType()
-    const val baseUrl = "https://api.github.com/"
+    private val mediaType = "application/json".toMediaType()
+    private const val baseUrl = "https://api.github.com/"
     private const val responseTag = "OkHttp"
     private const val timeout = 60L
-
     private val httpLoggingInterceptor =
         HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }.apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
     @ExperimentalSerializationApi
-    @PublishedApi
-    internal inline fun <reified T> provideRestConnector(): T =
-        createRetrofitService(baseUrl)
+    internal inline fun <reified T> provideAPIConnector(baseUrl: String = this.baseUrl): T =
+        createAPIService(baseUrl)
 
     @ExperimentalSerializationApi
-    @PublishedApi
-    internal inline fun <reified T> createRetrofitService(baseUrl: String) =
+    private inline fun <reified T> createAPIService(baseUrl: String) =
         castValue<T>(
             Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(provideOkHttpClient())
+                .client(provideLoggerClient())
                 .addConverterFactory(
                     Json { ignoreUnknownKeys = true }.asConverterFactory(mediaType)
                 )
                 .build().create(T::class.java)
         )
 
-    @PublishedApi
-    internal fun provideOkHttpClient(): OkHttpClient = createOkHttpClient()
+    private fun provideLoggerClient() = createLoggerClient()
 
-    private fun createOkHttpClient() =
+    private fun createLoggerClient() =
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(timeout, TimeUnit.SECONDS)

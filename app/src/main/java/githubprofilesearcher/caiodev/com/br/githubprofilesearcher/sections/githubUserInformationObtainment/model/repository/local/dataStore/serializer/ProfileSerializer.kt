@@ -10,6 +10,8 @@ import java.io.OutputStream
 @Suppress("BlockingMethodInNonBlockingContext")
 object ProfileSerializer : Serializer<ProfilePreferences> {
 
+    const val profileProtoFileName = "profile.proto"
+
     override val defaultValue: ProfilePreferences = ProfilePreferences.getDefaultInstance()
 
     override suspend fun readFrom(input: InputStream): ProfilePreferences {
