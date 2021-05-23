@@ -32,7 +32,6 @@ object NetworkChecking {
         }
     }
 
-    // Checks whether or not there is internet connection
     fun checkIfInternetConnectionIsAvailable(
         applicationContext: Context,
         onConnectionAvailable: () -> Unit,
@@ -69,7 +68,6 @@ object NetworkChecking {
         }
     }
 
-    // Returns a StateFlow so internet connection related state changes can be observed
     fun observeInternetConnectionAvailability(applicationContext: Context): StateFlow<Boolean> {
         castValue<ConnectivityManager>(applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)).apply {
             requestNetwork(networkRequest, connectivityCallback)

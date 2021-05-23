@@ -62,7 +62,7 @@ fun ImageView.changeDrawable(@DrawableRes newDrawable: Int) {
 
 @Suppress("UNUSED")
 fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) =
-    addRepeatingJob(Lifecycle.State.STARTED) {
+    addRepeatingJob(Lifecycle.State.CREATED) {
         task()
     }
 

@@ -1,6 +1,7 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.callInterface.UserProfile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.RemoteRepository
 
 class ProfileRepository(
     private val remoteRepository: RemoteRepository,

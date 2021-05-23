@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.GenericProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.GenericProfileRepository
 
 class FakeProfileInformationRepository :
     GenericProfileRepository {
