@@ -3,7 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.GithubProfileViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.ImageLoading.loadImage
 import okhttp3.internal.format
 
@@ -21,7 +21,7 @@ class GithubProfileInformationViewHolder(
         }
     }
 
-    fun bind(model: GithubProfileInformation) {
+    fun bind(model: UserProfileInformation) {
         githubProfileUrl = model.profileUrl
 
         model.userId.let {

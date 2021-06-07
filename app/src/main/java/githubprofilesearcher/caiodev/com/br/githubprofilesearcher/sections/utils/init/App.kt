@@ -2,9 +2,9 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.app.Application
 import androidx.viewbinding.BuildConfig
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.di.githubProfileViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.di.userProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.userRepositoryInformationObtainment.model.diModules.githubUserRepositoryViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.diModules.globalModule
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.di.globalModule
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -20,7 +20,7 @@ class App : Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(githubProfileViewModel, githubUserRepositoryViewModel, globalModule)
+            modules(globalModule, userProfileViewModel, githubUserRepositoryViewModel)
         }
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }

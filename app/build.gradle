@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-    id "com.google.protobuf" version "$protobufPlugin"
+    id 'com.google.protobuf' version "$protobufPlugin"
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlinx-serialization'
@@ -29,6 +29,7 @@ android {
             debuggable = true
             testCoverageEnabled = true
             signingConfig signingConfigs.debug
+            buildConfigField "String", "API_URL", "$apiUrl"
         }
 
         release {
@@ -36,6 +37,7 @@ android {
             debuggable = false
             testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_URL", "$apiUrl"
         }
     }
 

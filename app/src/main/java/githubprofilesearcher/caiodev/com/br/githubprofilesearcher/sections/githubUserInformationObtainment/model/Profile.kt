@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Profile(
-    @SerialName("items") val githubProfileInformationList: List<GithubProfileInformation>
+    @SerialName("items") val githubProfileInformationList: List<UserProfileInformation>
 )

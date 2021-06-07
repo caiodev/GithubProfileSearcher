@@ -17,7 +17,7 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ActivityGithubProfileListingBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.TransientViewsAdapter
@@ -312,7 +312,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         }
     }
 
-    private fun splitOnSuccess(githubUsersList: List<GithubProfileInformation>) {
+    private fun splitOnSuccess(githubUsersList: List<UserProfileInformation>) {
         if (viewModel.obtainValueFromDataStore().numberOfItems < GithubProfileViewModel.numberOfItemsPerPage) {
             changeViewState(transientViewsAdapter, endOfResults)
         } else {

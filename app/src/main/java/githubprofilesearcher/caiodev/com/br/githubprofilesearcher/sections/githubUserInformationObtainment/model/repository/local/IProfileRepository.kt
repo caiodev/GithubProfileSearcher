@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local
 
-interface GenericProfileRepository {
+interface IProfileRepository {
 
     suspend fun provideGithubUserInformation(
         user: String = "",
