@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.GithubProfileViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.GithubProfileInformationViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
@@ -12,7 +12,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 class GithubProfileAdapter(private val onItemSelectedListener: OnItemSelectedListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var dataSource = listOf<GithubProfileInformation>()
+    private var dataSource = listOf<UserProfileInformation>()
 
     override fun getItemCount() = dataSource.size
 
@@ -31,7 +31,7 @@ class GithubProfileAdapter(private val onItemSelectedListener: OnItemSelectedLis
         castValue<GithubProfileInformationViewHolder>(viewHolder).bind(dataSource[position])
     }
 
-    internal fun updateDataSource(newDataSource: List<GithubProfileInformation>) {
+    internal fun updateDataSource(newDataSource: List<UserProfileInformation>) {
         dataSource = newDataSource
     }
 }

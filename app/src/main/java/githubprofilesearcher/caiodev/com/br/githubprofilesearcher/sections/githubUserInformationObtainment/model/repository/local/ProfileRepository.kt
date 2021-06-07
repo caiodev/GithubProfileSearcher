@@ -6,7 +6,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 class ProfileRepository(
     private val remoteRepository: RemoteRepository,
     private val apiService: UserProfile
-) : GenericProfileRepository {
+) : IProfileRepository {
 
     override suspend fun provideGithubUserInformation(
         user: String,

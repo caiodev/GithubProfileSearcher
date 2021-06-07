@@ -9,7 +9,7 @@ import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 class RemoteRepository {
-    
+
     private val fourHundred = 400
     private val fourHundredAndTwo = 402
     private val fourHundredAndThree = 403

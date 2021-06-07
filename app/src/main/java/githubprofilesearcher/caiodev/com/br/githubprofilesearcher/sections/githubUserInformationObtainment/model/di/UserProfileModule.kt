@@ -2,21 +2,22 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.GenericProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.callInterface.UserProfile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.ProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dataStore.serializer.ProfileSerializer
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dataStore.serializer.ProfileSerializer.profileProtoFileName
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.IKeyValueStorageManager
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.KeyValueStorageManager
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.APIConnector.provideAPIConnector
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import retrofit2.Retrofit
 
 @ExperimentalSerializationApi
-val githubProfileViewModel = module {
+val userProfileViewModel = module {
 
     viewModel {
         GithubProfileViewModel(
@@ -27,15 +28,15 @@ val githubProfileViewModel = module {
 
     single<IKeyValueStorageManager> {
         KeyValueStorageManager(
-            DataStoreFactory.create(serializer = ProfileSerializer,
+            keyValueStorageClient = DataStoreFactory.create(serializer = ProfileSerializer,
                 produceFile = { androidContext().dataStoreFile(profileProtoFileName) })
         )
     }
 
-    single<GenericProfileRepository> {
+    single<IProfileRepository> {
         ProfileRepository(
-            get(),
-            provideAPIConnector()
+            remoteRepository = get(),
+            apiService = get<Retrofit>().create(UserProfile::class.java)
         )
     }
 }

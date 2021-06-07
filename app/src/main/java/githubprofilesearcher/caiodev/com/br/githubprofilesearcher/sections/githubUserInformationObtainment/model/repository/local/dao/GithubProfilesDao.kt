@@ -4,17 +4,17 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 
 @Dao
 interface GithubProfilesDao {
 
-    @Query("SELECT * " + "FROM GithubProfileInformation LIMIT 20")
-    suspend fun getGithubProfilesFromDb(): List<GithubProfileInformation>?
+    @Query("SELECT * " + "FROM UserProfileInformation LIMIT 20")
+    suspend fun getProfilesFromDb(): List<UserProfileInformation>?
 
     @Insert
-    suspend fun insertGithubProfilesIntoDb(githubProfilesList: List<GithubProfileInformation>)
+    suspend fun insertProfilesIntoDb(githubProfilesList: List<UserProfileInformation>)
 
-    @Delete(entity = GithubProfileInformation::class)
-    suspend fun dropGithubProfileInformationTable(githubProfilesList: List<GithubProfileInformation>)
+    @Delete(entity = UserProfileInformation::class)
+    suspend fun dropProfileInformationTable(githubProfilesList: List<UserProfileInformation>)
 }

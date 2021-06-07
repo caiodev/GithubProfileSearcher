@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Entity
 @Serializable
-data class GithubProfileInformation(
+data class UserProfileInformation(
     @ColumnInfo
     @SerialName("login")
     val login: String = "",

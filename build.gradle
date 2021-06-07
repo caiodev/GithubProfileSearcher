@@ -3,27 +3,27 @@ buildscript {
     ext {
 
         //AndroidXCore
-        androidXCore = '1.6.0-beta01'
+        androidXCore = '1.6.0-beta02'
 
         //Annotation
         annotation = '1.3.0-alpha01'
 
         //AppCompat
-        appCompat = '1.4.0-alpha01'
+        appCompat = '1.4.0-alpha02'
 
         //Browser
         browser = '1.3.0'
 
         //Code quality checking
         //Detekt
-        detektVersion = '1.16.0'
+        detektVersion = '1.17.0'
 
         //Ktlint
-        ktlintVersion = '0.42.0-SNAPSHOT'
+        ktlintVersion = '0.41.0'
         ktlintPluginVersion = '10.0.0'
 
         //Coil
-        coil = '1.2.1'
+        coil = '1.2.2'
 
         //DataStore
         dataStore = '1.0.0-beta01'
@@ -35,10 +35,10 @@ buildscript {
         koin = '3.0.2'
 
         //Kotlin
-        kotlin = '1.5.0'
+        kotlin = '1.5.10'
 
         //Ktx
-        ktxCore = '1.6.0-beta01'
+        ktxCore = '1.6.0-beta02'
 
         //LeakCanary
         leakCanary = '2.7'
@@ -74,7 +74,7 @@ buildscript {
         constraintLayout = '2.1.0-beta02'
 
         //RecyclerView
-        recyclerView = '1.2.0'
+        recyclerView = '1.2.1'
 
         //SwipeRefreshLayout
         swipeRefreshLayout = '1.2.0-alpha01'
@@ -89,6 +89,7 @@ buildscript {
         testCore = '1.4.0-beta01'
 
         //Others
+        apiUrl = "\"https://api.github.com/\""
         sharedTestCodePath = "src/sharedTest/java"
         toolsPath = "$project.projectDir/tools/"
     }

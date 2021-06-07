@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.unit.viewModel.fakes.repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.GithubProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
 
@@ -11,7 +11,7 @@ class FakeRemoteRepository {
 
             listOf(
 
-                GithubProfileInformation(
+                UserProfileInformation(
                     "torvalds",
                     "https://github.com/torvalds",
                     1024025,
