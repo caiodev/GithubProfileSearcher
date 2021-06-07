@@ -1,7 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.init
 
 import android.app.Application
-import androidx.viewbinding.BuildConfig
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.di.userProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.userRepositoryInformationObtainment.model.diModules.githubUserRepositoryViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.di.globalModule
