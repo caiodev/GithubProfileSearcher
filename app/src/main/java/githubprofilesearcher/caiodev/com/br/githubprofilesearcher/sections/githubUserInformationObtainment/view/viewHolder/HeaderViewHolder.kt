@@ -8,7 +8,7 @@ class HeaderViewHolder(private val itemBinding: HeaderViewHolderLayoutBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
 
     internal fun bind(@StringRes model: Int) {
-        itemBinding.githubUsersListHeader.text =
+        itemBinding.userListHeader.text =
             itemView.context.getString(model)
     }
 }
