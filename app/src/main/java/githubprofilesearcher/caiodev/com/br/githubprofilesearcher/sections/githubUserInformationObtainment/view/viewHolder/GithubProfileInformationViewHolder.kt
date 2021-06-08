@@ -2,13 +2,13 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.GithubProfileViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ProfileViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.ImageLoading.loadImage
 import okhttp3.internal.format
 
 class GithubProfileInformationViewHolder(
-    private val itemBinding: GithubProfileViewHolderLayoutBinding,
+    private val itemBinding: ProfileViewHolderLayoutBinding,
     onItemSelected: OnItemSelectedListener
 ) :
     RecyclerView.ViewHolder(itemBinding.root) {

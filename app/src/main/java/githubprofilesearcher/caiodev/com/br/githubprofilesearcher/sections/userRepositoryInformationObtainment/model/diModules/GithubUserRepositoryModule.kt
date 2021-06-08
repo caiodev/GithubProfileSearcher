@@ -4,6 +4,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.userR
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val githubUserRepositoryViewModel = module {
+val userRepositoryViewModel = module {
     viewModel { UserRepositoryInformationViewModel() }
 }

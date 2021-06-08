@@ -4,18 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ProfilePreferences
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.Profile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Error
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Generic
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Success
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnForeground
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-internal class GithubProfileViewModel(
+internal class ProfileViewModel(
     private val localRepository: ILocalRepository,
     private val remoteRepository: IProfileRepository
 ) : ViewModel() {
@@ -24,12 +27,12 @@ internal class GithubProfileViewModel(
     val successLiveData: LiveData<List<UserProfileInformation>>
         get() = _successLiveData
 
-    private val _errorStateFlow = MutableStateFlow<States<States.Error>>(States.Generic)
-    val errorStateFlow: StateFlow<States<States.Error>>
+    private val _errorStateFlow = MutableStateFlow<State<Error>>(Generic)
+    val errorStateFlow: StateFlow<State<Error>>
         get() = _errorStateFlow
 
-    private val _githubProfilesInfoList = mutableListOf<UserProfileInformation>()
-    private var githubProfilesInfoList: List<UserProfileInformation> = _githubProfilesInfoList
+    private val _profileInfoList = mutableListOf<UserProfileInformation>()
+    private var profilesInfoList: List<UserProfileInformation> = _profileInfoList
 
     fun requestUpdatedGithubProfiles(profile: String = emptyString) {
         saveValueToDataStore(
@@ -40,9 +43,9 @@ internal class GithubProfileViewModel(
             saveValueToDataStore(
                 obtainValueFromDataStore().toBuilder().setTemporaryCurrentProfile(profile).build()
             )
-            requestGithubProfiles(profile, true)
+            requestProfiles(profile, true)
         } else {
-            requestGithubProfiles(
+            requestProfiles(
                 obtainValueFromDataStore().temporaryCurrentProfile,
                 true
             )
@@ -50,10 +53,10 @@ internal class GithubProfileViewModel(
     }
 
     fun requestMoreGithubProfiles() {
-        requestGithubProfiles(obtainValueFromDataStore().currentProfile, false)
+        requestProfiles(obtainValueFromDataStore().currentProfile, false)
     }
 
-    private fun requestGithubProfiles(
+    private fun requestProfiles(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
@@ -83,7 +86,7 @@ internal class GithubProfileViewModel(
     }
 
     private suspend fun handleSuccess(value: Any, shouldListItemsBeRemoved: Boolean) {
-        if (value is States.Success<*>) {
+        if (value is Success<*>) {
             saveValueToDataStore(
                 obtainValueFromDataStore().toBuilder().setCurrentProfile(emptyString).build()
             )
@@ -105,7 +108,7 @@ internal class GithubProfileViewModel(
             }
 
             saveValueToDataStore(
-                obtainValueFromDataStore().toBuilder().setNumberOfItems(githubProfilesInfoList.size)
+                obtainValueFromDataStore().toBuilder().setNumberOfItems(profilesInfoList.size)
                     .build()
             )
 
@@ -123,7 +126,7 @@ internal class GithubProfileViewModel(
         }
     }
 
-    private suspend fun handleError(error: States<States.Error>) {
+    private suspend fun handleError(error: State<Error>) {
         _errorStateFlow.emit(error)
     }
 
@@ -132,12 +135,12 @@ internal class GithubProfileViewModel(
     ) {
         runTaskOnBackground {
             localRepository.dropProfileInformationTable(localRepository.getProfilesFromDb())
-            _githubProfilesInfoList.clear()
+            _profileInfoList.clear()
             addContentToGithubProfilesInfoList(githubProfileInformationList)
             localRepository.insertProfilesIntoDb(
                 githubProfileInformationList
             )
-            _successLiveData.postValue(githubProfilesInfoList)
+            _successLiveData.postValue(profilesInfoList)
         }
     }
 
@@ -148,11 +151,11 @@ internal class GithubProfileViewModel(
         runTaskOnBackground {
             if (!shouldSavedListBeUsed) {
                 addContentToGithubProfilesInfoList(githubProfileInformationList)
-                localRepository.insertProfilesIntoDb(githubProfilesInfoList)
+                localRepository.insertProfilesIntoDb(profilesInfoList)
             } else {
                 addContentToGithubProfilesInfoList(localRepository.getProfilesFromDb())
             }
-            _successLiveData.postValue(githubProfilesInfoList)
+            _successLiveData.postValue(profilesInfoList)
         }
     }
 
@@ -173,7 +176,7 @@ internal class GithubProfileViewModel(
     }
 
     private fun addContentToGithubProfilesInfoList(list: List<UserProfileInformation>) {
-        _githubProfilesInfoList.addAll(list)
+        _profileInfoList.addAll(list)
     }
 
     fun updateUIWithCache() {

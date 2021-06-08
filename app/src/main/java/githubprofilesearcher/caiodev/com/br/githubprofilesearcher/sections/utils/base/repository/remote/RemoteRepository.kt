@@ -1,6 +1,16 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Success
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithoutBody
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ClientSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Forbidden
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ServerSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Generic
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Connect
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SocketTimeout
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SSLHandshake
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.UnknownHost
+
 import retrofit2.Response
 import java.io.IOException
 import java.net.ConnectException
@@ -41,9 +51,9 @@ class RemoteRepository {
     private fun handleSuccess(response: Response<*>): Any {
         with(response) {
             body()?.let { apiResponse ->
-                return States.Success(apiResponse, obtainTotalPages(headers()))
+                return Success(apiResponse, obtainTotalPages(headers()))
             } ?: run {
-                return States.SuccessWithoutBody
+                return SuccessWithoutBody
             }
         }
     }
@@ -51,20 +61,20 @@ class RemoteRepository {
     private fun handleHttpError(responseCode: Int): Any {
         return when (responseCode) {
             in fourHundred..fourHundredAndTwo,
-            in fourHundredAndFour..fourHundredAndNinetyNine -> States.ClientSide
-            fourHundredAndThree -> States.Forbidden
-            in fiveHundred..fiveHundredAndNinetyEight -> States.ServerSide
-            else -> States.Generic
+            in fourHundredAndFour..fourHundredAndNinetyNine -> ClientSide
+            fourHundredAndThree -> Forbidden
+            in fiveHundred..fiveHundredAndNinetyEight -> ServerSide
+            else -> Generic
         }
     }
 
     private fun handleException(exception: IOException): Any {
         return when (exception) {
-            is ConnectException -> States.Connect
-            is SocketTimeoutException -> States.SocketTimeout
-            is SSLHandshakeException -> States.SSLHandshake
-            is UnknownHostException -> States.UnknownHost
-            else -> States.Generic
+            is ConnectException -> Connect
+            is SocketTimeoutException -> SocketTimeout
+            is SSLHandshakeException -> SSLHandshake
+            is UnknownHostException -> UnknownHost
+            else -> Generic
         }
     }
 

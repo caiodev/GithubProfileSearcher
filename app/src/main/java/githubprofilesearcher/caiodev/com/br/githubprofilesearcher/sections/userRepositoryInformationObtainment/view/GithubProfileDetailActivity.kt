@@ -11,7 +11,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 
-class GithubProfileDetailActivity : AppCompatActivity(R.layout.activity_github_profile_detail) {
+class GithubProfileDetailActivity : AppCompatActivity(R.layout.activity_profile_detail) {
 
     private val emptyString = ""
     private val https = "https"

@@ -17,7 +17,7 @@ object APIConnector {
     private const val timeout = 60L
 
     @ExperimentalSerializationApi
-    fun Scope.createAPIConnectorInstance(baseUrl: String = BuildConfig.API_URL): Retrofit {
+    fun Scope.newInstance(baseUrl: String = BuildConfig.API_URL): Retrofit {
         val mediaType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl(baseUrl)

@@ -3,7 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.GithubProfileViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ProfileViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.GithubProfileInformationViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
@@ -18,7 +18,7 @@ class GithubProfileAdapter(private val onItemSelectedListener: OnItemSelectedLis
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return GithubProfileInformationViewHolder(
-            GithubProfileViewHolderLayoutBinding.inflate(
+            ProfileViewHolderLayoutBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false

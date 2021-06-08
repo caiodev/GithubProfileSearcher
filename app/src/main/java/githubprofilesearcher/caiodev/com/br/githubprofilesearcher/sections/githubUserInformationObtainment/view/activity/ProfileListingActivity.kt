@@ -16,18 +16,18 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ActivityGithubProfileListingBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ActivityProfileListingBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.adapter.TransientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.viewHolder.OnItemSelectedListener
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.GithubProfileViewModel.Companion.emptyString
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.ProfileViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel.ProfileViewModel.Companion.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.userRepositoryInformationObtainment.view.GithubProfileDetailActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.LifecycleOwnerFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
@@ -46,7 +46,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
-    private lateinit var binding: ActivityGithubProfileListingBinding
+    private lateinit var binding: ActivityProfileListingBinding
     private lateinit var countingIdlingResource: CountingIdlingResource
 
     private val errorSnackBar by lazy {
@@ -61,7 +61,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         CustomSnackBar.make(findViewById(android.R.id.content))
     }
 
-    private val viewModel by viewModel<GithubProfileViewModel>()
+    private val viewModel by viewModel<ProfileViewModel>()
 
     private val concatAdapter by lazy {
         ConcatAdapter(
@@ -96,7 +96,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     override fun setupView() {
-        binding = ActivityGithubProfileListingBinding.inflate(layoutInflater)
+        binding = ActivityProfileListingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupDarkMode()
         bindViewModelDataToUIInCaseOfOrientationChanges()
@@ -313,7 +313,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun splitOnSuccess(githubUsersList: List<UserProfileInformation>) {
-        if (viewModel.obtainValueFromDataStore().numberOfItems < GithubProfileViewModel.numberOfItemsPerPage) {
+        if (viewModel.obtainValueFromDataStore().numberOfItems < ProfileViewModel.numberOfItemsPerPage) {
             changeViewState(transientViewsAdapter, endOfResults)
         } else {
             changeViewState(transientViewsAdapter, empty)
@@ -396,12 +396,12 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
 
                 when (error) {
-                    States.UnknownHost, States.SocketTimeout, States.Connect ->
+                    UnknownHost, SocketTimeout, Connect ->
                         showErrorMessages(R.string.unknown_host_exception_and_socket_timeout_exception)
-                    States.SSLHandshake -> showErrorMessages(R.string.ssl_handshake_exception)
-                    States.ClientSide -> showErrorMessages(R.string.client_side_error)
-                    States.ServerSide -> showErrorMessages(R.string.server_side_error)
-                    States.Forbidden -> showErrorMessages(R.string.api_query_limit_exceeded_error)
+                    SSLHandshake -> showErrorMessages(R.string.ssl_handshake_exception)
+                    ClientSide -> showErrorMessages(R.string.client_side_error)
+                    ServerSide -> showErrorMessages(R.string.server_side_error)
+                    Forbidden -> showErrorMessages(R.string.api_query_limit_exceeded_error)
                     else -> showErrorMessages(R.string.generic_exception_and_generic_error)
                 }
 

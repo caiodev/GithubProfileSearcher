@@ -2,7 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.gith
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.Profile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.States
 
 class FakeRemoteRepository {
 

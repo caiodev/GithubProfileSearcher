@@ -6,7 +6,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.LocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.db.AppDatabase
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote.RemoteRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.APIConnector.createAPIConnectorInstance
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.APIConnector.newInstance
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -29,7 +29,7 @@ val globalModule = module {
     }
 
     single {
-        createAPIConnectorInstance()
+        newInstance()
     }
 
     single {
