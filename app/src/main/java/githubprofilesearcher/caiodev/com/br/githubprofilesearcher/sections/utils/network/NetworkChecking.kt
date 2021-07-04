@@ -1,20 +1,22 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ConnectionAvailable
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ConnectionUnavailable
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Generic
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.State
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.emitValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-object NetworkChecking {
+class NetworkChecking(private val connectivityManager: ConnectivityManager) {
 
-    private val mutableNetworkStateFlow = MutableStateFlow(false)
-    private val networkStateFlow: StateFlow<Boolean>
-        get() = mutableNetworkStateFlow
+    private val _networkStateFlow = MutableStateFlow<State<*>>(ConnectionAvailable)
+    private val networkStateFlow: StateFlow<State<*>>
+        get() = _networkStateFlow
 
     private val networkRequest = NetworkRequest.Builder().apply {
         addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -24,54 +26,37 @@ object NetworkChecking {
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
-            mutableNetworkStateFlow.emitValue(true)
+            _networkStateFlow.emitValue(ConnectionAvailable)
         }
 
         override fun onLost(network: Network) {
-            mutableNetworkStateFlow.emitValue(false)
+            _networkStateFlow.emitValue(ConnectionUnavailable)
         }
     }
 
-    fun checkIfInternetConnectionIsAvailable(
-        applicationContext: Context,
-        onConnectionAvailable: () -> Unit,
-        onConnectionUnavailable: () -> Unit
-    ) =
-        handleInternetConnectionAvailability(
-            castValue(applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)),
-            onConnectionAvailable,
-            onConnectionUnavailable
-        )
+    fun checkIfInternetConnectionIsAvailable() = handleInternetConnectionAvailability()
 
-    private fun handleInternetConnectionAvailability(
-        connectivityManager: ConnectivityManager,
-        onConnectionAvailable: () -> Unit,
-        onConnectionUnavailable: () -> Unit
-    ) {
-        if (connectivityManager.allNetworks.isNotEmpty()) {
-            iterateOverTheListOfNetworks(connectivityManager, onConnectionAvailable)
+    private fun handleInternetConnectionAvailability(): State<*> {
+        return if (connectivityManager.allNetworks.isNotEmpty()) {
+            iterateOverTheListOfNetworks()
         } else {
-            onConnectionUnavailable()
+            ConnectionUnavailable
         }
     }
 
-    private fun iterateOverTheListOfNetworks(
-        connectivityManager: ConnectivityManager,
-        onConnectionAvailable: () -> Unit
-    ) {
+    private fun iterateOverTheListOfNetworks(): State<*> {
         connectivityManager.allNetworks.forEach { network ->
             connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
                 if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                    onConnectionAvailable()
+                    return ConnectionAvailable
                 }
             }
         }
+        return Generic
     }
 
-    fun observeInternetConnectionAvailability(applicationContext: Context): StateFlow<Boolean> {
-        castValue<ConnectivityManager>(applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE)).apply {
-            requestNetwork(networkRequest, connectivityCallback)
-        }
+    fun observeInternetConnectionAvailability(): StateFlow<State<*>> {
+        connectivityManager.requestNetwork(networkRequest, connectivityCallback)
         return networkStateFlow
     }
 }
