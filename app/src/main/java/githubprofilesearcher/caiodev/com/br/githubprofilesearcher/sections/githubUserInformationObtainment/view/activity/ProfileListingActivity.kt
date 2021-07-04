@@ -28,7 +28,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.userR
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.LifecycleOwnerFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileAdapter
@@ -39,8 +39,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.transientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.checkIfInternetConnectionIsAvailable
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking.observeInternetConnectionAvailability
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -66,7 +64,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     private val concatAdapter by lazy {
         ConcatAdapter(
             HeaderAdapter(R.string.github_user_list_header),
-            GithubProfileAdapter(obtainGithubProfileListener()),
+            GithubProfileAdapter(obtainProfileListener()),
             TransientViewsAdapter()
         )
     }
@@ -84,9 +82,9 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         viewModel.apply {
             saveValueToDataStore(
                 obtainValueFromDataStore().toBuilder()
-                    .setIsTextInputEditTextEmpty(isTextInputEditTextEmpty()).build()
+                    .setIsTextInputEditTextNotEmpty(isTextInputEditTextNotEmpty()).build()
             )
-            if (!isTextInputEditTextEmpty()) {
+            if (isTextInputEditTextNotEmpty()) {
                 saveValueToDataStore(
                     obtainValueFromDataStore().toBuilder()
                         .setProfile(binding.searchProfileTextInputEditText.text.toString()).build()
@@ -108,7 +106,14 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun bindViewModelDataToUIInCaseOfOrientationChanges() {
-        viewModel.successLiveData.value?.let {
+        if (viewModel.isObserverUnchanged()) {
+            viewModel.saveValueToDataStore()
+            viewModel.updateUIWithCache()
+            changeViewState(headerAdapter, header)
+            if (viewModel.obtainValueFromDataStore().isRetryViewVisible) {
+                changeViewState(transientViewsAdapter, retry)
+            }
+        } else {
             if (viewModel.obtainValueFromDataStore().profile.isNotEmpty()) {
                 binding.searchProfileTextInputEditText.setText(
                     viewModel.obtainValueFromDataStore().profile
@@ -133,21 +138,16 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
             viewModel.obtainValueFromDataStore().apply {
                 if (hasASuccessfulCallAlreadyBeenMade &&
-                    !isTextInputEditTextEmpty && !hasUserDeletedProfileText
+                    !isTextInputEditTextNotEmpty && !hasUserDeletedProfileText
                 ) {
                     binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
                 }
             }
 
-            if (provideRecyclerViewLayoutManager().findFirstVisibleItemPosition() >= 2) {
-                binding.backToTopButton.applyViewVisibility(VISIBLE)
-            }
-        } ?: run {
-            viewModel.saveValueToDataStore()
-            viewModel.updateUIWithCache()
-            changeViewState(headerAdapter, header)
-            if (viewModel.obtainValueFromDataStore().isRetryViewVisible) {
-                changeViewState(transientViewsAdapter, retry)
+            provideRecyclerViewLayoutManager()?.findFirstVisibleItemPosition()?.let {
+                if (it >= 2) {
+                    binding.backToTopButton.applyViewVisibility(VISIBLE)
+                }
             }
         }
     }
@@ -233,7 +233,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun initializeAdapterCallback() {
-        provideAdapter<TransientViewsAdapter>(transientViewsAdapter).setOnItemClicked(
+        provideAdapter<TransientViewsAdapter>(transientViewsAdapter)?.setOnItemClicked(
             object :
                 OnItemClicked {
                 override fun onItemClick(adapterPosition: Int, id: Int) {
@@ -243,11 +243,10 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         )
     }
 
-    private fun obtainGithubProfileListener(): OnItemSelectedListener {
+    private fun obtainProfileListener(): OnItemSelectedListener {
         return object : OnItemSelectedListener {
             override fun onItemSelected(text: String) {
-                checkIfInternetConnectionIsAvailable(
-                    applicationContext,
+                handleConnectionState(
                     onConnectionAvailable = {
                         startActivity(
                             GithubProfileDetailActivity.newIntent(
@@ -272,43 +271,48 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun onSuccess() {
-        viewModel.successLiveData.observe(
-            this
-        ) { githubUsersList ->
-            viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().toBuilder()
-                    .setHasLastCallBeenUnsuccessful(false).build()
-            )
-            viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().toBuilder().setIsThereAnOngoingCall(false)
-                    .build()
-            )
+        runTaskOnBackground {
+            viewModel.successStateFlow.collect { content ->
+                if (!viewModel.isResultListEmpty()) {
+                    viewModel.saveValueToDataStore(
+                        viewModel.obtainValueFromDataStore().toBuilder()
+                            .setHasLastCallBeenUnsuccessful(false).build()
+                    )
+                    viewModel.saveValueToDataStore(
+                        viewModel.obtainValueFromDataStore().toBuilder()
+                            .setIsThereAnOngoingCall(false)
+                            .build()
+                    )
 
-            if (this::countingIdlingResource.isInitialized) {
-                countingIdlingResource.decrement()
+                    if (this::countingIdlingResource.isInitialized) {
+                        countingIdlingResource.decrement()
+                    }
+
+                    setupUpperViewsInteraction(true)
+
+                    if (viewModel.obtainValueFromDataStore().hasUserDeletedProfileText &&
+                        viewModel.obtainValueFromDataStore().profile.isNotEmpty()
+                    ) {
+                        viewModel.saveValueToDataStore(
+                            viewModel.obtainValueFromDataStore().toBuilder()
+                                .setShouldASearchBePerformed(true).build()
+                        )
+                    } else {
+                        viewModel.saveValueToDataStore(
+                            viewModel.obtainValueFromDataStore().toBuilder()
+                                .setShouldASearchBePerformed(false).build()
+                        )
+                    }
+
+                    if (!viewModel.obtainValueFromDataStore().isHeaderVisible) {
+                        changeViewState(headerAdapter, header)
+                    }
+
+                    castTo<List<UserProfileInformation>>(content)?.let {
+                        splitOnSuccess(it)
+                    }
+                }
             }
-
-            setupUpperViewsInteraction(true)
-
-            if (viewModel.obtainValueFromDataStore().hasUserDeletedProfileText &&
-                viewModel.obtainValueFromDataStore().profile.isNotEmpty()
-            ) {
-                viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().toBuilder()
-                        .setShouldASearchBePerformed(true).build()
-                )
-            } else {
-                viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().toBuilder()
-                        .setShouldASearchBePerformed(false).build()
-                )
-            }
-
-            if (!viewModel.obtainValueFromDataStore().isHeaderVisible) {
-                changeViewState(headerAdapter, header)
-            }
-
-            splitOnSuccess(githubUsersList)
         }
     }
 
@@ -319,7 +323,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             changeViewState(transientViewsAdapter, empty)
         }
 
-        provideAdapter<GithubProfileAdapter>(githubProfileAdapter).apply {
+        provideAdapter<GithubProfileAdapter>(githubProfileAdapter)?.apply {
             updateDataSource(githubUsersList)
             notifyDataSetChanged()
         }
@@ -337,7 +341,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         )
 
         if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData) {
-            provideAdapter<GithubProfileAdapter>(githubProfileAdapter).updateDataSource(
+            provideAdapter<GithubProfileAdapter>(githubProfileAdapter)?.updateDataSource(
                 githubUsersList
             )
 
@@ -420,7 +424,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     override fun setupExtras() {
-        callToCheckIfInternetConnectionIsAvailable(
+        handleConnectionState(
             onConnectionUnavailable = {
                 internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
                     false
@@ -445,7 +449,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
     private fun textInputEditTextNotEmptyRequiredCall() {
         binding.searchProfileTextInputEditText.hideKeyboard()
-        if (!isTextInputEditTextEmpty()) {
+        if (isTextInputEditTextNotEmpty()) {
             binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
             viewModel.saveValueToDataStore(
                 viewModel.obtainValueFromDataStore().toBuilder()
@@ -482,7 +486,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private inline fun callApiThroughViewModel(crossinline task: () -> Unit) {
-        callToCheckIfInternetConnectionIsAvailable(
+        handleConnectionState(
             onConnectionAvailable = {
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().toBuilder().setIsThereAnOngoingCall(true)
@@ -534,7 +538,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
     private fun shouldRecallInternetConnectivitySnackBar(): Any {
         if (!viewModel.obtainValueFromDataStore().isRetryViewVisible) {
-            return callToCheckIfInternetConnectionIsAvailable(
+            return handleConnectionState(
                 onConnectionUnavailable = {
                     internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(false)
                 }
@@ -543,21 +547,10 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         return emptyString
     }
 
-    private fun callToCheckIfInternetConnectionIsAvailable(
-        onConnectionAvailable: () -> Unit = {},
-        onConnectionUnavailable: () -> Unit = {}
-    ) {
-        checkIfInternetConnectionIsAvailable(
-            applicationContext,
-            onConnectionAvailable,
-            onConnectionUnavailable
-        )
-    }
-
     private fun setupInternetConnectionObserver() {
         runTaskOnBackground {
-            observeInternetConnectionAvailability(applicationContext).collect { isInternetAvailable ->
-                if (isInternetAvailable) {
+            viewModel.provideConnectionObserver().collect { connectionState ->
+                if (connectionState == ConnectionAvailable) {
                     internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
                         true
                     )
@@ -609,19 +602,21 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                     val recyclerViewLayoutManager = provideRecyclerViewLayoutManager()
 
                     binding.backToTopButton.apply {
-                        if (recyclerViewLayoutManager.findFirstVisibleItemPosition() >= 2) {
-                            if (visibility != VISIBLE && isClickable) {
-                                binding.backToTopButton.applyViewVisibility(VISIBLE)
+                        recyclerViewLayoutManager?.findFirstVisibleItemPosition()?.let {
+                            if (it >= 2) {
+                                if (visibility != VISIBLE && isClickable) {
+                                    binding.backToTopButton.applyViewVisibility(VISIBLE)
+                                }
+                            } else {
+                                if (visibility != INVISIBLE) {
+                                    this.applyViewVisibility(INVISIBLE)
+                                }
+                                isClickable = true
                             }
-                        } else {
-                            if (visibility != INVISIBLE) {
-                                this.applyViewVisibility(INVISIBLE)
-                            }
-                            isClickable = true
                         }
                     }
 
-                    if (recyclerViewLayoutManager.findLastVisibleItemPosition() == total?.minus(2) &&
+                    if (recyclerViewLayoutManager?.findLastVisibleItemPosition() == total?.minus(2) &&
                         viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
                     ) {
                         viewModel.saveValueToDataStore(
@@ -664,19 +659,19 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         }
     }
 
-    private fun isTextInputEditTextEmpty() =
-        binding.searchProfileTextInputEditText.text.toString().isEmpty()
+    private fun isTextInputEditTextNotEmpty() =
+        binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
 
     fun bindIdlingResource(receivedCountingIdlingResource: CountingIdlingResource) {
         countingIdlingResource = receivedCountingIdlingResource
     }
 
     private fun provideRecyclerViewLayoutManager() =
-        castValue<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
+        castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
 
     private fun changeViewState(adapterPosition: Int, viewState: Int) {
         if (adapterPosition == headerAdapter) {
-            (castValue<HeaderAdapter>(concatAdapter.adapters[adapterPosition])).apply {
+            (castTo<HeaderAdapter>(concatAdapter.adapters[adapterPosition]))?.apply {
                 updateViewState(viewState)
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().toBuilder().setIsHeaderVisible(true)
@@ -684,7 +679,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 )
             }
         } else {
-            (castValue<TransientViewsAdapter>(concatAdapter.adapters[adapterPosition])).apply {
+            (castTo<TransientViewsAdapter>(concatAdapter.adapters[adapterPosition]))?.apply {
                 updateViewState(viewState)
                 notifyDataSetChanged()
 
@@ -739,5 +734,16 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private inline fun <reified T> provideAdapter(adapterPosition: Int) =
-        castValue<T>(concatAdapter.adapters[adapterPosition])
+        castTo<T>(concatAdapter.adapters[adapterPosition])
+
+    private fun handleConnectionState(
+        onConnectionAvailable: () -> Unit = {},
+        onConnectionUnavailable: () -> Unit = {}
+    ) {
+        if (viewModel.obtainConnectionState() == ConnectionAvailable) {
+            onConnectionAvailable()
+        } else {
+            onConnectionUnavailable()
+        }
+    }
 }

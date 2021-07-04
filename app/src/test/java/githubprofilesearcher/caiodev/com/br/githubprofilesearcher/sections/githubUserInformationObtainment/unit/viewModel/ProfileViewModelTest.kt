@@ -40,7 +40,7 @@ class ProfileViewModelTest : TestSteps {
 
         doWhen {
             githubInfo =
-                LiveDataTestUtil.getValue(viewModel.successLiveData).first()
+                LiveDataTestUtil.getValue(viewModel.successStateFlow).first()
         }
 
         then {

@@ -15,7 +15,7 @@ message ProfilePreferences {
   bool isThereAnOngoingCall = 9;
   bool hasUserRequestedUpdatedData = 10;
   bool shouldASearchBePerformed = 11;
-  bool isTextInputEditTextEmpty = 12;
+  bool isTextInputEditTextNotEmpty = 12;
   int32 numberOfItems = 13;
   bool isHeaderVisible = 14;
   bool isEndOfResultsViewVisible = 15;

@@ -15,13 +15,14 @@ import androidx.lifecycle.addRepeatingJob
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 
 fun CustomSnackBar.showInternetConnectionStatusSnackBar(
     isInternetConnectionAvailable: Boolean
 ) {
     if (isInternetConnectionAvailable) {
+        println("SnackBar: ConnectionAvailable")
         setText(R.string.back_online_success_message).setBackgroundColor(
             ContextCompat.getColor(
                 context,
@@ -29,9 +30,11 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
             )
         )
         if (isShown) {
+            println("SnackBar: isShown True")
             dismiss()
         }
     } else {
+        println("SnackBar: ConnectionUnavailable")
         setText(R.string.no_connection_error).setBackgroundColor(
             ContextCompat.getColor(
                 context,
@@ -39,16 +42,18 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
             )
         )
         if (CustomSnackBar.shouldSnackBarBeShownIfUserIsOnline) {
+            println("SnackBar: ShowToast")
             show()
         } else {
+            println("SnackBar: SetVariableToTrue")
             CustomSnackBar.shouldSnackBarBeShownIfUserIsOnline = true
         }
     }
 }
 
 fun EditText.hideKeyboard() {
-    castValue<InputMethodManager>(context.getSystemService(Context.INPUT_METHOD_SERVICE))
-        .hideSoftInputFromWindow(applicationWindowToken, 0)
+    castTo<InputMethodManager>(context.getSystemService(Context.INPUT_METHOD_SERVICE))
+        ?.hideSoftInputFromWindow(applicationWindowToken, 0)
 }
 
 fun ImageView.changeDrawable(@DrawableRes newDrawable: Int) {

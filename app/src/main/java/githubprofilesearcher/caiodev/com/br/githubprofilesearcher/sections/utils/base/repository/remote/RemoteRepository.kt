@@ -1,16 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Success
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithoutBody
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ClientSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Forbidden
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ServerSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Generic
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Connect
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SocketTimeout
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SSLHandshake
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.UnknownHost
-
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
 import retrofit2.Response
 import java.io.IOException
 import java.net.ConnectException
@@ -35,7 +25,7 @@ class RemoteRepository {
 
     suspend fun <T> callApi(
         call: suspend () -> Response<T>
-    ): Any {
+    ): State<*> {
         return try {
             val response = call()
             if (response.isSuccessful) {
@@ -48,7 +38,7 @@ class RemoteRepository {
         }
     }
 
-    private fun handleSuccess(response: Response<*>): Any {
+    private fun handleSuccess(response: Response<*>): State<*> {
         with(response) {
             body()?.let { apiResponse ->
                 return Success(apiResponse, obtainTotalPages(headers()))
@@ -58,7 +48,7 @@ class RemoteRepository {
         }
     }
 
-    private fun handleHttpError(responseCode: Int): Any {
+    private fun handleHttpError(responseCode: Int): State<*> {
         return when (responseCode) {
             in fourHundred..fourHundredAndTwo,
             in fourHundredAndFour..fourHundredAndNinetyNine -> ClientSide
@@ -68,7 +58,7 @@ class RemoteRepository {
         }
     }
 
-    private fun handleException(exception: IOException): Any {
+    private fun handleException(exception: IOException): State<*> {
         return when (exception) {
             is ConnectException -> Connect
             is SocketTimeoutException -> SocketTimeout

@@ -21,6 +21,7 @@ val userProfileViewModel = module {
 
     viewModel {
         ProfileViewModel(
+            networkChecking = get(),
             localRepository = get(),
             remoteRepository = get()
         )

@@ -2,5 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 object ValueCasting {
     @Suppress("UNCHECKED_CAST")
-    fun <T> castValue(value: Any?) = value as T
+    fun <T> castToNonNullable(value: Any?) = value as T
+
+    inline fun <reified T> castTo(value: Any?) = value as? T
 }

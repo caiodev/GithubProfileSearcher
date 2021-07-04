@@ -1,7 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.viewModel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ProfilePreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.Profile
@@ -12,20 +10,22 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Generic
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.State
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Success
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castValue
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnForeground
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 internal class ProfileViewModel(
+    private val networkChecking: NetworkChecking,
     private val localRepository: ILocalRepository,
     private val remoteRepository: IProfileRepository
 ) : ViewModel() {
 
-    private val _successLiveData = MutableLiveData<List<UserProfileInformation>>()
-    val successLiveData: LiveData<List<UserProfileInformation>>
-        get() = _successLiveData
+    private val _successMutableStateFlow = MutableStateFlow<List<UserProfileInformation>>(listOf())
+    val successStateFlow: StateFlow<List<UserProfileInformation>>
+        get() = _successMutableStateFlow
 
     private val _errorStateFlow = MutableStateFlow<State<Error>>(Generic)
     val errorStateFlow: StateFlow<State<Error>>
@@ -99,7 +99,7 @@ internal class ProfileViewModel(
                 )
             }
 
-            castValue<Profile>(value.data).apply {
+            castTo<Profile>(value.data)?.apply {
                 if (shouldListItemsBeRemoved) {
                     setupUpdatedList(githubProfileInformationList)
                 } else {
@@ -122,12 +122,14 @@ internal class ProfileViewModel(
                 )
             }
         } else {
-            handleError(castValue(value))
+            handleError(castTo(value))
         }
     }
 
-    private suspend fun handleError(error: State<Error>) {
-        _errorStateFlow.emit(error)
+    private suspend fun handleError(error: State<Error>?) {
+        error?.let {
+            _errorStateFlow.emit(error)
+        }
     }
 
     private fun setupUpdatedList(
@@ -140,7 +142,8 @@ internal class ProfileViewModel(
             localRepository.insertProfilesIntoDb(
                 githubProfileInformationList
             )
-            _successLiveData.postValue(profilesInfoList)
+            println("Emit: Success1")
+            _successMutableStateFlow.emit(profilesInfoList)
         }
     }
 
@@ -155,22 +158,25 @@ internal class ProfileViewModel(
             } else {
                 addContentToGithubProfilesInfoList(localRepository.getProfilesFromDb())
             }
-            _successLiveData.postValue(profilesInfoList)
+            if (profilesInfoList.isNotEmpty()) {
+                println("Emit: Success2")
+                _successMutableStateFlow.emit(profilesInfoList)
+            }
         }
     }
 
     fun obtainValueFromDataStore(): ProfilePreferences {
         var profilePreferences: ProfilePreferences? = null
         runTaskOnForeground {
-            profilePreferences = castValue(localRepository.obtainProtoDataStore().obtainData())
+            profilePreferences = castTo(localRepository.obtainProtoDataStore().obtainData())
         }
         return profilePreferences ?: ProfilePreferences.getDefaultInstance()
     }
 
-    fun saveValueToDataStore(profilePreferences: ProfilePreferences = ProfilePreferences.getDefaultInstance()) {
+    fun saveValueToDataStore(profile: ProfilePreferences = ProfilePreferences.getDefaultInstance()) {
         runTaskOnForeground {
             localRepository.obtainProtoDataStore().updateData(
-                castValue<ProfilePreferences>(profilePreferences)
+                castTo<ProfilePreferences>(profile)
             )
         }
     }
@@ -182,6 +188,14 @@ internal class ProfileViewModel(
     fun updateUIWithCache() {
         setupPaginationList(shouldSavedListBeUsed = true)
     }
+
+    fun obtainConnectionState() = networkChecking.checkIfInternetConnectionIsAvailable()
+
+    fun provideConnectionObserver() = networkChecking.observeInternetConnectionAvailability()
+
+    fun isObserverUnchanged() = successStateFlow.value.isEmpty()
+
+    fun isResultListEmpty() = profilesInfoList.isEmpty()
 
     companion object {
         const val emptyString = ""
