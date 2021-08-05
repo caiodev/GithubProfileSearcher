@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="unknown">
     <words>
+      <w>appname</w>
       <w>browsable</w>
       <w>caio</w>
       <w>caiodev</w>
@@ -10,6 +11,9 @@
       <w>couldn</w>
       <w>datas</w>
       <w>detekt</w>
+      <w>dorg</w>
+      <w>endlocal</w>
+      <w>errorlevel</w>
       <w>githubprofilesearcher</w>
       <w>gravatar</w>
       <w>koin</w>
@@ -21,6 +25,8 @@
       <w>octocat</w>
       <w>protobuf</w>
       <w>recyclerview</w>
+      <w>setlocal</w>
+      <w>windowz</w>
     </words>
   </dictionary>
 </component>

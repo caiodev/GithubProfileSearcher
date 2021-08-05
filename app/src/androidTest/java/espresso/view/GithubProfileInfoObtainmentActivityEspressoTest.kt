@@ -9,7 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.view.activity.ProfileListingActivity
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.activity.ProfileListingActivity
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

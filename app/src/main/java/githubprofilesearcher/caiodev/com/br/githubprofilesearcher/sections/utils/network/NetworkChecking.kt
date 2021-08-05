@@ -4,18 +4,17 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ConnectionAvailable
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ConnectionUnavailable
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Generic
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.emitValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class NetworkChecking(private val connectivityManager: ConnectivityManager) {
 
-    private val _networkStateFlow = MutableStateFlow<State<*>>(ConnectionAvailable)
-    private val networkStateFlow: StateFlow<State<*>>
+    private val _networkStateFlow = MutableStateFlow<State<Connection>>(
+        InitialConnection
+    )
+    private val networkStateFlow: StateFlow<State<Connection>>
         get() = _networkStateFlow
 
     private val networkRequest = NetworkRequest.Builder().apply {
@@ -26,36 +25,36 @@ class NetworkChecking(private val connectivityManager: ConnectivityManager) {
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
-            _networkStateFlow.emitValue(ConnectionAvailable)
+            _networkStateFlow.emitValue(Available)
         }
 
         override fun onLost(network: Network) {
-            _networkStateFlow.emitValue(ConnectionUnavailable)
+            _networkStateFlow.emitValue(Unavailable)
         }
     }
 
     fun checkIfInternetConnectionIsAvailable() = handleInternetConnectionAvailability()
 
-    private fun handleInternetConnectionAvailability(): State<*> {
+    private fun handleInternetConnectionAvailability(): State<Connection> {
         return if (connectivityManager.allNetworks.isNotEmpty()) {
             iterateOverTheListOfNetworks()
         } else {
-            ConnectionUnavailable
+            Unavailable
         }
     }
 
-    private fun iterateOverTheListOfNetworks(): State<*> {
+    private fun iterateOverTheListOfNetworks(): State<Connection> {
         connectivityManager.allNetworks.forEach { network ->
             connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
                 if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                    return ConnectionAvailable
+                    return Available
                 }
             }
         }
-        return Generic
+        return Neutral
     }
 
-    fun observeInternetConnectionAvailability(): StateFlow<State<*>> {
+    fun observeInternetConnectionAvailability(): StateFlow<State<Connection>> {
         connectivityManager.requestNetwork(networkRequest, connectivityCallback)
         return networkStateFlow
     }

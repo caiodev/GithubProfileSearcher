@@ -11,18 +11,19 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.addRepeatingJob
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
+import kotlinx.coroutines.launch
 
 fun CustomSnackBar.showInternetConnectionStatusSnackBar(
     isInternetConnectionAvailable: Boolean
 ) {
     if (isInternetConnectionAvailable) {
-        println("SnackBar: ConnectionAvailable")
         setText(R.string.back_online_success_message).setBackgroundColor(
             ContextCompat.getColor(
                 context,
@@ -30,11 +31,9 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
             )
         )
         if (isShown) {
-            println("SnackBar: isShown True")
             dismiss()
         }
     } else {
-        println("SnackBar: ConnectionUnavailable")
         setText(R.string.no_connection_error).setBackgroundColor(
             ContextCompat.getColor(
                 context,
@@ -42,10 +41,8 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
             )
         )
         if (CustomSnackBar.shouldSnackBarBeShownIfUserIsOnline) {
-            println("SnackBar: ShowToast")
             show()
         } else {
-            println("SnackBar: SetVariableToTrue")
             CustomSnackBar.shouldSnackBarBeShownIfUserIsOnline = true
         }
     }
@@ -66,10 +63,11 @@ fun ImageView.changeDrawable(@DrawableRes newDrawable: Int) {
 }
 
 @Suppress("UNUSED")
-fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) =
-    addRepeatingJob(Lifecycle.State.CREATED) {
-        task()
+fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.CREATED) { task() }
     }
+}
 
 fun View.applyBackgroundColor(@ColorRes color: Int) {
     setBackgroundColor(ContextCompat.getColor(context, color))
