@@ -1,6 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.UserProfileInformation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.Database
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.IKeyValueStorageManager
@@ -13,20 +13,20 @@ class LocalRepository(
 
     override fun obtainProtoDataStore() = keyValueStorageManager
 
-    override suspend fun getProfilesFromDb(): List<UserProfileInformation> {
-        var list = listOf<UserProfileInformation>()
-        appDatabase.githubProfilesDao().getProfilesFromDb()?.let {
+    override suspend fun getProfilesFromDb(): List<UserProfile> {
+        var list = listOf<UserProfile>()
+        appDatabase.profileDao().getProfilesFromDb()?.let {
             list = it
         }
         return list
     }
 
-    override suspend fun insertProfilesIntoDb(githubProfilesList: List<UserProfileInformation>) {
-        appDatabase.githubProfilesDao()
-            .insertProfilesIntoDb(githubProfilesList)
+    override suspend fun insertProfilesIntoDb(profileList: List<UserProfile>) {
+        appDatabase.profileDao()
+            .insertProfilesIntoDb(profileList)
     }
 
-    override suspend fun dropProfileInformationTable(githubProfilesList: List<UserProfileInformation>) {
-        appDatabase.githubProfilesDao().dropProfileInformationTable(githubProfilesList)
+    override suspend fun dropProfileInformationTable(profileList: List<UserProfile>) {
+        appDatabase.profileDao().dropProfileInformationTable(profileList)
     }
 }

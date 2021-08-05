@@ -1,7 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.repository.local.dao.GithubProfilesDao
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.dao.ProfileDao
 
 interface Database {
-    fun githubProfilesDao(): GithubProfilesDao
+    fun profileDao(): ProfileDao
 }

@@ -2,8 +2,8 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 import android.app.Application
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.githubUserInformationObtainment.model.di.userProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.userRepositoryInformationObtainment.model.diModules.userRepositoryViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.di.userProfileViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.repository.model.diModules.userRepositoryViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.di.globalModule
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext

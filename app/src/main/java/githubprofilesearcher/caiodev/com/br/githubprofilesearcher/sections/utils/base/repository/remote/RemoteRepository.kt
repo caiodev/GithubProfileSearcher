@@ -38,17 +38,17 @@ class RemoteRepository {
         }
     }
 
-    private fun handleSuccess(response: Response<*>): State<*> {
+    private fun handleSuccess(response: Response<*>): State<Success> {
         with(response) {
             body()?.let { apiResponse ->
-                return Success(apiResponse, obtainTotalPages(headers()))
+                return SuccessWithBody(apiResponse, obtainTotalPages(headers()))
             } ?: run {
                 return SuccessWithoutBody
             }
         }
     }
 
-    private fun handleHttpError(responseCode: Int): State<*> {
+    private fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
             in fourHundred..fourHundredAndTwo,
             in fourHundredAndFour..fourHundredAndNinetyNine -> ClientSide
@@ -58,7 +58,7 @@ class RemoteRepository {
         }
     }
 
-    private fun handleException(exception: IOException): State<*> {
+    private fun handleException(exception: IOException): State<Error> {
         return when (exception) {
             is ConnectException -> Connect
             is SocketTimeoutException -> SocketTimeout
