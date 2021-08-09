@@ -149,13 +149,15 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                             }
                         }
 
-                        provideRecyclerViewLayoutManager()?.findFirstVisibleItemPosition()?.let { position ->
-                            if (position >= 2) {
-                                binding.backToTopButton.applyViewVisibility(VISIBLE)
+                        provideRecyclerViewLayoutManager()?.findFirstVisibleItemPosition()
+                            ?.let { position ->
+                                if (position >= 2) {
+                                    binding.backToTopButton.applyViewVisibility(VISIBLE)
+                                }
                             }
-                        }
                     }
-                    else -> {}
+                    else -> {
+                    }
                 }
             }
         }
@@ -362,54 +364,16 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     private fun onError() {
         runTaskOnBackground {
             viewModel.errorStateFlow.collect { error ->
-                viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().toBuilder()
-                        .setHasLastCallBeenUnsuccessful(true).build()
-                )
-                viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().toBuilder().setIsThereAnOngoingCall(false)
-                        .build()
-                )
-
-                if (this::countingIdlingResource.isInitialized) {
-                    countingIdlingResource.decrement()
-                }
-
-                if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData) {
-                    viewModel.saveValueToDataStore(
-                        viewModel.obtainValueFromDataStore().toBuilder()
-                            .setHasUserRequestedUpdatedData(false).build()
-                    )
-                }
-
-                setupUpperViewsInteraction(true)
-
-                binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
-                    isSwipeEnabled = true
-                )
-
-                binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
-
                 when (error) {
                     UnknownHost, SocketTimeout, Connect ->
-                        showErrorMessages(R.string.unknown_host_exception_and_socket_timeout_exception)
-                    SSLHandshake -> showErrorMessages(R.string.ssl_handshake_exception)
-                    ClientSide -> showErrorMessages(R.string.client_side_error)
-                    ServerSide -> showErrorMessages(R.string.server_side_error)
-                    Forbidden -> showErrorMessages(R.string.api_query_limit_exceeded_error)
-                    InitialError -> {}
-                    else -> showErrorMessages(R.string.generic_exception_and_generic_error)
-                }
-
-                if (!viewModel.obtainValueFromDataStore().shouldRecyclerViewAnimationBeExecuted) {
-                    viewModel.saveValueToDataStore(
-                        viewModel.obtainValueFromDataStore().toBuilder()
-                            .setShouldASearchBePerformed(true).build()
-                    )
-                }
-
-                if (viewModel.obtainValueFromDataStore().isPaginationLoadingViewVisible) {
-                    changeViewState(transientViewsAdapter, retry)
+                        showErrorMessage(R.string.unknown_host_exception_and_socket_timeout_exception)
+                    SSLHandshake -> showErrorMessage(R.string.ssl_handshake_exception)
+                    ClientSide -> showErrorMessage(R.string.client_side_error)
+                    ServerSide -> showErrorMessage(R.string.server_side_error)
+                    Forbidden -> showErrorMessage(R.string.api_query_limit_exceeded_error)
+                    InitialError -> {
+                    }
+                    else -> showErrorMessage(R.string.generic_exception_and_generic_error)
                 }
             }
         }
@@ -511,12 +475,39 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 ) {
                     changeViewState(transientViewsAdapter, retry)
                 }
-                showErrorMessages(R.string.no_connection_error)
+                showErrorMessage(R.string.no_connection_error)
             }
         )
     }
 
-    private fun showErrorMessages(@StringRes message: Int) {
+    private fun showErrorMessage(@StringRes message: Int) {
+        viewModel.saveValueToDataStore(
+            viewModel.obtainValueFromDataStore().toBuilder()
+                .setHasLastCallBeenUnsuccessful(true).build()
+        )
+        viewModel.saveValueToDataStore(
+            viewModel.obtainValueFromDataStore().toBuilder().setIsThereAnOngoingCall(false)
+                .build()
+        )
+
+        if (this::countingIdlingResource.isInitialized) {
+            countingIdlingResource.decrement()
+        }
+
+        if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData) {
+            viewModel.saveValueToDataStore(
+                viewModel.obtainValueFromDataStore().toBuilder()
+                    .setHasUserRequestedUpdatedData(false).build()
+            )
+        }
+
+        setupUpperViewsInteraction(true)
+
+        binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
+            isSwipeEnabled = true
+        )
+
+        binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
         binding.searchProfileTextInputEditText.hideKeyboard()
         binding.repositoryLoadingProgressBar.applyViewVisibility(GONE)
         setupUpperViewsInteraction(true)
@@ -526,6 +517,17 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 shouldRecallInternetConnectivitySnackBar()
             }
         )
+
+        if (!viewModel.obtainValueFromDataStore().shouldRecyclerViewAnimationBeExecuted) {
+            viewModel.saveValueToDataStore(
+                viewModel.obtainValueFromDataStore().toBuilder()
+                    .setShouldASearchBePerformed(true).build()
+            )
+        }
+
+        if (viewModel.obtainValueFromDataStore().isPaginationLoadingViewVisible) {
+            changeViewState(transientViewsAdapter, retry)
+        }
     }
 
     private fun shouldRecallInternetConnectivitySnackBar(): Any {
@@ -550,6 +552,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                         if (!viewModel.obtainValueFromDataStore().isThereAnOngoingCall &&
                             viewModel.obtainValueFromDataStore().hasLastCallBeenUnsuccessful
                         ) {
+                            println("PrintValues: ${viewModel.obtainValueFromDataStore().isThereAnOngoingCall} ${viewModel.obtainValueFromDataStore().hasLastCallBeenUnsuccessful}")
                             if (viewModel.obtainValueFromDataStore().isRetryViewVisible) {
                                 paginationCall()
                             } else {
@@ -560,7 +563,8 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                     Unavailable -> {
                         internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(false)
                     }
-                    else -> {}
+                    else -> {
+                    }
                 }
             }
         }
@@ -631,19 +635,19 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         )
     }
 
-    private fun setupUpperViewsInteraction(shouldUsersBeAbleToInteractWithTheUpperViews: Boolean) {
+    private fun setupUpperViewsInteraction(isInteractive: Boolean) {
         binding.actionIconImageView.apply {
-            isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
-            isFocusable = shouldUsersBeAbleToInteractWithTheUpperViews
+            isClickable = isInteractive
+            isFocusable = isInteractive
         }
 
         with(binding.searchProfileTextInputEditText) {
-            isClickable = shouldUsersBeAbleToInteractWithTheUpperViews
-            isCursorVisible = shouldUsersBeAbleToInteractWithTheUpperViews
-            isFocusable = shouldUsersBeAbleToInteractWithTheUpperViews
-            isFocusableInTouchMode = shouldUsersBeAbleToInteractWithTheUpperViews
-            isLongClickable = shouldUsersBeAbleToInteractWithTheUpperViews
-            if (shouldUsersBeAbleToInteractWithTheUpperViews) requestFocus()
+            isClickable = isInteractive
+            isCursorVisible = isInteractive
+            isFocusable = isInteractive
+            isFocusableInTouchMode = isInteractive
+            isLongClickable = isInteractive
+            if (isInteractive) requestFocus()
         }
     }
 
