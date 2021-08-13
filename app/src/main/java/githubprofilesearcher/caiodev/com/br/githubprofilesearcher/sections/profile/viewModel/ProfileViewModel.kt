@@ -200,9 +200,9 @@ internal class ProfileViewModel(
         setupPaginationList(shouldSavedListBeUsed = true)
     }
 
-    fun obtainConnectionState() = networkChecking.checkIfInternetConnectionIsAvailable()
+    fun obtainConnectionState() = networkChecking.checkIfConnectionIsAvailable()
 
-    fun provideConnectionObserver() = networkChecking.observeInternetConnectionAvailability()
+    fun provideConnectionObserver() = networkChecking.observeConnection()
 
     private suspend fun postSuccessDataSaving(successWithBody: SuccessWithBody<*>) {
         saveValueToDataStore(

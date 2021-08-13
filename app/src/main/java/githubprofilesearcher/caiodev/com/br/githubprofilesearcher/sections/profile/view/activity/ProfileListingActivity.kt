@@ -546,13 +546,13 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             viewModel.provideConnectionObserver().collect { connectionState ->
                 when (connectionState) {
                     Available -> {
+                        println("CONNECTIONPROBE: AVAILABLE")
                         internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
                             true
                         )
                         if (!viewModel.obtainValueFromDataStore().isThereAnOngoingCall &&
                             viewModel.obtainValueFromDataStore().hasLastCallBeenUnsuccessful
                         ) {
-                            println("PrintValues: ${viewModel.obtainValueFromDataStore().isThereAnOngoingCall} ${viewModel.obtainValueFromDataStore().hasLastCallBeenUnsuccessful}")
                             if (viewModel.obtainValueFromDataStore().isRetryViewVisible) {
                                 paginationCall()
                             } else {
@@ -561,9 +561,11 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                         }
                     }
                     Unavailable -> {
+                        println("CONNECTIONPROBE: UNAVAILABLE")
                         internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(false)
                     }
                     else -> {
+                        println("CONNECTIONPROBE: $connectionState")
                     }
                 }
             }
