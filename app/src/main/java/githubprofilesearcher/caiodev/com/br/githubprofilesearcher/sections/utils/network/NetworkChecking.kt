@@ -25,20 +25,23 @@ class NetworkChecking(private val connectivityManager: ConnectivityManager) {
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
+            println("NETWORKPROBE: PostAvailable")
             _networkStateFlow.emitValue(Available)
         }
 
         override fun onLost(network: Network) {
+            println("NETWORKPROBE: PostUnavailable")
             _networkStateFlow.emitValue(Unavailable)
         }
     }
 
-    fun checkIfInternetConnectionIsAvailable() = handleInternetConnectionAvailability()
+    fun checkIfConnectionIsAvailable() = handleConnection()
 
-    private fun handleInternetConnectionAvailability(): State<Connection> {
+    private fun handleConnection(): State<Connection> {
         return if (connectivityManager.allNetworks.isNotEmpty()) {
             iterateOverTheListOfNetworks()
         } else {
+            println("NETWORKPROBE: ReturnUnavailable")
             Unavailable
         }
     }
@@ -47,14 +50,16 @@ class NetworkChecking(private val connectivityManager: ConnectivityManager) {
         connectivityManager.allNetworks.forEach { network ->
             connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
                 if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                    println("NETWORKPROBE: ReturnAvailable")
                     return Available
                 }
             }
         }
+        println("NETWORKPROBE: ReturnNeutral")
         return Neutral
     }
 
-    fun observeInternetConnectionAvailability(): StateFlow<State<Connection>> {
+    fun observeConnection(): StateFlow<State<Connection>> {
         connectivityManager.requestNetwork(networkRequest, connectivityCallback)
         return networkStateFlow
     }
