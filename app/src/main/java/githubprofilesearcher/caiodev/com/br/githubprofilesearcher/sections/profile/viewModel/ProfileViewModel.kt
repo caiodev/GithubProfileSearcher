@@ -202,7 +202,7 @@ internal class ProfileViewModel(
 
     fun obtainConnectionState() = networkChecking.checkIfConnectionIsAvailable()
 
-    fun provideConnectionObserver() = networkChecking.observeConnection()
+    fun provideConnectionObserver() = networkChecking.obtainConnectionObserver()
 
     private suspend fun postSuccessDataSaving(successWithBody: SuccessWithBody<*>) {
         saveValueToDataStore(

@@ -16,11 +16,11 @@ buildscript {
 
         //Code quality checking
         //Detekt
-        detektVersion = '1.17.0'
+        detektVersion = '1.18.0'
 
         //Ktlint
-        ktlintVersion = '0.41.0'
-        ktlintPluginVersion = '10.0.0'
+        ktlintVersion = '0.42.1'
+        ktlintPluginVersion = '10.1.0'
 
         //Coil
         coil = '1.3.2'
@@ -67,7 +67,7 @@ buildscript {
         serialization = '1.2.2'
 
         //Timber
-        timber = '4.7.1'
+        timber = '5.0.1'
 
         //Views/ViewGroups
         //ConstraintLayout

@@ -32,7 +32,10 @@ val globalModule = module {
     }
 
     single {
-        NetworkChecking(androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        NetworkChecking(
+            androidContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        )
     }
 
     single {
