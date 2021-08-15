@@ -9,7 +9,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class NetworkChecking(private val connectivityManager: ConnectivityManager) {
+class NetworkChecking(private val manager: ConnectivityManager) {
 
     private val _networkStateFlow = MutableStateFlow<State<Connection>>(
         InitialConnection
@@ -25,42 +25,35 @@ class NetworkChecking(private val connectivityManager: ConnectivityManager) {
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
-            println("NETWORKPROBE: PostAvailable")
             _networkStateFlow.emitValue(Available)
         }
 
         override fun onLost(network: Network) {
-            println("NETWORKPROBE: PostUnavailable")
             _networkStateFlow.emitValue(Unavailable)
         }
     }
 
-    fun checkIfConnectionIsAvailable() = handleConnection()
-
-    private fun handleConnection(): State<Connection> {
-        return if (connectivityManager.allNetworks.isNotEmpty()) {
-            iterateOverTheListOfNetworks()
-        } else {
-            println("NETWORKPROBE: ReturnUnavailable")
-            Unavailable
-        }
+    fun obtainConnectionObserver(): StateFlow<State<Connection>> {
+        manager.registerNetworkCallback(networkRequest, connectivityCallback)
+        return networkStateFlow
     }
 
-    private fun iterateOverTheListOfNetworks(): State<Connection> {
-        connectivityManager.allNetworks.forEach { network ->
-            connectivityManager.getNetworkCapabilities(network)?.let { networkCapabilities ->
-                if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                    println("NETWORKPROBE: ReturnAvailable")
-                    return Available
+    fun checkIfConnectionIsAvailable(): State<Connection> {
+        manager.run {
+            getNetworkCapabilities(activeNetwork)?.run {
+                val isAnyTransportMethodAvailable =
+                    hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+                return if (isAnyTransportMethodAvailable) {
+                    Available
+                } else {
+                    Unavailable
                 }
+            } ?: run {
+                return Unavailable
             }
         }
-        println("NETWORKPROBE: ReturnNeutral")
-        return Neutral
-    }
-
-    fun observeConnection(): StateFlow<State<Connection>> {
-        connectivityManager.requestNetwork(networkRequest, connectivityCallback)
-        return networkStateFlow
     }
 }

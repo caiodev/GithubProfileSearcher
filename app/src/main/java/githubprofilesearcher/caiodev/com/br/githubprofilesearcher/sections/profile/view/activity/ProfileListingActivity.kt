@@ -546,7 +546,6 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             viewModel.provideConnectionObserver().collect { connectionState ->
                 when (connectionState) {
                     Available -> {
-                        println("CONNECTIONPROBE: AVAILABLE")
                         internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
                             true
                         )
@@ -561,12 +560,9 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                         }
                     }
                     Unavailable -> {
-                        println("CONNECTIONPROBE: UNAVAILABLE")
                         internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(false)
                     }
-                    else -> {
-                        println("CONNECTIONPROBE: $connectionState")
-                    }
+                    else -> Unit
                 }
             }
         }
