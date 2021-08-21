@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="text_input_layout_hint">Digite um perfil ex: torvalds</string>
+    <string name="text_input_layout_hint">Digite um perfil</string>
     <string name="empty_field_error">Campo vazio</string>
     <string name="no_connection_error">Não há conexão com a internet</string>
     <string name="github_user_list_header">Perfis</string>
