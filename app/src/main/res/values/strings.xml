@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">GithubProfileSearcher</string>
 
     <!--User information-->
-    <string name="text_input_layout_hint">Type a profile e.g: torvalds</string>
+    <string name="text_input_layout_hint">Type a profile</string>
     <string name="user_id" translatable="false">ID: %s</string>
     <string name="login">User: %s</string>
 

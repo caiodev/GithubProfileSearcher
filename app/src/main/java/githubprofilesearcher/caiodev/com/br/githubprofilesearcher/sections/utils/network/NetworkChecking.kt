@@ -49,11 +49,19 @@ class NetworkChecking(private val manager: ConnectivityManager) {
                 return if (isAnyTransportMethodAvailable) {
                     Available
                 } else {
+                    checkIfValueIsInitialConnection()
                     Unavailable
                 }
             } ?: run {
+                checkIfValueIsInitialConnection()
                 return Unavailable
             }
+        }
+    }
+
+    private fun checkIfValueIsInitialConnection() {
+        if (_networkStateFlow.value is InitialConnection) {
+            _networkStateFlow.emitValue(Unavailable)
         }
     }
 }
