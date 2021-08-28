@@ -108,7 +108,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
     private fun bindViewModelDataToUIInCaseOfOrientationChanges() {
         runTaskOnBackground {
-            viewModel.intermediateStateFlow.collect {
+            viewModel.intermediateSharedFlow.collect {
                 when (it) {
                     LocalPopulation -> {
                         viewModel.saveValueToDataStore()
@@ -156,8 +156,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                                 }
                             }
                     }
-                    else -> {
-                    }
+                    else -> Unit
                 }
             }
         }
@@ -363,7 +362,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
     private fun onError() {
         runTaskOnBackground {
-            viewModel.errorStateFlow.collect { error ->
+            viewModel.errorSharedFlow.collect { error ->
                 when (error) {
                     UnknownHost, SocketTimeout, Connect ->
                         showErrorMessage(R.string.unknown_host_exception_and_socket_timeout_exception)
@@ -371,8 +370,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                     ClientSide -> showErrorMessage(R.string.client_side_error)
                     ServerSide -> showErrorMessage(R.string.server_side_error)
                     Forbidden -> showErrorMessage(R.string.api_query_limit_exceeded_error)
-                    InitialError -> {
-                    }
+                    InitialError -> Unit
                     else -> showErrorMessage(R.string.generic_exception_and_generic_error)
                 }
             }
