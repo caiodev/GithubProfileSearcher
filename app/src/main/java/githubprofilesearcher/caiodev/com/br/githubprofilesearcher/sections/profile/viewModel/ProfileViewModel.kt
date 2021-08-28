@@ -11,8 +11,10 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnForeground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.network.NetworkChecking
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 internal class ProfileViewModel(
     private val networkChecking: NetworkChecking,
@@ -22,20 +24,20 @@ internal class ProfileViewModel(
 
     private var profilePreferences = ProfilePreferences.getDefaultInstance()
 
-    private val _successMutableStateFlow = MutableStateFlow<State<Success>>(InitialSuccess)
+    private val _successStateFlow = MutableStateFlow<State<Success>>(InitialSuccess)
     internal val successStateFlow: StateFlow<State<Success>>
-        get() = _successMutableStateFlow
+        get() = _successStateFlow
 
-    private val _intermediateStateFlow = MutableStateFlow<State<Intermediate>>(InitialIntermediate)
-    internal val intermediateStateFlow: StateFlow<State<Intermediate>>
-        get() = _intermediateStateFlow
+    private val _intermediateSharedFlow = MutableSharedFlow<State<Intermediate>>()
+    internal val intermediateSharedFlow = _intermediateSharedFlow.asSharedFlow()
 
-    private val _errorStateFlow = MutableStateFlow<State<Error>>(InitialError)
-    internal val errorStateFlow: StateFlow<State<Error>>
-        get() = _errorStateFlow
+    private val _errorSharedFlow = MutableSharedFlow<State<Error>>()
+    internal val errorSharedFlow = _errorSharedFlow.asSharedFlow()
 
     private val _profileInfoList = mutableListOf<UserProfile>()
     private var profilesInfoList: List<UserProfile> = _profileInfoList
+
+    private var currentIntermediateState: State<Intermediate> = InitialIntermediate
 
     fun requestUpdatedProfiles(profile: String = emptyString) {
         saveValueToDataStore(
@@ -125,8 +127,7 @@ internal class ProfileViewModel(
                 }
             }
 
-            SuccessWithoutBody -> {
-            }
+            SuccessWithoutBody -> Unit
 
             else -> {
                 handleError(castTo(value))
@@ -136,7 +137,7 @@ internal class ProfileViewModel(
 
     private suspend fun handleError(error: State<Error>?) {
         error?.let {
-            _errorStateFlow.emit(error)
+            _errorSharedFlow.emit(error)
         }
     }
 
@@ -229,9 +230,9 @@ internal class ProfileViewModel(
         }
 
         if (successWithBody.totalPages == SuccessWithBody.initialPosition) {
-            _successMutableStateFlow.emit(SuccessWithBody(data = Profile(profile = profilesInfoList)))
+            _successStateFlow.emit(SuccessWithBody(data = Profile(profile = profilesInfoList)))
         } else {
-            _successMutableStateFlow.emit(successWithBody)
+            _successStateFlow.emit(successWithBody)
         }
     }
 
@@ -240,14 +241,21 @@ internal class ProfileViewModel(
             if (successStateFlow.value == InitialSuccess &&
                 localRepository.getProfilesFromDb().isEmpty()
             ) {
-                _intermediateStateFlow.emit(ActionNotRequired)
+                postIntermediateState(ActionNotRequired)
             } else if (localRepository.getProfilesFromDb().isNotEmpty() &&
                 profilesInfoList.isEmpty()
             ) {
-                _intermediateStateFlow.emit(LocalPopulation)
+                postIntermediateState(LocalPopulation)
             } else {
-                _intermediateStateFlow.emit(StateRestoration)
+                postIntermediateState(StateRestoration)
             }
+        }
+    }
+
+    private suspend fun postIntermediateState(state: State<Intermediate>) {
+        if (state != currentIntermediateState) {
+            currentIntermediateState = state
+            _intermediateSharedFlow.emit(state)
         }
     }
 
