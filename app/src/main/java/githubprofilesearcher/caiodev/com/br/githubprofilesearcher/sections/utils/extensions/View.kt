@@ -21,9 +21,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import kotlinx.coroutines.launch
 
 fun CustomSnackBar.showInternetConnectionStatusSnackBar(
-    isInternetConnectionAvailable: Boolean
+    isConnectionAvailable: Boolean
 ) {
-    if (isInternetConnectionAvailable) {
+    if (isConnectionAvailable) {
         setText(R.string.back_online_success_message).setBackgroundColor(
             ContextCompat.getColor(
                 context,
@@ -40,11 +40,7 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
                 R.color.red_700
             )
         )
-        if (CustomSnackBar.shouldSnackBarBeShownIfUserIsOnline) {
-            show()
-        } else {
-            CustomSnackBar.shouldSnackBarBeShownIfUserIsOnline = true
-        }
+        show()
     }
 }
 
