@@ -7,6 +7,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnForeground
@@ -21,8 +22,6 @@ internal class ProfileViewModel(
     private val localRepository: ILocalRepository,
     private val remoteRepository: IProfileRepository
 ) : ViewModel() {
-
-    private var profilePreferences = ProfilePreferences.getDefaultInstance()
 
     private val _successStateFlow = MutableStateFlow<State<Success>>(InitialSuccess)
     internal val successStateFlow: StateFlow<State<Success>>
@@ -39,9 +38,11 @@ internal class ProfileViewModel(
 
     private var currentIntermediateState: State<Intermediate> = InitialIntermediate
 
+    private var profilePreferences = ProfilePreferences.getDefaultInstance()
+
     fun requestUpdatedProfiles(profile: String = emptyString) {
         saveValueToDataStore(
-            obtainValueFromDataStore().toBuilder().setPageNumber(initialPageNumber).build()
+            obtainValueFromDataStore().toBuilder().setPageNumber(initialPage).build()
         )
 
         if (profile.isNotEmpty()) {
@@ -84,7 +85,7 @@ internal class ProfileViewModel(
                 remoteRepository.provideGithubUserInformation(
                     user,
                     obtainValueFromDataStore().pageNumber,
-                    numberOfItemsPerPage
+                    itemsPerPage
                 )
             handleResult(value, shouldListItemsBeRemoved)
         }
@@ -110,27 +111,12 @@ internal class ProfileViewModel(
                 } else {
                     setupPaginationList(successWithBody = value)
                 }
-
-                saveValueToDataStore(
-                    obtainValueFromDataStore().toBuilder().setNumberOfItems(profilesInfoList.size)
-                        .build()
-                )
-
-                obtainValueFromDataStore().apply {
-                    saveValueToDataStore(
-                        toBuilder().setPageNumber(
-                            pageNumber.plus(
-                                initialPageNumber
-                            )
-                        ).build()
-                    )
-                }
             }
 
             SuccessWithoutBody -> Unit
 
             else -> {
-                handleError(castTo(value))
+                handleError(ValueCasting.castTo(value))
             }
         }
     }
@@ -146,15 +132,17 @@ internal class ProfileViewModel(
     ) {
         runTaskOnBackground {
             successWithBody.apply {
-                localRepository.dropProfileInformationTable(localRepository.getProfilesFromDb())
-                _profileInfoList.clear()
+                localRepository.dropProfileInformation()
+                if (_profileInfoList.isNotEmpty()) {
+                    _profileInfoList.clear()
+                }
                 castTo<Profile>(successWithBody.data)?.let { profile ->
                     addContentToProfileInfoList(profile.profile)
                     localRepository.insertProfilesIntoDb(
                         profile.profile
                     )
                 }
-                postSuccessDataSaving(this)
+                saveDataAfterSuccess(this)
             }
         }
     }
@@ -173,7 +161,7 @@ internal class ProfileViewModel(
                 } else {
                     addContentToProfileInfoList(localRepository.getProfilesFromDb())
                 }
-                postSuccessDataSaving(this)
+                saveDataAfterSuccess(this)
             }
         }
     }
@@ -205,10 +193,16 @@ internal class ProfileViewModel(
 
     fun provideConnectionObserver() = networkChecking.obtainConnectionObserver()
 
-    private suspend fun postSuccessDataSaving(successWithBody: SuccessWithBody<*>) {
+    private suspend fun saveDataAfterSuccess(successWithBody: SuccessWithBody<*>) {
         saveValueToDataStore(
             obtainValueFromDataStore().toBuilder()
-                .setHasLastCallBeenUnsuccessful(false).build()
+                .setCurrentProfile(obtainValueFromDataStore().temporaryCurrentProfile)
+                .build()
+        )
+        saveValueToDataStore(
+            obtainValueFromDataStore().toBuilder()
+                .setHasLastCallBeenUnsuccessful(false)
+                .build()
         )
         saveValueToDataStore(
             obtainValueFromDataStore().toBuilder()
@@ -220,20 +214,38 @@ internal class ProfileViewModel(
         ) {
             saveValueToDataStore(
                 obtainValueFromDataStore().toBuilder()
-                    .setShouldASearchBePerformed(true).build()
+                    .setShouldASearchBePerformed(true)
+                    .build()
             )
         } else {
             saveValueToDataStore(
                 obtainValueFromDataStore().toBuilder()
-                    .setShouldASearchBePerformed(false).build()
+                    .setShouldASearchBePerformed(false)
+                    .build()
             )
         }
 
-        if (successWithBody.totalPages == SuccessWithBody.initialPosition) {
-            _successStateFlow.emit(SuccessWithBody(data = Profile(profile = profilesInfoList)))
-        } else {
-            _successStateFlow.emit(successWithBody)
+        saveValueToDataStore(
+            obtainValueFromDataStore().toBuilder().setNumberOfItems(profilesInfoList.size)
+                .build()
+        )
+
+        obtainValueFromDataStore().apply {
+            saveValueToDataStore(
+                toBuilder().setPageNumber(
+                    pageNumber.plus(
+                        initialPage
+                    )
+                ).build()
+            )
         }
+
+        _successStateFlow.emit(
+            SuccessWithBody(
+                data = profilesInfoList,
+                successWithBody.totalPages
+            )
+        )
     }
 
     fun checkDataAtStartup() {
@@ -259,9 +271,11 @@ internal class ProfileViewModel(
         }
     }
 
+    internal inline fun <reified T> castTo(value: Any) = ValueCasting.castTo<T>(value)
+
     companion object {
         const val emptyString = ""
-        const val numberOfItemsPerPage = 20
-        private const val initialPageNumber = 1
+        const val itemsPerPage = 20
+        private const val initialPage = 1
     }
 }

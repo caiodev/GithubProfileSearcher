@@ -17,7 +17,6 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ActivityProfileListingBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.HeaderAdapter
@@ -289,7 +288,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                     }
                     is SuccessWithBody<*> -> {
                         when (val value = state.data) {
-                            is Profile -> {
+                            is List<*> -> {
                                 setupUpperViewsInteraction(true)
                                 if (this::countingIdlingResource.isInitialized) {
                                     countingIdlingResource.decrement()
@@ -297,7 +296,9 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                                 if (!viewModel.obtainValueFromDataStore().isHeaderVisible) {
                                     changeViewState(headerAdapter, header)
                                 }
-                                splitOnSuccess(value.profile)
+                                viewModel.castTo<List<UserProfile>>(value)?.let {
+                                    splitOnSuccess(it)
+                                }
                             }
                         }
                     }
@@ -309,7 +310,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun splitOnSuccess(githubUsersList: List<UserProfile>) {
-        if (viewModel.obtainValueFromDataStore().numberOfItems < ProfileViewModel.numberOfItemsPerPage) {
+        if (viewModel.obtainValueFromDataStore().numberOfItems < ProfileViewModel.itemsPerPage) {
             changeViewState(transientViewsAdapter, endOfResults)
         } else {
             changeViewState(transientViewsAdapter, empty)
@@ -442,6 +443,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     private inline fun callApiThroughViewModel(crossinline task: () -> Unit) {
         handleConnectionState(
             onConnectionAvailable = {
+                println("CHAMADA LISTENER RV: callApiThroughViewModel")
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().toBuilder().setIsThereAnOngoingCall(true)
                         .build()
@@ -512,7 +514,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         errorSnackBar.showErrorSnackBar(
             message,
             onDismissed = {
-                shouldRecallInternetConnectivitySnackBar()
+                recallConnectivitySnackBar()
             }
         )
 
@@ -528,7 +530,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         }
     }
 
-    private fun shouldRecallInternetConnectivitySnackBar(): Any {
+    private fun recallConnectivitySnackBar(): Any {
         if (!viewModel.obtainValueFromDataStore().isRetryViewVisible) {
             return handleConnectionState(
                 onConnectionUnavailable = {
@@ -593,7 +595,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     private fun setupRecyclerViewAddOnScrollListener() {
         binding.profileInfoRecyclerView.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     val total = recyclerView.layoutManager?.itemCount
                     val recyclerViewLayoutManager = provideRecyclerViewLayoutManager()
 

@@ -10,5 +10,5 @@ interface ILocalRepository : ProfileDao {
 
     override suspend fun getProfilesFromDb(): List<UserProfile>
     override suspend fun insertProfilesIntoDb(profileList: List<UserProfile>)
-    override suspend fun dropProfileInformationTable(profileList: List<UserProfile>)
+    override suspend fun dropProfileInformation()
 }
