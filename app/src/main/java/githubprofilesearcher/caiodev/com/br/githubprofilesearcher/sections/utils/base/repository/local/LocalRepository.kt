@@ -26,7 +26,7 @@ class LocalRepository(
             .insertProfilesIntoDb(profileList)
     }
 
-    override suspend fun dropProfileInformationTable(profileList: List<UserProfile>) {
-        appDatabase.profileDao().dropProfileInformationTable(profileList)
+    override suspend fun dropProfileInformation() {
+        appDatabase.profileDao().dropProfileInformation()
     }
 }

@@ -16,7 +16,7 @@ class FakeDatabase : Database, ProfileDao {
         //
     }
 
-    override suspend fun dropProfileInformationTable(githubProfilesList: List<UserProfile>) {
+    override suspend fun dropProfileInformation(githubProfilesList: List<UserProfile>) {
         //
     }
 }
