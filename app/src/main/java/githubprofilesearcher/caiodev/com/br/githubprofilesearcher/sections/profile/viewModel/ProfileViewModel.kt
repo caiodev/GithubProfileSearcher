@@ -6,7 +6,16 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ActionNotRequired
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Error
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.InitialIntermediate
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.InitialSuccess
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Intermediate
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.LocalPopulation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Success
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithBody
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithoutBody
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
@@ -102,7 +111,8 @@ internal class ProfileViewModel(
                 ) {
                     saveValueToDataStore(
                         obtainValueFromDataStore().toBuilder()
-                            .setHasASuccessfulCallAlreadyBeenMade(true).build()
+                            .setHasASuccessfulCallAlreadyBeenMade(true)
+                            .build()
                     )
                 }
 
@@ -173,7 +183,7 @@ internal class ProfileViewModel(
         return profilePreferences
     }
 
-    fun saveValueToDataStore(profile: ProfilePreferences = ProfilePreferences.getDefaultInstance()) {
+    fun saveValueToDataStore(profile: ProfilePreferences) {
         runTaskOnForeground {
             localRepository.obtainProtoDataStore().updateData(
                 castTo<ProfilePreferences>(profile)
@@ -257,9 +267,12 @@ internal class ProfileViewModel(
             } else if (localRepository.getProfilesFromDb().isNotEmpty() &&
                 profilesInfoList.isEmpty()
             ) {
+                saveValueToDataStore(
+                    obtainValueFromDataStore().toBuilder()
+                        .setHasASuccessfulCallAlreadyBeenMade(false)
+                        .build()
+                )
                 postIntermediateState(LocalPopulation)
-            } else {
-                postIntermediateState(StateRestoration)
             }
         }
     }
