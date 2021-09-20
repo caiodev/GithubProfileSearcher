@@ -84,8 +84,8 @@ buildscript {
         espresso = '3.4.0'
         jacocoVersion = '0.8.7'
         junitAndroidX = '1.1.3'
-        junit5 = '5.8.0-RC1'
-        kotest = '4.6.2'
+        junit5 = '5.8.0'
+        kotest = '5.0.0.M1'
         testCore = '1.4.0'
 
         //Others

@@ -110,56 +110,69 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             viewModel.intermediateSharedFlow.collect {
                 when (it) {
                     LocalPopulation -> {
-                        viewModel.saveValueToDataStore()
                         viewModel.updateUIWithCache()
-                        changeViewState(headerAdapter, header)
                         if (viewModel.obtainValueFromDataStore().isRetryViewVisible) {
                             changeViewState(transientViewsAdapter, retry)
                         }
-                    }
-                    StateRestoration -> {
-                        if (viewModel.obtainValueFromDataStore().profile.isNotEmpty()) {
-                            binding.searchProfileTextInputEditText.setText(
-                                viewModel.obtainValueFromDataStore().profile
-                            )
-                            viewModel.saveValueToDataStore(
-                                viewModel.obtainValueFromDataStore().toBuilder()
-                                    .setShouldASearchBePerformed(true).build()
-                            )
-                        }
-
-                        changeViewState(headerAdapter, header)
-
-                        if (viewModel.obtainValueFromDataStore().isThereAnOngoingCall) {
-                            binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
-                            setupUpperViewsInteraction(false)
-                            viewModel.saveValueToDataStore(
-                                viewModel.obtainValueFromDataStore().toBuilder()
-                                    .setShouldASearchBePerformed(false).build()
-                            )
-                            binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
-                        }
-
-                        viewModel.obtainValueFromDataStore().apply {
-                            if (hasASuccessfulCallAlreadyBeenMade &&
-                                !isTextInputEditTextNotEmpty && !hasUserDeletedProfileText
-                            ) {
-                                binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
-                            }
-                        }
-
-                        provideRecyclerViewLayoutManager()?.findFirstVisibleItemPosition()
-                            ?.let { position ->
-                                if (position >= 2) {
-                                    binding.backToTopButton.applyViewVisibility(VISIBLE)
-                                }
-                            }
+                        restoreScreenState()
                     }
                     else -> Unit
                 }
             }
         }
+        restoreScreenState()
         viewModel.checkDataAtStartup()
+    }
+
+    private fun restoreScreenState() {
+        if (viewModel.obtainValueFromDataStore().profile.isNotEmpty()) {
+            binding.searchProfileTextInputEditText.setText(
+                viewModel.obtainValueFromDataStore().profile
+            )
+            viewModel.saveValueToDataStore(
+                viewModel.obtainValueFromDataStore().toBuilder()
+                    .setShouldASearchBePerformed(true).build()
+            )
+        }
+
+        if (viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade) {
+            changeViewState(headerAdapter, header)
+        }
+
+        if (viewModel.obtainValueFromDataStore().isThereAnOngoingCall) {
+            binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
+            setupUpperViewsInteraction(false)
+            viewModel.saveValueToDataStore(
+                viewModel.obtainValueFromDataStore().toBuilder()
+                    .setShouldASearchBePerformed(false).build()
+            )
+            binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
+        }
+
+        viewModel.obtainValueFromDataStore().apply {
+            if (hasASuccessfulCallAlreadyBeenMade &&
+                isTextInputEditTextNotEmpty && !hasUserDeletedProfileText
+            ) {
+                viewModel.saveValueToDataStore(
+                    viewModel.obtainValueFromDataStore().toBuilder()
+                        .setShouldASearchBePerformed(false).build()
+                )
+                binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
+            } else {
+                viewModel.saveValueToDataStore(
+                    viewModel.obtainValueFromDataStore().toBuilder()
+                        .setShouldASearchBePerformed(true).build()
+                )
+                binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
+            }
+        }
+
+        provideRecyclerViewLayoutManager()?.findFirstVisibleItemPosition()
+            ?.let { position ->
+                if (position >= 2) {
+                    binding.backToTopButton.applyViewVisibility(VISIBLE)
+                }
+            }
     }
 
     private fun setupDarkMode() {
@@ -284,8 +297,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         runTaskOnBackground {
             viewModel.successStateFlow.collect { state ->
                 when (state) {
-                    is InitialSuccess -> {
-                    }
+                    is InitialSuccess -> Unit
                     is SuccessWithBody<*> -> {
                         when (val value = state.data) {
                             is List<*> -> {
@@ -302,8 +314,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                             }
                         }
                     }
-                    else -> {
-                    }
+                    else -> Unit
                 }
             }
         }
@@ -443,7 +454,6 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     private inline fun callApiThroughViewModel(crossinline task: () -> Unit) {
         handleConnectionState(
             onConnectionAvailable = {
-                println("CHAMADA LISTENER RV: callApiThroughViewModel")
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().toBuilder().setIsThereAnOngoingCall(true)
                         .build()
