@@ -100,9 +100,9 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
 
     //Lifecycle section
-    implementation "androidx.lifecycle:lifecycle-common-java8:$arch"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"

@@ -40,8 +40,8 @@ buildscript {
         //LeakCanary
         leakCanary = '2.7'
 
-        //Lifecycle Architecture components
-        arch = '2.4.0-beta01'
+        //Lifecycle
+        lifecycleVersion = '2.4.0-beta01'
 
         //Material design
         materialDesign = '1.4.0'
