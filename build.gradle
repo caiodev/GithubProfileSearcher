@@ -2,9 +2,6 @@ buildscript {
 
     ext {
 
-        //AndroidXCore
-        androidXCore = '1.7.0-alpha02'
-
         //Annotation
         annotation = '1.3.0-alpha01'
 
@@ -35,16 +32,16 @@ buildscript {
         koin = '3.1.2'
 
         //Kotlin
-        kotlin = '1.5.30'
+        kotlin = '1.5.31'
 
         //Ktx
-        ktxCore = '1.7.0-alpha02'
+        ktxCore = '1.7.0-beta01'
 
         //LeakCanary
         leakCanary = '2.7'
 
         //Lifecycle Architecture components
-        arch = '2.4.0-alpha03'
+        arch = '2.4.0-beta01'
 
         //Material design
         materialDesign = '1.4.0'
@@ -64,14 +61,14 @@ buildscript {
         room = '2.4.0-alpha04'
 
         //Serialization
-        serialization = '1.2.2'
+        serialization = '1.3.0'
 
         //Timber
         timber = '5.0.1'
 
         //Views/ViewGroups
         //ConstraintLayout
-        constraintLayout = '2.1.0'
+        constraintLayout = '2.1.1'
 
         //RecyclerView
         recyclerView = '1.2.1'
@@ -84,7 +81,7 @@ buildscript {
         espresso = '3.4.0'
         jacocoVersion = '0.8.7'
         junitAndroidX = '1.1.3'
-        junit5 = '5.8.0'
+        junit5 = '5.8.1'
         kotest = '5.0.0.M1'
         testCore = '1.4.0'
 
