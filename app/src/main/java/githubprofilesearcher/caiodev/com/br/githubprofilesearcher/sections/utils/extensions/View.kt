@@ -61,7 +61,7 @@ fun ImageView.changeDrawable(@DrawableRes newDrawable: Int) {
 @Suppress("UNUSED")
 fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
     lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.CREATED) { task() }
+        repeatOnLifecycle(Lifecycle.State.STARTED) { task() }
     }
 }
 
@@ -71,7 +71,6 @@ fun View.applyBackgroundColor(@ColorRes color: Int) {
 
 @Suppress("UNUSED")
 fun View.applyViewVisibility(visibility: Int) {
-    View.VISIBLE
     this.visibility = visibility
 }
 

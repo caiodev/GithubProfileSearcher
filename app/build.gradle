@@ -72,9 +72,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    //AndroidXCore
-    implementation "androidx.core:core-ktx:$androidXCore"
-
     //Annotation
     implementation "androidx.annotation:annotation:$annotation"
 
@@ -87,6 +84,9 @@ dependencies {
     //Coil
     implementation "io.coil-kt:coil:$coil"
 
+    //Core
+    implementation "androidx.core:core-ktx:$ktxCore"
+
     //DataStore
     implementation "androidx.datastore:datastore:$dataStore"
 
@@ -95,10 +95,6 @@ dependencies {
 
     //Koin
     implementation "io.insert-koin:koin-android:$koin"
-
-    //Ktx
-    implementation "androidx.core:core-ktx:$ktxCore"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$arch"
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
