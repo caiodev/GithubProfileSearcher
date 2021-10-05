@@ -90,9 +90,6 @@ dependencies {
     //DataStore
     implementation "androidx.datastore:datastore:$dataStore"
 
-    //Espresso
-    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
-
     //Koin
     implementation "io.insert-koin:koin-android:$koin"
 
@@ -162,6 +159,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
 
     //JUnit
