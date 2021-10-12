@@ -2,7 +2,7 @@ apply plugin: 'jacoco'
 
 jacoco {
     toolVersion = "$jacocoVersion"
-    reportsDir = file("$buildDir")
+    reportsDirectory = file("$buildDir")
 }
 
 tasks.withType(Test) {
@@ -57,6 +57,6 @@ task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
     executionData.setFrom fileTree(dir: project.projectDir, includes: ["**/*.exec"])
 
     reports {
-        html.enabled true
+        html.required = true
     }
 }
