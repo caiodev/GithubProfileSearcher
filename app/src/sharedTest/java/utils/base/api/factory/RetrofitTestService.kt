@@ -1,9 +1,9 @@
-package utils.base.network.factory
+package utils.base.api.factory
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.rest.APIConnector.mediaType
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockWebServer
@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit
 object RetrofitTestService {
 
     lateinit var mockWebServer: MockWebServer
+    val json = Json { ignoreUnknownKeys = true }
+    val mediaType = "application/json".toMediaType()
 
     fun setup(): MockWebServer {
         mockWebServer = MockWebServer()
@@ -23,21 +25,19 @@ object RetrofitTestService {
 
     @ExperimentalSerializationApi
     @PublishedApi
-    internal inline fun <reified T> createRetrofitService() =
+    internal inline fun <reified T> newInstance() =
         Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
-            .client(createOkHttpClient())
+            .client(createLoggerClient())
             .addConverterFactory(
-                Json {
-                    ignoreUnknownKeys = true
-                }.asConverterFactory(
+                json.asConverterFactory(
                     mediaType
                 )
             )
             .build().create(T::class.java) as T
 
     @PublishedApi
-    internal fun createOkHttpClient() =
+    internal fun createLoggerClient() =
         OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }.apply {
