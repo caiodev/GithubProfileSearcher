@@ -1,10 +1,11 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder
 
 import androidx.recyclerview.widget.RecyclerView
+import coil.imageLoader
+import coil.load
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ProfileViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.imageLoading.ImageLoading.loadImage
 import okhttp3.internal.format
 
 class GithubProfileInformationViewHolder(
@@ -34,11 +35,6 @@ class GithubProfileInformationViewHolder(
                 format(itemView.context.getString(R.string.login), it)
         }
 
-        loadImage(
-            itemView.context,
-            model.userImage,
-            R.mipmap.ic_launcher,
-            itemBinding.userAvatar
-        )
+        itemBinding.userAvatar.load(model.userImage, itemView.context.imageLoader)
     }
 }
