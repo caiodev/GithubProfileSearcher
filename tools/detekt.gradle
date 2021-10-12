@@ -1,10 +1,11 @@
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
 detekt {
+    allRules = true
+    autoCorrect = true
     buildUponDefaultConfig = true
-    failFast = true
-    input = files(rootProject.projectDir)
     parallel = true
+    source = files(rootProject.projectDir)
     reports {
         html.enabled = true
         xml.enabled = false
