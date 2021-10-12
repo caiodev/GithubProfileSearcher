@@ -15,15 +15,16 @@ import java.util.concurrent.TimeUnit
 object APIConnector {
 
     private const val timeout = 60L
+    private val json = Json { ignoreUnknownKeys = true }
+    private val mediaType = "application/json".toMediaType()
 
     @ExperimentalSerializationApi
     fun Scope.newInstance(baseUrl: String = BuildConfig.API_URL): Retrofit {
-        val mediaType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(createLoggerClient())
             .addConverterFactory(
-                Json { ignoreUnknownKeys = true }.asConverterFactory(mediaType)
+                json.asConverterFactory(mediaType)
             )
             .build()
     }

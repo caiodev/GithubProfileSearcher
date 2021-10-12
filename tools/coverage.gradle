@@ -37,9 +37,6 @@ task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
             '**/*customViews/**/*.*',
             '**/*service/**/*.*',
             '**/*network/**/*.*',
-            '**/*factory/**/*.*',
-            '**/GithubProfileRepository**',
-            '**/LiveDataKt**',
             '**/ViewKt**',
             '**/AppDatabase**'
     ]

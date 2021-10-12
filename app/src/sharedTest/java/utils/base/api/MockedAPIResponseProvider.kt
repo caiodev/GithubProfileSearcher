@@ -1,6 +1,6 @@
-package utils.base.network
+package utils.base.api
 
-object MockedAPIResponsesProvider {
+object MockedAPIResponseProvider {
 
     const val profileInfoCallResult =
         "{\n" +

@@ -14,9 +14,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import retrofit2.Response
 import utils.base.TestSteps
-import utils.base.network.MockedAPIResponsesProvider.profileInfoCallResult
-import utils.base.network.factory.RetrofitTestService.createRetrofitService
-import utils.base.network.factory.RetrofitTestService.setup
+import utils.base.api.MockedAPIResponseProvider.profileInfoCallResult
+import utils.base.api.factory.RetrofitTestService.newInstance
+import utils.base.api.factory.RetrofitTestService.setup
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -25,16 +25,15 @@ import javax.net.ssl.SSLHandshakeException
 
 class RemoteRepositoryTest : TestSteps {
 
-    @PublishedApi
-    internal lateinit var mockWebServer: MockWebServer
+    private lateinit var mockWebServer: MockWebServer
     private lateinit var userProfile: UserProfile
     private lateinit var remoteRepository: RemoteRepository
 
-    @ExperimentalSerializationApi
+    @OptIn(ExperimentalSerializationApi::class)
     @BeforeEach
     override fun setupDependencies() {
         mockWebServer = setup()
-        userProfile = createRetrofitService()
+        userProfile = newInstance()
         remoteRepository =
             RemoteRepository()
     }

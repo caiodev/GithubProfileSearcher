@@ -22,6 +22,9 @@ buildscript {
         //Coil
         coil = '1.4.0'
 
+        //Coroutines
+        coroutines = '1.5.2-native-mt'
+
         //DataStore
         dataStore = '1.0.0'
 
