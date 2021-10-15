@@ -19,6 +19,7 @@ object APIConnector {
     private val mediaType = "application/json".toMediaType()
 
     @ExperimentalSerializationApi
+    @Suppress("UNUSED")
     fun Scope.newInstance(baseUrl: String = BuildConfig.API_URL): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -29,13 +30,11 @@ object APIConnector {
             .build()
     }
 
-    @Suppress("UNUSED")
-    fun Scope.createLoggerClient(): OkHttpClient {
+    private fun createLoggerClient(): OkHttpClient {
         val responseTag = "OkHttp"
         val httpLoggingInterceptor =
-            HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }.apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
+            HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }
+                .apply { level = HttpLoggingInterceptor.Level.BODY }
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(timeout, TimeUnit.SECONDS)

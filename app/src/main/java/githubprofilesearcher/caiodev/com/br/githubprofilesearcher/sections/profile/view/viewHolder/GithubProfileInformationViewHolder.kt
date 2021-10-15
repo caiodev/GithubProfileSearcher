@@ -27,7 +27,7 @@ class GithubProfileInformationViewHolder(
 
         model.userId.let {
             itemBinding.userId.text =
-                format(itemView.context.getString(R.string.user_id), it.toString())
+                format(itemView.context.getString(R.string.uid), it.toString())
         }
 
         model.login.let {

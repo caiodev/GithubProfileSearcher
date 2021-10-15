@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="text_input_layout_hint">Digite um perfil</string>
-    <string name="empty_field_error">Campo vazio</string>
-    <string name="no_connection_error">Não há conexão com a internet</string>
-    <string name="github_user_list_header">Perfis</string>
+    <!--Profile info-->
+    <string name="profile_hint">Digite um perfil</string>
     <string name="login">Usuário: %s</string>
-    <string name="server_side_error">Os servidores estão sobrecarregados no momento. Por favor, tente novamente mais tarde</string>
-    <string name="ssl_handshake_exception">A rede na qual você está, não é segura. Por favor, mude de rede e tente novamente mais tarde</string>
-    <string name="client_side_error">Não conseguimos obter o que você está procurando. Por favor, tente novamente mais tarde</string>
-    <string name="unknown_host_exception_and_socket_timeout_exception">Por favor, verifique sua conexão e tente novamente mais tarde</string>
-    <string name="generic_exception_and_generic_error">Ocorreu um erro. Por favor, tente novamente mais tarde</string>
-    <string name="api_query_limit_exceeded_error">A cota de buscas da API foi excedida. Por favor, tente novamente mais tarde</string>
-    <string name="back_online_success_message">Conexão reestabelecida</string>
-    <string name="retry_button_message">Tentar novamente</string>
+    <string name="user_list_header">Perfis</string>
+    <string name="retry">Tentar novamente</string>
     <string name="end_of_results">Fim dos resultados</string>
+
+    <!-- Success message -->
+    <string name="back_online">Conexão reestabelecida</string>
+
+    <!-- Error messages -->
+    <string name="empty_field">Campo vazio</string>
+    <string name="no_connection">Não há conexão com a internet</string>
+    <string name="client_side">Não conseguimos obter o que você está procurando. Por favor, tente novamente mais tarde</string>
+    <string name="server_side">Os servidores estão sobrecarregados no momento. Por favor, tente novamente mais tarde</string>
+    <string name="query_limit">A cota máxima de buscas da API foi alcançada. Por favor, tente novamente mais tarde</string>
+    <string name="limit_of_profile_results">Você alcançou o milésimo perfil 🎉</string>
+    <string name="unknown_host_and_socket_timeout">Por favor, verifique sua conexão e tente novamente mais tarde</string>
+    <string name="ssl_handshake">A rede na qual você está, não é segura. Por favor, mude de rede e tente novamente mais tarde</string>
+    <string name="generic">Ocorreu um erro. Por favor, tente novamente mais tarde</string>
 </resources>

@@ -45,4 +45,8 @@ class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<Recycler
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is HeaderViewHolder) viewHolder.bind(headerName)
     }
+
+    companion object {
+        const val header = 5
+    }
 }

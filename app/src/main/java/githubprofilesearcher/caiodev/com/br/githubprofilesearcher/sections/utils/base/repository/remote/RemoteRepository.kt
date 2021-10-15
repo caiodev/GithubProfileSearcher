@@ -10,19 +10,6 @@ import javax.net.ssl.SSLHandshakeException
 
 class RemoteRepository {
 
-    private val fourHundred = 400
-    private val fourHundredAndTwo = 402
-    private val fourHundredAndThree = 403
-    private val fourHundredAndFour = 404
-    private val fourHundredAndTwentyTwo = 422
-    private val fourHundredAndNinetyNine = 499
-    private val fiveHundred = 500
-    private val fiveHundredAndNinetyEight = 598
-
-    private val headerParameterName = "link"
-    private val headerParameterPattern = "[0-9]+".toPattern().toString()
-    private val headerListIndex = 2
-
     suspend fun <T> callApi(
         call: suspend () -> Response<T>
     ): State<*> {
@@ -50,10 +37,10 @@ class RemoteRepository {
 
     private fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
-            in fourHundred..fourHundredAndTwo,
-            in fourHundredAndFour..fourHundredAndNinetyNine -> ClientSide
-            fourHundredAndThree -> Forbidden
-            in fiveHundred..fiveHundredAndNinetyEight -> ServerSide
+            in `400`..`402`, in `404`..`451` -> ClientSide
+            `403` -> SearchQuotaReached
+            `422` -> SearchLimitReached
+            in `500`..`511` -> ServerSide
             else -> Generic
         }
     }
@@ -78,5 +65,20 @@ class RemoteRepository {
             }
         }
         return totalPages
+    }
+
+    companion object {
+        private const val `400` = 400
+        private const val `402` = 402
+        private const val `403` = 403
+        private const val `404` = 404
+        private const val `422` = 422
+        private const val `451` = 451
+        private const val `500` = 500
+        private const val `511` = 511
+
+        private const val headerParameterName = "link"
+        private val headerParameterPattern = "[0-9]+".toPattern().toString()
+        private const val headerListIndex = 2
     }
 }

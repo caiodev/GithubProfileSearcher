@@ -33,7 +33,7 @@
             android:layout_marginStart="@dimen/margin_8dp"
             android:layout_marginTop="@dimen/margin_8dp"
             android:layout_marginEnd="@dimen/margin_8dp"
-            android:hint="@string/text_input_layout_hint"
+            android:hint="@string/profile_hint"
             app:hintTextAppearance="?android:textAppearanceSmall"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
