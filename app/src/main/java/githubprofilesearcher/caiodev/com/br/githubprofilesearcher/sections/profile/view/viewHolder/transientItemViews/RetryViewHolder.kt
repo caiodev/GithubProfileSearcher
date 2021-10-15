@@ -3,7 +3,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.prof
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.RetryViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
 
 class RetryViewHolder(
     itemBinding: RetryViewHolderLayoutBinding,
@@ -14,5 +13,9 @@ class RetryViewHolder(
         itemBinding.retryTextView.setOnClickListener {
             onItemClicked?.onItemClick(layoutPosition, retry)
         }
+    }
+
+    companion object {
+        const val retry = 3
     }
 }

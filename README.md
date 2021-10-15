@@ -1,5 +1,5 @@
 # GithubProfileSearcher
-This app basically gets information about a given github profile and shows its info on the screen. Only compatible with API 21(Lollipop) and above
+Spare time project to get information about a given Github profile - API 23(Marshmallow) and above
 
 License
 =======

@@ -24,7 +24,7 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
     isConnectionAvailable: Boolean
 ) {
     if (isConnectionAvailable) {
-        setText(R.string.back_online_success_message).setBackgroundColor(
+        setText(R.string.back_online).setBackgroundColor(
             ContextCompat.getColor(
                 context,
                 R.color.green_700
@@ -34,7 +34,7 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
             dismiss()
         }
     } else {
-        setText(R.string.no_connection_error).setBackgroundColor(
+        setText(R.string.no_connection).setBackgroundColor(
             ContextCompat.getColor(
                 context,
                 R.color.red_700

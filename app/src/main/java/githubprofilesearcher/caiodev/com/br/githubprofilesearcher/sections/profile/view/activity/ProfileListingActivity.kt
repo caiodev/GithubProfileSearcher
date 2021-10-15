@@ -20,8 +20,13 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.Ac
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.HeaderAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.HeaderAdapter.Companion.header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.TransientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.OnItemSelectedListener
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.empty
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.endOfResults
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.loading
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.RetryViewHolder.Companion.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.viewModel.ProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.viewModel.ProfileViewModel.Companion.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.repository.view.GithubProfileDetailActivity
@@ -29,14 +34,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.endOfResults
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.githubProfileAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.header
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.headerAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.loading
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.retry
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.transientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import kotlinx.coroutines.flow.collect
@@ -50,7 +47,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     private val errorSnackBar by lazy {
         Snackbar.make(
             findViewById(android.R.id.content),
-            R.string.generic_exception_and_generic_error,
+            R.string.generic,
             Snackbar.LENGTH_SHORT
         )
     }
@@ -63,7 +60,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
     private val concatAdapter by lazy {
         ConcatAdapter(
-            HeaderAdapter(R.string.github_user_list_header),
+            HeaderAdapter(R.string.user_list_header),
             GithubProfileAdapter(obtainProfileListener()),
             TransientViewsAdapter()
         )
@@ -280,7 +277,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                     },
                     onConnectionUnavailable = {
                         errorSnackBar.showErrorSnackBar(
-                            R.string.no_connection_error
+                            R.string.no_connection
                         )
                     }
                 )
@@ -377,13 +374,14 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             viewModel.errorSharedFlow.collect { error ->
                 when (error) {
                     UnknownHost, SocketTimeout, Connect ->
-                        showErrorMessage(R.string.unknown_host_exception_and_socket_timeout_exception)
-                    SSLHandshake -> showErrorMessage(R.string.ssl_handshake_exception)
-                    ClientSide -> showErrorMessage(R.string.client_side_error)
-                    ServerSide -> showErrorMessage(R.string.server_side_error)
-                    Forbidden -> showErrorMessage(R.string.api_query_limit_exceeded_error)
+                        showErrorMessage(R.string.unknown_host_and_socket_timeout)
+                    SSLHandshake -> showErrorMessage(R.string.ssl_handshake)
+                    ClientSide -> showErrorMessage(R.string.client_side)
+                    ServerSide -> showErrorMessage(R.string.server_side)
+                    SearchQuotaReached -> showErrorMessage(R.string.query_limit)
+                    SearchLimitReached -> showErrorMessage(R.string.limit_of_profile_results)
                     InitialError -> Unit
-                    else -> showErrorMessage(R.string.generic_exception_and_generic_error)
+                    else -> showErrorMessage(R.string.generic)
                 }
             }
         }
@@ -428,7 +426,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             updatedProfileCall(binding.searchProfileTextInputEditText.text.toString())
         } else {
             errorSnackBar.showErrorSnackBar(
-                R.string.empty_field_error
+                R.string.empty_field
             )
         }
     }
@@ -485,7 +483,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 ) {
                     changeViewState(transientViewsAdapter, retry)
                 }
-                showErrorMessage(R.string.no_connection_error)
+                showErrorMessage(R.string.no_connection)
             }
         )
     }
@@ -753,5 +751,11 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         } else {
             onConnectionUnavailable()
         }
+    }
+
+    companion object {
+        private const val headerAdapter = 0
+        private const val githubProfileAdapter = 1
+        private const val transientViewsAdapter = 2
     }
 }
