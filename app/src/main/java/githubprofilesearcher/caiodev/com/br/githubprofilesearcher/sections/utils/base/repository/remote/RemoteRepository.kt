@@ -57,9 +57,9 @@ class RemoteRepository {
 
     private fun obtainTotalPages(headers: okhttp3.Headers): Int {
         var totalPages = 0
-        headers[headerParameterName]?.let { header ->
+        headers[headerName]?.let { header ->
             if (header.isNotEmpty()) {
-                totalPages = Regex(headerParameterPattern).findAll(header)
+                totalPages = Regex(headerPattern).findAll(header)
                     .map(MatchResult::value)
                     .toList()[headerListIndex].toInt()
             }
@@ -68,6 +68,9 @@ class RemoteRepository {
     }
 
     companion object {
+        private const val headerName = "link"
+        private val headerPattern = "[0-9]+".toPattern().toString()
+        private const val headerListIndex = 2
         private const val `400` = 400
         private const val `402` = 402
         private const val `403` = 403
@@ -76,9 +79,5 @@ class RemoteRepository {
         private const val `451` = 451
         private const val `500` = 500
         private const val `511` = 511
-
-        private const val headerParameterName = "link"
-        private val headerParameterPattern = "[0-9]+".toPattern().toString()
-        private const val headerListIndex = 2
     }
 }
