@@ -226,11 +226,6 @@ internal class ProfileViewModel(
             )
         }
 
-        saveValueToDataStore(
-            obtainValueFromDataStore().toBuilder().setNumberOfItems(profilesInfoList.size)
-                .build()
-        )
-
         obtainValueFromDataStore().apply {
             saveValueToDataStore(
                 toBuilder().setPageNumber(

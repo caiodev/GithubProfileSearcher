@@ -306,7 +306,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                                     changeViewState(headerAdapter, header)
                                 }
                                 viewModel.castTo<List<UserProfile>>(value)?.let {
-                                    splitOnSuccess(it)
+                                    splitOnSuccess(it, state.totalPages)
                                 }
                             }
                         }
@@ -317,8 +317,9 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         }
     }
 
-    private fun splitOnSuccess(githubUsersList: List<UserProfile>) {
-        if (viewModel.obtainValueFromDataStore().numberOfItems < ProfileViewModel.itemsPerPage) {
+    private fun splitOnSuccess(githubUsersList: List<UserProfile>, totalPages: Int) {
+
+        if (viewModel.obtainValueFromDataStore().pageNumber == totalPages) {
             changeViewState(transientViewsAdapter, endOfResults)
         } else {
             changeViewState(transientViewsAdapter, empty)

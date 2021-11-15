@@ -7,7 +7,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.Em
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.HeaderViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.HeaderViewHolder
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.EmptyViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.constants.Constants.empty
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.empty
 
 class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
