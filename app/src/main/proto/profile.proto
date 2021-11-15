@@ -16,9 +16,8 @@ message ProfilePreferences {
   bool hasUserRequestedUpdatedData = 10;
   bool shouldASearchBePerformed = 11;
   bool isTextInputEditTextNotEmpty = 12;
-  int32 numberOfItems = 13;
-  bool isHeaderVisible = 14;
-  bool isEndOfResultsViewVisible = 15;
-  bool isPaginationLoadingViewVisible = 16;
-  bool isRetryViewVisible = 17;
+  bool isHeaderVisible = 13;
+  bool isEndOfResultsViewVisible = 14;
+  bool isPaginationLoadingViewVisible = 15;
+  bool isRetryViewVisible = 16;
 }
