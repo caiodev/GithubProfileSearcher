@@ -20,4 +20,5 @@ message ProfilePreferences {
   bool isEndOfResultsViewVisible = 14;
   bool isPaginationLoadingViewVisible = 15;
   bool isRetryViewVisible = 16;
+  bool isLocalPopulation = 17;
 }

@@ -93,9 +93,7 @@ inline fun Snackbar.showErrorSnackBar(
 
 @Suppress("UNUSED")
 fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
-    isSwipeRefreshing: Boolean = false,
     isSwipeEnabled: Boolean = true
 ) {
-    isRefreshing = isSwipeRefreshing
     isEnabled = isSwipeEnabled
 }

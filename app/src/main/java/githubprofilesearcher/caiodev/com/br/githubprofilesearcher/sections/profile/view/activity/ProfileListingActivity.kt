@@ -94,9 +94,9 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         binding = ActivityProfileListingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupDarkMode()
+        setupSwipeRefreshLayout()
         bindViewModelDataToUIInCaseOfOrientationChanges()
         setupActionViews()
-        setupSwipeRefreshLayout()
         setupRecyclerView()
         setupTextInputEditText()
         initializeAdapterCallback()
@@ -122,7 +122,9 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     }
 
     private fun restoreScreenState() {
-        if (viewModel.obtainValueFromDataStore().profile.isNotEmpty()) {
+        if (!viewModel.obtainValueFromDataStore().hasUserDeletedProfileText &&
+            viewModel.obtainValueFromDataStore().profile.isNotEmpty()
+        ) {
             binding.searchProfileTextInputEditText.setText(
                 viewModel.obtainValueFromDataStore().profile
             )
@@ -135,7 +137,6 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         if (viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade) {
             changeViewState(headerAdapter, header)
         }
-
         if (viewModel.obtainValueFromDataStore().isThereAnOngoingCall) {
             binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
             setupUpperViewsInteraction(false)
@@ -147,9 +148,10 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         }
 
         viewModel.obtainValueFromDataStore().apply {
-            if (hasASuccessfulCallAlreadyBeenMade &&
-                isTextInputEditTextNotEmpty && !hasUserDeletedProfileText
+            println("FLAGSRESULT: $isLocalPopulation $isTextInputEditTextNotEmpty $hasUserDeletedProfileText")
+            if (isLocalPopulation && isTextInputEditTextNotEmpty && !hasUserDeletedProfileText
             ) {
+                binding.searchProfileTextInputEditText.setSelection(viewModel.obtainValueFromDataStore().profile.length)
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().toBuilder()
                         .setShouldASearchBePerformed(false).build()
@@ -161,6 +163,21 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                         .setShouldASearchBePerformed(true).build()
                 )
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
+            }
+        }
+
+        if (binding.searchProfileTextInputEditText.text.toString().isEmpty()) {
+            viewModel.saveValueToDataStore(
+                viewModel.obtainValueFromDataStore().toBuilder()
+                    .setShouldASearchBePerformed(true).build()
+            )
+        } else {
+            if (viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade) {
+                viewModel.saveValueToDataStore(
+                    viewModel.obtainValueFromDataStore().toBuilder()
+                        .setShouldASearchBePerformed(false).build()
+                )
+                binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
             }
         }
 
@@ -193,7 +210,8 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
 
     private fun setupSwipeRefreshLayout() {
         binding.githubProfileListSwipeRefreshLayout.apply {
-            if (!viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
+            if (!viewModel.obtainValueFromDataStore().isLocalPopulation &&
+                !viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
             ) {
                 applySwipeRefreshVisibilityAttributes(isSwipeEnabled = false)
             }
@@ -510,11 +528,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             )
         }
 
-        setupUpperViewsInteraction(true)
-
-        binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
-            isSwipeEnabled = true
-        )
+        binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
 
         binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
         binding.searchProfileTextInputEditText.hideKeyboard()
@@ -588,8 +602,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             } else {
                 binding.searchProfileTextInputEditText.setText(emptyString)
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
-                if (!viewModel.obtainValueFromDataStore().shouldASearchBePerformed
-                ) viewModel.saveValueToDataStore(
+                viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().toBuilder()
                         .setShouldASearchBePerformed(true).build()
                 )
@@ -693,14 +706,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 when (viewState) {
                     endOfResults -> saveItemView(isEndOfResultsItemVisible = true)
                     loading -> saveItemView(isPaginationLoadingItemVisible = true)
-                    retry -> {
-                        saveItemView(isRetryItemVisible = true)
-//                        profileInfoRecyclerView.smoothScrollToPosition(
-//                            viewModel.obtainValueFromDataStore(
-//                                numberOfItems, Constants.zero
-//                            ).plus(2)
-//                        )
-                    }
+                    retry -> saveItemView(isRetryItemVisible = true)
                     else -> saveItemView()
                 }
             }

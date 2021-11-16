@@ -255,6 +255,10 @@ internal class ProfileViewModel(
                 profilesInfoList.isEmpty()
             ) {
                 saveValueToDataStore(
+                    obtainValueFromDataStore()
+                        .toBuilder().setIsLocalPopulation(true).build()
+                )
+                saveValueToDataStore(
                     obtainValueFromDataStore().toBuilder()
                         .setHasASuccessfulCallAlreadyBeenMade(false)
                         .build()
