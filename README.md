@@ -1,8 +1,4 @@
-[![CodeFactor](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher/badge)](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher)
-
-[![codebeat badge](https://codebeat.co/badges/01a58976-c99f-4a96-9a62-a9a005af21b5)](https://codebeat.co/projects/github-com-caiodev-githubprofilesearcher-master)
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dce16c6f362b4319887525ea214fdb05)](https://app.codacy.com/manual/caiodev/GithubProfileSearcher?utm_source=github.com&utm_medium=referral&utm_content=caiodev/GithubProfileSearcher&utm_campaign=Badge_Grade_Dashboard)
+[![CodeFactor](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher/badge)](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher)[![codebeat badge](https://codebeat.co/badges/01a58976-c99f-4a96-9a62-a9a005af21b5)](https://codebeat.co/projects/github-com-caiodev-githubprofilesearcher-master)
 
 # GithubProfileSearcher
 This app basically gets information about a given github profile - API 21+
