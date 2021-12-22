@@ -15,7 +15,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 @ExperimentalSerializationApi
-val globalModule = module {
+val global = module {
     single<Database> {
         Room.databaseBuilder(
             androidContext(),

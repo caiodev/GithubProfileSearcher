@@ -12,16 +12,17 @@ apply from: "${toolsPath}lint.gradle"
 apply from: "${toolsPath}protobuf.gradle"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -157,6 +158,9 @@ dependencies {
     //Instrumented/UI
     //ArchTestCore
     androidTestImplementation "androidx.arch.core:core-testing:$archTest"
+
+    //Coroutines
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
 
     //Espresso
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso"

@@ -62,7 +62,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = remoteRepository.callApi { userProfile }
+                response = remoteRepository.call { userProfile }
             }
         }
 
@@ -93,7 +93,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = remoteRepository.callApi { userProfile }
+                response = remoteRepository.call { userProfile }
             }
         }
 
@@ -124,7 +124,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = remoteRepository.callApi { userProfile }
+                response = remoteRepository.call { userProfile }
             }
         }
 
@@ -155,7 +155,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = remoteRepository.callApi { userProfile }
+                response = remoteRepository.call { userProfile }
             }
         }
 
@@ -186,7 +186,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = remoteRepository.callApi { userProfile }
+                response = remoteRepository.call { userProfile }
             }
         }
 
@@ -217,7 +217,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 val userProfile = userProfile.provideGithubUsersListAsync("torvalds", 1, 20)
-                response = remoteRepository.callApi { userProfile }
+                response = remoteRepository.call { userProfile }
             }
         }
 
@@ -237,7 +237,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { setupException(ConnectException()) }
+                    remoteRepository.call { setupException(ConnectException()) }
             }
         }
 
@@ -253,7 +253,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { setupException() }
+                    remoteRepository.call { setupException() }
             }
         }
 
@@ -269,7 +269,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { setupException(SocketTimeoutException()) }
+                    remoteRepository.call { setupException(SocketTimeoutException()) }
             }
         }
 
@@ -285,7 +285,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { setupException(SSLHandshakeException("")) }
+                    remoteRepository.call { setupException(SSLHandshakeException("")) }
             }
         }
 
@@ -301,7 +301,7 @@ class RemoteRepositoryTest : TestSteps {
         doWhen {
             runBlocking {
                 response =
-                    remoteRepository.callApi { setupException(UnknownHostException()) }
+                    remoteRepository.call { setupException(UnknownHostException()) }
             }
         }
 

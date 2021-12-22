@@ -8,7 +8,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.Pr
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
 import okhttp3.internal.format
 
-class GithubProfileInformationViewHolder(
+class ProfileInformationViewHolder(
     private val itemBinding: ProfileViewHolderLayoutBinding,
     onItemSelected: OnItemSelectedListener
 ) :

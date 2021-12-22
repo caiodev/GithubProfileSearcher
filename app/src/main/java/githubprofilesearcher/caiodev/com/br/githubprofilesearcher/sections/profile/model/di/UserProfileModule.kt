@@ -3,10 +3,10 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.prof
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.callInterface.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.IProfileRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.ProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.dataStore.serializer.ProfileSerializer
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.dataStore.serializer.ProfileSerializer.profileProtoFileName
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.remote.IProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.remote.ProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.viewModel.ProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.IKeyValueStorageManager
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.local.dataStore.manager.KeyValueStorageManager
@@ -27,14 +27,16 @@ val userProfileViewModel = module {
         )
     }
 
-    single<IKeyValueStorageManager> {
+    factory<IKeyValueStorageManager> {
         KeyValueStorageManager(
-            keyValueStorageClient = DataStoreFactory.create(serializer = ProfileSerializer,
-                produceFile = { androidContext().dataStoreFile(profileProtoFileName) })
+            keyValueStorageClient = DataStoreFactory.create(
+                serializer = ProfileSerializer,
+                produceFile = { androidContext().dataStoreFile(profileProtoFileName) }
+            )
         )
     }
 
-    single<IProfileRepository> {
+    factory<IProfileRepository> {
         ProfileRepository(
             remoteRepository = get(),
             apiService = get<Retrofit>().create(UserProfile::class.java)

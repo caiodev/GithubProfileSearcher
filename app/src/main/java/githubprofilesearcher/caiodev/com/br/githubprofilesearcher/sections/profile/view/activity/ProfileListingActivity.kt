@@ -18,9 +18,9 @@ import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.databinding.ActivityProfileListingBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.GithubProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.HeaderAdapter.Companion.header
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.ProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.adapter.TransientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.OnItemSelectedListener
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.empty
@@ -61,7 +61,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
     private val concatAdapter by lazy {
         ConcatAdapter(
             HeaderAdapter(R.string.user_list_header),
-            GithubProfileAdapter(obtainProfileListener()),
+            ProfileAdapter(obtainProfileListener()),
             TransientViewsAdapter()
         )
     }
@@ -343,7 +343,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             changeViewState(transientViewsAdapter, empty)
         }
 
-        provideAdapter<GithubProfileAdapter>(githubProfileAdapter)?.apply {
+        provideAdapter<ProfileAdapter>(githubProfileAdapter)?.apply {
             updateDataSource(githubUsersList)
             notifyDataSetChanged()
         }
@@ -361,7 +361,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         )
 
         if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData) {
-            provideAdapter<GithubProfileAdapter>(githubProfileAdapter)?.updateDataSource(
+            provideAdapter<ProfileAdapter>(githubProfileAdapter)?.updateDataSource(
                 githubUsersList
             )
 
