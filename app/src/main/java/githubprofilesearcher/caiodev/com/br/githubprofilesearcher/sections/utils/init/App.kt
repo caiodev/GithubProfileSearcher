@@ -8,7 +8,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.BuildConfig
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.di.userProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.repository.model.diModules.userRepositoryViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.di.globalModule
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.di.global
 import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -25,7 +25,7 @@ class App : Application(), ImageLoaderFactory {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(globalModule, userProfileViewModel, userRepositoryViewModel)
+            modules(global, userProfileViewModel, userRepositoryViewModel)
         }
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }

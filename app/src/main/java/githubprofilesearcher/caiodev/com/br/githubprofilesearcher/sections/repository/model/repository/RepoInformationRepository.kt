@@ -9,14 +9,14 @@ class RepoInformationRepository(
 ) : IRepoInformationRepository {
 
     override suspend fun fetchUser(user: String) =
-        remoteRepository.callApi(
+        remoteRepository.call(
             call = {
                 retrofitService.fetchUser(user)
             }
         )
 
     override suspend fun fetchRepository(user: String) =
-        remoteRepository.callApi(
+        remoteRepository.call(
             call = {
                 retrofitService.fetchRepository(user)
             }

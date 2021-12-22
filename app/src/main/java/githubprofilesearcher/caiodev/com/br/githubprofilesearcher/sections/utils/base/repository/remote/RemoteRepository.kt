@@ -10,7 +10,7 @@ import javax.net.ssl.SSLHandshakeException
 
 class RemoteRepository {
 
-    suspend fun <T> callApi(
+    suspend fun <T> call(
         call: suspend () -> Response<T>
     ): State<*> {
         return try {

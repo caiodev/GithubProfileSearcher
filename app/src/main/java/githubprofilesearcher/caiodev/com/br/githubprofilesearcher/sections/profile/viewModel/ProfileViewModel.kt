@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ProfilePreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.IProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.remote.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting
@@ -82,7 +82,7 @@ internal class ProfileViewModel(
     ) {
         runTaskOnBackground {
             val value =
-                remoteRepository.provideGithubUserInformation(
+                remoteRepository.provideUserInformation(
                     user,
                     obtainValueFromDataStore().pageNumber,
                     itemsPerPage
