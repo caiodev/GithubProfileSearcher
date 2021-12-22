@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/303712fcd65c4f98930c4afbac1c9005)](https://app.codacy.com/gh/caiodev/GithubProfileSearcher?utm_source=github.com&utm_medium=referral&utm_content=caiodev/GithubProfileSearcher&utm_campaign=Badge_Grade_Settings)
 [![CodeFactor](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher/badge)](https://www.codefactor.io/repository/github/caiodev/githubprofilesearcher)
 
 [![codebeat badge](https://codebeat.co/badges/01a58976-c99f-4a96-9a62-a9a005af21b5)](https://codebeat.co/projects/github-com-caiodev-githubprofilesearcher-master)
