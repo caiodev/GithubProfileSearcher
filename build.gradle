@@ -6,7 +6,7 @@ buildscript {
         annotation = '1.3.0'
 
         //AppCompat
-        appCompat = '1.4.0-rc01'
+        appCompat = '1.4.0'
 
         //Browser
         browser = '1.4.0'
@@ -29,13 +29,13 @@ buildscript {
         dataStore = '1.0.0'
 
         //Gradle
-        gradleVersion = '7.0.3'
+        gradleVersion = '7.0.4'
 
         //Koin
-        koin = '3.1.3'
+        koin = '3.1.4'
 
         //Kotlin
-        kotlin = '1.6.0'
+        kotlin = '1.6.10'
 
         //Ktx
         ktxCore = '1.7.0'
@@ -50,7 +50,7 @@ buildscript {
         materialDesign = '1.4.0'
 
         //OkHttp
-        okHttp = '5.0.0-alpha.2'
+        okHttp = '5.0.0-alpha.3'
 
         //Protobuf
         protobufPlugin = '0.8.15'
@@ -61,7 +61,7 @@ buildscript {
         serializationConverter = '0.8.0'
 
         //Room
-        room = '2.4.0-beta01'
+        room = '2.4.0'
 
         //Serialization
         serialization = '1.3.1'
@@ -71,7 +71,7 @@ buildscript {
 
         //Views/ViewGroups
         //ConstraintLayout
-        constraintLayout = '2.1.1'
+        constraintLayout = '2.1.2'
 
         //RecyclerView
         recyclerView = '1.2.1'
@@ -84,8 +84,8 @@ buildscript {
         espresso = '3.4.0'
         jacocoVersion = '0.8.7'
         junitAndroidX = '1.1.3'
-        junit5 = '5.8.1'
-        kotest = '5.0.0.M1'
+        junit5 = '5.8.2'
+        kotest = '5.0.3'
         testCore = '1.4.0'
 
         //Others
