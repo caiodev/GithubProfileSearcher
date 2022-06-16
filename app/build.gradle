@@ -49,7 +49,7 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs += ['-Xopt-in=kotlin.RequiresOptIn', '-Xuse-k2']
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
