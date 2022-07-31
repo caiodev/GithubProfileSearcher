@@ -7,6 +7,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.remote.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
@@ -40,7 +41,7 @@ internal class ProfileViewModel(
 
     private var profilePreferences = ProfilePreferences.getDefaultInstance()
 
-    fun requestUpdatedProfiles(profile: String = emptyString) {
+    fun requestUpdatedProfiles(profile: String = emptyString()) {
         saveValueToDataStore(
             obtainValueFromDataStore().toBuilder().setPageNumber(initialPage).build()
         )
@@ -95,7 +96,7 @@ internal class ProfileViewModel(
         when (value) {
             is SuccessWithBody<*> -> {
                 saveValueToDataStore(
-                    obtainValueFromDataStore().toBuilder().setCurrentProfile(emptyString).build()
+                    obtainValueFromDataStore().toBuilder().setCurrentProfile(emptyString()).build()
                 )
 
                 if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
@@ -278,7 +279,6 @@ internal class ProfileViewModel(
     internal inline fun <reified T> castTo(value: Any) = ValueCasting.castTo<T>(value)
 
     companion object {
-        const val emptyString = ""
         const val itemsPerPage = 20
         private const val initialPage = 1
     }

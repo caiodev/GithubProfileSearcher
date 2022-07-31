@@ -1,6 +1,8 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.activity
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.View.*
 import android.view.animation.AnimationUtils
@@ -28,15 +30,13 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.view.viewHolder.transientItemViews.RetryViewHolder.Companion.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.viewModel.ProfileViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.viewModel.ProfileViewModel.Companion.emptyString
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.repository.view.GithubProfileDetailActivity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.LifecycleOwnerFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
-import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
@@ -148,7 +148,6 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         }
 
         viewModel.obtainValueFromDataStore().apply {
-            println("FLAGSRESULT: $isLocalPopulation $isTextInputEditTextNotEmpty $hasUserDeletedProfileText")
             if (isLocalPopulation && isTextInputEditTextNotEmpty && !hasUserDeletedProfileText
             ) {
                 binding.searchProfileTextInputEditText.setSelection(viewModel.obtainValueFromDataStore().profile.length)
@@ -286,12 +285,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
             override fun onItemSelected(text: String) {
                 handleConnectionState(
                     onConnectionAvailable = {
-                        startActivity(
-                            GithubProfileDetailActivity.newIntent(
-                                applicationContext,
-                                text
-                            )
-                        )
+                        launchBrowser(text)
                     },
                     onConnectionUnavailable = {
                         errorSnackBar.showErrorSnackBar(
@@ -561,7 +555,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 }
             )
         }
-        return emptyString
+        return emptyString()
     }
 
     private fun setupInternetConnectionObserver() {
@@ -600,7 +594,7 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
                 )
                 textInputEditTextNotEmptyRequiredCall()
             } else {
-                binding.searchProfileTextInputEditText.setText(emptyString)
+                binding.searchProfileTextInputEditText.setText(emptyString())
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore().toBuilder()
@@ -758,6 +752,15 @@ class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
         } else {
             onConnectionUnavailable()
         }
+    }
+
+    private fun launchBrowser(profileUrl: String) {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(profileUrl)
+            )
+        )
     }
 
     companion object {
