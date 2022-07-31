@@ -12,11 +12,11 @@ apply from: "${toolsPath}lint.gradle"
 apply from: "${toolsPath}protobuf.gradle"
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 23
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
