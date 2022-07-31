@@ -2,8 +2,8 @@ plugins {
     id 'com.android.application'
     id 'com.google.protobuf' version "$protobufPlugin"
     id 'kotlin-android'
-    id 'kotlin-kapt'
     id 'kotlinx-serialization'
+    id 'kotlin-kapt'
 }
 apply from: "${toolsPath}codeChecking.gradle"
 apply from: "${toolsPath}coverage.gradle"
@@ -21,6 +21,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+    }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildTypes {
@@ -49,7 +55,7 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs += ['-Xopt-in=kotlin.RequiresOptIn', '-Xuse-k2']
+        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn'] //, '-Xuse-k2'
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
@@ -78,9 +84,6 @@ dependencies {
 
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat"
-
-    //Browser
-    implementation "androidx.browser:browser:$browser"
 
     //Coil
     implementation "io.coil-kt:coil:$coil"

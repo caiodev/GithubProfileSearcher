@@ -8,16 +8,13 @@ buildscript {
         //AppCompat
         appCompat = '1.4.2'
 
-        //Browser
-        browser = '1.4.0'
-
-        //Code quality checking
+        //Quality checking
         //Detekt
-        detektVersion = '1.18.1'
+        detektVersion = '1.21.0'
 
         //Ktlint
-        ktlintVersion = '0.42.1'
-        ktlintPluginVersion = '10.2.0'
+        ktlintVersion = '0.46.1'
+        ktlintPluginVersion = '10.3.0'
 
         //Coil
         coil = '2.1.0'
@@ -95,7 +92,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradleVersion"
+            classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin"
     }

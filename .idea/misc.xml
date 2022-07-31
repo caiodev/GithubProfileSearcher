@@ -9,6 +9,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.35104166666666664" />
+        <entry key="app/src/main/res/layout/activity_profile_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_profile_listing.xml" value="0.15416666666666667" />
       </map>
     </option>
