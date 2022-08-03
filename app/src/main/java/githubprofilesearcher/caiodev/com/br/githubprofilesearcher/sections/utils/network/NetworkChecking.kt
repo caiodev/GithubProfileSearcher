@@ -43,9 +43,9 @@ class NetworkChecking(private val manager: ConnectivityManager) {
             getNetworkCapabilities(activeNetwork)?.run {
                 val isAnyTransportMethodAvailable =
                     hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                            hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                            hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
-                            hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                        hasTransport(NetworkCapabilities.TRANSPORT_VPN)
                 return if (isAnyTransportMethodAvailable) {
                     Available
                 } else {

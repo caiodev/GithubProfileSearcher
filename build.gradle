@@ -8,6 +8,20 @@ buildscript {
         //AppCompat
         appCompat = '1.4.2'
 
+        //Coil
+        coil = '2.1.0'
+
+        //Compose
+        activity = '1.5.1'
+        compiler = '1.3.0-rc01'
+        composeCore = '1.3.0-alpha02'
+
+        //Coroutines
+        coroutines = '1.6.4'
+
+        //DataStore
+        dataStore = '1.0.0'
+
         //Quality checking
         //Detekt
         detektVersion = '1.21.0'
@@ -15,15 +29,6 @@ buildscript {
         //Ktlint
         ktlintVersion = '0.46.1'
         ktlintPluginVersion = '10.3.0'
-
-        //Coil
-        coil = '2.1.0'
-
-        //Coroutines
-        coroutines = '1.6.4'
-
-        //DataStore
-        dataStore = '1.0.0'
 
         //Gradle
         gradleVersion = '7.2.1'
@@ -41,13 +46,13 @@ buildscript {
         leakCanary = '2.9.1'
 
         //Lifecycle
-        lifecycleVersion = '2.5.1'
+        lifecycle = '2.5.1'
 
         //Material design
         materialDesign = '1.6.1'
 
         //OkHttp
-        okHttp = '5.0.0-alpha.8'
+        okHttp = '5.0.0-alpha.10'
 
         //Protobuf
         protobufPlugin = '0.8.15'
@@ -80,19 +85,24 @@ buildscript {
         archTest = '2.1.0'
         espresso = '3.4.0'
         jacocoVersion = '0.8.8'
+
+        //JUnit
+        junit = '4.13.2'
         junitAndroidX = '1.1.3'
         junit5 = '5.9.0'
+
         kotest = '5.4.1'
         testCore = '1.4.0'
 
         //Others
         apiUrl = "\"https://api.github.com/\""
+        jvm = "10"
         sharedTestCodePath = "src/sharedTest/java"
         toolsPath = "$project.projectDir/tools/"
     }
 
     dependencies {
-            classpath "com.android.tools.build:gradle:$gradleVersion"
+        classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin"
     }
