@@ -50,13 +50,21 @@ android {
     android.buildFeatures.viewBinding = true
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility "$jvm"
+        targetCompatibility "$jvm"
     }
 
     kotlinOptions {
         freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn'] //, '-Xuse-k2'
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = "$jvm"
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "$compiler"
     }
 
     testOptions {
@@ -69,7 +77,7 @@ android {
     }
     packagingOptions {
         resources {
-            excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1', 'META-INF/LICENSE.md', 'META-INF/LICENSE-notice.md']
+            excludes += '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}'
         }
     }
 
@@ -88,6 +96,17 @@ dependencies {
     //Coil
     implementation "io.coil-kt:coil:$coil"
 
+    //Compose
+    implementation "androidx.activity:activity-compose:$activity"
+    implementation "androidx.compose.foundation:foundation:$composeCore"
+    implementation "androidx.compose.material:material:$composeCore"
+    implementation "androidx.compose.material:material-icons-core:$composeCore"
+    implementation "androidx.compose.material:material-icons-extended:$composeCore"
+    implementation "androidx.compose.ui:ui:$composeCore"
+    implementation "androidx.compose.ui:ui-tooling-preview:$composeCore"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
+    debugImplementation "androidx.compose.ui:ui-tooling:$composeCore"
+
     //Core
     implementation "androidx.core:core-ktx:$ktxCore"
 
@@ -101,9 +120,8 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
 
     //Lifecycle section
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
     //Logging section
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
@@ -145,6 +163,7 @@ dependencies {
     testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
 
     //JUnit
+    testImplementation "junit:junit:$junit"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5"
 
     //Kotest
@@ -162,14 +181,18 @@ dependencies {
     //ArchTestCore
     androidTestImplementation "androidx.arch.core:core-testing:$archTest"
 
+    //Compose
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeCore"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$composeCore"
+
     //Coroutines
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
 
     //Espresso
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
-    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
 
     //JUnit
