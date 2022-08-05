@@ -3,7 +3,7 @@ buildscript {
     ext {
 
         //Annotation
-        annotation = '1.4.0'
+        annotation = '1.5.0-alpha01'
 
         //AppCompat
         appCompat = '1.4.2'
@@ -31,7 +31,7 @@ buildscript {
         ktlintPluginVersion = '10.3.0'
 
         //Gradle
-        gradleVersion = '7.2.1'
+        gradleVersion = '7.2.2'
 
         //Koin
         koin = '3.2.0'
@@ -96,7 +96,6 @@ buildscript {
 
         //Others
         apiUrl = "\"https://api.github.com/\""
-        jvm = "10"
         sharedTestCodePath = "src/sharedTest/java"
         toolsPath = "$project.projectDir/tools/"
     }
