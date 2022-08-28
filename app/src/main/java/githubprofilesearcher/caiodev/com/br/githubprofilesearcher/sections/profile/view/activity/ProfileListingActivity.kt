@@ -8,10 +8,11 @@ import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +40,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProfileListingActivity : AppCompatActivity(), LifecycleOwnerFlow {
+class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
     private lateinit var binding: ActivityProfileListingBinding
     private lateinit var countingIdlingResource: CountingIdlingResource
