@@ -7,4 +7,4 @@ Spare time project to get information about a given Github profile - API 23(Mars
 License
 =======
 
-    Check LICENSE.md -> https://github.com/caiodev/GithubProfileSearcher/blob/master/LICENSE.md
+    Check LICENSE.md -> https://github.com/caiodev/GithubProfileSearcher/blob/edge___often_broken___/LICENSE.md
