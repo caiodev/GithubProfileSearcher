@@ -1,9 +1,9 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.devtools.ksp'
     id 'com.google.protobuf' version "$protobufPlugin"
     id 'kotlin-android'
     id 'kotlinx-serialization'
-    id 'kotlin-kapt'
 }
 apply from: "${toolsPath}codeChecking.gradle"
 apply from: "${toolsPath}coverage.gradle"
@@ -23,11 +23,7 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    kapt {
-        arguments {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
+    ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 
     buildTypes {
         debug {
@@ -36,6 +32,11 @@ android {
             testCoverageEnabled = true
             signingConfig signingConfigs.debug
             buildConfigField "String", "API_URL", "$apiUrl"
+            sourceSets {
+                main {
+                    java { srcDirs = ["build/generated/ksp/debug/kotlin"] }
+                }
+            }
         }
 
         release {
@@ -44,6 +45,11 @@ android {
             testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "API_URL", "$apiUrl"
+            sourceSets {
+                main {
+                    java { srcDirs = ["build/generated/ksp/release/kotlin"] }
+                }
+            }
         }
     }
 
@@ -55,7 +61,7 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn'] //, '-Xuse-k2'
+        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
         jvmTarget = JavaVersion.VERSION_11
     }
 
@@ -139,7 +145,7 @@ dependencies {
 
     //Room
     implementation "androidx.room:room-runtime:$room"
-    kapt "androidx.room:room-compiler:$room"
+    ksp "androidx.room:room-compiler:$room"
     implementation "androidx.room:room-ktx:$room"
 
     //Serialization

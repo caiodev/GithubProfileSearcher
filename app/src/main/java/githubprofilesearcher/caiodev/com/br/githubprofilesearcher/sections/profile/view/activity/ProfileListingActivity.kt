@@ -4,7 +4,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.view.View.*
+import android.view.View.GONE
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -12,7 +14,6 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,11 +34,31 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.viewModel.ProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.LifecycleOwnerFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Available
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ClientSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Connect
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.InitialError
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.InitialSuccess
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.LocalPopulation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SSLHandshake
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SearchLimitReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SearchQuotaReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ServerSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SocketTimeout
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithBody
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Unavailable
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.UnknownHost
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.customViews.snackBar.CustomSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyBackgroundColor
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applySwipeRefreshVisibilityAttributes
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.applyViewVisibility
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.changeDrawable
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.hideKeyboard
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.runTaskOnBackground
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showErrorSnackBar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.showInternetConnectionStatusSnackBar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
