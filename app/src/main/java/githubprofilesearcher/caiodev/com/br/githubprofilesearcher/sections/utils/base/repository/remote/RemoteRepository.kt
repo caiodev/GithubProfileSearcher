@@ -1,6 +1,19 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ClientSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Connect
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Error
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Generic
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SSLHandshake
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SearchLimitReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SearchQuotaReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ServerSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SocketTimeout
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Success
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithBody
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithoutBody
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.UnknownHost
 import retrofit2.Response
 import java.io.IOException
 import java.net.ConnectException
@@ -37,10 +50,10 @@ class RemoteRepository {
 
     private fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
-            in `400`..`402`, in `404`..`451` -> ClientSide
-            `403` -> SearchQuotaReached
-            `422` -> SearchLimitReached
-            in `500`..`511` -> ServerSide
+            in Error400..Error402, in Error403..Error404 -> ClientSide
+            Error422 -> SearchQuotaReached
+            Error451 -> SearchLimitReached
+            in Error500..Error511 -> ServerSide
             else -> Generic
         }
     }
@@ -69,15 +82,15 @@ class RemoteRepository {
 
     companion object {
         private const val headerName = "link"
-        private val headerPattern = "[0-9]+".toPattern().toString()
+        private val headerPattern = "\\d+".toPattern().toString()
         private const val headerListIndex = 2
-        private const val `400` = 400
-        private const val `402` = 402
-        private const val `403` = 403
-        private const val `404` = 404
-        private const val `422` = 422
-        private const val `451` = 451
-        private const val `500` = 500
-        private const val `511` = 511
+        private const val Error400 = 400
+        private const val Error402 = 402
+        private const val Error403 = 403
+        private const val Error404 = 404
+        private const val Error422 = 422
+        private const val Error451 = 451
+        private const val Error500 = 500
+        private const val Error511 = 511
     }
 }

@@ -6,7 +6,15 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.remote.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.*
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ActionNotRequired
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.InitialIntermediate
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.InitialSuccess
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Intermediate
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.LocalPopulation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.Success
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithBody
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.SuccessWithoutBody
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.cast.ValueCasting.castTo
@@ -31,7 +39,9 @@ internal class ProfileViewModel(
     private val _intermediateSharedFlow = MutableSharedFlow<State<Intermediate>>()
     internal val intermediateSharedFlow = _intermediateSharedFlow.asSharedFlow()
 
-    private val _errorSharedFlow = MutableSharedFlow<State<Error>>()
+    private val _errorSharedFlow =
+        MutableSharedFlow<State<githubprofilesearcher.caiodev.com.br
+        .githubprofilesearcher.sections.utils.base.states.Error>>()
     internal val errorSharedFlow = _errorSharedFlow.asSharedFlow()
 
     private val _profileInfoList = mutableListOf<UserProfile>()
@@ -67,14 +77,10 @@ internal class ProfileViewModel(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
-        if (shouldListItemsBeRemoved) {
-            handleCall(profile, shouldListItemsBeRemoved)
-        } else {
-            handleCall(
-                profile,
-                shouldListItemsBeRemoved
-            )
-        }
+        if (shouldListItemsBeRemoved)
+            handleCall(profile, true)
+        else
+            handleCall(profile, false)
     }
 
     private fun handleCall(
@@ -123,7 +129,10 @@ internal class ProfileViewModel(
         }
     }
 
-    private suspend fun handleError(error: State<Error>?) {
+    private suspend fun handleError(
+        error: State<githubprofilesearcher.caiodev.com.br
+        .githubprofilesearcher.sections.utils.base.states.Error>?
+    ) {
         error?.let {
             _errorSharedFlow.emit(error)
         }
