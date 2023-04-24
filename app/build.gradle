@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'com.google.devtools.ksp'
-    id 'com.google.protobuf' version "$protobufPlugin"
     id 'kotlin-android'
     id 'kotlinx-serialization'
 }
@@ -9,10 +8,10 @@ apply from: "${toolsPath}codeChecking.gradle"
 apply from: "${toolsPath}coverage.gradle"
 apply from: "${toolsPath}detekt.gradle"
 apply from: "${toolsPath}lint.gradle"
-apply from: "${toolsPath}protobuf.gradle"
 
 android {
     compileSdkVersion 33
+    buildToolsVersion "33.0.2"
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 23
@@ -135,9 +134,6 @@ dependencies {
 
     //Material design
     implementation "com.google.android.material:material:$materialDesign"
-
-    //Protobuf
-    implementation "com.google.protobuf:protobuf-javalite:$protobufVersion"
 
     //APIConnector
     implementation "com.squareup.retrofit2:retrofit:$retrofit"

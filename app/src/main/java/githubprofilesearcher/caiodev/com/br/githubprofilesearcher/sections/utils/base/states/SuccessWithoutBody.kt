@@ -1,3 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states
 
-object SuccessWithoutBody : State<Success>
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.string.emptyString
+
+data class SuccessWithoutBody(val message: String = emptyString()) : State<Success>

@@ -25,10 +25,7 @@ val global = module {
     }
 
     factory<ILocalRepository> {
-        LocalRepository(
-            get(),
-            get()
-        )
+        LocalRepository(get(), get())
     }
 
     single {
@@ -38,11 +35,7 @@ val global = module {
         )
     }
 
-    single {
-        newInstance()
-    }
+    single { newInstance() }
 
-    single {
-        RemoteRepository()
-    }
+    single { RemoteRepository() }
 }

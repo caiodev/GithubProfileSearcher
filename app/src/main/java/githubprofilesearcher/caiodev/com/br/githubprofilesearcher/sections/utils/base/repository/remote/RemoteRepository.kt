@@ -43,7 +43,7 @@ class RemoteRepository {
             body()?.let { apiResponse ->
                 return SuccessWithBody(apiResponse, obtainTotalPages(headers()))
             } ?: run {
-                return SuccessWithoutBody
+                return SuccessWithoutBody()
             }
         }
     }

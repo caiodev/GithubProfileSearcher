@@ -3,38 +3,38 @@ buildscript {
     ext {
 
         //Annotation
-        annotation = '1.5.0'
+        annotation = '1.6.0'
 
         //AppCompat
-        appCompat = '1.6.0'
+        appCompat = '1.6.1'
 
         //Coil
-        coil = '2.2.2'
+        coil = '2.3.0'
 
         //Compose
-        activity = '1.6.1'
+        activity = '1.7.1'
         compiler = '1.4.0'
-        composeCore = '1.4.0-alpha05'
+        composeCore = '1.5.0-alpha03'
 
         //Coroutines
         coroutines = '1.6.4'
 
         //DataStore
-        dataStore = '1.1.0-alpha01'
+        dataStore = '1.1.0-alpha04'
 
         //Quality checking
         //Detekt
-        detektVersion = '1.21.0'
+        detektVersion = '1.23.0-RC1'
 
         //Ktlint
-        ktlintVersion = '0.46.1'
-        ktlintPluginVersion = '10.3.0'
+        ktlintVersion = '0.49.0'
+        ktlintPluginVersion = '11.3.1'
 
         //Gradle
-        gradleVersion = '7.4.1'
+        gradleVersion = '8.0.0'
 
         //Koin
-        koin = '3.3.2'
+        koin = '3.4.0'
 
         //Kotlin
         kotlin = '1.8.0'
@@ -43,13 +43,13 @@ buildscript {
         ksp = '1.8.0-1.0.8'
 
         //Ktx
-        ktxCore = '1.9.0'
+        ktxCore = '1.10.0'
 
         //LeakCanary
         leakCanary = '2.10'
 
         //Lifecycle
-        lifecycle = '2.5.1'
+        lifecycle = '2.6.1'
 
         //Material design
         materialDesign = '1.8.0'
@@ -57,19 +57,15 @@ buildscript {
         //OkHttp
         okHttp = '5.0.0-alpha.11'
 
-        //Protobuf
-        protobufPlugin = '0.8.15'
-        protobufVersion = '4.0.0-rc-2'
-
         //Retrofit
         retrofit = '2.9.0'
-        serializationConverter = '0.8.0'
+        serializationConverter = '1.0.0'
 
         //Room
-        room = '2.5.0'
+        room = '2.5.1'
 
         //Serialization
-        serialization = '1.4.1'
+        serialization = '1.5.0'
 
         //Timber
         timber = '5.0.1'
@@ -79,23 +75,23 @@ buildscript {
         constraintLayout = '2.1.4'
 
         //RecyclerView
-        recyclerView = '1.2.1'
+        recyclerView = '1.3.0'
 
         //SwipeRefreshLayout
         swipeRefreshLayout = '1.2.0-alpha01'
 
         //Test dependency versions
-        archTest = '2.1.0'
+        archTest = '2.2.0'
         espresso = '3.5.1'
-        jacocoVersion = '0.8.8'
+        jacocoVersion = '0.8.9'
 
         //JUnit
         junit = '4.13.2'
         junitAndroidX = '1.1.5'
         junit5 = '5.9.2'
 
-        kotest = '5.5.4'
-        testCore = '1.5.0'
+        kotest = '5.6.1'
+        testCore = '1.6.0-alpha01'
 
         //Others
         apiUrl = "\"https://api.github.com/\""

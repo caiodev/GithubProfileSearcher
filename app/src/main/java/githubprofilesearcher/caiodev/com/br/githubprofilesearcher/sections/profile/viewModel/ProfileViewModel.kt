@@ -1,9 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.viewModel
 
 import androidx.lifecycle.ViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ProfilePreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.UserProfile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.dataStore.serializer.model.ProfilePreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.remote.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.ILocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.states.ActionNotRequired
@@ -49,16 +49,17 @@ internal class ProfileViewModel(
 
     private var currentIntermediateState: State<Intermediate> = InitialIntermediate
 
-    private var profilePreferences = ProfilePreferences.getDefaultInstance()
+    private var profilePreferences: ProfilePreferences = ProfilePreferences.getDefaultInstance()
 
     fun requestUpdatedProfiles(profile: String = emptyString()) {
+
         saveValueToDataStore(
-            obtainValueFromDataStore().toBuilder().setPageNumber(initialPage).build()
+            obtainValueFromDataStore().copy(pageNumber = initialPage)
         )
 
         if (profile.isNotEmpty()) {
             saveValueToDataStore(
-                obtainValueFromDataStore().toBuilder().setTemporaryCurrentProfile(profile).build()
+                obtainValueFromDataStore().copy(temporaryCurrentProfile = profile)
             )
             requestProfiles(profile, true)
         } else {
@@ -102,15 +103,13 @@ internal class ProfileViewModel(
         when (value) {
             is SuccessWithBody<*> -> {
                 saveValueToDataStore(
-                    obtainValueFromDataStore().toBuilder().setCurrentProfile(emptyString()).build()
+                    obtainValueFromDataStore().copy(currentProfile = emptyString())
                 )
 
                 if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
                 ) {
                     saveValueToDataStore(
-                        obtainValueFromDataStore().toBuilder()
-                            .setHasASuccessfulCallAlreadyBeenMade(true)
-                            .build()
+                        obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = true)
                     )
                 }
 
@@ -121,7 +120,7 @@ internal class ProfileViewModel(
                 }
             }
 
-            SuccessWithoutBody -> Unit
+            is SuccessWithoutBody -> Unit
 
             else -> {
                 handleError(ValueCasting.castTo(value))
@@ -179,7 +178,8 @@ internal class ProfileViewModel(
 
     fun obtainValueFromDataStore(): ProfilePreferences {
         runTaskOnForeground {
-            profilePreferences = castTo(localRepository.obtainProtoDataStore().obtainData())
+            profilePreferences =
+                castTo(localRepository.obtainProtoDataStore().obtainData()) ?: ProfilePreferences.getDefaultInstance()
         }
         return profilePreferences
     }
@@ -206,43 +206,33 @@ internal class ProfileViewModel(
 
     private suspend fun saveDataAfterSuccess(successWithBody: SuccessWithBody<*>) {
         saveValueToDataStore(
-            obtainValueFromDataStore().toBuilder()
-                .setCurrentProfile(obtainValueFromDataStore().temporaryCurrentProfile)
-                .build()
+            obtainValueFromDataStore().copy(currentProfile = obtainValueFromDataStore().temporaryCurrentProfile)
         )
         saveValueToDataStore(
-            obtainValueFromDataStore().toBuilder()
-                .setHasLastCallBeenUnsuccessful(false)
-                .build()
+            obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = false)
         )
         saveValueToDataStore(
-            obtainValueFromDataStore().toBuilder()
-                .setIsThereAnOngoingCall(false)
-                .build()
+            obtainValueFromDataStore().copy(isThereAnOngoingCall = false)
         )
         if (obtainValueFromDataStore().hasUserDeletedProfileText &&
             obtainValueFromDataStore().profile.isNotEmpty()
         ) {
             saveValueToDataStore(
-                obtainValueFromDataStore().toBuilder()
-                    .setShouldASearchBePerformed(true)
-                    .build()
+                obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
             )
         } else {
             saveValueToDataStore(
-                obtainValueFromDataStore().toBuilder()
-                    .setShouldASearchBePerformed(false)
-                    .build()
+                obtainValueFromDataStore().copy(shouldASearchBePerformed = false)
             )
         }
 
         obtainValueFromDataStore().apply {
             saveValueToDataStore(
-                toBuilder().setPageNumber(
-                    pageNumber.plus(
+                obtainValueFromDataStore().copy(
+                    pageNumber = pageNumber.plus(
                         initialPage
                     )
-                ).build()
+                )
             )
         }
 
@@ -265,13 +255,10 @@ internal class ProfileViewModel(
                 profilesInfoList.isEmpty()
             ) {
                 saveValueToDataStore(
-                    obtainValueFromDataStore()
-                        .toBuilder().setIsLocalPopulation(true).build()
+                    obtainValueFromDataStore().copy(isLocalPopulation = true)
                 )
                 saveValueToDataStore(
-                    obtainValueFromDataStore().toBuilder()
-                        .setHasASuccessfulCallAlreadyBeenMade(false)
-                        .build()
+                    obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = false)
                 )
                 postIntermediateState(LocalPopulation)
             }

@@ -58,7 +58,6 @@ fun ImageView.changeDrawable(@DrawableRes newDrawable: Int) {
     )
 }
 
-@Suppress("UNUSED")
 fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
     lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) { task() }
@@ -69,12 +68,10 @@ fun View.applyBackgroundColor(@ColorRes color: Int) {
     setBackgroundColor(ContextCompat.getColor(context, color))
 }
 
-@Suppress("UNUSED")
 fun View.applyViewVisibility(visibility: Int) {
     this.visibility = visibility
 }
 
-@Suppress("UNUSED")
 inline fun Snackbar.showErrorSnackBar(
     @StringRes message: Int,
     crossinline onDismissed: (() -> Any) = {}
@@ -91,7 +88,6 @@ inline fun Snackbar.showErrorSnackBar(
     show()
 }
 
-@Suppress("UNUSED")
 fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
     isSwipeEnabled: Boolean = true
 ) {

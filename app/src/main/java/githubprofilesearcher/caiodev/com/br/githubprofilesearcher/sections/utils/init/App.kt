@@ -17,7 +17,6 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import timber.log.Timber
 
-@Suppress("Unused")
 @OptIn(ExperimentalSerializationApi::class)
 class App : Application(), ImageLoaderFactory {
     override fun onCreate() {
