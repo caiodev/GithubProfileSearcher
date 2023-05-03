@@ -2,4 +2,4 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.repo
 
 import androidx.lifecycle.ViewModel
 
-class RepositoryInformationViewModel : ViewModel() {}
+class RepositoryInformationViewModel : ViewModel()

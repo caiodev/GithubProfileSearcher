@@ -1,125 +1,38 @@
-build:
-  maxIssues: 0
-  excludeCorrectable: false
-  weights:
-  # complexity: 2
-  # LongParameterList: 1
-  # style: 1
-  # comments: 1
-
-config:
-  validation: true
-  warningsAsErrors: false
-  # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
-  excludes: ''
-
-processors:
-  active: true
-  exclude:
-    - 'DetektProgressListener'
-  # - 'FunctionCountProcessor'
-  # - 'PropertyCountProcessor'
-  # - 'ClassCountProcessor'
-  # - 'PackageCountProcessor'
-  # - 'KtFileCountProcessor'
-
-console-reports:
-  active: true
-  exclude:
-    - 'ProjectStatisticsReport'
-    - 'ComplexityReport'
-    - 'NotificationReport'
-    #  - 'FindingsReport'
-    - 'FileBasedFindingsReport'
-
-output-reports:
-  active: true
-  exclude:
-  - 'HtmlOutputReport'
-
 comments:
-  active: true
-  AbsentOrWrongFileLicense:
-    active: false
-    licenseTemplateFile: 'license.template'
-  CommentOverPrivateFunction:
-    active: false
   CommentOverPrivateProperty:
-    active: false
-  EndOfSentenceFormat:
-    active: false
-    endOfSentenceFormat: '([.?!][ \t\n\r\f<])|([.?!:]$)'
+    active: true
   UndocumentedPublicClass:
-    active: false
-    searchInNestedClass: true
-    searchInInnerClass: true
-    searchInInnerObject: true
-    searchInInnerInterface: true
+    active: true
+    excludes: ['**/*.kt']
+    includes: ['**/detekt-api/src/main/**/api/*.kt']
   UndocumentedPublicFunction:
-    active: false
-  UndocumentedPublicProperty:
-    active: false
+    active: true
+    excludes: ['**/*.kt']
+    includes: ['**/detekt-api/src/main/**/api/*.kt']
 
 complexity:
-  active: true
-  ComplexCondition:
-    active: true
-    threshold: 4
-  ComplexInterface:
-    active: false
-    threshold: 10
-    includeStaticDeclarations: false
-    includePrivateDeclarations: false
-  ComplexMethod:
-    active: true
-    threshold: 15
-    ignoreSingleWhenExpression: false
-    ignoreSimpleWhenEntries: false
-    ignoreNestingFunctions: false
-    nestingFunctions: [run, let, apply, with, also, use, forEach, isNotNull, ifNull]
-  LabeledExpression:
-    active: false
-    ignoredLabels: []
-  LargeClass:
-    active: true
-    threshold: 600
-  LongMethod:
-    active: true
-    threshold: 60
-  LongParameterList:
-    active: true
-    functionThreshold: 6
-    constructorThreshold: 7
-    ignoreDefaultParameters: false
-    ignoreDataClasses: true
-    ignoreAnnotated: []
-  MethodOverloading:
-    active: false
-    threshold: 6
-  NamedArguments:
-    active: false
-    threshold: 3
-  NestedBlockDepth:
-    active: true
-    threshold: 4
-  ReplaceSafeCallChainWithRun:
-    active: false
   StringLiteralDuplication:
-    active: false
-    threshold: 3
+    active: true
+    excludes: ['**/test/**', '**/*Test.kt', '**/*Spec.kt']
+    threshold: 5
     ignoreAnnotation: true
     excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: '$^'
-  TooManyFunctions:
+  ComplexInterface:
     active: true
-    thresholdInFiles: 11
-    thresholdInClasses: 40
-    thresholdInInterfaces: 11
-    thresholdInObjects: 11
-    thresholdInEnums: 11
-    ignoreDeprecated: false
-    ignorePrivate: false
-    ignoreOverridden: false
+    threshold: 10
+    includeStaticDeclarations: false
+    includePrivateDeclarations: false
+  CyclomaticComplexMethod:
+    active: true
+    ignoreSingleWhenExpression: true
+  LargeClass:
+    active: true
+    excludes: ['**/test/**', '**/*.Test.kt', '**/*.Spec.kt']
+  MethodOverloading:
+    active: true
+  TooManyFunctions:
+    excludes: ['**/test/**', '**/functionalTest/**']
 
 coroutines:
   active: true
@@ -127,533 +40,249 @@ coroutines:
     active: true
   RedundantSuspendModifier:
     active: true
+  SleepInsteadOfDelay:
+    active: true
   SuspendFunWithFlowReturnType:
     active: true
 
-empty-blocks:
-  active: true
-  EmptyCatchBlock:
-    active: true
-    allowedExceptionNameRegex: '_|(ignore|expected).*'
-  EmptyClassBlock:
-    active: true
-  EmptyDefaultConstructor:
-    active: true
-  EmptyDoWhileBlock:
-    active: true
-  EmptyElseBlock:
-    active: true
-  EmptyFinallyBlock:
-    active: true
-  EmptyForBlock:
-    active: true
-  EmptyFunctionBlock:
-    active: true
-    ignoreOverridden: false
-  EmptyIfBlock:
-    active: true
-  EmptyInitBlock:
-    active: true
-  EmptyKtFile:
-    active: true
-  EmptySecondaryConstructor:
-    active: true
-  EmptyTryBlock:
-    active: true
-  EmptyWhenBlock:
-    active: true
-  EmptyWhileBlock:
-    active: true
-
 exceptions:
-  active: true
-  ExceptionRaisedInUnexpectedLocation:
-    active: false
-    methodNames: [toString, hashCode, equals, finalize]
   InstanceOfCheckForException:
-    active: false
-  NotImplementedDeclaration:
-    active: false
-  PrintStackTrace:
-    active: false
-  RethrowCaughtException:
-    active: false
-  ReturnFromFinally:
-    active: false
-    ignoreLabeled: false
-  SwallowedException:
-    active: false
-    ignoredExceptionTypes:
-      - InterruptedException
-      - NumberFormatException
-      - ParseException
-      - MalformedURLException
-    allowedExceptionNameRegex: '_|(ignore|expected).*'
-  ThrowingExceptionFromFinally:
-    active: false
-  ThrowingExceptionInMain:
-    active: false
-  ThrowingExceptionsWithoutMessageOrCause:
-    active: false
-    exceptions:
-      - IllegalArgumentException
-      - IllegalStateException
-      - IOException
-  ThrowingNewInstanceOfSameException:
-    active: false
-  TooGenericExceptionCaught:
-    active: false
-    exceptionNames:
-      - ArrayIndexOutOfBoundsException
-      - Error
-      - Exception
-      - IllegalMonitorStateException
-      - NullPointerException
-      - IndexOutOfBoundsException
-      - RuntimeException
-      - Throwable
-    allowedExceptionNameRegex: '_|(ignore|expected).*'
-  TooGenericExceptionThrown:
     active: true
-    exceptionNames:
-      - Error
-      - Exception
-      - Throwable
-      - RuntimeException
+  NotImplementedDeclaration:
+    active: true
+  ObjectExtendsThrowable:
+    active: true
+  RethrowCaughtException:
+    active: true
+  ReturnFromFinally:
+    active: true
+  ThrowingExceptionFromFinally:
+    active: true
+  ThrowingExceptionInMain:
+    active: true
+  ThrowingExceptionsWithoutMessageOrCause:
+    active: true
+  ThrowingNewInstanceOfSameException:
+    active: true
 
 formatting:
   active: true
   android: false
   autoCorrect: true
-  AnnotationOnSeparateLine:
-    active: false
-    autoCorrect: true
-  AnnotationSpacing:
-    active: false
-    autoCorrect: true
-  ArgumentListWrapping:
-    active: false
-    autoCorrect: true
-  ChainWrapping:
+  ContextReceiverMapping:
     active: true
-    autoCorrect: true
-  CommentSpacing:
-    active: true
-    autoCorrect: true
-  EnumEntryNameCase:
-    active: false
-    autoCorrect: true
   Filename:
-    active: true
-  FinalNewline:
-    active: true
-    autoCorrect: true
-    insertFinalNewLine: true
-  ImportOrdering:
     active: false
-    autoCorrect: true
-    layout: 'idea'
-  Indentation:
-    active: false
-    autoCorrect: true
-    indentSize: 4
-    continuationIndentSize: 4
   MaximumLineLength:
-    active: true
-    maxLineLength: 120
-  ModifierOrdering:
-    active: true
-    autoCorrect: true
-  MultiLineIfElse:
-    active: true
-    autoCorrect: true
-  NoBlankLineBeforeRbrace:
-    active: true
-    autoCorrect: true
-  NoConsecutiveBlankLines:
-    active: true
-    autoCorrect: true
-  NoEmptyClassBody:
-    active: true
-    autoCorrect: true
-  NoEmptyFirstLineInMethodBlock:
     active: false
-    autoCorrect: true
-  NoLineBreakAfterElse:
+  ParameterListSpacing:
     active: true
-    autoCorrect: true
-  NoLineBreakBeforeAssignment:
+  TypeParameterListSpacing:
     active: true
-    autoCorrect: true
-  NoMultipleSpaces:
-    active: true
-    autoCorrect: true
-  NoSemicolons:
-    active: true
-    autoCorrect: true
-  NoTrailingSpaces:
-    active: true
-    autoCorrect: true
-  NoUnitReturn:
-    active: true
-    autoCorrect: true
-  NoUnusedImports:
-    active: true
-    autoCorrect: true
-  NoWildcardImports:
-    active: true
-  PackageName:
-    active: true
-    autoCorrect: true
-  ParameterListWrapping:
-    active: true
-    autoCorrect: true
-    indentSize: 4
-  SpacingAroundColon:
-    active: true
-    autoCorrect: true
-  SpacingAroundComma:
-    active: true
-    autoCorrect: true
-  SpacingAroundCurly:
-    active: true
-    autoCorrect: true
-  SpacingAroundDot:
-    active: true
-    autoCorrect: true
-  SpacingAroundDoubleColon:
-    active: false
-    autoCorrect: true
-  SpacingAroundKeyword:
-    active: true
-    autoCorrect: true
-  SpacingAroundOperators:
-    active: true
-    autoCorrect: true
-  SpacingAroundParens:
-    active: true
-    autoCorrect: true
-  SpacingAroundRangeOperator:
-    active: true
-    autoCorrect: true
-  SpacingBetweenDeclarationsWithAnnotations:
-    active: false
-    autoCorrect: true
-  SpacingBetweenDeclarationsWithComments:
-    active: false
-    autoCorrect: true
-  StringTemplate:
-    active: true
-    autoCorrect: true
 
 naming:
-  active: true
   ClassNaming:
-    active: true
-    classPattern: '[A-Z][a-zA-Z0-9]*'
-  ConstructorParameterNaming:
-    active: true
-    parameterPattern: '[a-z][A-Za-z0-9]*'
-    privateParameterPattern: '[a-z][A-Za-z0-9]*'
-    excludeClassPattern: '$^'
-    ignoreOverridden: true
-  EnumNaming:
-    active: true
-    enumEntryPattern: '[A-Z][_a-zA-Z0-9]*'
-  ForbiddenClassName:
-    active: false
-    forbiddenName: []
-  FunctionMaxLength:
-    active: false
-    maximumFunctionNameLength: 30
-  FunctionMinLength:
-    active: false
-    minimumFunctionNameLength: 3
+    ignoreAnnotated: ['org.junit.jupiter.api.Nested']
   FunctionNaming:
     active: true
-    functionPattern: '([a-z][a-zA-Z0-9]*)|(`.*`)'
-    excludeClassPattern: '$^'
-    ignoreOverridden: true
-    ignoreAnnotated: ['Composable']
-  FunctionParameterNaming:
-    active: true
-    parameterPattern: '[a-z][A-Za-z0-9]*'
-    excludeClassPattern: '$^'
-    ignoreOverridden: true
-  InvalidPackageDeclaration:
-    active: false
-    rootPackage: ''
-  MatchingDeclarationName:
-    active: true
-    mustBeFirst: true
-  MemberNameEqualsClassName:
-    active: true
-    ignoreOverridden: true
-  NonBooleanPropertyPrefixedWithIs:
-    active: false
-  ObjectPropertyNaming:
-    active: true
-    constantPattern: '[A-Za-z][_A-Za-z0-9]*'
-    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
-    privatePropertyPattern: '(_)?[A-Za-z][_A-Za-z0-9]*'
-  PackageNaming:
-    active: true
-    packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
+    excludes: []
+    ignoreAnnotated: ['Test', 'ParameterizedTest', 'RepeatedTest', 'TestFactory']
   TopLevelPropertyNaming:
+    constantPattern: '[a-z][_A-Za-z0-9]*|[A-Z][_A-Z0-9]*'
+  InvalidPackageDeclaration:
     active: true
-    constantPattern: '[A-Z][_A-Z0-9]*'
-    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
-    privatePropertyPattern: '_?[A-Za-z][_A-Za-z0-9]*'
+    excludes: ['**/build-logic/**/*.kt', '**/*.kts']
+  NoNameShadowing:
+    active: true
+  NonBooleanPropertyPrefixedWithIs:
+    active: true
   VariableMaxLength:
-    active: false
-    maximumVariableNameLength: 64
-  VariableMinLength:
-    active: false
-    minimumVariableNameLength: 1
-  VariableNaming:
     active: true
-    variablePattern: '[a-z][A-Za-z0-9]*'
-    privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
-    excludeClassPattern: '$^'
-    ignoreOverridden: true
+  VariableMinLength:
+    active: true
 
 performance:
-  active: true
-  ArrayPrimitive:
-    active: true
-  ForEachOnRange:
-    active: true
   SpreadOperator:
-    active: true
-  UnnecessaryTemporaryInstantiation:
-    active: true
+    excludes: ['**/test/**', '**/functionalTest/**']
 
 potential-bugs:
-  active: true
-  Deprecation:
+  AvoidReferentialEquality:
+    active: true
+  DontDowncastCollectionTypes:
+    active: true
+  ElseCaseInsteadOfExhaustiveWhen:
+    active: true
+  ExitOutsideMain:
     active: false
-  DuplicateCaseInWhenExpression:
-    active: true
-  EqualsAlwaysReturnsTrueOrFalse:
-    active: true
-  EqualsWithHashCodeExist:
-    active: true
-  ExplicitGarbageCollectionCall:
-    active: true
   HasPlatformType:
-    active: false
+    active: true
   IgnoredReturnValue:
-    active: false
-    restrictToAnnotatedMethods: true
-    returnValueAnnotations: ['*.CheckReturnValue', '*.CheckResult']
-  ImplicitDefaultLocale:
-    active: false
+    active: true
   ImplicitUnitReturnType:
-    active: false
-    allowExplicitReturnType: true
-  InvalidRange:
     active: true
-  IteratorHasNextCallsNextMethod:
-    active: true
-  IteratorNotThrowingNoSuchElementException:
-    active: true
-  LateinitUsage:
-    active: false
-    excludeAnnotatedProperties: []
-    ignoreOnClassesPattern: ''
   MapGetWithNotNullAssertionOperator:
-    active: false
-  MissingWhenCase:
-    active: true
-    allowElseExpression: true
-  NullableToStringCall:
-    active: false
-  RedundantElseInWhen:
     active: true
   UnconditionalJumpStatementInLoop:
-    active: false
-  UnnecessaryNotNullOperator:
-    active: false
-  UnnecessarySafeCall:
-    active: false
-  UnreachableCode:
     active: true
-  UnsafeCallOnNullableType:
+  UnreachableCatchBlock:
     active: true
   UnsafeCast:
-    active: false
+    active: true
+    excludes: ['**/test/**', '**/*.Test.kt', '**/*.Spec.kt']
   UselessPostfixExpression:
-    active: false
-  WrongEqualsTypeParameter:
     active: true
 
 style:
-  active: true
+  BracesOnIfStatements:
+    active: true
+    singleLine: 'consistent'
+    multiLine: 'consistent'
+  CanBeNonNullable:
+    active: true
+  CascadingCallWrapping:
+    active: true
   ClassOrdering:
-    active: false
+    active: true
   CollapsibleIfStatements:
-    active: false
-  DataClassContainsFunctions:
-    active: false
-    conversionFunctionPrefix: 'to'
-  DataClassShouldBeImmutable:
-    active: false
-  EqualsNullCall:
+    active: true
+  DestructuringDeclarationWithTooManyEntries:
     active: true
   EqualsOnSignatureLine:
-    active: false
+    active: true
   ExplicitCollectionElementAccessMethod:
-    active: false
+    active: true
   ExplicitItLambdaParameter:
-    active: false
-  ExpressionBodySyntax:
-    active: false
-    includeLineWrapping: false
+    active: true
   ForbiddenComment:
     active: true
-    values: ['TODO:', 'FIXME:', 'STOPSHIP:']
-    allowedPatterns: ''
+    values:
+      - 'TODO:'
+      - 'FIXME:'
+      - 'STOPSHIP:'
+      - '@author'
+      - '@requiresTypeResolution'
+    excludes: ['**/detekt-rules-style/**/ForbiddenComment.kt']
   ForbiddenImport:
-    active: false
-    imports: []
-    forbiddenPatterns: ''
+    active: true
+    imports:
+      - value: 'org.assertj.core.api.Assertions'
+        reason: 'Import Assertions.assertThat instead.'
+      - value: 'org.junit.jupiter.api.Assertions*'
+        reason: 'Use AssertJ assertions instead.'
+      - value: 'org.junit.jupiter.api.assertAll'
+        reason: 'Use AssertJ assertSoftly instead.'
+      - value: 'org.junit.jupiter.api.assertThrows'
+        reason: 'Use AssertJ assertThatCode { }.isInstanceOf() or assertThatExceptionOfType().isThrownBy { } instead.'
+      - value: 'org.junit.jupiter.api.assertDoesNotThrow'
+        reason: 'Use AssertJ assertThatCode { }.doesNotThrowAnyException() instead.'
+      # These don't have AssertJ alternatives, so just allow them:
+      #- value: 'org.junit.jupiter.api.fail'
+      #- value: 'org.junit.jupiter.api.assertTimeout'
+      #- value: 'org.junit.jupiter.api.assertTimeoutPreemptively'
+      - value: 'java.util.stream.*'
+        reason: "Use Kotlin's sequences instead."
   ForbiddenMethodCall:
-    active: false
-    methods: ['kotlin.io.println', 'kotlin.io.print']
-  ForbiddenPublicDataClass:
-    active: false
-    ignorePackages: ['*.internal', '*.internal.*']
+    active: true
+    methods:
+      - 'kotlin.io.print'
+      - 'kotlin.io.println'
+      - 'java.net.URL.openStream'
+      - 'java.lang.Class.getResourceAsStream'
+      - 'java.lang.ClassLoader.getResourceAsStream'
+      - 'org.jetbrains.kotlin.diagnostics.DiagnosticUtils.getLineAndColumnInPsiFile'
   ForbiddenVoid:
-    active: false
-    ignoreOverridden: false
-    ignoreUsageInGenerics: false
-  FunctionOnlyReturningConstant:
     active: true
-    ignoreOverridableFunction: true
-    excludedFunctions: 'describeContents'
-    excludeAnnotatedFunction: ['dagger.Provides']
-  LibraryCodeMustSpecifyReturnType:
-    active: true
-  LibraryEntitiesShouldNotBePublic:
-    active: false
-  LoopWithTooManyJumpStatements:
-    active: true
-    maxJumpCount: 1
   MagicNumber:
-    active: true
-    ignoreNumbers: ['-1', '0', '1', '2']
-    ignoreHashCodeFunction: true
-    ignorePropertyDeclaration: false
-    ignoreLocalVariableDeclaration: false
-    ignoreConstantDeclaration: true
-    ignoreCompanionObjectPropertyDeclaration: true
-    ignoreAnnotation: false
-    ignoreNamedArgument: true
-    ignoreEnums: false
-    ignoreRanges: false
-  MandatoryBracesIfStatements:
-    active: false
+    excludes: ['**/test/**', '**/*Test.kt', '**/*Spec.kt']
+    ignorePropertyDeclaration: true
+    ignoreAnnotation: true
+    ignoreEnums: true
+    ignoreNumbers:
+      - '-1'
+      - '0'
+      - '1'
+      - '2'
+      - '100'
+      - '1000'
   MandatoryBracesLoops:
-    active: false
+    active: true
   MaxLineLength:
     active: true
-    maxLineLength: 120
-    excludePackageStatements: true
-    excludeImportStatements: true
-    excludeCommentStatements: false
-  MayBeConst:
-    active: true
-  ModifierOrder:
-    active: true
+    excludes: ['**/test/**', '**/*Test.kt', '**/*Spec.kt']
+    excludeCommentStatements: true
   NestedClassesVisibility:
-    active: false
-  NewLineAtEndOfFile:
     active: true
-  NoTabs:
-    active: false
-  OptionalAbstractKeyword:
+  ObjectLiteralToLambda:
     active: true
-  OptionalUnit:
-    active: false
-  OptionalWhenBraces:
-    active: false
   PreferToOverPairSyntax:
-    active: false
-  ProtectedMemberInFinalClass:
     active: true
   RedundantExplicitType:
-    active: false
+    active: true
   RedundantHigherOrderMapUsage:
-    active: false
+    active: true
   RedundantVisibilityModifierRule:
-    active: false
+    active: true
   ReturnCount:
     active: true
-    max: 2
-    excludedFunctions: 'equals'
-    excludeLabeled: false
-    excludeReturnFromLambda: true
-    excludeGuardClauses: false
-  SafeCast:
-    active: true
-  SerialVersionUIDInSerializableClass:
-    active: false
+    excludeGuardClauses: true
   SpacingBetweenPackageAndImports:
-    active: false
-  ThrowsCount:
     active: true
-    max: 2
-  TrailingWhitespace:
-    active: false
+  TrimMultilineRawString:
+    active: true
   UnderscoresInNumericLiterals:
-    active: false
-    acceptableDecimalLength: 5
-  UnnecessaryAbstractClass:
     active: true
   UnnecessaryAnnotationUseSiteTarget:
-    active: false
-  UnnecessaryApply:
-    active: false
-  UnnecessaryInheritance:
+    active: true
+  UnnecessaryBackticks:
+    active: true
+  UnnecessaryFilter:
     active: true
   UnnecessaryLet:
-    active: false
-  UnnecessaryParentheses:
-    active: false
+    active: true
+  UnnecessaryInnerClass:
+    active: true
+    ignoreAnnotated: ['Nested']
   UntilInsteadOfRangeTo:
-    active: false
+    active: true
   UnusedImports:
-    active: false
-  UnusedPrivateClass:
-    active: true
+    active: false # formatting already have this rule enabled
   UnusedPrivateMember:
-    active: false
-    allowedNames: '(_|ignored|expected|serialVersionUID)'
-  UseArrayLiteralsInAnnotations:
-    active: false
-  UseCheckNotNull:
-    active: false
-  UseCheckOrError:
-    active: false
-  UseDataClass:
     active: true
-    excludeAnnotatedClasses: []
-    allowVars: false
+    allowedNames: '(_|ignored|expected)'
+  UseAnyOrNoneInsteadOfFind:
+    active: true
+  UseCheckOrError:
+    active: true
   UseEmptyCounterpart:
-    active: false
+    active: true
   UseIfEmptyOrIfBlank:
     active: true
-  UseIfInsteadOfWhen:
+  UseIsNullOrEmpty:
+    active: true
+  UseOrEmpty:
     active: true
   UseRequire:
     active: true
   UseRequireNotNull:
-    active: false
-  UselessCallOnNotNull:
-    active: true
-  UtilityClassWithPublicConstructor:
     active: true
   VarCouldBeVal:
     active: true
+    ignoreAnnotated: ['Parameter']
   WildcardImport:
     active: true
+    excludeImports: []
+
+libraries:
+  ForbiddenPublicDataClass:
+    active: false
+  LibraryEntitiesShouldNotBePublic:
+    active: false
+  LibraryCodeMustSpecifyReturnType:
+    active: true
+    excludes: ['**/*.kt']
+    includes: ['**/detekt-api/src/main/**/api/*.kt']
+
+ruleauthors:
+  ViolatesTypeResolutionRequirements:
+    active: true
+    excludes: ['**/test/**', '**/*Test.kt', '**/*Spec.kt']

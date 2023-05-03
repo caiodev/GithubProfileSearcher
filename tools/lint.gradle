@@ -1,15 +1,17 @@
 apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 ktlint {
+    android = true
+    debug = true
+    enableExperimentalRules = true
+    outputColorName = "RED"
+    outputToConsole = true
+    verbose = true
     version = "$ktlintVersion"
-    verbose.set(true)
-    enableExperimentalRules.set(true)
-    reporters {
-        reporter "html"
-        reporter "json"
-    }
     filter {
         exclude("**/generated/**")
         include("**/kotlin/**")
     }
+    kotlinScriptAdditionalPaths { include fileTree("scripts/") }
+    reporters { reporter "html" }
 }

@@ -12,6 +12,5 @@ interface UserRepository {
     suspend fun fetchUser(@Path("user") user: String): Response<UserProfile>
 
     @GET("users/{user}/repos")
-    suspend fun fetchRepository(@Path("user") user: String):
-        Response<RepositoryInformation>
+    suspend fun fetchRepository(@Path("user") user: String): Response<RepositoryInformation>
 }

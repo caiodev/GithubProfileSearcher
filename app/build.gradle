@@ -4,10 +4,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlinx-serialization'
 }
-apply from: "${toolsPath}codeChecking.gradle"
-apply from: "${toolsPath}coverage.gradle"
-apply from: "${toolsPath}detekt.gradle"
-apply from: "${toolsPath}lint.gradle"
 
 android {
     compileSdkVersion 33
@@ -80,6 +76,7 @@ android {
         androidTest { java.srcDirs += "$sharedTestCodePath" }
         test { java.srcDirs += "$sharedTestCodePath" }
     }
+
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}'

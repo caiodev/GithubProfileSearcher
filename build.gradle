@@ -24,26 +24,26 @@ buildscript {
 
         //Quality checking
         //Detekt
-        detektVersion = '1.23.0-RC1'
+        detektVersion = '1.23.0-RC2'
 
         //Ktlint
         ktlintVersion = '0.49.0'
-        ktlintPluginVersion = '11.3.1'
+        ktlintPluginVersion = '11.3.2'
 
         //Gradle
-        gradleVersion = '8.0.0'
+        gradleVersion = '8.0.1'
 
         //Koin
         koin = '3.4.0'
 
         //Kotlin
-        kotlin = '1.8.0'
+        kotlin = '1.8.21'
 
         //KSP
-        ksp = '1.8.0-1.0.8'
+        ksp = '1.8.21-1.0.11'
 
         //Ktx
-        ktxCore = '1.10.0'
+        ktxCore = '1.11.0-alpha03'
 
         //LeakCanary
         leakCanary = '2.10'
@@ -83,12 +83,12 @@ buildscript {
         //Test dependency versions
         archTest = '2.2.0'
         espresso = '3.5.1'
-        jacocoVersion = '0.8.9'
+        jacocoVersion = '0.8.10'
 
         //JUnit
         junit = '4.13.2'
         junitAndroidX = '1.1.5'
-        junit5 = '5.9.2'
+        junit5 = '5.9.3'
 
         kotest = '5.6.1'
         testCore = '1.6.0-alpha01'
@@ -108,6 +108,7 @@ buildscript {
 
     repositories {
         google()
+        gradlePluginPortal()
         mavenCentral()
     }
 }
@@ -117,9 +118,24 @@ plugins {
     id "org.jlleitschuh.gradle.ktlint" version "$ktlintPluginVersion"
 }
 
+subprojects {
+    apply from: "${toolsPath}codeChecking.gradle"
+    apply from: "${toolsPath}coverage.gradle"
+    apply from: "${toolsPath}detekt.gradle"
+    apply from: "${toolsPath}lint.gradle"
+
+    dependencies {
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-libraries:$detektVersion"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-ruleauthors:$detektVersion"
+    }
+}
+
 allprojects {
     repositories {
         google()
+        gradlePluginPortal()
         mavenCentral()
     }
 }

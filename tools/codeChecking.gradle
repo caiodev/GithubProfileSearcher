@@ -1,1 +1,1 @@
-task codeChecking(dependsOn: ['clean', 'ktlintCheck', 'ktlintFormat', 'detekt', 'jacocoReport']) //, 'connectedAndroidTest'
+task codeChecking(dependsOn: ['clean', 'ktlintFormat', 'detekt', 'jacocoReport'])

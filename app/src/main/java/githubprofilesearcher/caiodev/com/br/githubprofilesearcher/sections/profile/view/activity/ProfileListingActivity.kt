@@ -342,7 +342,6 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
     }
 
     private fun splitOnSuccess(githubUsersList: List<UserProfile>, totalPages: Int) {
-
         if (viewModel.obtainValueFromDataStore().pageNumber == totalPages) {
             changeViewState(transientViewsAdapter, endOfResults)
         } else {
@@ -355,13 +354,17 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         }
 
         viewModel.saveValueToDataStore(
-            viewModel.obtainValueFromDataStore().copy(shouldRecyclerViewAnimationBeExecuted = shouldRecyclerViewAnimationBeExecuted())
+            viewModel.obtainValueFromDataStore().copy(
+                shouldRecyclerViewAnimationBeExecuted = shouldRecyclerViewAnimationBeExecuted()
+            )
         )
 
         if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData
-        ) viewModel.saveValueToDataStore(
-            viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false)
-        )
+        ) {
+            viewModel.saveValueToDataStore(
+                viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false)
+            )
+        }
 
         if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData) {
             provideAdapter<ProfileAdapter>(githubProfileAdapter)?.updateDataSource(

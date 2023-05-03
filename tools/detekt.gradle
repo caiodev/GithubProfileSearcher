@@ -2,13 +2,23 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 
 detekt {
     allRules = true
-    autoCorrect = true
     buildUponDefaultConfig = true
+    config.from(files("${rootProject.projectDir}/config/detekt/detekt.yml"))
+    debug = true
+    ignoredBuildTypes = ["release"]
+    ignoredFlavors = ["production"]
+    ignoredVariants = ["productionRelease"]
     parallel = true
-    source = files(rootProject.projectDir)
+    source.from(files(rootProject.projectDir))
+    toolVersion = "$detektVersion"
+}
+
+tasks.named("detekt").configure {
     reports {
-        html.enabled = true
-        xml.enabled = false
-        txt.enabled = false
+        html.required.set(true)
+        md.required.set(false)
+        sarif.required.set(false)
+        txt.required.set(false)
+        xml.required.set(false)
     }
 }

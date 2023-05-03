@@ -40,8 +40,12 @@ internal class ProfileViewModel(
     internal val intermediateSharedFlow = _intermediateSharedFlow.asSharedFlow()
 
     private val _errorSharedFlow =
-        MutableSharedFlow<State<githubprofilesearcher.caiodev.com.br
-        .githubprofilesearcher.sections.utils.base.states.Error>>()
+        MutableSharedFlow<
+            State<
+                githubprofilesearcher.caiodev.com.br
+                    .githubprofilesearcher.sections.utils.base.states.Error
+                >
+            >()
     internal val errorSharedFlow = _errorSharedFlow.asSharedFlow()
 
     private val _profileInfoList = mutableListOf<UserProfile>()
@@ -52,7 +56,6 @@ internal class ProfileViewModel(
     private var profilePreferences: ProfilePreferences = ProfilePreferences.getDefaultInstance()
 
     fun requestUpdatedProfiles(profile: String = emptyString()) {
-
         saveValueToDataStore(
             obtainValueFromDataStore().copy(pageNumber = initialPage)
         )
@@ -78,10 +81,11 @@ internal class ProfileViewModel(
         profile: String,
         shouldListItemsBeRemoved: Boolean
     ) {
-        if (shouldListItemsBeRemoved)
+        if (shouldListItemsBeRemoved) {
             handleCall(profile, true)
-        else
+        } else {
             handleCall(profile, false)
+        }
     }
 
     private fun handleCall(
@@ -129,8 +133,10 @@ internal class ProfileViewModel(
     }
 
     private suspend fun handleError(
-        error: State<githubprofilesearcher.caiodev.com.br
-        .githubprofilesearcher.sections.utils.base.states.Error>?
+        error: State<
+            githubprofilesearcher.caiodev.com.br
+                .githubprofilesearcher.sections.utils.base.states.Error
+            >?
     ) {
         error?.let {
             _errorSharedFlow.emit(error)
