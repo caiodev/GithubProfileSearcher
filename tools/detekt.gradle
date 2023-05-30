@@ -5,6 +5,7 @@ detekt {
     buildUponDefaultConfig = true
     config.from(files("${rootProject.projectDir}/config/detekt/detekt.yml"))
     debug = true
+    ignoredBuildTypes = ["release"]
     parallel = true
     source.from(fileTree(rootProject.projectDir) {
         exclude("**/.gradle/")
