@@ -13,7 +13,7 @@ import java.io.OutputStream
 object ProfileSerializer : Serializer<ProfilePreferences> {
 
     const val profileProtoFileName = "profile.proto"
-    override val defaultValue: ProfilePreferences = ProfilePreferences()
+    override val defaultValue: ProfilePreferences = ProfilePreferences.getDefaultInstance()
     private const val TAG = "ProfileSerializer"
 
     override suspend fun readFrom(input: InputStream): ProfilePreferences {

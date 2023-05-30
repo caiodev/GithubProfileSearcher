@@ -48,20 +48,20 @@ android {
         }
     }
 
-    android.buildFeatures.viewBinding = true
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_19
+        targetCompatibility JavaVersion.VERSION_19
     }
 
     kotlinOptions {
         freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
-        jvmTarget = JavaVersion.VERSION_11
+        jvmTarget = JavaVersion.VERSION_19
     }
 
     buildFeatures {
+        buildConfig true
         compose true
+        viewBinding true
     }
 
     composeOptions {
@@ -170,6 +170,10 @@ dependencies {
     testImplementation "io.kotest:kotest-property:$kotest"
     testImplementation "io.kotest:kotest-runner-junit5:$kotest"
 
+    //MockK
+    testImplementation "io.mockk:mockk-android:$mockkVersion"
+    testImplementation "io.mockk:mockk-agent:$mockkVersion"
+
     //MockWebServer
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
 
@@ -197,6 +201,10 @@ dependencies {
     //JUnit
     androidTestImplementation "androidx.test.ext:junit-ktx:$junitAndroidX"
     androidTestImplementation "org.junit.jupiter:junit-jupiter:$junit5"
+
+    //MockK
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
+    androidTestImplementation "io.mockk:mockk-agent:$mockkVersion"
 
     //MockWebServer
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"

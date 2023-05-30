@@ -1,0 +1,1 @@
+val codeChecking by tasks.registering { dependsOn("clean", "ktlintFormat", "detekt", "jacocoReport") }

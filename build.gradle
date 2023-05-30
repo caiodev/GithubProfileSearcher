@@ -12,9 +12,9 @@ buildscript {
         coil = '2.3.0'
 
         //Compose
-        activity = '1.7.1'
-        compiler = '1.4.0'
-        composeCore = '1.5.0-alpha03'
+        activity = '1.7.2'
+        compiler = '1.4.3'
+        composeCore = '1.5.0-beta01'
 
         //Coroutines
         coroutines = '1.6.4'
@@ -24,14 +24,14 @@ buildscript {
 
         //Quality checking
         //Detekt
-        detektVersion = '1.23.0-RC2'
+        detektVersion = '1.23.0'
 
         //Ktlint
         ktlintVersion = '0.49.0'
         ktlintPluginVersion = '11.3.2'
 
         //Gradle
-        gradleVersion = '8.0.1'
+        gradleVersion = '8.0.2'
 
         //Koin
         koin = '3.4.0'
@@ -43,7 +43,7 @@ buildscript {
         ksp = '1.8.21-1.0.11'
 
         //Ktx
-        ktxCore = '1.11.0-alpha03'
+        ktxCore = '1.11.0-beta01'
 
         //LeakCanary
         leakCanary = '2.10'
@@ -52,7 +52,7 @@ buildscript {
         lifecycle = '2.6.1'
 
         //Material design
-        materialDesign = '1.8.0'
+        materialDesign = '1.9.0'
 
         //OkHttp
         okHttp = '5.0.0-alpha.11'
@@ -82,7 +82,9 @@ buildscript {
 
         //Test dependency versions
         archTest = '2.2.0'
+
         espresso = '3.5.1'
+
         jacocoVersion = '0.8.10'
 
         //JUnit
@@ -91,6 +93,10 @@ buildscript {
         junit5 = '5.9.3'
 
         kotest = '5.6.1'
+
+        //Mockk
+        mockkVersion = '1.13.5'
+
         testCore = '1.6.0-alpha01'
 
         //Others
@@ -119,7 +125,7 @@ plugins {
 }
 
 subprojects {
-    apply from: "${toolsPath}codeChecking.gradle"
+    apply from: "${toolsPath}codeChecking.gradle.kts"
     apply from: "${toolsPath}coverage.gradle"
     apply from: "${toolsPath}detekt.gradle"
     apply from: "${toolsPath}lint.gradle"
