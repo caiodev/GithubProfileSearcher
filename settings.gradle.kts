@@ -1,2 +1,2 @@
 rootProject.name = "GithubProfileSearcher"
-include (":app")
+include(":app")

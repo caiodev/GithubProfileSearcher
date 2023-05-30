@@ -5,11 +5,14 @@ detekt {
     buildUponDefaultConfig = true
     config.from(files("${rootProject.projectDir}/config/detekt/detekt.yml"))
     debug = true
-    ignoredBuildTypes = ["release"]
-    ignoredFlavors = ["production"]
-    ignoredVariants = ["productionRelease"]
     parallel = true
-    source.from(files(rootProject.projectDir))
+    source.from(fileTree(rootProject.projectDir) {
+        exclude("**/.gradle/")
+        exclude("**/.idea/")
+        exclude("**/build/")
+        exclude("**/gradle/")
+        exclude("**/schemas/")
+    })
     toolVersion = "$detektVersion"
 }
 
