@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Profile(
-    @SerialName("items") val profile: List<UserProfile>
+    @SerialName("items") val profile: List<UserProfile>,
 )

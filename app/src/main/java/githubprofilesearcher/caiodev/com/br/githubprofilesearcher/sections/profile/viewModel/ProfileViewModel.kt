@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 internal class ProfileViewModel(
     private val networkChecking: NetworkChecking,
     private val localRepository: ILocalRepository,
-    private val remoteRepository: IProfileRepository
+    private val remoteRepository: IProfileRepository,
 ) : ViewModel() {
 
     private val _successStateFlow = MutableStateFlow<State<Success>>(InitialSuccess)
@@ -43,8 +43,8 @@ internal class ProfileViewModel(
         MutableSharedFlow<
             State<
                 githubprofilesearcher.caiodev.com.br
-                    .githubprofilesearcher.sections.utils.base.states.Error
-                >
+                    .githubprofilesearcher.sections.utils.base.states.Error,
+                >,
             >()
     internal val errorSharedFlow = _errorSharedFlow.asSharedFlow()
 
@@ -57,18 +57,18 @@ internal class ProfileViewModel(
 
     fun requestUpdatedProfiles(profile: String = emptyString()) {
         saveValueToDataStore(
-            obtainValueFromDataStore().copy(pageNumber = initialPage)
+            obtainValueFromDataStore().copy(pageNumber = initialPage),
         )
 
         if (profile.isNotEmpty()) {
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(temporaryCurrentProfile = profile)
+                obtainValueFromDataStore().copy(temporaryCurrentProfile = profile),
             )
             requestProfiles(profile, true)
         } else {
             requestProfiles(
                 obtainValueFromDataStore().temporaryCurrentProfile,
-                true
+                true,
             )
         }
     }
@@ -79,7 +79,7 @@ internal class ProfileViewModel(
 
     private fun requestProfiles(
         profile: String,
-        shouldListItemsBeRemoved: Boolean
+        shouldListItemsBeRemoved: Boolean,
     ) {
         if (shouldListItemsBeRemoved) {
             handleCall(profile, true)
@@ -90,14 +90,14 @@ internal class ProfileViewModel(
 
     private fun handleCall(
         user: String,
-        shouldListItemsBeRemoved: Boolean = false
+        shouldListItemsBeRemoved: Boolean = false,
     ) {
         runTaskOnBackground {
             val value =
                 remoteRepository.provideUserInformation(
                     user,
                     obtainValueFromDataStore().pageNumber,
-                    itemsPerPage
+                    itemsPerPage,
                 )
             handleResult(value, shouldListItemsBeRemoved)
         }
@@ -107,13 +107,13 @@ internal class ProfileViewModel(
         when (value) {
             is SuccessWithBody<*> -> {
                 saveValueToDataStore(
-                    obtainValueFromDataStore().copy(currentProfile = emptyString())
+                    obtainValueFromDataStore().copy(currentProfile = emptyString()),
                 )
 
                 if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
                 ) {
                     saveValueToDataStore(
-                        obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = true)
+                        obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = true),
                     )
                 }
 
@@ -135,8 +135,8 @@ internal class ProfileViewModel(
     private suspend fun handleError(
         error: State<
             githubprofilesearcher.caiodev.com.br
-                .githubprofilesearcher.sections.utils.base.states.Error
-            >?
+                .githubprofilesearcher.sections.utils.base.states.Error,
+            >?,
     ) {
         error?.let {
             _errorSharedFlow.emit(error)
@@ -144,7 +144,7 @@ internal class ProfileViewModel(
     }
 
     private fun setupUpdatedList(
-        successWithBody: SuccessWithBody<*>
+        successWithBody: SuccessWithBody<*>,
     ) {
         runTaskOnBackground {
             successWithBody.apply {
@@ -155,7 +155,7 @@ internal class ProfileViewModel(
                 castTo<Profile>(successWithBody.data)?.let { profile ->
                     addContentToProfileInfoList(profile.profile)
                     localRepository.insertProfilesIntoDb(
-                        profile.profile
+                        profile.profile,
                     )
                 }
                 saveDataAfterSuccess(this)
@@ -165,7 +165,7 @@ internal class ProfileViewModel(
 
     private fun setupPaginationList(
         shouldSavedListBeUsed: Boolean = false,
-        successWithBody: SuccessWithBody<*> = SuccessWithBody(Any())
+        successWithBody: SuccessWithBody<*> = SuccessWithBody(Any()),
     ) {
         runTaskOnBackground {
             successWithBody.apply {
@@ -193,7 +193,7 @@ internal class ProfileViewModel(
     fun saveValueToDataStore(profile: ProfilePreferences) {
         runTaskOnForeground {
             localRepository.obtainProtoDataStore().updateData(
-                castTo<ProfilePreferences>(profile)
+                castTo<ProfilePreferences>(profile),
             )
         }
     }
@@ -212,23 +212,23 @@ internal class ProfileViewModel(
 
     private suspend fun saveDataAfterSuccess(successWithBody: SuccessWithBody<*>) {
         saveValueToDataStore(
-            obtainValueFromDataStore().copy(currentProfile = obtainValueFromDataStore().temporaryCurrentProfile)
+            obtainValueFromDataStore().copy(currentProfile = obtainValueFromDataStore().temporaryCurrentProfile),
         )
         saveValueToDataStore(
-            obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = false)
+            obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = false),
         )
         saveValueToDataStore(
-            obtainValueFromDataStore().copy(isThereAnOngoingCall = false)
+            obtainValueFromDataStore().copy(isThereAnOngoingCall = false),
         )
         if (obtainValueFromDataStore().hasUserDeletedProfileText &&
             obtainValueFromDataStore().profile.isNotEmpty()
         ) {
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
             )
         } else {
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(shouldASearchBePerformed = false)
+                obtainValueFromDataStore().copy(shouldASearchBePerformed = false),
             )
         }
 
@@ -236,9 +236,9 @@ internal class ProfileViewModel(
             saveValueToDataStore(
                 obtainValueFromDataStore().copy(
                     pageNumber = pageNumber.plus(
-                        initialPage
-                    )
-                )
+                        initialPage,
+                    ),
+                ),
             )
         }
 
@@ -246,8 +246,8 @@ internal class ProfileViewModel(
         _successStateFlow.emit(
             SuccessWithBody(
                 data = profilesInfoList,
-                successWithBody.totalPages
-            )
+                successWithBody.totalPages,
+            ),
         )
     }
 
@@ -261,10 +261,10 @@ internal class ProfileViewModel(
                 profilesInfoList.isEmpty()
             ) {
                 saveValueToDataStore(
-                    obtainValueFromDataStore().copy(isLocalPopulation = true)
+                    obtainValueFromDataStore().copy(isLocalPopulation = true),
                 )
                 saveValueToDataStore(
-                    obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = false)
+                    obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = false),
                 )
                 postIntermediateState(LocalPopulation)
             }

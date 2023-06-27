@@ -35,15 +35,15 @@ class LocalRepositoryTest : TestSteps {
             runBlockingTest {
                 assertEquals(
                     0,
-                    localRepository.obtainProtoDataStore().obtainData().pageNumber
+                    localRepository.obtainProtoDataStore().obtainData().pageNumber,
                 )
                 assertEquals(
                     false,
-                    localRepository.obtainProtoDataStore().obtainData().isHeaderVisible
+                    localRepository.obtainProtoDataStore().obtainData().isHeaderVisible,
                 )
                 assertEquals(
                     "",
-                    localRepository.obtainProtoDataStore().obtainData().currentProfile
+                    localRepository.obtainProtoDataStore().obtainData().currentProfile,
                 )
             }
         }
@@ -65,15 +65,15 @@ class LocalRepositoryTest : TestSteps {
             runBlockingTest {
                 assertEquals(
                     7,
-                    localRepository.obtainProtoDataStore().obtainData().pageNumber
+                    localRepository.obtainProtoDataStore().obtainData().pageNumber,
                 )
                 assertEquals(
                     true,
-                    localRepository.obtainProtoDataStore().obtainData().isHeaderVisible
+                    localRepository.obtainProtoDataStore().obtainData().isHeaderVisible,
                 )
                 assertEquals(
                     "torvalds",
-                    localRepository.obtainProtoDataStore().obtainData().currentProfile
+                    localRepository.obtainProtoDataStore().obtainData().currentProfile,
                 )
             }
         }

@@ -5,18 +5,18 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 
 class ProfileRepository(
     private val remoteRepository: RemoteRepository,
-    private val apiService: UserProfile
+    private val apiService: UserProfile,
 ) : IProfileRepository {
 
     override suspend fun provideUserInformation(
         user: String,
         pageNumber: Int,
-        maxResultsPerPage: Int
+        maxResultsPerPage: Int,
     ) = remoteRepository.call {
         apiService.provideUsers(
             user,
             pageNumber,
-            maxResultsPerPage
+            maxResultsPerPage,
         )
     }
 }

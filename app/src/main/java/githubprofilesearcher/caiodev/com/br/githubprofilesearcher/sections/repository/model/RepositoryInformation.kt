@@ -9,5 +9,5 @@ data class RepositoryInformation(
     @SerialName("name") val repositoryName: String?,
     @SerialName("html_url") val repositoryUrl: String,
     @SerialName("stargazers_count") val starsCount: String?,
-    @SerialName("forks_count") val forksCount: Int
+    @SerialName("forks_count") val forksCount: Int,
 )

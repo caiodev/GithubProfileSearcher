@@ -20,5 +20,5 @@ data class UserProfile(
     val userId: Long = 0,
     @ColumnInfo
     @SerialName("avatar_url")
-    val userImage: String = ""
+    val userImage: String = "",
 )

@@ -8,7 +8,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 @Suppress("UNCHECKED_CAST")
 class LocalRepository(
     private val keyValueStorageManager: IKeyValueStorageManager,
-    private val appDatabase: Database
+    private val appDatabase: Database,
 ) : ILocalRepository {
 
     override fun obtainProtoDataStore() = keyValueStorageManager

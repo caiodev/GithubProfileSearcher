@@ -5,6 +5,6 @@ interface IProfileRepository {
     suspend fun provideUserInformation(
         user: String = "",
         pageNumber: Int = 0,
-        maxResultsPerPage: Int = 0
+        maxResultsPerPage: Int = 0,
     ): Any
 }

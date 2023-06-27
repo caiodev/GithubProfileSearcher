@@ -10,6 +10,6 @@ interface UserProfile {
     suspend fun provideUsers(
         @Query("q") user: String,
         @Query("page") pageNumber: Int,
-        @Query("per_page") maxQuantityPerPage: Int
+        @Query("per_page") maxQuantityPerPage: Int,
     ): Response<Profile>
 }

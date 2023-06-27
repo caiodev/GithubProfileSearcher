@@ -10,7 +10,7 @@ import okhttp3.internal.format
 
 class ProfileInformationViewHolder(
     private val itemBinding: ProfileViewHolderLayoutBinding,
-    onItemSelected: OnItemSelectedListener
+    onItemSelected: OnItemSelectedListener,
 ) :
     RecyclerView.ViewHolder(itemBinding.root) {
 

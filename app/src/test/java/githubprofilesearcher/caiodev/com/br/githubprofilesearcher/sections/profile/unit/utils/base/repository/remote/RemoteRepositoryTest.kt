@@ -54,8 +54,8 @@ class RemoteRepositoryTest : TestSteps {
                 MockResponse()
                     .setResponseCode(200)
                     .setBody(
-                        profileInfoCallResult
-                    )
+                        profileInfoCallResult,
+                    ),
             )
         }
 
@@ -85,8 +85,8 @@ class RemoteRepositoryTest : TestSteps {
                 MockResponse()
                     .setResponseCode(204)
                     .setBody(
-                        ""
-                    )
+                        "",
+                    ),
             )
         }
 
@@ -116,8 +116,8 @@ class RemoteRepositoryTest : TestSteps {
                 MockResponse()
                     .setResponseCode(403)
                     .setBody(
-                        ""
-                    )
+                        "",
+                    ),
             )
         }
 
@@ -147,8 +147,8 @@ class RemoteRepositoryTest : TestSteps {
                 MockResponse()
                     .setResponseCode(451)
                     .setBody(
-                        ""
-                    )
+                        "",
+                    ),
             )
         }
 
@@ -178,8 +178,8 @@ class RemoteRepositoryTest : TestSteps {
                 MockResponse()
                     .setResponseCode(530)
                     .setBody(
-                        ""
-                    )
+                        "",
+                    ),
             )
         }
 
@@ -209,8 +209,8 @@ class RemoteRepositoryTest : TestSteps {
                 MockResponse()
                     .setResponseCode(750)
                     .setBody(
-                        ""
-                    )
+                        "",
+                    ),
             )
         }
 
@@ -311,14 +311,14 @@ class RemoteRepositoryTest : TestSteps {
     }
 
     private fun setupException(
-        exception: IOException = IOException()
+        exception: IOException = IOException(),
     ): Response<Profile> {
         throwException(exception)
         return listOf<Response<Profile>>()[0]
     }
 
     private fun throwException(
-        exception: IOException
+        exception: IOException,
     ) {
         throw exception
     }

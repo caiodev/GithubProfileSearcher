@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.util
 
 data class SuccessWithBody<T>(
     val data: T,
-    val totalPages: Int = initialPosition
+    val totalPages: Int = initialPosition,
 ) : State<Success> {
 
     companion object {

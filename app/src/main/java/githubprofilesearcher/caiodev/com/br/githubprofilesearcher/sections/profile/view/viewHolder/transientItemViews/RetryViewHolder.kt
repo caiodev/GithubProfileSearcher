@@ -6,7 +6,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 
 class RetryViewHolder(
     itemBinding: RetryViewHolderLayoutBinding,
-    private val onItemClicked: OnItemClicked?
+    private val onItemClicked: OnItemClicked?,
 ) :
     RecyclerView.ViewHolder(itemBinding.root) {
     init {

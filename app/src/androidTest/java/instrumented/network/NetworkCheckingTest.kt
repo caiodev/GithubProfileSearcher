@@ -24,13 +24,13 @@ class NetworkCheckingTest : TestSteps {
             checkIfInternetConnectionIsAvailable(
                 InstrumentationRegistry.getInstrumentation().targetContext,
                 {},
-                { isOffline = true }
+                { isOffline = true },
             )
         }
 
         assertEquals(
             true,
-            isOffline
+            isOffline,
         )
     }
 
@@ -42,14 +42,14 @@ class NetworkCheckingTest : TestSteps {
         doWhen {
             runBlocking {
                 isOffline = observeInternetConnectionAvailability(
-                    InstrumentationRegistry.getInstrumentation().targetContext
+                    InstrumentationRegistry.getInstrumentation().targetContext,
                 ).drop(1).first()
             }
         }
 
         assertEquals(
             false,
-            isOffline
+            isOffline,
         )
     }
 
@@ -61,13 +61,13 @@ class NetworkCheckingTest : TestSteps {
             checkIfInternetConnectionIsAvailable(
                 InstrumentationRegistry.getInstrumentation().targetContext,
                 { isOnline = true },
-                {}
+                {},
             )
         }
 
         assertEquals(
             true,
-            isOnline
+            isOnline,
         )
     }
 
@@ -79,14 +79,14 @@ class NetworkCheckingTest : TestSteps {
         doWhen {
             runBlocking {
                 isOnline = observeInternetConnectionAvailability(
-                    InstrumentationRegistry.getInstrumentation().targetContext
+                    InstrumentationRegistry.getInstrumentation().targetContext,
                 ).drop(1).first()
             }
         }
 
         assertEquals(
             true,
-            isOnline
+            isOnline,
         )
     }
 }

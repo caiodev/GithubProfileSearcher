@@ -21,9 +21,9 @@ class ProfileAdapter(private val onItemSelectedListener: OnItemSelectedListener)
             ProfileViewHolderLayoutBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
+                false,
             ),
-            onItemSelectedListener
+            onItemSelectedListener,
         )
     }
 

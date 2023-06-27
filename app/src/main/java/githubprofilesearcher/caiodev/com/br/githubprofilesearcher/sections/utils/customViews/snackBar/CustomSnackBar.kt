@@ -12,7 +12,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 class CustomSnackBar(
     content: ViewGroup,
     private val viewBinding: CustomSnackbarLayoutBinding,
-    callback: com.google.android.material.snackbar.ContentViewCallback
+    callback: com.google.android.material.snackbar.ContentViewCallback,
 ) : BaseTransientBottomBar<CustomSnackBar>(content, viewBinding.root, callback) {
     private var hasSnackBarBeenRequestedToDismiss = false
 
@@ -43,12 +43,12 @@ class CustomSnackBar(
             val content = CustomSnackbarLayoutBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
+                false,
             )
             return CustomSnackBar(
                 parent,
                 content,
-                CustomContentViewCallback()
+                CustomContentViewCallback(),
             ).run {
                 getView().setPadding(0, 0, 0, 0)
                 this.duration = Snackbar.LENGTH_INDEFINITE

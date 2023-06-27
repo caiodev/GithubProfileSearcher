@@ -31,8 +31,8 @@ object RetrofitTestService {
             .client(createLoggerClient())
             .addConverterFactory(
                 json.asConverterFactory(
-                    mediaType
-                )
+                    mediaType,
+                ),
             )
             .build().create(T::class.java) as T
 
@@ -42,7 +42,7 @@ object RetrofitTestService {
             .addInterceptor(
                 HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }.apply {
                     level = HttpLoggingInterceptor.Level.BODY
-                }
+                },
             )
             .connectTimeout(2, TimeUnit.SECONDS)
             .readTimeout(2, TimeUnit.SECONDS)

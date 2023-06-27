@@ -5,20 +5,20 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 
 class RepoInformationRepository(
     private val remoteRepository: RemoteRepository,
-    private val retrofitService: UserRepository
+    private val retrofitService: UserRepository,
 ) : IRepoInformationRepository {
 
     override suspend fun fetchUser(user: String) =
         remoteRepository.call(
             call = {
                 retrofitService.fetchUser(user)
-            }
+            },
         )
 
     override suspend fun fetchRepository(user: String) =
         remoteRepository.call(
             call = {
                 retrofitService.fetchRepository(user)
-            }
+            },
         )
 }

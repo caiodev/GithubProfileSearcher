@@ -21,14 +21,14 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils
 import kotlinx.coroutines.launch
 
 fun CustomSnackBar.showInternetConnectionStatusSnackBar(
-    isConnectionAvailable: Boolean
+    isConnectionAvailable: Boolean,
 ) {
     if (isConnectionAvailable) {
         setText(R.string.back_online).setBackgroundColor(
             ContextCompat.getColor(
                 context,
-                R.color.green_700
-            )
+                R.color.green_700,
+            ),
         )
         if (isShown) {
             dismiss()
@@ -37,8 +37,8 @@ fun CustomSnackBar.showInternetConnectionStatusSnackBar(
         setText(R.string.no_connection).setBackgroundColor(
             ContextCompat.getColor(
                 context,
-                R.color.red_700
-            )
+                R.color.red_700,
+            ),
         )
         show()
     }
@@ -53,8 +53,8 @@ fun ImageView.changeDrawable(@DrawableRes newDrawable: Int) {
     setImageDrawable(
         ContextCompat.getDrawable(
             context,
-            newDrawable
-        )
+            newDrawable,
+        ),
     )
 }
 
@@ -74,7 +74,7 @@ fun View.applyViewVisibility(visibility: Int) {
 
 inline fun Snackbar.showErrorSnackBar(
     @StringRes message: Int,
-    crossinline onDismissed: (() -> Any) = {}
+    crossinline onDismissed: (() -> Any) = {},
 ) {
     setText(message)
     addCallback(
@@ -83,13 +83,13 @@ inline fun Snackbar.showErrorSnackBar(
                 super.onDismissed(transientBottomBar, event)
                 onDismissed()
             }
-        }
+        },
     )
     show()
 }
 
 fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
-    isSwipeEnabled: Boolean = true
+    isSwipeEnabled: Boolean = true,
 ) {
     isEnabled = isSwipeEnabled
 }

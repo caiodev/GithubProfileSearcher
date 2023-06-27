@@ -26,16 +26,16 @@ class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<Recycler
                 EmptyViewHolderLayoutBinding.inflate(
                     inflater,
                     parent,
-                    false
-                )
+                    false,
+                ),
             )
         } else {
             HeaderViewHolder(
                 HeaderViewHolderLayoutBinding.inflate(
                     inflater,
                     parent,
-                    false
-                )
+                    false,
+                ),
             )
         }
     }

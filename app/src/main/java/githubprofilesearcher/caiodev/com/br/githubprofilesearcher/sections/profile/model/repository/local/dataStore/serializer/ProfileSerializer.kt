@@ -36,7 +36,7 @@ object ProfileSerializer : Serializer<ProfilePreferences> {
                 isEndOfResultsViewVisible = dis.readBoolean(),
                 isPaginationLoadingViewVisible = dis.readBoolean(),
                 isRetryViewVisible = dis.readBoolean(),
-                isLocalPopulation = dis.readBoolean()
+                isLocalPopulation = dis.readBoolean(),
             )
         } catch (exception: CorruptionException) {
             Timber.e(TAG, exception)

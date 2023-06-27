@@ -6,12 +6,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "33.0.2"
+    compileSdkVersion 34
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -27,11 +26,6 @@ android {
             testCoverageEnabled = true
             signingConfig signingConfigs.debug
             buildConfigField "String", "API_URL", "$apiUrl"
-            sourceSets {
-                main {
-                    java { srcDirs = ["build/generated/ksp/debug/kotlin"] }
-                }
-            }
         }
 
         release {
@@ -40,22 +34,17 @@ android {
             testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "API_URL", "$apiUrl"
-            sourceSets {
-                main {
-                    java { srcDirs = ["build/generated/ksp/release/kotlin"] }
-                }
-            }
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_19
-        targetCompatibility JavaVersion.VERSION_19
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
         freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
-        jvmTarget = JavaVersion.VERSION_19
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -70,11 +59,6 @@ android {
 
     testOptions {
         unitTests.all { useJUnitPlatform() }
-    }
-
-    sourceSets {
-        androidTest { java.srcDirs += "$sharedTestCodePath" }
-        test { java.srcDirs += "$sharedTestCodePath" }
     }
 
     packagingOptions {
@@ -100,10 +84,14 @@ dependencies {
 
     //Compose
     implementation "androidx.activity:activity-compose:$activity"
+    implementation "androidx.compose.animation:animation:$composeCore"
     implementation "androidx.compose.foundation:foundation:$composeCore"
     implementation "androidx.compose.material:material:$composeCore"
     implementation "androidx.compose.material:material-icons-core:$composeCore"
     implementation "androidx.compose.material:material-icons-extended:$composeCore"
+    implementation "androidx.compose.material3:material3:$material3"
+    implementation "androidx.compose.runtime:runtime:$composeCore"
+    implementation "androidx.compose.runtime:runtime-android:$composeCore"
     implementation "androidx.compose.ui:ui:$composeCore"
     implementation "androidx.compose.ui:ui-tooling-preview:$composeCore"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"

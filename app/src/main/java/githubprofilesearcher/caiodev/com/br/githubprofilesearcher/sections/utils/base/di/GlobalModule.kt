@@ -20,7 +20,7 @@ val global = module {
         Room.databaseBuilder(
             androidContext(),
             AppDatabase::class.java,
-            AppDatabase.databaseName
+            AppDatabase.databaseName,
         ).build()
     }
 
@@ -31,7 +31,7 @@ val global = module {
     single {
         NetworkChecking(
             androidContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager,
         )
     }
 

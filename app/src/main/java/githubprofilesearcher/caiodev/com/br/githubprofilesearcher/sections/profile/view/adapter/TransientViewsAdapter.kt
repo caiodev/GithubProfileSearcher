@@ -32,8 +32,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     LoadingViewHolderLayoutBinding.inflate(
                         inflater,
                         parent,
-                        false
-                    )
+                        false,
+                    ),
                 )
             }
 
@@ -42,9 +42,9 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     RetryViewHolderLayoutBinding.inflate(
                         inflater,
                         parent,
-                        false
+                        false,
                     ),
-                    itemClicked
+                    itemClicked,
                 )
             }
 
@@ -52,8 +52,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 EndOfResultsViewHolderLayoutBinding.inflate(
                     inflater,
                     parent,
-                    false
-                )
+                    false,
+                ),
             )
 
             else ->
@@ -61,8 +61,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     EmptyViewHolderLayoutBinding.inflate(
                         inflater,
                         parent,
-                        false
-                    )
+                        false,
+                    ),
                 )
         }
     }

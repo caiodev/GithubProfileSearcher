@@ -11,6 +11,6 @@ class FakeProfileInformationRepository :
     override suspend fun provideGithubUserInformation(
         user: String,
         pageNumber: Int,
-        maxResultsPerPage: Int
+        maxResultsPerPage: Int,
     ) = fakeRemoteRepository.provideFakeResponse()
 }

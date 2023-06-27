@@ -14,7 +14,8 @@ buildscript {
         //Compose
         activity = '1.7.2'
         compiler = '1.4.7'
-        composeCore = '1.5.0-beta01'
+        composeCore = '1.6.0-alpha01'
+        material3 = '1.2.0-alpha03'
 
         //Coroutines
         coroutines = '1.6.4'
@@ -27,8 +28,8 @@ buildscript {
         detektVersion = '1.23.0'
 
         //Ktlint
-        ktlintVersion = '0.49.0'
-        ktlintPluginVersion = '11.3.2'
+        ktlintVersion = '0.49.1'
+        ktlintPluginVersion = '11.4.0'
 
         //Gradle
         gradleVersion = '8.0.2'
@@ -62,7 +63,7 @@ buildscript {
         serializationConverter = '1.0.0'
 
         //Room
-        room = '2.5.1'
+        room = '2.5.2'
 
         //Serialization
         serialization = '1.5.0'
@@ -101,7 +102,6 @@ buildscript {
 
         //Others
         apiUrl = "\"https://api.github.com/\""
-        sharedTestCodePath = "src/sharedTest/java"
         toolsPath = "$project.projectDir/tools/"
     }
 

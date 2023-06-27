@@ -14,9 +14,9 @@ class FakeRemoteRepository {
                     "torvalds",
                     "https://github.com/torvalds",
                     1024025,
-                    "https://avatars0.githubusercontent.com/u/1024025?v=4"
-                )
-            )
-        )
+                    "https://avatars0.githubusercontent.com/u/1024025?v=4",
+                ),
+            ),
+        ),
     )
 }

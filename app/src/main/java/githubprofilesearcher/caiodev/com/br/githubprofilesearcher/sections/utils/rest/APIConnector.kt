@@ -25,7 +25,7 @@ object APIConnector {
             .baseUrl(baseUrl)
             .client(createLoggerClient())
             .addConverterFactory(
-                json.asConverterFactory(mediaType)
+                json.asConverterFactory(mediaType),
             )
             .build()
     }

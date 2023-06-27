@@ -23,7 +23,7 @@ val userProfileViewModel = module {
         ProfileViewModel(
             networkChecking = get(),
             localRepository = get(),
-            remoteRepository = get()
+            remoteRepository = get(),
         )
     }
 
@@ -31,15 +31,15 @@ val userProfileViewModel = module {
         KeyValueStorageManager(
             keyValueStorageClient = DataStoreFactory.create(
                 serializer = ProfileSerializer,
-                produceFile = { androidContext().dataStoreFile(profileProtoFileName) }
-            )
+                produceFile = { androidContext().dataStoreFile(profileProtoFileName) },
+            ),
         )
     }
 
     factory<IProfileRepository> {
         ProfileRepository(
             remoteRepository = get(),
-            apiService = get<Retrofit>().create(UserProfile::class.java)
+            apiService = get<Retrofit>().create(UserProfile::class.java),
         )
     }
 }

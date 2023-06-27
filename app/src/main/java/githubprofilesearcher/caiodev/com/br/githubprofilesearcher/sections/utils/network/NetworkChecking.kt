@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 class NetworkChecking(private val manager: ConnectivityManager) {
 
     private val _networkStateFlow = MutableStateFlow<State<Connection>>(
-        InitialConnection
+        InitialConnection,
     )
     private val networkStateFlow: StateFlow<State<Connection>>
         get() = _networkStateFlow

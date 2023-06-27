@@ -70,7 +70,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         Snackbar.make(
             findViewById(android.R.id.content),
             R.string.generic,
-            Snackbar.LENGTH_SHORT
+            Snackbar.LENGTH_SHORT,
         )
     }
 
@@ -84,7 +84,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         ConcatAdapter(
             HeaderAdapter(R.string.user_list_header),
             ProfileAdapter(obtainProfileListener()),
-            TransientViewsAdapter()
+            TransientViewsAdapter(),
         )
     }
 
@@ -100,11 +100,11 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         super.onSaveInstanceState(outState)
         viewModel.apply {
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(isTextInputEditTextNotEmpty = isTextInputEditTextNotEmpty())
+                obtainValueFromDataStore().copy(isTextInputEditTextNotEmpty = isTextInputEditTextNotEmpty()),
             )
             if (isTextInputEditTextNotEmpty()) {
                 saveValueToDataStore(
-                    obtainValueFromDataStore().copy(profile = binding.searchProfileTextInputEditText.text.toString())
+                    obtainValueFromDataStore().copy(profile = binding.searchProfileTextInputEditText.text.toString()),
                 )
             }
         }
@@ -146,10 +146,10 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             viewModel.obtainValueFromDataStore().profile.isNotEmpty()
         ) {
             binding.searchProfileTextInputEditText.setText(
-                viewModel.obtainValueFromDataStore().profile
+                viewModel.obtainValueFromDataStore().profile,
             )
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
             )
         }
 
@@ -160,7 +160,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
             setupUpperViewsInteraction(false)
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false)
+                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false),
             )
             binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
         }
@@ -170,12 +170,12 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             ) {
                 binding.searchProfileTextInputEditText.setSelection(viewModel.obtainValueFromDataStore().profile.length)
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false)
+                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false),
                 )
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
             } else {
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
                 )
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
             }
@@ -183,12 +183,12 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
         if (binding.searchProfileTextInputEditText.text.toString().isEmpty()) {
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
             )
         } else {
             if (viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade) {
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false)
+                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false),
                 )
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
             }
@@ -232,7 +232,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             setOnRefreshListener {
                 viewModel.saveValueToDataStore(
                     viewModel.obtainValueFromDataStore()
-                        .copy(hasUserRequestedUpdatedData = true)
+                        .copy(hasUserRequestedUpdatedData = true),
                 )
                 updatedProfileCall()
             }
@@ -256,14 +256,14 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                         return@OnEditorActionListener true
                     }
                     false
-                }
+                },
             )
 
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
                     if (!viewModel.obtainValueFromDataStore().shouldASearchBePerformed) {
                         viewModel.saveValueToDataStore(
-                            viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                            viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
                         )
                     }
 
@@ -272,7 +272,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                     text?.let {
                         if (it.isEmpty()) {
                             viewModel.saveValueToDataStore(
-                                viewModel.obtainValueFromDataStore().copy(hasUserDeletedProfileText = true)
+                                viewModel.obtainValueFromDataStore().copy(hasUserDeletedProfileText = true),
                             )
                         }
                     }
@@ -288,7 +288,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                 override fun onItemClick(adapterPosition: Int, id: Int) {
                     paginationCall()
                 }
-            }
+            },
         )
     }
 
@@ -301,9 +301,9 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                     },
                     onConnectionUnavailable = {
                         errorSnackBar.showErrorSnackBar(
-                            R.string.no_connection
+                            R.string.no_connection,
                         )
-                    }
+                    },
                 )
             }
         }
@@ -355,28 +355,28 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
         viewModel.saveValueToDataStore(
             viewModel.obtainValueFromDataStore().copy(
-                shouldRecyclerViewAnimationBeExecuted = shouldRecyclerViewAnimationBeExecuted()
-            )
+                shouldRecyclerViewAnimationBeExecuted = shouldRecyclerViewAnimationBeExecuted(),
+            ),
         )
 
         if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData
         ) {
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false)
+                viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false),
             )
         }
 
         if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData) {
             provideAdapter<ProfileAdapter>(githubProfileAdapter)?.updateDataSource(
-                githubUsersList
+                githubUsersList,
             )
 
             viewModel.apply {
                 saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(shouldRecyclerViewAnimationBeExecuted = true)
+                    viewModel.obtainValueFromDataStore().copy(shouldRecyclerViewAnimationBeExecuted = true),
                 )
                 saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false)
+                    viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false),
                 )
             }
         }
@@ -386,7 +386,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             runLayoutAnimation(binding.profileInfoRecyclerView)
         } else {
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(shouldRecyclerViewAnimationBeExecuted = true)
+                viewModel.obtainValueFromDataStore().copy(shouldRecyclerViewAnimationBeExecuted = true),
             )
         }
     }
@@ -413,9 +413,9 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         handleConnectionState(
             onConnectionUnavailable = {
                 internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
-                    false
+                    false,
                 )
-            }
+            },
         )
         setupInternetConnectionObserver()
     }
@@ -438,15 +438,15 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         if (isTextInputEditTextNotEmpty()) {
             binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = true)
+                viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = true),
             )
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(hasUserDeletedProfileText = false)
+                viewModel.obtainValueFromDataStore().copy(hasUserDeletedProfileText = false),
             )
             updatedProfileCall(binding.searchProfileTextInputEditText.text.toString())
         } else {
             errorSnackBar.showErrorSnackBar(
-                R.string.empty_field
+                R.string.empty_field,
             )
         }
     }
@@ -455,7 +455,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         with(recyclerView) {
             layoutAnimation = AnimationUtils.loadLayoutAnimation(
                 context,
-                R.anim.layout_animation_fall_down
+                R.anim.layout_animation_fall_down,
             )
 
             adapter?.notifyDataSetChanged()
@@ -473,7 +473,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         handleConnectionState(
             onConnectionAvailable = {
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(isThereAnOngoingCall = true)
+                    viewModel.obtainValueFromDataStore().copy(isThereAnOngoingCall = true),
                 )
 
                 if (!viewModel.obtainValueFromDataStore().hasUserDeletedProfileText) {
@@ -482,7 +482,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                 }
 
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false)
+                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = false),
                 )
 
                 task()
@@ -493,7 +493,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             },
             onConnectionUnavailable = {
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = true)
+                    viewModel.obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = true),
                 )
                 binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
                 if (viewModel.obtainValueFromDataStore().isPaginationLoadingViewVisible
@@ -501,16 +501,16 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                     changeViewState(transientViewsAdapter, retry)
                 }
                 showErrorMessage(R.string.no_connection)
-            }
+            },
         )
     }
 
     private fun showErrorMessage(@StringRes message: Int) {
         viewModel.saveValueToDataStore(
-            viewModel.obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = true)
+            viewModel.obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = true),
         )
         viewModel.saveValueToDataStore(
-            viewModel.obtainValueFromDataStore().copy(isThereAnOngoingCall = false)
+            viewModel.obtainValueFromDataStore().copy(isThereAnOngoingCall = false),
         )
 
         if (this::countingIdlingResource.isInitialized) {
@@ -519,7 +519,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
         if (viewModel.obtainValueFromDataStore().hasUserRequestedUpdatedData) {
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false)
+                viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = false),
             )
         }
 
@@ -533,12 +533,12 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             message,
             onDismissed = {
                 recallConnectivitySnackBar()
-            }
+            },
         )
 
         if (!viewModel.obtainValueFromDataStore().shouldRecyclerViewAnimationBeExecuted) {
             viewModel.saveValueToDataStore(
-                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
             )
         }
 
@@ -552,7 +552,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             return handleConnectionState(
                 onConnectionUnavailable = {
                     internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(false)
-                }
+                },
             )
         }
         return emptyString()
@@ -564,7 +564,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                 when (connectionState) {
                     Available -> {
                         internetConnectivitySnackBar.showInternetConnectionStatusSnackBar(
-                            true
+                            true,
                         )
                         if (!viewModel.obtainValueFromDataStore().isThereAnOngoingCall &&
                             viewModel.obtainValueFromDataStore().hasLastCallBeenUnsuccessful
@@ -589,17 +589,17 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         if (!viewModel.obtainValueFromDataStore().isThereAnOngoingCall) {
             if (viewModel.obtainValueFromDataStore().shouldASearchBePerformed) {
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = true)
+                    viewModel.obtainValueFromDataStore().copy(hasUserRequestedUpdatedData = true),
                 )
                 textInputEditTextNotEmptyRequiredCall()
             } else {
                 binding.searchProfileTextInputEditText.setText(emptyString())
                 binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true)
+                    viewModel.obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
                 )
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(hasUserDeletedProfileText = true)
+                    viewModel.obtainValueFromDataStore().copy(hasUserDeletedProfileText = true),
                 )
             }
         }
@@ -631,7 +631,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                         viewModel.obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
                     ) {
                         viewModel.saveValueToDataStore(
-                            viewModel.obtainValueFromDataStore().copy(shouldRecyclerViewAnimationBeExecuted = false)
+                            viewModel.obtainValueFromDataStore().copy(shouldRecyclerViewAnimationBeExecuted = false),
                         )
                         if (!viewModel.obtainValueFromDataStore().isThereAnOngoingCall &&
                             !viewModel.obtainValueFromDataStore().isRetryViewVisible &&
@@ -641,7 +641,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                         }
                     }
                 }
-            }
+            },
         )
     }
 
@@ -684,7 +684,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             (castTo<HeaderAdapter>(concatAdapter.adapters[adapterPosition]))?.apply {
                 updateViewState(viewState)
                 viewModel.saveValueToDataStore(
-                    viewModel.obtainValueFromDataStore().copy(isHeaderVisible = true)
+                    viewModel.obtainValueFromDataStore().copy(isHeaderVisible = true),
                 )
             }
         } else {
@@ -705,17 +705,17 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
     private fun saveItemView(
         isEndOfResultsItemVisible: Boolean = false,
         isPaginationLoadingItemVisible: Boolean = false,
-        isRetryItemVisible: Boolean = false
+        isRetryItemVisible: Boolean = false,
     ) {
         viewModel.apply {
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(isEndOfResultsViewVisible = isEndOfResultsItemVisible)
+                obtainValueFromDataStore().copy(isEndOfResultsViewVisible = isEndOfResultsItemVisible),
             )
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(isPaginationLoadingViewVisible = isPaginationLoadingItemVisible)
+                obtainValueFromDataStore().copy(isPaginationLoadingViewVisible = isPaginationLoadingItemVisible),
             )
             saveValueToDataStore(
-                obtainValueFromDataStore().copy(isRetryViewVisible = isRetryItemVisible)
+                obtainValueFromDataStore().copy(isRetryViewVisible = isRetryItemVisible),
             )
         }
     }
@@ -737,7 +737,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
     private fun handleConnectionState(
         onConnectionAvailable: () -> Unit = {},
-        onConnectionUnavailable: () -> Unit = {}
+        onConnectionUnavailable: () -> Unit = {},
     ) {
         if (viewModel.obtainConnectionState() == Available) {
             onConnectionAvailable()
@@ -750,8 +750,8 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse(profileUrl)
-            )
+                Uri.parse(profileUrl),
+            ),
         )
     }
 
