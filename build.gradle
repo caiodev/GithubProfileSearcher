@@ -47,7 +47,7 @@ buildscript {
         ktxCore = '1.11.0-beta01'
 
         //LeakCanary
-        leakCanary = '2.10'
+        leakCanary = '2.12'
 
         //Lifecycle
         lifecycle = '2.6.1'

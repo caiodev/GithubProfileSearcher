@@ -1,0 +1,128 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
+}
+
+android {
+    compileSdkVersion 34
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable = true
+            testCoverageEnabled = true
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled true
+            debuggable = false
+            testCoverageEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "$compiler"
+    }
+
+    testOptions {
+        unitTests.all { useJUnitPlatform() }
+    }
+
+    namespace 'githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':modules:common:core') because 'Core Module'
+    implementation project(':modules:common:datasource') because 'Datasource Module'
+    implementation project(':modules:common:ui') because 'UI Module'
+    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
+    androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
+
+    //Annotation
+    implementation "androidx.annotation:annotation:$annotation"
+
+    //AppCompat
+    implementation "androidx.appcompat:appcompat:$appCompat"
+
+    //Coil
+    implementation "io.coil-kt:coil:$coil"
+
+    //Compose
+    implementation "androidx.activity:activity-compose:$activity"
+    implementation "androidx.compose.animation:animation:$composeCore"
+    implementation "androidx.compose.foundation:foundation:$composeCore"
+    implementation "androidx.compose.material:material:$composeCore"
+    implementation "androidx.compose.material:material-icons-core:$composeCore"
+    implementation "androidx.compose.material:material-icons-extended:$composeCore"
+    implementation "androidx.compose.material3:material3:$material3"
+    implementation "androidx.compose.runtime:runtime:$composeCore"
+    implementation "androidx.compose.runtime:runtime-android:$composeCore"
+    implementation "androidx.compose.ui:ui:$composeCore"
+    implementation "androidx.compose.ui:ui-tooling-preview:$composeCore"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
+    debugImplementation "androidx.compose.ui:ui-tooling:$composeCore"
+
+    //Core
+    implementation "androidx.core:core-ktx:$ktxCore"
+
+    //DataStore
+    implementation "androidx.datastore:datastore:$dataStore"
+
+    //Espresso
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
+
+    //Koin
+    implementation "io.insert-koin:koin-android:$koin"
+
+    //Lifecycle section
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+
+    //Logging section
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
+    implementation "com.jakewharton.timber:timber:$timber"
+
+    //Material design
+    implementation "com.google.android.material:material:$materialDesign"
+
+    //APIConnector
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
+
+    //Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
+
+    //Views/ViewGroups
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    implementation "androidx.recyclerview:recyclerview:$recyclerView"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
+}

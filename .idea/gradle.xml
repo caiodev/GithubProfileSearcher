@@ -12,6 +12,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/modules" />
+            <option value="$PROJECT_DIR$/modules/common" />
+            <option value="$PROJECT_DIR$/modules/common/core" />
+            <option value="$PROJECT_DIR$/modules/common/datasource" />
+            <option value="$PROJECT_DIR$/modules/common/testing" />
+            <option value="$PROJECT_DIR$/modules/common/ui" />
+            <option value="$PROJECT_DIR$/modules/features" />
+            <option value="$PROJECT_DIR$/modules/features/profile" />
           </set>
         </option>
       </GradleProjectSettings>

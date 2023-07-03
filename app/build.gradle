@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'com.google.devtools.ksp'
     id 'kotlin-android'
     id 'kotlinx-serialization'
 }
@@ -17,15 +16,12 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    ksp { arg("room.schemaLocation", "$projectDir/schemas") }
-
     buildTypes {
         debug {
             minifyEnabled false
             debuggable = true
             testCoverageEnabled = true
             signingConfig signingConfigs.debug
-            buildConfigField "String", "API_URL", "$apiUrl"
         }
 
         release {
@@ -33,7 +29,6 @@ android {
             debuggable = false
             testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "API_URL", "$apiUrl"
         }
     }
 
@@ -49,12 +44,6 @@ android {
 
     buildFeatures {
         buildConfig true
-        compose true
-        viewBinding true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion "$compiler"
     }
 
     testOptions {
@@ -73,133 +62,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    //Annotation
-    implementation "androidx.annotation:annotation:$annotation"
+    implementation project(':modules:common:core') because 'Core Module'
+    implementation project(':modules:common:datasource') because 'Datasource Module'
+    implementation project(':modules:common:ui') because 'UI Module'
+    implementation project(':modules:features:profile') because 'Profile Module'
+    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
+    androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
-    //AppCompat
-    implementation "androidx.appcompat:appcompat:$appCompat"
-
-    //Coil
-    implementation "io.coil-kt:coil:$coil"
-
-    //Compose
-    implementation "androidx.activity:activity-compose:$activity"
-    implementation "androidx.compose.animation:animation:$composeCore"
-    implementation "androidx.compose.foundation:foundation:$composeCore"
-    implementation "androidx.compose.material:material:$composeCore"
-    implementation "androidx.compose.material:material-icons-core:$composeCore"
-    implementation "androidx.compose.material:material-icons-extended:$composeCore"
-    implementation "androidx.compose.material3:material3:$material3"
-    implementation "androidx.compose.runtime:runtime:$composeCore"
-    implementation "androidx.compose.runtime:runtime-android:$composeCore"
-    implementation "androidx.compose.ui:ui:$composeCore"
-    implementation "androidx.compose.ui:ui-tooling-preview:$composeCore"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
-    debugImplementation "androidx.compose.ui:ui-tooling:$composeCore"
-
-    //Core
-    implementation "androidx.core:core-ktx:$ktxCore"
-
-    //DataStore
-    implementation "androidx.datastore:datastore:$dataStore"
-
-    //Koin
-    implementation "io.insert-koin:koin-android:$koin"
-
-    //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
-
-    //Lifecycle section
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
-
-    //Logging section
-    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
-    implementation "com.jakewharton.timber:timber:$timber"
-
-    //Material design
-    implementation "com.google.android.material:material:$materialDesign"
-
-    //APIConnector
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
-
-    //Room
-    implementation "androidx.room:room-runtime:$room"
-    ksp "androidx.room:room-compiler:$room"
-    implementation "androidx.room:room-ktx:$room"
-
-    //Serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
-
-    //Views/ViewGroups
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
-    implementation "androidx.recyclerview:recyclerview:$recyclerView"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
-
-    /*Testing section*/
-
-    //JVM
-    //ArchTestCore
-    testImplementation "androidx.arch.core:core-testing:$archTest"
-
-    //Coroutines
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
-
-    //Jacoco
-    testImplementation "org.jacoco:org.jacoco.ant:$jacocoVersion"
-
-    //JUnit
-    testImplementation "junit:junit:$junit"
-    testImplementation "org.junit.jupiter:junit-jupiter:$junit5"
-
-    //Kotest
-    testImplementation "io.kotest:kotest-assertions-core:$kotest"
-    testImplementation "io.kotest:kotest-property:$kotest"
-    testImplementation "io.kotest:kotest-runner-junit5:$kotest"
-
-    //MockK
-    testImplementation "io.mockk:mockk-android:$mockkVersion"
-    testImplementation "io.mockk:mockk-agent:$mockkVersion"
-
-    //MockWebServer
-    testImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
-
-    //Test core
-    testImplementation "androidx.test:core-ktx:$testCore"
-
-    //Instrumented/UI
-    //ArchTestCore
-    androidTestImplementation "androidx.arch.core:core-testing:$archTest"
-
-    //Compose
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeCore"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$composeCore"
-
-    //Coroutines
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
-
-    //Espresso
-    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso"
-
-    //JUnit
-    androidTestImplementation "androidx.test.ext:junit-ktx:$junitAndroidX"
-    androidTestImplementation "org.junit.jupiter:junit-jupiter:$junit5"
-
-    //MockK
-    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
-    androidTestImplementation "io.mockk:mockk-agent:$mockkVersion"
-
-    //MockWebServer
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$okHttp"
-
-    //Runner
-    androidTestImplementation "androidx.test:runner:$testCore"
-
-    //Test core
-    androidTestImplementation "androidx.test:core-ktx:$testCore"
 }

@@ -1,0 +1,102 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 34
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable = true
+            testCoverageEnabled = true
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled true
+            debuggable = false
+            testCoverageEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "$compiler"
+    }
+
+    testOptions {
+        unitTests.all { useJUnitPlatform() }
+    }
+
+    namespace 'githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':modules:common:core') because 'Core Module'
+    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
+    androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
+
+    //Annotation
+    api "androidx.annotation:annotation:$annotation"
+
+    //AppCompat
+    api "androidx.appcompat:appcompat:$appCompat"
+
+    //Coil
+    api "io.coil-kt:coil:$coil"
+
+    //Compose
+    api "androidx.activity:activity-compose:$activity"
+    api "androidx.compose.animation:animation:$composeCore"
+    api "androidx.compose.foundation:foundation:$composeCore"
+    api "androidx.compose.material:material:$composeCore"
+    api "androidx.compose.material:material-icons-core:$composeCore"
+    api "androidx.compose.material:material-icons-extended:$composeCore"
+    api "androidx.compose.material3:material3:$material3"
+    api "androidx.compose.runtime:runtime:$composeCore"
+    api "androidx.compose.runtime:runtime-android:$composeCore"
+    api "androidx.compose.ui:ui:$composeCore"
+    api "androidx.compose.ui:ui-tooling-preview:$composeCore"
+    api "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
+    debugApi "androidx.compose.ui:ui-tooling:$composeCore"
+
+    //Lifecycle section
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+
+    //Material design
+    api "com.google.android.material:material:$materialDesign"
+
+    //Views/ViewGroups
+    api "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    api "androidx.recyclerview:recyclerview:$recyclerView"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
+}

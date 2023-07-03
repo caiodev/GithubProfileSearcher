@@ -1,0 +1,127 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
+}
+
+android {
+    compileSdkVersion 34
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig true
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "$compiler"
+    }
+
+    testOptions {
+        unitTests.all { useJUnitPlatform() }
+    }
+
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}'
+        }
+    }
+
+    namespace 'githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing'
+}
+
+dependencies {
+
+    //APIConnector
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
+
+    //Logging section
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
+    implementation "com.jakewharton.timber:timber:$timber"
+
+    //Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
+
+    //JVM
+    //ArchTestCore
+    api "androidx.arch.core:core-testing:$archTest"
+
+    //Coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
+
+    //Jacoco
+    api "org.jacoco:org.jacoco.ant:$jacocoVersion"
+
+    //JUnit
+    api "junit:junit:$junit"
+    api "org.junit.jupiter:junit-jupiter:$junit5"
+
+    //Kotest
+    api "io.kotest:kotest-assertions-core:$kotest"
+    api "io.kotest:kotest-property:$kotest"
+    api "io.kotest:kotest-runner-junit5:$kotest"
+
+    //MockK
+    api "io.mockk:mockk-android:$mockkVersion"
+    api "io.mockk:mockk-agent:$mockkVersion"
+
+    //MockWebServer
+    api "com.squareup.okhttp3:mockwebserver:$okHttp"
+
+    //Test core
+    api "androidx.test:core-ktx:$testCore"
+
+    //Instrumented/UI
+    //ArchTestCore
+    api "androidx.arch.core:core-testing:$archTest"
+
+    //Compose
+    api "androidx.compose.ui:ui-test-junit4:$composeCore"
+    debugApi "androidx.compose.ui:ui-test-manifest:$composeCore"
+
+    //Coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
+
+    //Espresso
+    api "androidx.test.espresso:espresso-idling-resource:$espresso"
+    api "androidx.test.espresso:espresso-accessibility:$espresso"
+    api "androidx.test.espresso:espresso-contrib:$espresso"
+    api "androidx.test.espresso:espresso-core:$espresso"
+    api "androidx.test.espresso:espresso-intents:$espresso"
+
+    //JUnit
+    api "androidx.test.ext:junit-ktx:$junitAndroidX"
+    api "org.junit.jupiter:junit-jupiter:$junit5"
+
+    //MockK
+    api "io.mockk:mockk-android:$mockkVersion"
+    api "io.mockk:mockk-agent:$mockkVersion"
+
+    //MockWebServer
+    api "com.squareup.okhttp3:mockwebserver:$okHttp"
+
+    //Runner
+    api "androidx.test:runner:$testCore"
+
+    //Test core
+    api "androidx.test:core-ktx:$testCore"
+}

@@ -1,26 +1,3 @@
 <resources>
     <string name="app_name" translatable="false">GithubProfileSearcher</string>
-
-    <!--Profile info-->
-    <string name="profile_hint">Type a profile</string>
-    <string name="uid" translatable="false">ID %s</string>
-    <string name="login">User: %s</string>
-    <string name="user_list_header">Profiles</string>
-    <string name="retry">Retry</string>
-    <string name="end_of_results">End of results</string>
-
-    <!-- Success message -->
-    <string name="back_online">Back online</string>
-
-    <!-- Error messages -->
-    <string name="empty_field">Empty field</string>
-    <string name="no_connection">No internet connection</string>
-    <string name="client_side">We couldn\'t get what you\'re looking for. Please, try again later</string>
-    <string name="server_side">Servers are overloaded at the moment. Please, try again later</string>
-    <string name="query_limit">The API query limit has been reached. Please, try again later</string>
-    <string name="limit_of_profile_results">You have reached the 1000th profile 🎉</string>
-    <string name="unknown_host_and_socket_timeout">Please, check your internet connection and try again later</string>
-    <string name="ssl_handshake">The network you\'re connected to is unsafe. Please, change it and try again later</string>
-    <string name="generic">An error occurred. Please, try again later</string>
-
 </resources>
