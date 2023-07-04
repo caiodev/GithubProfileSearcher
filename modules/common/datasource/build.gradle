@@ -61,11 +61,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':modules:common:core') because 'Core Module'
+
     testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
     //DataStore
-    implementation "androidx.datastore:datastore:$dataStore"
+    api "androidx.datastore:datastore:$dataStore"
 
     //Koin
     api "io.insert-koin:koin-android:$koin"
@@ -74,7 +75,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
 
     //APIConnector
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    api "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
 
     //Room

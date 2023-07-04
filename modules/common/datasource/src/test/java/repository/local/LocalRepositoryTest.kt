@@ -1,16 +1,16 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.base.repository.local
+package repository.local
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.base.repository.local.fakes.database.FakeDatabase
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.base.repository.local.fakes.protoDataStore.manager.FakeKeyValueStorageManager
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.base.repository.local.LocalRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.coroutines.junit5.CoroutinesTestExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.coroutines.junit5.CoroutinesTestExtension
+import repository.local.fakes.database.FakeDatabase
+import repository.local.fakes.protoDataStore.manager.FakeKeyValueStorageManager
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
@@ -54,8 +54,8 @@ class LocalRepositoryTest : TestSteps {
                 runBlockingTest {
                     updateData(
                         githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer.model.ProfilePreferences(
-                            pageNumber = 7
-                        )
+                            pageNumber = 7,
+                        ),
                     )
                     updateData(obtainData().copy(isHeaderVisible = true))
                     updateData(obtainData().copy(currentProfile = "torvalds"))
@@ -87,8 +87,8 @@ class LocalRepositoryTest : TestSteps {
             runBlockingTest {
                 localRepository.obtainProtoDataStore().updateData(
                     githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer.model.ProfilePreferences(
-                        pageNumber = 7
-                    )
+                        pageNumber = 7,
+                    ),
                 )
             }
         }

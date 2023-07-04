@@ -60,7 +60,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolde
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.R as UI
 
 class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
@@ -70,7 +70,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
     private val errorSnackBar by lazy {
         Snackbar.make(
             findViewById(android.R.id.content),
-            Core.string.generic,
+            UI.string.generic,
             Snackbar.LENGTH_SHORT,
         )
     }
@@ -303,7 +303,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                     },
                     onConnectionUnavailable = {
                         errorSnackBar.showErrorSnackBar(
-                            Core.string.no_connection,
+                            UI.string.no_connection,
                         )
                     },
                 )
@@ -399,15 +399,15 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             viewModel.errorSharedFlow.collect { error ->
                 when (error) {
                     UnknownHost, SocketTimeout, Connect ->
-                        showErrorMessage(Core.string.unknown_host_and_socket_timeout)
+                        showErrorMessage(UI.string.unknown_host_and_socket_timeout)
 
-                    SSLHandshake -> showErrorMessage(Core.string.ssl_handshake)
-                    ClientSide -> showErrorMessage(Core.string.client_side)
-                    ServerSide -> showErrorMessage(Core.string.server_side)
-                    SearchQuotaReached -> showErrorMessage(Core.string.query_limit)
-                    SearchLimitReached -> showErrorMessage(Core.string.limit_of_profile_results)
+                    SSLHandshake -> showErrorMessage(UI.string.ssl_handshake)
+                    ClientSide -> showErrorMessage(UI.string.client_side)
+                    ServerSide -> showErrorMessage(UI.string.server_side)
+                    SearchQuotaReached -> showErrorMessage(UI.string.query_limit)
+                    SearchLimitReached -> showErrorMessage(UI.string.limit_of_profile_results)
                     InitialError -> Unit
-                    else -> showErrorMessage(Core.string.generic)
+                    else -> showErrorMessage(UI.string.generic)
                 }
             }
         }
@@ -450,7 +450,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             updatedProfileCall(binding.searchProfileTextInputEditText.text.toString())
         } else {
             errorSnackBar.showErrorSnackBar(
-                Core.string.empty_field,
+                UI.string.empty_field,
             )
         }
     }
@@ -504,7 +504,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                 ) {
                     changeViewState(transientViewsAdapter, retry)
                 }
-                showErrorMessage(Core.string.no_connection)
+                showErrorMessage(UI.string.no_connection)
             },
         )
     }

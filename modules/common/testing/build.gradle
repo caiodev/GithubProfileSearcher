@@ -28,7 +28,6 @@ android {
     buildFeatures {
         buildConfig true
         compose true
-        viewBinding true
     }
 
     composeOptions {
@@ -37,12 +36,6 @@ android {
 
     testOptions {
         unitTests.all { useJUnitPlatform() }
-    }
-
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}'
-        }
     }
 
     namespace 'githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing'

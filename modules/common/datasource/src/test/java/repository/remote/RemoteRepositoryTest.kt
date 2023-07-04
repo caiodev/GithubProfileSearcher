@@ -1,8 +1,12 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.base.repository.remote
+package repository.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.remote.RemoteRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.remote.RemoteRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.MockedAPIResponseProvider.profileInfoCallResult
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.RetrofitTestService.newInstance
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.RetrofitTestService.setup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -13,10 +17,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import retrofit2.Response
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.MockedAPIResponseProvider.profileInfoCallResult
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.RetrofitTestService.newInstance
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.RetrofitTestService.setup
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException

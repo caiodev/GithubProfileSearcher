@@ -1,18 +1,18 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher
 
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.models.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.unit.viewModel.fakes.repository.local.FakeLocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.unit.viewModel.fakes.repository.remote.FakeProfileInformationRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.extensions.castValue
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.extensions.runTaskOnBackground
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.coroutines.junit5.CoroutinesTestExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.coroutines.junit5.CoroutinesTestExtension
 import utils.base.liveData.junit4.LiveDataTestUtil
 import utils.base.liveData.junit5.LiveDataTestExtension
 import java.io.Writer
@@ -28,7 +28,7 @@ class ProfileViewModelTest : TestSteps {
         viewModel =
             githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel(
                 FakeLocalRepository(),
-                FakeProfileInformationRepository()
+                FakeProfileInformationRepository(),
             )
     }
 

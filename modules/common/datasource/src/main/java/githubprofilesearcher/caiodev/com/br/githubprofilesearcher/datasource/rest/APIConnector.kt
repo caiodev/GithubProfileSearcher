@@ -19,7 +19,8 @@ object APIConnector {
     private val mediaType = "application/json".toMediaType()
 
     @ExperimentalSerializationApi
-    fun Scope.newInstance(baseUrl: String = BuildConfig.API_URL
+    fun Scope.newInstance(
+        baseUrl: String = BuildConfig.API_URL,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)

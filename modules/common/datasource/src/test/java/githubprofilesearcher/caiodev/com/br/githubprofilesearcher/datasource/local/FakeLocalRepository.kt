@@ -1,13 +1,11 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.local
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.models.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.base.repository.local.fakes.protoDataStore.manager.FakeKeyValueStorageManager
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.utils.base.interfaces.GenericLocalRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
+import repository.local.fakes.protoDataStore.manager.FakeKeyValueStorageManager
 
 class FakeLocalRepository : GenericLocalRepository {
 
-    override fun obtainProtoDataStore() =
-        githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.base.repository.local.fakes.protoDataStore.manager.FakeKeyValueStorageManager()
+    override fun obtainProtoDataStore() = FakeKeyValueStorageManager()
 
     override suspend fun getGithubProfilesFromDb(): List<UserProfile> {
         TODO("Not yet implemented")

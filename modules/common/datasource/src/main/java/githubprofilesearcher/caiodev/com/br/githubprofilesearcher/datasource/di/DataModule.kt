@@ -27,7 +27,7 @@ val global = module {
     factory<ILocalRepository> {
         LocalRepository(
             get(),
-            get()
+            get(),
         )
     }
 

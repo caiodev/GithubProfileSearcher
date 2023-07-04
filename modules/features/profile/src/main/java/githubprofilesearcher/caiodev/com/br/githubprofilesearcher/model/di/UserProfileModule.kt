@@ -3,11 +3,12 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.di
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.KeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.local.dataStore.manager.IKeyValueStorageManager
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer.ProfileSerializer
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer.ProfileSerializer.profileProtoFileName
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.ProfileRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.KeyValueStorageManager
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
@@ -26,7 +27,7 @@ val userProfileViewModel = module {
         )
     }
 
-    factory<githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.local.dataStore.manager.IKeyValueStorageManager> {
+    factory<IKeyValueStorageManager> {
         KeyValueStorageManager(
             keyValueStorageClient = DataStoreFactory.create(
                 serializer = ProfileSerializer,

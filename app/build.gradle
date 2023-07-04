@@ -66,6 +66,7 @@ dependencies {
     implementation project(':modules:common:datasource') because 'Datasource Module'
     implementation project(':modules:common:ui') because 'UI Module'
     implementation project(':modules:features:profile') because 'Profile Module'
+
     testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 

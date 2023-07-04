@@ -1,9 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.delay
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.delay.Delay.delayTaskBy
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.MILLISECONDS
 

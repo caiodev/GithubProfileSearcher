@@ -58,7 +58,8 @@ dependencies {
     testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    api "androidx.core:core-ktx:$ktxCore"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
     api "com.jakewharton.timber:timber:$timber"
-    implementation "com.google.android.material:material:$materialDesign"
 }

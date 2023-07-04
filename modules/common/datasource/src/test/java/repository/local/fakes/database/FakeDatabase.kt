@@ -1,10 +1,11 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.utils.base.repository.local.fakes.database
+package repository.local.fakes.database
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.ProfileDao
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
 
-class FakeDatabase : githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database,
+class FakeDatabase :
+    githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database,
     ProfileDao {
 
     override fun profileDao(): ProfileDao {

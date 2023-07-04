@@ -61,6 +61,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':modules:common:core') because 'Core Module'
+
     testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
@@ -88,9 +89,8 @@ dependencies {
     api "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
     debugApi "androidx.compose.ui:ui-tooling:$composeCore"
 
-    //Lifecycle section
-    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
-    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    //Espresso
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
 
     //Material design
     api "com.google.android.material:material:$materialDesign"
