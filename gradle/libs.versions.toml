@@ -131,7 +131,6 @@ activityCompose = { group = "androidx.activity", name = "activity-compose", vers
 animationCompose = { group = "androidx.compose.animation", name = "animation", version.ref = "composeCore" }
 foundationCompose = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeCore" }
 lifecycleCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-materialCompose = { group = "androidx.compose.material", name = "material", version.ref = "composeCore" }
 material3Compose = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 materialIconsCoreCompose = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeCore" }
 materialIconsExtendedCompose = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeCore" }
@@ -251,7 +250,6 @@ compose = [
  "animationCompose",
  "foundationCompose",
  "lifecycleCompose",
- "materialCompose",
  "material3Compose",
  "materialIconsCoreCompose",
  "materialIconsExtendedCompose",

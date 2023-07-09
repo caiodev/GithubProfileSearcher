@@ -14,14 +14,24 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    flavorDimensions "version"
+
+    productFlavors {
+
+        demo {
+            dimension "version"
+            versionNameSuffix "-demo"
+        }
+
+        full {
+            dimension "version"
+            versionNameSuffix "-full"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
-        jvmTarget = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -31,7 +41,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion "${dep.versions.compiler}"
+        kotlinCompilerExtensionVersion "1.4.8"
     }
 
     testOptions {

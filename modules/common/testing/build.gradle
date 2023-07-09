@@ -19,18 +19,8 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
-        jvmTarget = JavaVersion.VERSION_17
-    }
-
     buildFeatures {
         buildConfig true
-        compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion "${dep.versions.compiler}"
     }
 
     testOptions {

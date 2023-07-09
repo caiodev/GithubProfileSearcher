@@ -23,14 +23,12 @@ android {
 
         demo {
             dimension "version"
-            applicationIdSuffix ".demo"
             versionNameSuffix "-demo"
             buildConfigField "String", "API_URL", "\"https://api.github.com/\""
         }
 
         full {
             dimension "version"
-            applicationIdSuffix ".full"
             versionNameSuffix "-full"
             buildConfigField "String", "API_URL", "\"https://api.github.com/\""
         }
@@ -39,11 +37,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        freeCompilerArgs += ['-opt-in=kotlin.RequiresOptIn']
-        jvmTarget = JavaVersion.VERSION_17
     }
 
     buildFeatures {
