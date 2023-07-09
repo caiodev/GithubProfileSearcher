@@ -14,7 +14,7 @@ detekt {
         exclude("**/gradle/")
         exclude("**/schemas/")
     })
-    toolVersion = "$detektVersion"
+    toolVersion = "${dep.versions.detekt}"
 }
 
 tasks.named("detekt").configure {

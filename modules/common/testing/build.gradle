@@ -12,7 +12,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
 
     compileOptions {
@@ -31,7 +30,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion "$compiler"
+        kotlinCompilerExtensionVersion "${dep.versions.compiler}"
     }
 
     testOptions {
@@ -44,77 +43,44 @@ android {
 dependencies {
 
     //APIConnector
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
+    implementation dep.bundles.apiConnection
 
-    //Logging section
-    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
-    implementation "com.jakewharton.timber:timber:$timber"
+    //Logging
+    implementation dep.bundles.logging
 
     //Serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
+    implementation dep.jsonSerialization
 
     //JVM
-    //ArchTestCore
-    api "androidx.arch.core:core-testing:$archTest"
-
     //Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
+    api dep.coroutinesTest
 
     //Jacoco
-    api "org.jacoco:org.jacoco.ant:$jacocoVersion"
+    api dep.jacoco
 
     //JUnit
-    api "junit:junit:$junit"
-    api "org.junit.jupiter:junit-jupiter:$junit5"
+    api dep.bundles.junit
 
     //Kotest
-    api "io.kotest:kotest-assertions-core:$kotest"
-    api "io.kotest:kotest-property:$kotest"
-    api "io.kotest:kotest-runner-junit5:$kotest"
+    api dep.bundles.kotest
 
     //MockK
-    api "io.mockk:mockk-android:$mockkVersion"
-    api "io.mockk:mockk-agent:$mockkVersion"
+    api dep.bundles.mockk
 
     //MockWebServer
-    api "com.squareup.okhttp3:mockwebserver:$okHttp"
+    api dep.mockWebServer
 
     //Test core
-    api "androidx.test:core-ktx:$testCore"
+    api dep.bundles.testCore
 
     //Instrumented/UI
-    //ArchTestCore
-    api "androidx.arch.core:core-testing:$archTest"
-
     //Compose
-    api "androidx.compose.ui:ui-test-junit4:$composeCore"
-    debugApi "androidx.compose.ui:ui-test-manifest:$composeCore"
-
-    //Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
+    api dep.composeTestJUnit4
+    debugApi dep.composeTestManifest
 
     //Espresso
-    api "androidx.test.espresso:espresso-idling-resource:$espresso"
-    api "androidx.test.espresso:espresso-accessibility:$espresso"
-    api "androidx.test.espresso:espresso-contrib:$espresso"
-    api "androidx.test.espresso:espresso-core:$espresso"
-    api "androidx.test.espresso:espresso-intents:$espresso"
+    api dep.bundles.espressoTest
 
     //JUnit
-    api "androidx.test.ext:junit-ktx:$junitAndroidX"
-    api "org.junit.jupiter:junit-jupiter:$junit5"
-
-    //MockK
-    api "io.mockk:mockk-android:$mockkVersion"
-    api "io.mockk:mockk-agent:$mockkVersion"
-
-    //MockWebServer
-    api "com.squareup.okhttp3:mockwebserver:$okHttp"
-
-    //Runner
-    api "androidx.test:runner:$testCore"
-
-    //Test core
-    api "androidx.test:core-ktx:$testCore"
+    api dep.junitAndroidX
 }

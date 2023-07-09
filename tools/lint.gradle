@@ -7,7 +7,7 @@ ktlint {
     outputColorName = "RED"
     outputToConsole = true
     verbose = true
-    version = "$ktlintVersion"
+    version = "${dep.versions.ktlint}"
     filter {
         exclude("**/generated/**")
         include("**/kotlin/**")

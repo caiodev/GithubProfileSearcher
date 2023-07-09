@@ -14,22 +14,6 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    buildTypes {
-        debug {
-            minifyEnabled false
-            debuggable = true
-            testCoverageEnabled = true
-            signingConfig signingConfigs.debug
-        }
-
-        release {
-            minifyEnabled true
-            debuggable = false
-            testCoverageEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -47,7 +31,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion "$compiler"
+        kotlinCompilerExtensionVersion "${dep.versions.compiler}"
     }
 
     testOptions {
@@ -66,37 +50,24 @@ dependencies {
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
     //Annotation
-    api "androidx.annotation:annotation:$annotation"
+    api dep.annotation
 
     //AppCompat
-    api "androidx.appcompat:appcompat:$appCompat"
+    api dep.appCompat
 
     //Coil
-    api "io.coil-kt:coil:$coil"
+    api dep.coil
 
     //Compose
-    api "androidx.activity:activity-compose:$activity"
-    api "androidx.compose.animation:animation:$composeCore"
-    api "androidx.compose.foundation:foundation:$composeCore"
-    api "androidx.compose.material:material:$composeCore"
-    api "androidx.compose.material:material-icons-core:$composeCore"
-    api "androidx.compose.material:material-icons-extended:$composeCore"
-    api "androidx.compose.material3:material3:$material3"
-    api "androidx.compose.runtime:runtime:$composeCore"
-    api "androidx.compose.runtime:runtime-android:$composeCore"
-    api "androidx.compose.ui:ui:$composeCore"
-    api "androidx.compose.ui:ui-tooling-preview:$composeCore"
-    api "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
-    debugApi "androidx.compose.ui:ui-tooling:$composeCore"
+    api dep.bundles.compose
+    debugApi dep.uiToolingCompose
 
     //Espresso
-    implementation "androidx.test.espresso:espresso-idling-resource:$espresso"
+    api dep.espressoIdlingResource
 
     //Material design
-    api "com.google.android.material:material:$materialDesign"
+    api dep.materialDesign
 
     //Views/ViewGroups
-    api "androidx.constraintlayout:constraintlayout:$constraintLayout"
-    api "androidx.recyclerview:recyclerview:$recyclerView"
-    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
+    api dep.bundles.views
 }

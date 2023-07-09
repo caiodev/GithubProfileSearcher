@@ -1,148 +1,26 @@
-buildscript {
-
-    ext {
-
-        //Annotation
-        annotation = '1.6.0'
-
-        //AppCompat
-        appCompat = '1.6.1'
-
-        //Coil
-        coil = '2.3.0'
-
-        //Compose
-        activity = '1.7.2'
-        compiler = '1.4.7'
-        composeCore = '1.6.0-alpha01'
-        material3 = '1.2.0-alpha03'
-
-        //Coroutines
-        coroutines = '1.6.4'
-
-        //DataStore
-        dataStore = '1.1.0-alpha04'
-
-        //Quality checking
-        //Detekt
-        detektVersion = '1.23.0'
-
-        //Ktlint
-        ktlintVersion = '0.49.1'
-        ktlintPluginVersion = '11.4.0'
-
-        //Gradle
-        gradleVersion = '8.0.2'
-
-        //Koin
-        koin = '3.4.0'
-
-        //Kotlin
-        kotlin = '1.8.21'
-
-        //KSP
-        ksp = '1.8.21-1.0.11'
-
-        //Ktx
-        ktxCore = '1.11.0-beta01'
-
-        //LeakCanary
-        leakCanary = '2.12'
-
-        //Lifecycle
-        lifecycle = '2.6.1'
-
-        //Material design
-        materialDesign = '1.9.0'
-
-        //OkHttp
-        okHttp = '5.0.0-alpha.11'
-
-        //Retrofit
-        retrofit = '2.9.0'
-        serializationConverter = '1.0.0'
-
-        //Room
-        room = '2.5.2'
-
-        //Serialization
-        serialization = '1.5.0'
-
-        //Timber
-        timber = '5.0.1'
-
-        //Views/ViewGroups
-        //ConstraintLayout
-        constraintLayout = '2.1.4'
-
-        //RecyclerView
-        recyclerView = '1.3.0'
-
-        //SwipeRefreshLayout
-        swipeRefreshLayout = '1.2.0-alpha01'
-
-        //Test dependency versions
-        archTest = '2.2.0'
-
-        espresso = '3.5.1'
-
-        jacocoVersion = '0.8.10'
-
-        //JUnit
-        junit = '4.13.2'
-        junitAndroidX = '1.1.5'
-        junit5 = '5.9.3'
-
-        kotest = '5.6.1'
-
-        //Mockk
-        mockkVersion = '1.13.5'
-
-        testCore = '1.6.0-alpha01'
-
-        //Others
-        apiUrl = "\"https://api.github.com/\""
-        toolsPath = "$project.projectDir/tools/"
-    }
-
-    dependencies {
-        classpath "com.android.tools.build:gradle:$gradleVersion"
-        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:$ksp"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin"
-    }
-
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-}
-
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "$detektVersion"
-    id "org.jlleitschuh.gradle.ktlint" version "$ktlintPluginVersion"
+    alias dep.plugins.androidApplication apply false
+    alias dep.plugins.androidLibrary apply false
+    alias dep.plugins.detekt apply false
+    alias dep.plugins.kotlinPlugin apply false
+    alias dep.plugins.kover apply false
+    alias dep.plugins.ksp apply false
+    alias dep.plugins.ktlint apply false
+    alias dep.plugins.serialization apply false
 }
 
 subprojects {
-    apply from: "${toolsPath}codeChecking.gradle.kts"
-    apply from: "${toolsPath}coverage.gradle"
-    apply from: "${toolsPath}detekt.gradle"
-    apply from: "${toolsPath}lint.gradle"
+    apply from: "$project.rootDir/tools/codeChecking.gradle.kts"
+    apply from: "$project.rootDir/tools/coverage.gradle"
+    apply from: "$project.rootDir/tools/coverageKover.gradle"
+    apply from: "$project.rootDir/tools/detekt.gradle"
+    apply from: "$project.rootDir/tools/lint.gradle"
 
     dependencies {
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion"
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-libraries:$detektVersion"
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-ruleauthors:$detektVersion"
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:${dep.versions.detekt}"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:${dep.versions.detekt}"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-libraries:${dep.versions.detekt}"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-ruleauthors:${dep.versions.detekt}"
     }
 }
 

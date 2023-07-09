@@ -12,23 +12,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
-    }
-
-    buildTypes {
-        debug {
-            minifyEnabled false
-            debuggable = true
-            testCoverageEnabled = true
-            signingConfig signingConfigs.debug
-        }
-
-        release {
-            minifyEnabled true
-            debuggable = false
-            testCoverageEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
     compileOptions {
@@ -58,8 +41,7 @@ dependencies {
     testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
-    api "androidx.core:core-ktx:$ktxCore"
-    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
-    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
-    api "com.jakewharton.timber:timber:$timber"
+    api dep.ktxCore
+    api dep.bundles.lifecycle
+    api dep.timber
 }

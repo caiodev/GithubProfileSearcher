@@ -6,18 +6,4 @@
     <string name="user_list_header">Perfis</string>
     <string name="retry">Tentar novamente</string>
     <string name="end_of_results">Fim dos resultados</string>
-
-    <!-- Success message -->
-    <string name="back_online">Conexão reestabelecida</string>
-
-    <!-- Error messages -->
-    <string name="empty_field">Campo vazio</string>
-    <string name="no_connection">Não há conexão com a internet</string>
-    <string name="client_side">Não conseguimos obter o que você está procurando. Por favor, tente novamente mais tarde</string>
-    <string name="server_side">Os servidores estão sobrecarregados no momento. Por favor, tente novamente mais tarde</string>
-    <string name="query_limit">A cota máxima de buscas da API foi alcançada. Por favor, tente novamente mais tarde</string>
-    <string name="limit_of_profile_results">Você alcançou o milésimo perfil 🎉</string>
-    <string name="unknown_host_and_socket_timeout">Por favor, verifique sua conexão e tente novamente mais tarde</string>
-    <string name="ssl_handshake">A rede na qual você está, não é segura. Por favor, mude de rede e tente novamente mais tarde</string>
-    <string name="generic">Ocorreu um erro. Por favor, tente novamente mais tarde</string>
 </resources>

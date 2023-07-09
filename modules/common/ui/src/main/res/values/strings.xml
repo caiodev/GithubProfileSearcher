@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GithubProfileSearcher</string>
+    <string name="app_name" translatable="false">GithubProfileSearcher</string>
 
     <!-- Success message -->
     <string name="back_online">Back online</string>

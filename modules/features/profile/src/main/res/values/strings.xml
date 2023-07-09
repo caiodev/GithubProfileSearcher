@@ -1,10 +1,8 @@
 <resources>
-
     <string name="profile_hint">Type a profile</string>
     <string name="uid" translatable="false">ID %s</string>
     <string name="login">User: %s</string>
     <string name="user_list_header">Profiles</string>
     <string name="retry">Retry</string>
     <string name="end_of_results">End of results</string>
-
 </resources>

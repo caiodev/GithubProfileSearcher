@@ -1,7 +1,7 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = "$jacocoVersion"
+    toolVersion = "${dep.versions.jacoco}"
     reportsDirectory = file("$buildDir")
 }
 

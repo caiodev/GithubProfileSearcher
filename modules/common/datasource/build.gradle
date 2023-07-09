@@ -13,26 +13,26 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
 
     ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 
-    buildTypes {
-        debug {
-            minifyEnabled false
-            debuggable = true
-            testCoverageEnabled = true
-            signingConfig signingConfigs.debug
-            buildConfigField "String", "API_URL", "$apiUrl"
+    flavorDimensions "version"
+
+    productFlavors {
+
+        demo {
+            dimension "version"
+            applicationIdSuffix ".demo"
+            versionNameSuffix "-demo"
+            buildConfigField "String", "API_URL", "\"https://api.github.com/\""
         }
 
-        release {
-            minifyEnabled true
-            debuggable = false
-            testCoverageEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "API_URL", "$apiUrl"
+        full {
+            dimension "version"
+            applicationIdSuffix ".full"
+            versionNameSuffix "-full"
+            buildConfigField "String", "API_URL", "\"https://api.github.com/\""
         }
     }
 
@@ -66,23 +66,22 @@ dependencies {
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
     //DataStore
-    api "androidx.datastore:datastore:$dataStore"
+    api dep.dataStore
 
     //Koin
-    api "io.insert-koin:koin-android:$koin"
+    api dep.koin
 
-    //Logging section
-    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp"
+    //Logging
+    implementation dep.okhttpLoggingInterceptor
 
     //APIConnector
-    api "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serializationConverter"
+    api dep.retrofit
+    implementation dep.retrofitSerializationConverter
 
     //Room
-    implementation "androidx.room:room-runtime:$room"
-    ksp "androidx.room:room-compiler:$room"
-    implementation "androidx.room:room-ktx:$room"
+    implementation dep.bundles.room
+    ksp dep.roomCompiler
 
     //Serialization
-    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
+    api dep.jsonSerialization
 }

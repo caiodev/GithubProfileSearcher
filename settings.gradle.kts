@@ -1,3 +1,21 @@
+@file:Suppress("UnstableApiUsage")
+pluginManagement {
+    repositories {
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    defaultLibrariesExtensionName.set("dep")
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 rootProject.name = "GithubProfileSearcher"
 include(":app")
 include(":modules:common:core")
