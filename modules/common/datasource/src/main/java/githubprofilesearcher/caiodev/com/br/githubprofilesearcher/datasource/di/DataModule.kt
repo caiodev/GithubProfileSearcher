@@ -8,8 +8,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rep
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.LocalRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.AppDatabase
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.remote.RemoteRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.APIConnector.newInstance
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.remote.RemoteRepository
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module

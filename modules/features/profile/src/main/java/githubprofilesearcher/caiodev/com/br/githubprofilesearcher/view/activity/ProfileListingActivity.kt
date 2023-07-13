@@ -1,7 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.activity
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.View.GONE
@@ -27,8 +26,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.stat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.InitialError
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.InitialSuccess
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.LocalPopulation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ResultLimitReached
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SSLHandshake
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SearchLimitReached
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SearchQuotaReached
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ServerSide
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SocketTimeout
@@ -41,7 +40,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fea
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ActivityProfileListingBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.CustomSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applyBackgroundColor
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applySwipeRefreshVisibilityAttributes
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applyViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.changeDrawable
@@ -114,7 +112,6 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
     override fun setupView() {
         binding = ActivityProfileListingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupDarkMode()
         setupSwipeRefreshLayout()
         bindViewModelDataToUIInCaseOfOrientationChanges()
         setupActionViews()
@@ -202,13 +199,6 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                     binding.backToTopButton.applyViewVisibility(VISIBLE)
                 }
             }
-    }
-
-    private fun setupDarkMode() {
-        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_YES ->
-                binding.parentConstraintLayout.applyBackgroundColor(android.R.color.black)
-        }
     }
 
     private fun setupActionViews() {
@@ -405,7 +395,7 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                     ClientSide -> showErrorMessage(UI.string.client_side)
                     ServerSide -> showErrorMessage(UI.string.server_side)
                     SearchQuotaReached -> showErrorMessage(UI.string.query_limit)
-                    SearchLimitReached -> showErrorMessage(UI.string.limit_of_profile_results)
+                    ResultLimitReached -> showErrorMessage(UI.string.limit_of_profile_results)
                     InitialError -> Unit
                     else -> showErrorMessage(UI.string.generic)
                 }

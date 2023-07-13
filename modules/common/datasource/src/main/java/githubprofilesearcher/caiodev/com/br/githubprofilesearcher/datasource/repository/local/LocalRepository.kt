@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.re
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.local.dataStore.manager.IKeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.IKeyValueStorageManager
 
 class LocalRepository(
     private val keyValueStorageManager: IKeyValueStorageManager,

@@ -4,7 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface UserProfileCall {
+fun interface UserProfileCall {
     @GET("search/users")
     suspend fun provideUsers(
         @Query("q") user: String,

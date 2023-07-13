@@ -60,6 +60,9 @@ dependencies {
     //MockWebServer
     api dep.mockWebServer
 
+    //Robolectric
+    api dep.robolectric
+
     //Test core
     api dep.bundles.testCore
 

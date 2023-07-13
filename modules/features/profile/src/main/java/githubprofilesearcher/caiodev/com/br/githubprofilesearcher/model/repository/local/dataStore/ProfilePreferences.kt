@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer.model
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.string.emptyString
 

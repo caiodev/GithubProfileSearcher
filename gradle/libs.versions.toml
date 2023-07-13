@@ -89,6 +89,9 @@ swipeRefreshLayout = '1.2.0-alpha01'
 #Arch
 archTest = '2.2.0'
 
+#Core
+testCore = '1.6.0-alpha01'
+
 #Espresso
 espresso = '3.5.1'
 
@@ -106,8 +109,8 @@ kotest = '5.6.1'
 #Mockk
 mockkVersion = '1.13.5'
 
-#Core
-testCore = '1.6.0-alpha01'
+#Robolectric
+robolectric = '4.10.3'
 
 ##### Libraries #####
 
@@ -207,6 +210,9 @@ mockkAndroid = { group = "io.mockk", name = "mockk-android", version.ref = "mock
 
 #MockWebServer
 mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okHttp" }
+
+#Robolectric
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 # Instrumented/UI #
 

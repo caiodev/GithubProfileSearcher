@@ -2,7 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.re
 
 import androidx.datastore.core.DataStore
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castToNonNullable
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.local.dataStore.manager.IKeyValueStorageManager
 import kotlinx.coroutines.flow.first
 
 class KeyValueStorageManager<S>(private val keyValueStorageClient: DataStore<S>) :

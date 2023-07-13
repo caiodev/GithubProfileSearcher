@@ -20,7 +20,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.string.em
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.ILocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer.model.ProfilePreferences
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.ProfilePreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,8 +1,7 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.serializer.model.ProfilePreferences
 import timber.log.Timber
 import java.io.DataInputStream
 import java.io.DataOutputStream

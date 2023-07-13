@@ -4,9 +4,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fea
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
 
-class FakeDatabase :
-    githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database,
-    ProfileDao {
+class FakeDatabase : Database, ProfileDao {
 
     override fun profileDao(): ProfileDao {
         return this

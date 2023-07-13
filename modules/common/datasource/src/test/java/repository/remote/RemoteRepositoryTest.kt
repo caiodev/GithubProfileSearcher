@@ -2,7 +2,7 @@ package repository.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.remote.RemoteRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.remote.RemoteRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.MockedAPIResponseProvider.profileInfoCallResult
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.RetrofitTestService.newInstance
@@ -28,7 +28,7 @@ class RemoteRepositoryTest : TestSteps {
 
     private lateinit var mockWebServer: MockWebServer
     private lateinit var userProfile: UserProfileCall
-    private lateinit var remoteRepository: githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.remote.RemoteRepository
+    private lateinit var remoteRepository: RemoteRepository
 
     @OptIn(ExperimentalSerializationApi::class)
     @BeforeEach
@@ -36,7 +36,7 @@ class RemoteRepositoryTest : TestSteps {
         mockWebServer = setup()
         userProfile = newInstance()
         remoteRepository =
-            githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.remote.RemoteRepository()
+            RemoteRepository()
     }
 
     @AfterEach

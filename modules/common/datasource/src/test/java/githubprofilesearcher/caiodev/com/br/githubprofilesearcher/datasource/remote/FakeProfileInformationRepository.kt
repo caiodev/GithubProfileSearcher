@@ -2,8 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.re
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.model.repository.local.GenericProfileRepository
 
-class FakeProfileInformationRepository :
-    GenericProfileRepository {
+class FakeProfileInformationRepository : GenericProfileRepository {
 
     private val fakeRemoteRepository =
         FakeRemoteRepository()

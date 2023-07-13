@@ -13,6 +13,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import timber.log.Timber
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.R as UI
 
 @OptIn(ExperimentalSerializationApi::class)
 class App : Application(), ImageLoaderFactory {
@@ -40,8 +41,8 @@ class App : Application(), ImageLoaderFactory {
                     .maxSizePercent(memoryCacheCap)
                     .build()
             }
-            .placeholder(R.mipmap.ic_launcher)
-            .error(R.mipmap.ic_launcher)
+            .placeholder(UI.mipmap.ic_launcher)
+            .error(UI.mipmap.ic_launcher)
             .build()
     }
 

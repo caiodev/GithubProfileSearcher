@@ -1,11 +1,11 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.repository.remote
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ClientSide
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Connect
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Error
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Generic
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ResultLimitReached
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SSLHandshake
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SearchLimitReached
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SearchQuotaReached
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ServerSide
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SocketTimeout
@@ -39,21 +39,19 @@ class RemoteRepository {
     }
 
     private fun handleSuccess(response: Response<*>): State<Success> {
-        with(response) {
-            body()?.let { apiResponse ->
-                return SuccessWithBody(apiResponse, obtainTotalPages(headers()))
-            } ?: run {
-                return SuccessWithoutBody()
-            }
+        response.body()?.let { apiResponse ->
+            return SuccessWithBody(apiResponse, obtainTotalPages(response.headers()))
+        } ?: run {
+            return SuccessWithoutBody()
         }
     }
 
     private fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
-            in Error400..Error402, in Error403..Error404 -> ClientSide
-            Error422 -> SearchQuotaReached
-            Error451 -> SearchLimitReached
-            in Error500..Error511 -> ServerSide
+            in ClientSideError -> ClientSide
+            SearchQuotaReachedError -> SearchQuotaReached
+            ResultLimitReachedError -> ResultLimitReached
+            in ServerSideError -> ServerSide
             else -> Generic
         }
     }
@@ -80,17 +78,13 @@ class RemoteRepository {
         return totalPages
     }
 
-    companion object {
-        private const val headerName = "link"
-        private val headerPattern = "\\d+".toPattern().toString()
-        private const val headerListIndex = 2
-        private const val Error400 = 400
-        private const val Error402 = 402
-        private const val Error403 = 403
-        private const val Error404 = 404
-        private const val Error422 = 422
-        private const val Error451 = 451
-        private const val Error500 = 500
-        private const val Error511 = 511
+    private companion object {
+        const val headerName = "link"
+        val headerPattern = "\\d+".toPattern().toString()
+        const val headerListIndex = 2
+        val ClientSideError = 400..404
+        const val SearchQuotaReachedError = 422
+        const val ResultLimitReachedError = 451
+        val ServerSideError = 500..511
     }
 }
