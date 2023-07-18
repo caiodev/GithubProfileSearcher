@@ -3,8 +3,8 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.di
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.IKeyValueStorageManager
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.KeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.IKeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.KeyValueStorageManager
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.ProfileSerializer
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.ProfileSerializer.profileProtoFileName
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileRepository

@@ -4,18 +4,19 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.room.Room
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.network.NetworkChecking
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.ILocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.LocalRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.AppDatabase
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.remote.RemoteRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest.APIConnector.newInstance
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.ILocalFetcher
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.LocalFetcher
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.AppDatabase
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.Database
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.RemoteFetcher
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.api.APIConnector.newInstance
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 @ExperimentalSerializationApi
 val global = module {
+
     single<Database> {
         Room.databaseBuilder(
             androidContext(),
@@ -24,8 +25,8 @@ val global = module {
         ).build()
     }
 
-    factory<ILocalRepository> {
-        LocalRepository(
+    factory<ILocalFetcher> {
+        LocalFetcher(
             get(),
             get(),
         )
@@ -40,5 +41,5 @@ val global = module {
 
     single { newInstance() }
 
-    single { RemoteRepository() }
+    single { RemoteFetcher() }
 }

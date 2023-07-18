@@ -19,7 +19,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.network.N
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.ILocalRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.ILocalFetcher
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.ProfilePreferences
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 
 internal class ProfileViewModel(
     private val networkChecking: NetworkChecking,
-    private val localRepository: ILocalRepository,
+    private val localRepository: ILocalFetcher,
     private val remoteRepository: IProfileRepository,
 ) : ViewModel() {
 

@@ -1,6 +1,6 @@
 package repository.local.fakes.protoDataStore.manager
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.IKeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.IKeyValueStorageManager
 
 class FakeKeyValueStorageManager : IKeyValueStorageManager {
 

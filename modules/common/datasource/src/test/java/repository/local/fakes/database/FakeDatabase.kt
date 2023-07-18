@@ -2,7 +2,7 @@ package repository.local.fakes.database
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.ProfileDao
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.Database
 
 class FakeDatabase : Database, ProfileDao {
 

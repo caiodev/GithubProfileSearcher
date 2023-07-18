@@ -1,10 +1,10 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.ProfileDao
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.IKeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.IKeyValueStorageManager
 
-interface ILocalRepository : ProfileDao {
+interface ILocalFetcher : ProfileDao {
 
     fun obtainProtoDataStore(): IKeyValueStorageManager
 

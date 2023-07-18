@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.rest
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.api
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.BuildConfig

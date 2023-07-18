@@ -1,13 +1,13 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db.Database
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.dataStore.manager.IKeyValueStorageManager
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.Database
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.IKeyValueStorageManager
 
-class LocalRepository(
+class LocalFetcher(
     private val keyValueStorageManager: IKeyValueStorageManager,
     private val appDatabase: Database,
-) : ILocalRepository {
+) : ILocalFetcher {
 
     override fun obtainProtoDataStore() = keyValueStorageManager
 

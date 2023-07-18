@@ -1,7 +1,7 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.local.db
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.ProfileDao
 
-interface Database {
+fun interface Database {
     fun profileDao(): ProfileDao
 }

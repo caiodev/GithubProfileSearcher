@@ -26,10 +26,10 @@ allprojects {
     }
 
     dependencies {
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:1.23.0"
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.0"
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-libraries:1.23.0"
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-ruleauthors:1.23.0"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:${dep.versions.detekt.get()}"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:${dep.versions.detekt.get()}"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-libraries:${dep.versions.detekt.get()}"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-rules-ruleauthors:${dep.versions.detekt.get()}"
     }
 }
 

@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.repository.remote
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ClientSide
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Connect
@@ -21,7 +21,7 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
-class RemoteRepository {
+class RemoteFetcher {
 
     suspend fun <T> call(
         call: suspend () -> Response<T>,
