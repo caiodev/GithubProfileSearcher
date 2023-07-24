@@ -2,7 +2,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.reposit
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.State
 
-fun interface IProfileRepository {
+fun interface IProfileOriginRepository {
 
     suspend fun provideUserInformation(
         user: String,

@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.network
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.network
 
 import android.net.ConnectivityManager
 import android.net.Network
@@ -23,6 +23,8 @@ class NetworkChecking(private val manager: ConnectivityManager) {
 
     private val networkRequest = NetworkRequest.Builder().apply {
         addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+        addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+        addTransportType(NetworkCapabilities.TRANSPORT_VPN)
         addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
     }.build()
 

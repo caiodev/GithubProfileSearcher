@@ -7,11 +7,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ProfileRepository(
+class ProfileOriginRepository(
     private val remoteRepository: RemoteFetcher,
     private val apiService: UserProfileCall,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : IProfileRepository {
+) : IProfileOriginRepository {
 
     override suspend fun provideUserInformation(
         user: String,

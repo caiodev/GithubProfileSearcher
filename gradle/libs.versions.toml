@@ -13,7 +13,7 @@ coil = '2.3.0'
 
 #Compose
 activity = '1.7.2'
-compiler = '1.4.8'
+compiler = '1.5.0'
 composeCore = '1.6.0-alpha01'
 material3 = '1.2.0-alpha03'
 
@@ -28,8 +28,8 @@ dataStore = '1.1.0-alpha04'
 detekt = '1.23.0'
 
 #Ktlint
-ktlint = '0.49.1'
-ktlintPlugin = '11.4.0'
+ktlint = '0.50.0'
+ktlintPlugin = '11.5.0'
 
 #Gradle
 gradle = '8.0.2'
@@ -147,7 +147,7 @@ uiToolingPreviewCompose = { group = "androidx.compose.ui", name = "ui-tooling-pr
 ktxCore = { group = "androidx.core", name = "core-ktx", version.ref = "ktxCore" }
 
 #DataStore
-dataStore = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
+dataStorePreferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 
 #Espresso
 idlingResourceEspresso = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "espresso" }

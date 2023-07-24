@@ -3,6 +3,7 @@ plugins {
     id 'com.google.devtools.ksp'
     id 'kotlin-android'
     id 'kotlinx-serialization'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -59,7 +60,7 @@ dependencies {
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
     //DataStore
-    api dep.dataStore
+    api dep.dataStorePreferences
 
     //Koin
     api dep.koin

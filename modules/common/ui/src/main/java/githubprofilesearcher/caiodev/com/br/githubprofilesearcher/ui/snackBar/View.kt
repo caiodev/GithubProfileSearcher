@@ -16,32 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.R
 import kotlinx.coroutines.launch
-
-fun CustomSnackBar.showInternetConnectionStatusSnackBar(
-    isConnectionAvailable: Boolean,
-) {
-    if (isConnectionAvailable) {
-        setText(R.string.back_online).setBackgroundColor(
-            ContextCompat.getColor(
-                context,
-                R.color.green_700,
-            ),
-        )
-        if (isShown) {
-            dismiss()
-        }
-    } else {
-        setText(R.string.no_connection).setBackgroundColor(
-            ContextCompat.getColor(
-                context,
-                R.color.red_700,
-            ),
-        )
-        show()
-    }
-}
 
 fun EditText.hideKeyboard() {
     castTo<InputMethodManager>(context.getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -71,19 +46,10 @@ fun View.applyViewVisibility(visibility: Int) {
     this.visibility = visibility
 }
 
-inline fun Snackbar.showErrorSnackBar(
-    @StringRes message: Int,
-    crossinline onDismissed: (() -> Any) = {},
+fun Snackbar.showErrorSnackBar(
+    @StringRes message: Int
 ) {
     setText(message)
-    addCallback(
-        object : Snackbar.Callback() {
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                super.onDismissed(transientBottomBar, event)
-                onDismissed()
-            }
-        },
-    )
     show()
 }
 

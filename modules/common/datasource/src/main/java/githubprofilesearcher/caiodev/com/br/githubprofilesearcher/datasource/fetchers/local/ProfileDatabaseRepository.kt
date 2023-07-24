@@ -2,14 +2,10 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fe
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.Database
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.IKeyValueStorageManager
 
-class LocalFetcher(
-    private val keyValueStorageManager: IKeyValueStorageManager,
+class ProfileDatabaseRepository(
     private val appDatabase: Database,
-) : ILocalFetcher {
-
-    override fun obtainProtoDataStore() = keyValueStorageManager
+) : IProfileDatabaseRepository {
 
     override suspend fun getProfilesFromDb(): List<UserProfile> {
         var list = listOf<UserProfile>()

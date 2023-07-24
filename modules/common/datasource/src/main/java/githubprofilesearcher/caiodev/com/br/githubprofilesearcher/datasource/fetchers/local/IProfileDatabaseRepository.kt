@@ -2,11 +2,8 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fe
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.ProfileDao
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.IKeyValueStorageManager
 
-interface ILocalFetcher : ProfileDao {
-
-    fun obtainProtoDataStore(): IKeyValueStorageManager
+interface IProfileDatabaseRepository : ProfileDao {
 
     override suspend fun getProfilesFromDb(): List<UserProfile>
     override suspend fun insertProfilesIntoDb(profileList: List<UserProfile>)

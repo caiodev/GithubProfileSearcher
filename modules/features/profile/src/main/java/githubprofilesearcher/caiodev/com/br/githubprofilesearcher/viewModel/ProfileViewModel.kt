@@ -15,61 +15,69 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.Valu
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnForeground
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.network.NetworkChecking
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.string.emptyString
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.obtainDefaultString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.ILocalFetcher
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.ProfilePreferences
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.IProfileDatabaseRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.network.NetworkChecking
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.ProfileDataAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.CallStatus
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.CurrentProfileText
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.DeletedProfileStatus
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.LastAttemptStatus
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.LocalPopulationStatus
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.PageNumber
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.ProfileText
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.SearchStatus
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.SuccessStatus
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.TemporaryProfileText
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 internal class ProfileViewModel(
+    private val profileDataAggregator: ProfileDataAggregator,
     private val networkChecking: NetworkChecking,
-    private val localRepository: ILocalFetcher,
-    private val remoteRepository: IProfileRepository,
+    private val profileDatabaseRepository: IProfileDatabaseRepository,
+    private val profileOriginRepository: IProfileOriginRepository,
 ) : ViewModel() {
 
     private val _successStateFlow = MutableStateFlow<State<Success>>(InitialSuccess)
-    internal val successStateFlow: StateFlow<State<Success>>
+    val successStateFlow: StateFlow<State<Success>>
         get() = _successStateFlow
 
     private val _intermediateSharedFlow = MutableSharedFlow<State<Intermediate>>()
-    internal val intermediateSharedFlow = _intermediateSharedFlow.asSharedFlow()
+    val intermediateSharedFlow = _intermediateSharedFlow.asSharedFlow()
 
     private val _errorSharedFlow = MutableSharedFlow<State<Error>>()
-    internal val errorSharedFlow = _errorSharedFlow.asSharedFlow()
+    val errorSharedFlow = _errorSharedFlow.asSharedFlow()
 
     private val _profileInfoList = mutableListOf<UserProfile>()
     private var profilesInfoList: List<UserProfile> = _profileInfoList
 
     private var currentIntermediateState: State<Intermediate> = InitialIntermediate
 
-    private var profilePreferences: ProfilePreferences = ProfilePreferences.getDefaultInstance()
-
-    fun requestUpdatedProfiles(profile: String = emptyString()) {
-        saveValueToDataStore(
-            obtainValueFromDataStore().copy(pageNumber = initialPage),
-        )
+    fun requestUpdatedProfiles(profile: String = obtainDefaultString()) {
+        setValue(key = PageNumber, value = initialPage)
 
         if (profile.isNotEmpty()) {
-            saveValueToDataStore(
-                obtainValueFromDataStore().copy(temporaryCurrentProfile = profile),
-            )
+            setValue(key = TemporaryProfileText, value = profile)
             requestProfiles(profile, true)
         } else {
             requestProfiles(
-                obtainValueFromDataStore().temporaryCurrentProfile,
-                true,
+                profile = getValue(TemporaryProfileText),
+                shouldListItemsBeRemoved = true,
             )
         }
     }
 
     fun paginateProfiles() {
-        requestProfiles(obtainValueFromDataStore().currentProfile, false)
+        requestProfiles(
+            profile = getValue(CurrentProfileText),
+            shouldListItemsBeRemoved = false
+        )
     }
 
     private fun requestProfiles(
@@ -89,10 +97,10 @@ internal class ProfileViewModel(
     ) {
         runTaskOnBackground {
             val value =
-                remoteRepository.provideUserInformation(
-                    user,
-                    obtainValueFromDataStore().pageNumber,
-                    itemsPerPage,
+                profileOriginRepository.provideUserInformation(
+                    user = user,
+                    pageNumber = getValue(key = PageNumber),
+                    maxResultsPerPage = itemsPerPage,
                 )
             handleResult(value, shouldListItemsBeRemoved)
         }
@@ -100,17 +108,13 @@ internal class ProfileViewModel(
 
     private suspend fun handleResult(value: Any, shouldListItemsBeRemoved: Boolean) {
         when (value) {
-            is SuccessWithBody<*> -> {
-                saveValueToDataStore(
-                    obtainValueFromDataStore().copy(currentProfile = emptyString()),
-                )
 
-                if (!obtainValueFromDataStore().hasASuccessfulCallAlreadyBeenMade
-                ) {
-                    saveValueToDataStore(
-                        obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = true),
-                    )
-                }
+            is SuccessWithBody<*> -> {
+
+                setValue(key = CurrentProfileText, value = obtainDefaultString())
+
+                if (!getValue<Boolean>(SuccessStatus))
+                    setValue(key = SuccessStatus, value = true)
 
                 if (shouldListItemsBeRemoved) {
                     setupUpdatedList(value)
@@ -138,13 +142,13 @@ internal class ProfileViewModel(
     ) {
         runTaskOnBackground {
             successWithBody.apply {
-                localRepository.dropProfileInformation()
+                profileDatabaseRepository.dropProfileInformation()
                 if (_profileInfoList.isNotEmpty()) {
                     _profileInfoList.clear()
                 }
                 castTo<Profile>(successWithBody.data)?.let { profile ->
                     addContentToProfileInfoList(profile.profile)
-                    localRepository.insertProfilesIntoDb(
+                    profileDatabaseRepository.insertProfilesIntoDb(
                         profile.profile,
                     )
                 }
@@ -163,29 +167,21 @@ internal class ProfileViewModel(
                     castTo<Profile>(successWithBody.data)?.let {
                         addContentToProfileInfoList(it.profile)
                     }
-                    localRepository.insertProfilesIntoDb(profilesInfoList)
+                    profileDatabaseRepository.insertProfilesIntoDb(profilesInfoList)
                 } else {
-                    addContentToProfileInfoList(localRepository.getProfilesFromDb())
+                    addContentToProfileInfoList(profileDatabaseRepository.getProfilesFromDb())
                 }
                 saveDataAfterSuccess(this)
             }
         }
     }
 
-    fun obtainValueFromDataStore(): ProfilePreferences {
-        runTaskOnForeground {
-            profilePreferences =
-                castTo(localRepository.obtainProtoDataStore().obtainData()) ?: ProfilePreferences.getDefaultInstance()
-        }
-        return profilePreferences
+    fun <T> getValue(key: Enum<*>): T {
+        return runTaskOnForeground { profileDataAggregator.getValue(key = key) }
     }
 
-    fun saveValueToDataStore(profile: ProfilePreferences) {
-        runTaskOnForeground {
-            localRepository.obtainProtoDataStore().updateData(
-                castTo<ProfilePreferences>(profile),
-            )
-        }
+    fun <T> setValue(key: Enum<*>, value: T) {
+        runTaskOnForeground { profileDataAggregator.setValue(key = key, value = value) }
     }
 
     private fun addContentToProfileInfoList(list: List<UserProfile>) {
@@ -201,36 +197,19 @@ internal class ProfileViewModel(
     fun provideConnectionObserver() = networkChecking.obtainConnectionObserver()
 
     private suspend fun saveDataAfterSuccess(successWithBody: SuccessWithBody<*>) {
-        saveValueToDataStore(
-            obtainValueFromDataStore().copy(currentProfile = obtainValueFromDataStore().temporaryCurrentProfile),
-        )
-        saveValueToDataStore(
-            obtainValueFromDataStore().copy(hasLastCallBeenUnsuccessful = false),
-        )
-        saveValueToDataStore(
-            obtainValueFromDataStore().copy(isThereAnOngoingCall = false),
-        )
-        if (obtainValueFromDataStore().hasUserDeletedProfileText &&
-            obtainValueFromDataStore().profile.isNotEmpty()
+        setValue(key = CurrentProfileText, value = getValue<String>(key = TemporaryProfileText))
+        setValue(key = LastAttemptStatus, value = false)
+        setValue(key = CallStatus, value = false)
+
+        if (getValue(key = DeletedProfileStatus) &&
+            getValue<String>(key = ProfileText).isNotEmpty()
         ) {
-            saveValueToDataStore(
-                obtainValueFromDataStore().copy(shouldASearchBePerformed = true),
-            )
+            setValue(key = SearchStatus, value = true)
         } else {
-            saveValueToDataStore(
-                obtainValueFromDataStore().copy(shouldASearchBePerformed = false),
-            )
+            setValue(key = SearchStatus, value = false)
         }
 
-        obtainValueFromDataStore().apply {
-            saveValueToDataStore(
-                obtainValueFromDataStore().copy(
-                    pageNumber = pageNumber.plus(
-                        initialPage,
-                    ),
-                ),
-            )
-        }
+        setValue(key = PageNumber, getValue<Int>(key = PageNumber).plus(initialPage))
 
         _successStateFlow.emit(InitialSuccess)
         _successStateFlow.emit(
@@ -244,18 +223,14 @@ internal class ProfileViewModel(
     fun checkDataAtStartup() {
         runTaskOnBackground {
             if (successStateFlow.value == InitialSuccess &&
-                localRepository.getProfilesFromDb().isEmpty()
+                profileDatabaseRepository.getProfilesFromDb().isEmpty()
             ) {
                 postIntermediateState(ActionNotRequired)
-            } else if (localRepository.getProfilesFromDb().isNotEmpty() &&
+            } else if (profileDatabaseRepository.getProfilesFromDb().isNotEmpty() &&
                 profilesInfoList.isEmpty()
             ) {
-                saveValueToDataStore(
-                    obtainValueFromDataStore().copy(isLocalPopulation = true),
-                )
-                saveValueToDataStore(
-                    obtainValueFromDataStore().copy(hasASuccessfulCallAlreadyBeenMade = false),
-                )
+                setValue(key = LocalPopulationStatus, value = true)
+                setValue(key = SuccessStatus, value = false)
                 postIntermediateState(LocalPopulation)
             }
         }
@@ -268,10 +243,10 @@ internal class ProfileViewModel(
         }
     }
 
-    internal inline fun <reified T> castTo(value: Any) = ValueCasting.castTo<T>(value)
+    inline fun <reified T> castTo(value: Any) = ValueCasting.castTo<T>(value)
 
-    companion object {
+    private companion object {
+        const val initialPage = 1
         const val itemsPerPage = 20
-        private const val initialPage = 1
     }
 }

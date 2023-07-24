@@ -1,14 +1,17 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.di
 
-import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.dataStoreFile
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.preferencesDataStoreFile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.IKeyValueStorageManager
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValueManager.KeyValueStorageManager
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.ProfileSerializer
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.dataStore.ProfileSerializer.profileProtoFileName
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.ProfileRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.IProfileDatabaseRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.ProfileDatabaseRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.IProfileDataAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.ProfileDataAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository.Companion.profilePreferencesInstanceID
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.ProfileOriginRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
@@ -19,27 +22,39 @@ import retrofit2.Retrofit
 @ExperimentalSerializationApi
 val userProfileViewModel = module {
 
-    viewModel {
-        ProfileViewModel(
-            networkChecking = get(),
-            localRepository = get(),
-            remoteRepository = get(),
+    factory<IKeyValueRepository> {
+        ProfileKeyValueRepository(
+            PreferenceDataStoreFactory.create {
+                androidContext().preferencesDataStoreFile(profilePreferencesInstanceID)
+            },
         )
     }
 
-    factory<IKeyValueStorageManager> {
-        KeyValueStorageManager(
-            keyValueStorageClient = DataStoreFactory.create(
-                serializer = ProfileSerializer,
-                produceFile = { androidContext().dataStoreFile(profileProtoFileName) },
-            ),
-        )
+    factory<IProfileDatabaseRepository> {
+        ProfileDatabaseRepository(appDatabase = get())
     }
 
-    factory<IProfileRepository> {
-        ProfileRepository(
+    factory<IProfileOriginRepository> {
+        ProfileOriginRepository(
             remoteRepository = get(),
             apiService = get<Retrofit>().create(UserProfileCall::class.java),
+        )
+    }
+
+    factory<IProfileDataAggregator> {
+        ProfileDataAggregator(
+            keyValueRepository = get(),
+            profileDatabaseRepository = get(),
+            profileOriginRepository = get(),
+        )
+    }
+
+    viewModel {
+        ProfileViewModel(
+            profileDataAggregator = get(),
+            networkChecking = get(),
+            profileDatabaseRepository = get(),
+            profileOriginRepository = get(),
         )
     }
 }

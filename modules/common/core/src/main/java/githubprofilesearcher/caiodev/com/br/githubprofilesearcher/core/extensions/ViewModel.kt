@@ -9,6 +9,6 @@ inline fun ViewModel.runTaskOnBackground(crossinline task: suspend () -> Unit) {
     viewModelScope.launch { task() }
 }
 
-inline fun ViewModel.runTaskOnForeground(crossinline task: suspend () -> Unit) {
-    runBlocking { task() }
+inline fun <T> ViewModel.runTaskOnForeground(crossinline task: suspend () -> T): T {
+    return runBlocking { task() }
 }

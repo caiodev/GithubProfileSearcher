@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-object APIConnector {
+object SourceConnector {
 
     private const val timeout = 60L
     private val json = Json { ignoreUnknownKeys = true }
