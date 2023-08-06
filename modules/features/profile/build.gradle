@@ -1,38 +1,20 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdkVersion 34
+    compileSdk 34
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
-    flavorDimensions "version"
-
-    productFlavors {
-
-        demo {
-            dimension "version"
-            versionNameSuffix "-demo"
-        }
-
-        full {
-            dimension "version"
-            versionNameSuffix "-full"
-        }
-    }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
     }
 
     buildFeatures {

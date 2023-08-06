@@ -14,8 +14,8 @@ coil = '2.3.0'
 #Compose
 activity = '1.7.2'
 compiler = '1.5.0'
-composeCore = '1.6.0-alpha01'
-material3 = '1.2.0-alpha03'
+composeCore = '1.6.0-alpha02'
+material3 = '1.2.0-alpha04'
 
 #Coroutines
 coroutines = '1.7.2'
@@ -25,14 +25,14 @@ dataStore = '1.1.0-alpha04'
 
 #Quality checking
 #Detekt
-detekt = '1.23.0'
+detekt = '1.23.1'
 
 #Ktlint
 ktlint = '0.50.0'
 ktlintPlugin = '11.5.0'
 
 #Gradle
-gradle = '8.0.2'
+gradle = '8.1.0'
 
 #Koin
 koin = '3.4.2'
@@ -40,14 +40,11 @@ koin = '3.4.2'
 #Kotlin
 kotlin = '1.9.0'
 
-#Kover
-kover = '0.7.2'
-
 #KSP
 ksp = '1.9.0-1.0.11'
 
 #Ktx
-ktxCore = '1.11.0-beta01'
+ktxCore = '1.12.0-beta01'
 
 #LeakCanary
 leakCanary = '2.12'
@@ -79,7 +76,7 @@ timber = '5.0.1'
 constraintLayout = '2.1.4'
 
 #RecyclerView
-recyclerView = '1.3.0'
+recyclerView = '1.3.1'
 
 #SwipeRefreshLayout
 swipeRefreshLayout = '1.2.0-alpha01'
@@ -91,9 +88,6 @@ archTest = '2.2.0'
 
 #Core
 testCore = '1.6.0-alpha01'
-
-#Espresso
-espresso = '3.5.1'
 
 #Jacoco
 jacoco = '0.8.10'
@@ -148,9 +142,6 @@ ktxCore = { group = "androidx.core", name = "core-ktx", version.ref = "ktxCore" 
 
 #DataStore
 dataStorePreferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
-
-#Espresso
-idlingResourceEspresso = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "espresso" }
 
 #Koin
 koin = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
@@ -220,13 +211,6 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 composeTestJUnit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeCore" }
 composeTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeCore" }
 
-#Espresso
-espressoAccessibility = { group = "androidx.test.espresso", name = "espresso-accessibility", version.ref = "espresso" }
-espressoContrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espresso" }
-espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
-espressoIdlingResource = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "espresso" }
-espressoIntents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espresso" }
-
 #JUnit
 junitAndroidX = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitAndroidX" }
 
@@ -237,7 +221,6 @@ androidApplication = { id = "com.android.application", version.ref = "gradle" }
 androidLibrary = { id = "com.android.library", version.ref = "gradle" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlinPlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -292,14 +275,6 @@ testCore = [
  "archTest",
  "testCore",
  "testRunner"
-]
-
-espressoTest = [
- "espressoAccessibility",
- "espressoContrib",
- "espressoCore",
- "espressoIdlingResource",
- "espressoIntents"
 ]
 
 junit = [

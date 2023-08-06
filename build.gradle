@@ -5,7 +5,6 @@ plugins {
     alias dep.plugins.androidLibrary apply false
     alias dep.plugins.detekt apply false
     alias dep.plugins.kotlinPlugin apply false
-    alias dep.plugins.kover apply false
     alias dep.plugins.ksp apply false
     alias dep.plugins.ktlint apply false
     alias dep.plugins.serialization apply false
@@ -14,15 +13,11 @@ plugins {
 allprojects {
     apply from: "$project.rootDir/tools/codeChecking.gradle.kts"
     apply from: "$project.rootDir/tools/coverage.gradle"
-    apply from: "$project.rootDir/tools/coverageKover.gradle"
     apply from: "$project.rootDir/tools/detekt.gradle"
     apply from: "$project.rootDir/tools/lint.gradle"
 
     tasks.withType(KotlinCompile).configureEach {
-        kotlinOptions {
-            freeCompilerArgs += ["-opt-in=kotlin.RequiresOptIn"]
-            jvmTarget = JavaVersion.VERSION_17
-        }
+        compilerOptions.properties["jvmTarget"] = JavaVersion.VERSION_20
     }
 
     dependencies {
@@ -33,6 +28,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }

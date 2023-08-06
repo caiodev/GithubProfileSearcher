@@ -1,16 +1,9 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel
 
 import androidx.lifecycle.ViewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ActionNotRequired
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Error
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.InitialIntermediate
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.InitialSuccess
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Intermediate
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.LocalPopulation
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ErrorWithMessage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.State
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithBody
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithoutBody
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnBackground
@@ -18,46 +11,35 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extension
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.obtainDefaultString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.Profile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.IProfileDatabaseRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.network.NetworkChecking
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.ProfileDataAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.IProfileDataAggregator
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.CallStatus
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.CurrentProfileText
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.DeletedProfileStatus
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.LastAttemptStatus
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.LocalPopulationStatus
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.PageNumber
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.ProfileText
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.SearchStatus
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.SuccessStatus
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs.TemporaryProfileText
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
-import kotlinx.coroutines.flow.MutableSharedFlow
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Default
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Empty
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Error
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Loading
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.UIState
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.states.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
 internal class ProfileViewModel(
-    private val profileDataAggregator: ProfileDataAggregator,
-    private val networkChecking: NetworkChecking,
-    private val profileDatabaseRepository: IProfileDatabaseRepository,
-    private val profileOriginRepository: IProfileOriginRepository,
+    private val profileDataAggregator: IProfileDataAggregator,
 ) : ViewModel() {
 
-    private val _successStateFlow = MutableStateFlow<State<Success>>(InitialSuccess)
-    val successStateFlow: StateFlow<State<Success>>
-        get() = _successStateFlow
-
-    private val _intermediateSharedFlow = MutableSharedFlow<State<Intermediate>>()
-    val intermediateSharedFlow = _intermediateSharedFlow.asSharedFlow()
-
-    private val _errorSharedFlow = MutableSharedFlow<State<Error>>()
-    val errorSharedFlow = _errorSharedFlow.asSharedFlow()
+    private val _uiState = MutableStateFlow<UIState>(Default)
+    val uiState: StateFlow<UIState>
+        get() = _uiState
 
     private val _profileInfoList = mutableListOf<UserProfile>()
-    private var profilesInfoList: List<UserProfile> = _profileInfoList
-
-    private var currentIntermediateState: State<Intermediate> = InitialIntermediate
+    private val profilesInfoList: List<UserProfile> = _profileInfoList
 
     fun requestUpdatedProfiles(profile: String = obtainDefaultString()) {
         setValue(key = PageNumber, value = initialPage)
@@ -76,7 +58,7 @@ internal class ProfileViewModel(
     fun paginateProfiles() {
         requestProfiles(
             profile = getValue(CurrentProfileText),
-            shouldListItemsBeRemoved = false
+            shouldListItemsBeRemoved = false,
         )
     }
 
@@ -96,8 +78,9 @@ internal class ProfileViewModel(
         shouldListItemsBeRemoved: Boolean = false,
     ) {
         runTaskOnBackground {
+            _uiState.emit(Loading)
             val value =
-                profileOriginRepository.provideUserInformation(
+                profileDataAggregator.provideUserInformation(
                     user = user,
                     pageNumber = getValue(key = PageNumber),
                     maxResultsPerPage = itemsPerPage,
@@ -106,16 +89,12 @@ internal class ProfileViewModel(
         }
     }
 
-    private suspend fun handleResult(value: Any, shouldListItemsBeRemoved: Boolean) {
+    private suspend fun handleResult(
+        value: State<*>,
+        shouldListItemsBeRemoved: Boolean,
+    ) {
         when (value) {
-
             is SuccessWithBody<*> -> {
-
-                setValue(key = CurrentProfileText, value = obtainDefaultString())
-
-                if (!getValue<Boolean>(SuccessStatus))
-                    setValue(key = SuccessStatus, value = true)
-
                 if (shouldListItemsBeRemoved) {
                     setupUpdatedList(value)
                 } else {
@@ -123,17 +102,15 @@ internal class ProfileViewModel(
                 }
             }
 
-            is SuccessWithoutBody -> Unit
-
-            else -> {
-                handleError(ValueCasting.castTo(value))
+            is ErrorWithMessage -> {
+                if (value.message == Core.string.generic) {
+                    _uiState.emit(Empty(value.message))
+                } else {
+                    _uiState.emit(Error(value.message))
+                }
             }
-        }
-    }
 
-    private suspend fun handleError(error: State<Error>?) {
-        error?.let {
-            _errorSharedFlow.emit(error)
+            else -> _uiState.emit(Default)
         }
     }
 
@@ -142,36 +119,26 @@ internal class ProfileViewModel(
     ) {
         runTaskOnBackground {
             successWithBody.apply {
-                profileDatabaseRepository.dropProfileInformation()
                 if (_profileInfoList.isNotEmpty()) {
                     _profileInfoList.clear()
                 }
                 castTo<Profile>(successWithBody.data)?.let { profile ->
                     addContentToProfileInfoList(profile.profile)
-                    profileDatabaseRepository.insertProfilesIntoDb(
-                        profile.profile,
-                    )
                 }
-                saveDataAfterSuccess(this)
+                saveDataAfterSuccess()
             }
         }
     }
 
     private fun setupPaginationList(
-        shouldSavedListBeUsed: Boolean = false,
         successWithBody: SuccessWithBody<*> = SuccessWithBody(Any()),
     ) {
         runTaskOnBackground {
             successWithBody.apply {
-                if (!shouldSavedListBeUsed) {
-                    castTo<Profile>(successWithBody.data)?.let {
-                        addContentToProfileInfoList(it.profile)
-                    }
-                    profileDatabaseRepository.insertProfilesIntoDb(profilesInfoList)
-                } else {
-                    addContentToProfileInfoList(profileDatabaseRepository.getProfilesFromDb())
+                castTo<Profile>(successWithBody.data)?.let {
+                    addContentToProfileInfoList(it.profile)
                 }
-                saveDataAfterSuccess(this)
+                saveDataAfterSuccess()
             }
         }
     }
@@ -189,14 +156,10 @@ internal class ProfileViewModel(
     }
 
     fun updateUIWithCache() {
-        setupPaginationList(shouldSavedListBeUsed = true)
+        setupPaginationList()
     }
 
-    fun obtainConnectionState() = networkChecking.checkIfConnectionIsAvailable()
-
-    fun provideConnectionObserver() = networkChecking.obtainConnectionObserver()
-
-    private suspend fun saveDataAfterSuccess(successWithBody: SuccessWithBody<*>) {
+    private suspend fun saveDataAfterSuccess() {
         setValue(key = CurrentProfileText, value = getValue<String>(key = TemporaryProfileText))
         setValue(key = LastAttemptStatus, value = false)
         setValue(key = CallStatus, value = false)
@@ -211,36 +174,7 @@ internal class ProfileViewModel(
 
         setValue(key = PageNumber, getValue<Int>(key = PageNumber).plus(initialPage))
 
-        _successStateFlow.emit(InitialSuccess)
-        _successStateFlow.emit(
-            SuccessWithBody(
-                data = profilesInfoList,
-                successWithBody.totalPages,
-            ),
-        )
-    }
-
-    fun checkDataAtStartup() {
-        runTaskOnBackground {
-            if (successStateFlow.value == InitialSuccess &&
-                profileDatabaseRepository.getProfilesFromDb().isEmpty()
-            ) {
-                postIntermediateState(ActionNotRequired)
-            } else if (profileDatabaseRepository.getProfilesFromDb().isNotEmpty() &&
-                profilesInfoList.isEmpty()
-            ) {
-                setValue(key = LocalPopulationStatus, value = true)
-                setValue(key = SuccessStatus, value = false)
-                postIntermediateState(LocalPopulation)
-            }
-        }
-    }
-
-    private suspend fun postIntermediateState(state: State<Intermediate>) {
-        if (state != currentIntermediateState) {
-            currentIntermediateState = state
-            _intermediateSharedFlow.emit(state)
-        }
+        _uiState.emit(User(content = profilesInfoList))
     }
 
     inline fun <reified T> castTo(value: Any) = ValueCasting.castTo<T>(value)

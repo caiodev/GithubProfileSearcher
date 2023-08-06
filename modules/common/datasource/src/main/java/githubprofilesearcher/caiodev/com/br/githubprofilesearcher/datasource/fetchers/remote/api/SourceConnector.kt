@@ -1,7 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.api
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.BuildConfig
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -14,13 +13,14 @@ import java.util.concurrent.TimeUnit
 
 object SourceConnector {
 
+    private const val baseUrl = "https://api.github.com/"
     private const val timeout = 60L
     private val json = Json { ignoreUnknownKeys = true }
     private val mediaType = "application/json".toMediaType()
 
     @ExperimentalSerializationApi
     fun Scope.newInstance(
-        baseUrl: String = BuildConfig.API_URL,
+        baseUrl: String = this@SourceConnector.baseUrl,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)

@@ -10,31 +10,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.snackbar.Snackbar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts.LifecycleOwnerFlow
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Available
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ClientSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Connect
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.InitialError
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.InitialSuccess
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.LocalPopulation
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ResultLimitReached
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SSLHandshake
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SearchQuotaReached
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ServerSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SocketTimeout
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithBody
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.UnknownHost
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.obtainDefaultString
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ActivityProfileListingBinding
@@ -44,28 +29,29 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.ch
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.showErrorSnackBar
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Empty
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Error
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.HeaderAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.HeaderAdapter.Companion.header
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.ProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.TransientViewsAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.states.User
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.OnItemSelectedListener
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.empty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.endOfResults
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.retry
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.R as UI
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
-class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
+internal class ProfileListingActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityProfileListingBinding
-    private lateinit var countingIdlingResource: CountingIdlingResource
 
     private val errorSnackBar by lazy {
         Snackbar.make(
             findViewById(android.R.id.content),
-            UI.string.generic,
+            Core.string.generic,
             Snackbar.LENGTH_SHORT,
         )
     }
@@ -84,8 +70,6 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setupView()
-        handleViewModel()
-        setupExtras()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,93 +80,34 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         if (isTextInputEditTextNotEmpty()) {
             viewModel.setValue(
                 key = ProfileKeyValueIDs.ProfileText,
-                value = binding.searchProfileTextInputEditText.text.toString()
+                value = binding.searchProfileTextInputEditText.text.toString(),
             )
         }
     }
 
-    override fun setupView() {
+    private fun setupView() {
         binding = ActivityProfileListingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupSwipeRefreshLayout()
-        bindViewModelDataToUIInCaseOfOrientationChanges()
         setupActionViews()
         setupRecyclerView()
         setupTextInputEditText()
         initializeAdapterCallback()
+        setupObserver()
     }
 
-    private fun bindViewModelDataToUIInCaseOfOrientationChanges() {
+    private fun setupObserver() {
         runTaskOnBackground {
-            viewModel.intermediateSharedFlow.collect {
-                when (it) {
-                    LocalPopulation -> {
-                        viewModel.updateUIWithCache()
-
-                        val isRetryViewVisible: Boolean = viewModel.getValue(ProfileKeyValueIDs.RetryStatus)
-                        if (isRetryViewVisible) {
-                            changeViewState(transientViewsAdapter, retry)
-                        }
-                        restoreScreenState()
-                    }
-
+            viewModel.uiState.collect { uiState ->
+                when (uiState) {
+                    is User -> onSuccess(uiState)
+                    is Error -> showErrorMessage(uiState.message)
+                    is Loading -> binding.repositoryLoadingProgressBar.isVisible = true
+                    is Empty -> {}
                     else -> Unit
                 }
             }
         }
-        restoreScreenState()
-        viewModel.checkDataAtStartup()
-    }
-
-    private fun restoreScreenState() {
-        val hasASuccessfulCallAlreadyBeenMade: Boolean = viewModel.getValue(ProfileKeyValueIDs.SuccessStatus)
-        val hasUserDeletedProfileText = viewModel.getValue<Boolean>(key = ProfileKeyValueIDs.DeletedProfileStatus)
-        val profile = viewModel.getValue<String>(key = ProfileKeyValueIDs.ProfileText)
-
-        if (!hasUserDeletedProfileText && profile.isNotEmpty()) {
-            binding.searchProfileTextInputEditText.setText(profile)
-            viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = true)
-        }
-
-        if (hasASuccessfulCallAlreadyBeenMade)
-            changeViewState(headerAdapter, header)
-
-        val isThereAnOngoingCall: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.CallStatus)
-        if (isThereAnOngoingCall) {
-            binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
-            setupUpperViewsInteraction(false)
-            viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = false)
-            binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
-        }
-
-        val isLocalPopulation: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.LocalPopulationStatus)
-        val isTextInputEditTextNotEmpty: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.UserInputStatus)
-
-        if (isLocalPopulation && isTextInputEditTextNotEmpty && !hasUserDeletedProfileText
-        ) {
-            binding.searchProfileTextInputEditText.setSelection(profile.length)
-            viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = false)
-            binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
-        } else {
-            viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = true)
-            binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
-        }
-
-        if (binding.searchProfileTextInputEditText.text.toString().isEmpty()) {
-            viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = true)
-        } else {
-            if (hasASuccessfulCallAlreadyBeenMade) {
-                viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = false)
-                binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
-            }
-        }
-
-        provideRecyclerViewLayoutManager()?.findFirstVisibleItemPosition()
-            ?.let { position ->
-                if (position >= 2) {
-                    binding.backToTopButton.applyViewVisibility(VISIBLE)
-                }
-            }
     }
 
     private fun setupActionViews() {
@@ -202,8 +127,9 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         val hasASuccessfulCallAlreadyBeenMade: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.SuccessStatus)
 
         binding.githubProfileListSwipeRefreshLayout.apply {
-            if (!isLocalPopulation && !hasASuccessfulCallAlreadyBeenMade)
+            if (!isLocalPopulation && !hasASuccessfulCallAlreadyBeenMade) {
                 applySwipeRefreshVisibilityAttributes(isSwipeEnabled = false)
+            }
 
             setOnRefreshListener {
                 viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = true)
@@ -242,8 +168,9 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                     binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
 
                     text?.let {
-                        if (it.isEmpty())
+                        if (it.isEmpty()) {
                             viewModel.setValue(key = ProfileKeyValueIDs.DeletedProfileStatus, value = true)
+                        }
                     }
                 }
             }
@@ -269,86 +196,31 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         }
     }
 
-    override fun handleViewModel() {
-        onSuccess()
-        onError()
-    }
+    private fun onSuccess(user: User) {
+        setupUpperViewsInteraction(true)
 
-    private fun onSuccess() {
-        runTaskOnBackground {
-            viewModel.successStateFlow.collect { state ->
-                when (state) {
-                    is InitialSuccess -> Unit
-                    is SuccessWithBody<*> -> {
-                        when (val value = state.data) {
-                            is List<*> -> {
-                                setupUpperViewsInteraction(true)
-                                if (this::countingIdlingResource.isInitialized) {
-                                    countingIdlingResource.decrement()
-                                }
-                                val isHeaderVisible: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.HeaderStatus)
-                                if (!isHeaderVisible) {
-                                    changeViewState(headerAdapter, header)
-                                }
-                                viewModel.castTo<List<UserProfile>>(value)?.let {
-                                    splitOnSuccess(it, state.totalPages)
-                                }
-                            }
-                        }
-                    }
+        val isHeaderVisible: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.HeaderStatus)
 
-                    else -> Unit
-                }
-            }
-        }
-    }
-
-    private fun splitOnSuccess(githubUsersList: List<UserProfile>, totalPages: Int) {
-        val pageNumber: Int = viewModel.getValue(ProfileKeyValueIDs.PageNumber)
-        if (pageNumber == totalPages) {
-            changeViewState(transientViewsAdapter, endOfResults)
-        } else {
-            changeViewState(transientViewsAdapter, empty)
+        if (!isHeaderVisible) {
+            changeViewState(headerAdapter, HeaderAdapter.header)
         }
 
         provideAdapter<ProfileAdapter>(githubProfileAdapter)?.apply {
-            updateDataSource(githubUsersList)
+            updateDataSource(user.content)
             notifyDataSetChanged()
         }
 
-        if (viewModel.getValue(key = ProfileKeyValueIDs.DataRequestStatus))
+        if (viewModel.getValue(key = ProfileKeyValueIDs.DataRequestStatus)) {
             viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = false)
+        }
 
         if (viewModel.getValue(key = ProfileKeyValueIDs.DataRequestStatus)) {
             provideAdapter<ProfileAdapter>(githubProfileAdapter)?.updateDataSource(
-                githubUsersList,
+                user.content,
             )
 
             viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = false)
         }
-    }
-
-    private fun onError() {
-        runTaskOnBackground {
-            viewModel.errorSharedFlow.collect { error ->
-                when (error) {
-                    UnknownHost, SocketTimeout, Connect ->
-                        showErrorMessage(UI.string.unknown_host_and_socket_timeout)
-
-                    SSLHandshake -> showErrorMessage(UI.string.ssl_handshake)
-                    ClientSide -> showErrorMessage(UI.string.client_side)
-                    ServerSide -> showErrorMessage(UI.string.server_side)
-                    SearchQuotaReached -> showErrorMessage(UI.string.query_limit)
-                    ResultLimitReached -> showErrorMessage(UI.string.limit_of_profile_results)
-                    InitialError -> Unit
-                    else -> showErrorMessage(UI.string.generic)
-                }
-            }
-        }
-    }
-
-    override fun setupExtras() {
-        setupInternetConnectionObserver()
     }
 
     private fun updatedProfileCall(profile: String = "") {
@@ -373,51 +245,33 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
             updatedProfileCall(binding.searchProfileTextInputEditText.text.toString())
         } else {
             errorSnackBar.showErrorSnackBar(
-                UI.string.empty_field,
+                Core.string.empty_field,
             )
         }
     }
 
     private inline fun callApiThroughViewModel(crossinline task: () -> Unit) {
-        handleConnectionState(
-            onConnectionAvailable = {
-                viewModel.setValue(key = ProfileKeyValueIDs.CallStatus, value = true)
+        viewModel.setValue(key = ProfileKeyValueIDs.CallStatus, value = true)
 
-                val hasUserDeletedProfileText: Boolean =
-                    viewModel.getValue(key = ProfileKeyValueIDs.DeletedProfileStatus)
-                if (!hasUserDeletedProfileText) {
-                    setupUpperViewsInteraction(false)
-                    binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
-                }
+        val hasUserDeletedProfileText: Boolean =
+            viewModel.getValue(key = ProfileKeyValueIDs.DeletedProfileStatus)
+        if (!hasUserDeletedProfileText) {
+            setupUpperViewsInteraction(false)
+            binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
+        }
 
-                viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = false)
+        viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = false)
 
-                task()
-
-                if (this::countingIdlingResource.isInitialized)
-                    countingIdlingResource.increment()
-            },
-            onConnectionUnavailable = {
-                viewModel.setValue(key = ProfileKeyValueIDs.LastAttemptStatus, value = true)
-                binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
-
-                if (viewModel.getValue(key = ProfileKeyValueIDs.PaginationLoadingStatus))
-                    changeViewState(transientViewsAdapter, retry)
-
-                showErrorMessage(UI.string.no_connection)
-            },
-        )
+        task()
     }
 
     private fun showErrorMessage(@StringRes message: Int) {
         viewModel.setValue(key = ProfileKeyValueIDs.LastAttemptStatus, value = true)
         viewModel.setValue(key = ProfileKeyValueIDs.CallStatus, value = false)
 
-        if (this::countingIdlingResource.isInitialized)
-            countingIdlingResource.decrement()
-
-        if (viewModel.getValue(key = ProfileKeyValueIDs.DataRequestStatus))
+        if (viewModel.getValue(key = ProfileKeyValueIDs.DataRequestStatus)) {
             viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = false)
+        }
 
         binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
 
@@ -427,30 +281,8 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
         setupUpperViewsInteraction(true)
         errorSnackBar.showErrorSnackBar(message)
 
-        if (viewModel.getValue(key = ProfileKeyValueIDs.PaginationLoadingStatus))
+        if (viewModel.getValue(key = ProfileKeyValueIDs.PaginationLoadingStatus)) {
             changeViewState(transientViewsAdapter, retry)
-    }
-
-    private fun setupInternetConnectionObserver() {
-        runTaskOnBackground {
-            viewModel.provideConnectionObserver().collect { connectionState ->
-                when (connectionState) {
-                    Available -> {
-                        val isThereAnOngoingCall: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.CallStatus)
-                        if (!isThereAnOngoingCall &&
-                            viewModel.getValue(key = ProfileKeyValueIDs.LastAttemptStatus)
-                        ) {
-                            if (viewModel.getValue(key = ProfileKeyValueIDs.RetryStatus)) {
-                                paginationCall()
-                            } else {
-                                textInputEditTextNotEmptyRequiredCall()
-                            }
-                        }
-                    }
-
-                    else -> Unit
-                }
-            }
         }
     }
 
@@ -491,7 +323,6 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                         }
                     }
 
-
                     if (recyclerViewLayoutManager?.findLastVisibleItemPosition() == total?.minus(2) &&
                         viewModel.getValue(key = ProfileKeyValueIDs.SuccessStatus)
                     ) {
@@ -503,7 +334,9 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
                         if (!isThereAnOngoingCall &&
                             !isRetryViewVisible &&
                             !isEndOfResultsViewVisible
-                        ) paginationCall()
+                        ) {
+                            paginationCall()
+                        }
                     }
                 }
             },
@@ -528,10 +361,6 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
     private fun isTextInputEditTextNotEmpty() =
         binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
-
-    fun bindIdlingResource(receivedCountingIdlingResource: CountingIdlingResource) {
-        countingIdlingResource = receivedCountingIdlingResource
-    }
 
     private fun provideRecyclerViewLayoutManager() =
         castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
@@ -571,17 +400,6 @@ class ProfileListingActivity : ComponentActivity(), LifecycleOwnerFlow {
 
     private inline fun <reified T> provideAdapter(adapterPosition: Int) =
         castTo<T>(concatAdapter.adapters[adapterPosition])
-
-    private fun handleConnectionState(
-        onConnectionAvailable: () -> Unit = {},
-        onConnectionUnavailable: () -> Unit = {},
-    ) {
-        if (viewModel.obtainConnectionState() == Available) {
-            onConnectionAvailable()
-        } else {
-            onConnectionUnavailable()
-        }
-    }
 
     private fun launchBrowser(profileUrl: String) {
         startActivity(

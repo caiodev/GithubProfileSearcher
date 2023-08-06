@@ -8,7 +8,7 @@ class ProfileDatabaseRepository(
 ) : IProfileDatabaseRepository {
 
     override suspend fun getProfilesFromDb(): List<UserProfile> {
-        var list = listOf<UserProfile>()
+        var list = emptyList<UserProfile>()
         appDatabase.profileDao().getProfilesFromDb()?.let {
             list = it
         }

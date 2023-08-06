@@ -33,7 +33,8 @@ object RetrofitTestService {
                     mediaType,
                 ),
             )
-            .build().create(T::class.java) as T
+            .build()
+            .create(T::class.java) as T
 
     fun createLoggerClient() =
         OkHttpClient.Builder()

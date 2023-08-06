@@ -2,22 +2,19 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlinx-serialization'
-    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdkVersion 34
+    compileSdk 34
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
     }
 
     buildFeatures {
@@ -71,9 +68,6 @@ dependencies {
     //Compose
     api dep.composeTestJUnit4
     debugApi dep.composeTestManifest
-
-    //Espresso
-    api dep.bundles.espressoTest
 
     //JUnit
     api dep.junitAndroidX

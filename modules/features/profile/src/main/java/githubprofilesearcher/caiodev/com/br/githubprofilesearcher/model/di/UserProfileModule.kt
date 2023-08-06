@@ -52,9 +52,6 @@ val userProfileViewModel = module {
     viewModel {
         ProfileViewModel(
             profileDataAggregator = get(),
-            networkChecking = get(),
-            profileDatabaseRepository = get(),
-            profileOriginRepository = get(),
         )
     }
 }

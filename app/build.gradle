@@ -2,11 +2,10 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlinx-serialization'
-    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdkVersion 34
+    compileSdk 34
     defaultConfig {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion 23
@@ -22,7 +21,6 @@ android {
             applicationIdSuffix ".debug"
             minifyEnabled false
             debuggable = true
-            testCoverageEnabled = true
             signingConfig signingConfigs.debug
         }
 
@@ -30,31 +28,13 @@ android {
             applicationIdSuffix ".release"
             minifyEnabled true
             debuggable = false
-            testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
-    flavorDimensions "version"
-
-    productFlavors {
-
-        demo {
-            dimension "version"
-            applicationIdSuffix ".demo"
-            versionNameSuffix "-demo"
-        }
-
-        full {
-            dimension "version"
-            applicationIdSuffix ".full"
-            versionNameSuffix "-full"
-        }
-    }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
     }
 
     buildFeatures {

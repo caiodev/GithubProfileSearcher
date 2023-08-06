@@ -3,41 +3,21 @@ plugins {
     id 'com.google.devtools.ksp'
     id 'kotlin-android'
     id 'kotlinx-serialization'
-    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdkVersion 34
+    compileSdk 34
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 
-    flavorDimensions "version"
-
-    productFlavors {
-
-        demo {
-            dimension "version"
-            versionNameSuffix "-demo"
-            buildConfigField "String", "API_URL", "\"https://api.github.com/\""
-        }
-
-        full {
-            dimension "version"
-            versionNameSuffix "-full"
-            buildConfigField "String", "API_URL", "\"https://api.github.com/\""
-        }
-    }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
     }
 
     buildFeatures {

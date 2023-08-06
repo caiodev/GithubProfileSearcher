@@ -47,7 +47,7 @@ fun View.applyViewVisibility(visibility: Int) {
 }
 
 fun Snackbar.showErrorSnackBar(
-    @StringRes message: Int
+    @StringRes message: Int,
 ) {
     setText(message)
     show()
