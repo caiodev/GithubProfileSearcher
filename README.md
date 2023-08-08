@@ -2,7 +2,7 @@
 
 # GithubProfileSearcher
 
-Spare time project to get information about a given Github profile - API 23(Marshmallow) and above
+Spare time project to get information about a given Github profile - API 26 (Oreo) and above
 
 License
 =======
