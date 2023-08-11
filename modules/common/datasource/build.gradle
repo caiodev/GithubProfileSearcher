@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'com.android.library'
     id 'com.google.devtools.ksp'
@@ -22,6 +24,12 @@ android {
 
     buildFeatures {
         buildConfig true
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_20)
+        }
     }
 
     testOptions {
@@ -51,6 +59,8 @@ dependencies {
     //APIConnector
     api dep.retrofit
     implementation dep.retrofitSerializationConverter
+
+    api dep.bundles.ktor
 
     //Room
     implementation dep.bundles.room

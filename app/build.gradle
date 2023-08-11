@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -41,14 +43,24 @@ android {
         buildConfig true
     }
 
-    testOptions {
-        unitTests.all { useJUnitPlatform() }
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_20)
+        }
     }
 
     packagingOptions {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}'
+            excludes += [
+                    '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}',
+                    'win32-x86/attach_hotspot_windows.dll',
+                    'win32-x86-64/attach_hotspot_windows.dll'
+            ]
         }
+    }
+
+    testOptions {
+        unitTests.all { useJUnitPlatform() }
     }
 
     namespace 'githubprofilesearcher.caiodev.com.br.githubprofilesearcher'

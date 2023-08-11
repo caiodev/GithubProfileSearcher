@@ -43,6 +43,9 @@ kotlin = '1.9.0'
 #KSP
 ksp = '1.9.0-1.0.11'
 
+#Ktor
+ktor = '2.3.3'
+
 #Ktx
 ktxCore = '1.12.0-beta01'
 
@@ -146,6 +149,11 @@ dataStorePreferences = { group = "androidx.datastore", name = "datastore-prefere
 #Koin
 koin = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 
+#Ktor
+client = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktorSerializationConverter = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
+logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+
 #Leak canary
 leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
 
@@ -246,6 +254,12 @@ compose = [
  "runtimeCompose",
  "uiCompose",
  "uiToolingPreviewCompose"
+]
+
+ktor = [
+ "client",
+ "ktorSerializationConverter",
+ "logging",
 ]
 
 lifecycle = [

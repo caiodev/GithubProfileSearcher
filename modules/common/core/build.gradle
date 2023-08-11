@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
@@ -19,6 +21,12 @@ android {
 
     buildFeatures {
         buildConfig true
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_20)
+        }
     }
 
     testOptions {
