@@ -3,7 +3,7 @@
 ##### Dependency versions #####
 
 #Annotation
-annotation = '1.6.0'
+annotation = '1.7.0'
 
 #AppCompat
 appCompat = '1.6.1'
@@ -13,15 +13,15 @@ coil = '2.3.0'
 
 #Compose
 activity = '1.7.2'
-compiler = '1.5.0'
-composeCore = '1.6.0-alpha02'
-material3 = '1.2.0-alpha04'
+compiler = '1.5.1'
+composeCore = '1.6.0-alpha05'
+material3 = '1.2.0-alpha07'
 
 #Coroutines
 coroutines = '1.7.2'
 
 #DataStore
-dataStore = '1.1.0-alpha04'
+dataStore = '1.1.0-alpha05'
 
 #Quality checking
 #Detekt
@@ -32,7 +32,7 @@ ktlint = '0.50.0'
 ktlintPlugin = '11.5.0'
 
 #Gradle
-gradle = '8.1.0'
+gradle = '8.1.1'
 
 #Koin
 koin = '3.4.2'
@@ -44,16 +44,16 @@ kotlin = '1.9.0'
 ksp = '1.9.0-1.0.11'
 
 #Ktor
-ktor = '2.3.3'
+ktor = '2.3.4'
 
 #Ktx
-ktxCore = '1.12.0-beta01'
+ktxCore = '1.12.0'
 
 #LeakCanary
 leakCanary = '2.12'
 
 #Lifecycle
-lifecycle = '2.6.1'
+lifecycle = '2.6.2'
 
 #Material design
 materialDesign = '1.9.0'
@@ -90,7 +90,7 @@ swipeRefreshLayout = '1.2.0-alpha01'
 archTest = '2.2.0'
 
 #Core
-testCore = '1.6.0-alpha01'
+testCore = '1.6.0-alpha04'
 
 #Jacoco
 jacoco = '0.8.10'
