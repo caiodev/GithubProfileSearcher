@@ -2,7 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.di
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.IProfileDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.ProfileDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
@@ -17,7 +16,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import retrofit2.Retrofit
 
 @ExperimentalSerializationApi
 val userProfileViewModel = module {
@@ -36,8 +34,8 @@ val userProfileViewModel = module {
 
     factory<IProfileOriginRepository> {
         ProfileOriginRepository(
-            remoteRepository = get(),
-            apiService = get<Retrofit>().create(UserProfileCall::class.java),
+            remoteFetcher = get(),
+            client = get(),
         )
     }
 

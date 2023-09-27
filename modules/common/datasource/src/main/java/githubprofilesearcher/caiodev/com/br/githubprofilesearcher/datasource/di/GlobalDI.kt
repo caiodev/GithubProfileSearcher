@@ -5,11 +5,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fet
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.Database
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.RemoteFetcher
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.api.SourceConnector.newInstance
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-@ExperimentalSerializationApi
 val global = module {
 
     single<Database> {

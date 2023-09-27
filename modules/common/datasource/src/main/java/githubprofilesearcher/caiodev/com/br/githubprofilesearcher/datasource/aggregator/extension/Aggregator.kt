@@ -26,7 +26,6 @@ suspend fun Aggregator.handleResult(
             onSuccess()
             value
         }
-
         is SuccessWithoutBody -> value
         else -> handleError(ValueCasting.castTo(value))
     }

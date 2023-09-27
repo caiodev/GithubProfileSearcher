@@ -50,9 +50,6 @@ dependencies {
     testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
-    //Annotation
-    api dep.annotation
-
     //AppCompat
     api dep.appCompat
 

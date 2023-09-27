@@ -57,15 +57,9 @@ dependencies {
     implementation dep.okhttpLoggingInterceptor
 
     //APIConnector
-    api dep.retrofit
-    implementation dep.retrofitSerializationConverter
-
-    api dep.bundles.ktor
+    api dep.bundles.apiConnection
 
     //Room
     implementation dep.bundles.room
     ksp dep.roomCompiler
-
-    //Serialization
-    api dep.jsonSerialization
 }

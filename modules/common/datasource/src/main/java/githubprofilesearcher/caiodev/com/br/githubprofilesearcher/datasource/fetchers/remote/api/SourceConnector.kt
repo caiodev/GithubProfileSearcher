@@ -1,46 +1,46 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.api
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.ExperimentalSerializationApi
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.scope.Scope
-import retrofit2.Retrofit
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 object SourceConnector {
 
     private const val baseUrl = "https://api.github.com/"
-    private const val timeout = 60L
-    private val json = Json { ignoreUnknownKeys = true }
-    private val mediaType = "application/json".toMediaType()
+    private const val timeout = 60000L
+    private const val responseTag = "OkHttp"
 
-    @ExperimentalSerializationApi
     fun Scope.newInstance(
         baseUrl: String = this@SourceConnector.baseUrl,
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(createLoggerClient())
-            .addConverterFactory(
-                json.asConverterFactory(mediaType),
-            )
-            .build()
-    }
+    ): HttpClient {
 
-    private fun createLoggerClient(): OkHttpClient {
-        val responseTag = "OkHttp"
-        val httpLoggingInterceptor =
-            HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }
-                .apply { level = HttpLoggingInterceptor.Level.BODY }
-        return OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .connectTimeout(timeout, TimeUnit.SECONDS)
-            .readTimeout(timeout, TimeUnit.SECONDS)
-            .writeTimeout(timeout, TimeUnit.SECONDS)
-            .build()
+        return HttpClient(OkHttp) {
+
+            defaultRequest { url(baseUrl) }
+
+            engine {
+                addInterceptor(
+                    HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }
+                        .apply { level = HttpLoggingInterceptor.Level.BODY }
+                )
+            }
+
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+
+            install(HttpTimeout) {
+                connectTimeoutMillis = timeout
+                requestTimeoutMillis = timeout
+                socketTimeoutMillis = timeout
+            }
+        }
     }
 }

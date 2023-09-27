@@ -1,17 +1,15 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockWebServer
-import retrofit2.Retrofit
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-object RetrofitTestService {
+object APITestService {
 
     lateinit var mockWebServer: MockWebServer
     val json = Json { ignoreUnknownKeys = true }

@@ -14,7 +14,10 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.stat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithBody
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithoutBody
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.UnknownHost
-import retrofit2.Response
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Headers
+import io.ktor.http.isSuccess
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -23,30 +26,31 @@ import javax.net.ssl.SSLHandshakeException
 
 class RemoteFetcher {
 
-    suspend fun <T> call(
-        call: suspend () -> Response<T>,
+    suspend inline fun <reified T> call(
+        call: () -> HttpResponse,
     ): State<*> {
         return try {
-            val response = call()
-            if (response.isSuccessful) {
-                handleSuccess(response)
+            val wrapper = call()
+            val response = wrapper.body<T>()
+            if (wrapper.status.isSuccess()) {
+                handleSuccess(wrapper.headers, response)
             } else {
-                handleHttpError(response.code())
+                handleHttpError(wrapper.status.value)
             }
         } catch (exception: IOException) {
             handleException(exception)
         }
     }
 
-    private fun handleSuccess(response: Response<*>): State<Success> {
-        response.body()?.let { apiResponse ->
-            return SuccessWithBody(apiResponse, obtainTotalPages(response.headers()))
+    @PublishedApi internal inline fun <reified T> handleSuccess(headers: Headers, response: T?): State<Success> {
+        response?.let { apiResponse ->
+            return SuccessWithBody(apiResponse, obtainTotalPages(headers))
         } ?: run {
             return SuccessWithoutBody()
         }
     }
 
-    private fun handleHttpError(responseCode: Int): State<Error> {
+    @PublishedApi internal fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
             in ClientSideError -> ClientSide
             SearchQuotaReachedError -> SearchQuotaReached
@@ -56,7 +60,7 @@ class RemoteFetcher {
         }
     }
 
-    private fun handleException(exception: IOException): State<Error> {
+    @PublishedApi internal fun handleException(exception: IOException): State<Error> {
         return when (exception) {
             is ConnectException -> Connect
             is SocketTimeoutException -> SocketTimeout
@@ -66,7 +70,7 @@ class RemoteFetcher {
         }
     }
 
-    private fun obtainTotalPages(headers: okhttp3.Headers): Int {
+    @PublishedApi internal fun obtainTotalPages(headers: Headers): Int {
         var totalPages = 0
         headers[headerName]?.let { header ->
             if (header.isNotEmpty()) {

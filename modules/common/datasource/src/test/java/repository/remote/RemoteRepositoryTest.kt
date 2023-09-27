@@ -5,8 +5,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fea
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.RemoteFetcher
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.MockedAPIResponseProvider.profileInfoCallResult
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.RetrofitTestService.newInstance
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.RetrofitTestService.setup
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.APITestService.newInstance
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.APITestService.setup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi

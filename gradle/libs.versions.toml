@@ -2,23 +2,20 @@
 
 ##### Dependency versions #####
 
-#Annotation
-annotation = '1.7.0'
-
 #AppCompat
-appCompat = '1.6.1'
+appCompat = '1.7.0-alpha03'
 
 #Coil
-coil = '2.3.0'
+coil = '2.4.0'
 
 #Compose
-activity = '1.7.2'
-compiler = '1.5.1'
-composeCore = '1.6.0-alpha05'
-material3 = '1.2.0-alpha07'
+activity = '1.8.0-rc01'
+compiler = '1.5.3'
+composeCore = '1.6.0-alpha06'
+material3 = '1.2.0-alpha08'
 
 #Coroutines
-coroutines = '1.7.2'
+coroutines = '1.7.3'
 
 #DataStore
 dataStore = '1.1.0-alpha05'
@@ -28,8 +25,8 @@ dataStore = '1.1.0-alpha05'
 detekt = '1.23.1'
 
 #Ktlint
-ktlint = '0.50.0'
-ktlintPlugin = '11.5.0'
+ktlint = '1.0.0'
+ktlintPlugin = '11.6.0'
 
 #Gradle
 gradle = '8.1.1'
@@ -38,10 +35,10 @@ gradle = '8.1.1'
 koin = '3.4.2'
 
 #Kotlin
-kotlin = '1.9.0'
+kotlin = '1.9.10'
 
 #KSP
-ksp = '1.9.0-1.0.11'
+ksp = '1.9.10-1.0.13'
 
 #Ktor
 ktor = '2.3.4'
@@ -61,15 +58,8 @@ materialDesign = '1.9.0'
 #OkHttp
 okHttp = '5.0.0-alpha.11'
 
-#Retrofit
-retrofit = '2.9.0'
-serializationConverter = '1.0.0'
-
 #Room
 room = '2.5.2'
-
-#Serialization
-serialization = '1.5.1'
 
 #Timber
 timber = '5.0.1'
@@ -113,12 +103,13 @@ robolectric = '4.10.3'
 
 [libraries]
 
-#Annotation
-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
-
 #APIConnector
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofitSerializationConverter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "serializationConverter" }
+client = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
 
 #AppCompat
 appCompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appCompat" }
@@ -149,11 +140,6 @@ dataStorePreferences = { group = "androidx.datastore", name = "datastore-prefere
 #Koin
 koin = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 
-#Ktor
-client = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
-ktorSerializationConverter = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
-
 #Leak canary
 leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
 
@@ -172,9 +158,6 @@ materialDesign = { group = "com.google.android.material", name = "material", ver
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 roomKtx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-
-#Serialization
-jsonSerialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
 #Views/ViewGroups
 constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
@@ -238,71 +221,69 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 [bundles]
 
 apiConnection = [
- "retrofit",
- "retrofitSerializationConverter"
+    "client",
+    "contentNegotiation",
+    "core",
+    "json",
+    "logging",
+    "serialization"
 ]
 
 compose = [
- "activityCompose",
- "animationCompose",
- "foundationCompose",
- "lifecycleCompose",
- "material3Compose",
- "materialIconsCoreCompose",
- "materialIconsExtendedCompose",
- "runtimeAndroidCompose",
- "runtimeCompose",
- "uiCompose",
- "uiToolingPreviewCompose"
-]
-
-ktor = [
- "client",
- "ktorSerializationConverter",
- "logging",
+    "activityCompose",
+    "animationCompose",
+    "foundationCompose",
+    "lifecycleCompose",
+    "material3Compose",
+    "materialIconsCoreCompose",
+    "materialIconsExtendedCompose",
+    "runtimeAndroidCompose",
+    "runtimeCompose",
+    "uiCompose",
+    "uiToolingPreviewCompose"
 ]
 
 lifecycle = [
- "lifecycleRuntimeKtx",
- "lifecycleViewmodelKtx"
+    "lifecycleRuntimeKtx",
+    "lifecycleViewmodelKtx"
 ]
 
 logging = [
- "okhttpLoggingInterceptor",
- "timber"
+    "okhttpLoggingInterceptor",
+    "timber"
 ]
 
 room = [
- "room",
- "roomKtx"
+    "room",
+    "roomKtx"
 ]
 
 views = [
- "constraintLayout",
- "recyclerView",
- "swipeRefreshLayout"
+    "constraintLayout",
+    "recyclerView",
+    "swipeRefreshLayout"
 ]
 
 # Test Bundles #
 
 testCore = [
- "archTest",
- "testCore",
- "testRunner"
+    "archTest",
+    "testCore",
+    "testRunner"
 ]
 
 junit = [
- "junit",
- "junit5"
+    "junit",
+    "junit5"
 ]
 
 kotest = [
- "kotestCore",
- "kotestProperty",
- "kotestRunner"
+    "kotestCore",
+    "kotestProperty",
+    "kotestRunner"
 ]
 
 mockk = [
- "mockkAgent",
- "mockkAndroid"
+    "mockkAgent",
+    "mockkAndroid"
 ]

@@ -44,9 +44,6 @@ dependencies {
     //Logging
     implementation dep.bundles.logging
 
-    //Serialization
-    implementation dep.jsonSerialization
-
     //JVM
     //Coroutines
     api dep.coroutinesTest
