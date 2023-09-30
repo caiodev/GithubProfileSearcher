@@ -10,7 +10,6 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 object APITestService {
-
     lateinit var mockWebServer: MockWebServer
     val json = Json { ignoreUnknownKeys = true }
     val mediaType = "application/json".toMediaType()

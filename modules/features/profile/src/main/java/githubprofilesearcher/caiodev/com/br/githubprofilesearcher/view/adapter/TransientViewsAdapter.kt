@@ -9,25 +9,27 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databi
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.LoadingViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.RetryViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.empty
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.EMPTY
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.endOfResults
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.END_OF_RESULTS
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.loading
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.retry
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.RETRY
 
 class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     private lateinit var itemClicked: OnItemClicked
-    private var viewType = empty
+    private var viewType = EMPTY
 
     override fun getItemViewType(position: Int) = viewType
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            loading -> {
+            LOADING -> {
                 LoadingViewHolder(
                     LoadingViewHolderLayoutBinding.inflate(
                         inflater,
@@ -37,7 +39,7 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 )
             }
 
-            retry -> {
+            RETRY -> {
                 RetryViewHolder(
                     RetryViewHolderLayoutBinding.inflate(
                         inflater,
@@ -48,13 +50,14 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 )
             }
 
-            endOfResults -> EndOfResultsViewHolder(
-                EndOfResultsViewHolderLayoutBinding.inflate(
-                    inflater,
-                    parent,
-                    false,
-                ),
-            )
+            END_OF_RESULTS ->
+                EndOfResultsViewHolder(
+                    EndOfResultsViewHolderLayoutBinding.inflate(
+                        inflater,
+                        parent,
+                        false,
+                    ),
+                )
 
             else ->
                 EmptyViewHolder(
@@ -77,7 +80,10 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         itemClicked = onItemClicked
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         // detekt : Empty block
     }
 }

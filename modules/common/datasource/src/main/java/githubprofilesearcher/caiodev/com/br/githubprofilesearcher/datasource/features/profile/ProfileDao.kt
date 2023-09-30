@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 
 @Dao
 interface ProfileDao {
-
     @androidx.room.Query("SELECT * " + "FROM UserProfile LIMIT 20")
     suspend fun getProfilesFromDb(): List<UserProfile>?
 

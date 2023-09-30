@@ -1,7 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing
 
 interface TestSteps {
-
     fun setupDependencies()
 
     fun given(given: () -> Unit) {

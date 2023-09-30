@@ -5,6 +5,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databi
 
 class EmptyViewHolder(itemBinding: EmptyViewHolderLayoutBinding) : RecyclerView.ViewHolder(itemBinding.root) {
     companion object {
-        const val empty = 0
+        const val EMPTY = 0
     }
 }

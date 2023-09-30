@@ -7,24 +7,17 @@
         android:layout_height="match_parent"
         tools:context="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.activity.ProfileListingActivity">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/githubProfileListSwipeRefreshLayout"
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/profileInfoRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/padding_8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout">
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/profileInfoRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingBottom="@dimen/padding_8dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layout_constraintTop_toBottomOf="@+id/githubUserTextInputLayout" />
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/githubUserTextInputLayout"
@@ -63,20 +56,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-            android:id="@+id/actionIconImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="@dimen/margin_16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="@+id/githubUserTextInputLayout"
-            app:layout_constraintEnd_toEndOf="@+id/githubUserTextInputLayout"
-            app:layout_constraintTop_toTopOf="@+id/githubUserTextInputLayout"
-            app:srcCompat="@drawable/ic_search"
-            tools:ignore="ContentDescription" />
 
     <ImageView
             android:id="@+id/backToTopButton"

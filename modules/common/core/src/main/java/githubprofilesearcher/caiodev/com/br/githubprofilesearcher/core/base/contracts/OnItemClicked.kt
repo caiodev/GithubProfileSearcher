@@ -1,5 +1,8 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts
 
 interface OnItemClicked {
-    fun onItemClick(adapterPosition: Int, id: Int)
+    fun onItemClick(
+        adapterPosition: Int,
+        id: Int,
+    )
 }

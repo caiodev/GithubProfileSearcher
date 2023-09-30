@@ -16,20 +16,23 @@ import kotlinx.coroutines.flow.map
 @Suppress("UNCHECKED_CAST")
 suspend fun <T> DataStore<Preferences>.getValue(key: String): T {
     return when {
-        key.contains(GlobalKeyValueIDs.Text.toString()) -> provideRequestedValue(
-            key = castToNonNullable(stringPreferencesKey(key)),
-            fallbackValue = obtainDefaultString() as T,
-        )
+        key.contains(GlobalKeyValueIDs.Text.toString()) ->
+            provideRequestedValue(
+                key = castToNonNullable(stringPreferencesKey(key)),
+                fallbackValue = obtainDefaultString() as T,
+            )
 
-        key.contains(GlobalKeyValueIDs.Status.toString()) -> provideRequestedValue(
-            key = castToNonNullable(booleanPreferencesKey(key)),
-            fallbackValue = obtainDefaultBoolean() as T,
-        )
+        key.contains(GlobalKeyValueIDs.Status.toString()) ->
+            provideRequestedValue(
+                key = castToNonNullable(booleanPreferencesKey(key)),
+                fallbackValue = obtainDefaultBoolean() as T,
+            )
 
-        else -> provideRequestedValue(
-            key = castToNonNullable(intPreferencesKey(key)),
-            fallbackValue = obtainDefaultInteger() as T,
-        )
+        else ->
+            provideRequestedValue(
+                key = castToNonNullable(intPreferencesKey(key)),
+                fallbackValue = obtainDefaultInteger() as T,
+            )
     }
 }
 
@@ -38,7 +41,10 @@ private suspend fun <T> DataStore<Preferences>.provideRequestedValue(
     fallbackValue: T,
 ): T = data.map { preferences -> preferences[key] ?: fallbackValue }.first()
 
-suspend fun <T> DataStore<Preferences>.setValue(key: String, value: T) {
+suspend fun <T> DataStore<Preferences>.setValue(
+    key: String,
+    value: T,
+) {
     when (value) {
         is Boolean -> applyKeyValuePersistence(key = booleanPreferencesKey(key), value = value)
         is Int -> applyKeyValuePersistence(key = intPreferencesKey(key), value = value)

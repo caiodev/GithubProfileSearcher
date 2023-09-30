@@ -1,45 +1,42 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.api
 
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.scope.Scope
-import timber.log.Timber
 
 object SourceConnector {
-
-    private const val baseUrl = "https://api.github.com/"
-    private const val timeout = 60000L
-    private const val responseTag = "OkHttp"
+    private const val BASE_URL = "https://api.github.com/"
+    private const val TIMEOUT = 60000L
 
     fun Scope.newInstance(
-        baseUrl: String = this@SourceConnector.baseUrl,
+        baseUrl: String = this@SourceConnector.BASE_URL,
+        interceptor: ChuckerInterceptor,
     ): HttpClient {
-
         return HttpClient(OkHttp) {
-
             defaultRequest { url(baseUrl) }
-
-            engine {
-                addInterceptor(
-                    HttpLoggingInterceptor { message -> Timber.tag(responseTag).d(message) }
-                        .apply { level = HttpLoggingInterceptor.Level.BODY }
-                )
-            }
-
-            install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
-            }
-
+            engine { addInterceptor(interceptor) }
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
             install(HttpTimeout) {
-                connectTimeoutMillis = timeout
-                requestTimeoutMillis = timeout
-                socketTimeoutMillis = timeout
+                connectTimeoutMillis = TIMEOUT
+                requestTimeoutMillis = TIMEOUT
+                socketTimeoutMillis = TIMEOUT
+            }
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    logger = Logger.SIMPLE
+                    level = LogLevel.ALL
+                }
             }
         }
     }

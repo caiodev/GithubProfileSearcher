@@ -54,7 +54,8 @@ dependencies {
     api dep.koin
 
     //Logging
-    implementation dep.okhttpLoggingInterceptor
+    debugImplementation dep.debugChucker
+    releaseImplementation dep.releaseChucker
 
     //APIConnector
     api dep.bundles.apiConnection

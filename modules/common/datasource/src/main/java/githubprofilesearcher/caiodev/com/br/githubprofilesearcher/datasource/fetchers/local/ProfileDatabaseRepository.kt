@@ -6,7 +6,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fet
 class ProfileDatabaseRepository(
     private val appDatabase: Database,
 ) : IProfileDatabaseRepository {
-
     override suspend fun getProfilesFromDb(): List<UserProfile> {
         var list = emptyList<UserProfile>()
         appDatabase.profileDao().getProfilesFromDb()?.let {

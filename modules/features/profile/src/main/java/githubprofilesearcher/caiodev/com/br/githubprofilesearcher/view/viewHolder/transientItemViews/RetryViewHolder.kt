@@ -11,11 +11,11 @@ class RetryViewHolder(
     RecyclerView.ViewHolder(itemBinding.root) {
     init {
         itemBinding.retryTextView.setOnClickListener {
-            onItemClicked?.onItemClick(layoutPosition, retry)
+            onItemClicked?.onItemClick(layoutPosition, RETRY)
         }
     }
 
     companion object {
-        const val retry = 3
+        const val RETRY = 3
     }
 }

@@ -11,12 +11,14 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolde
 
 class ProfileAdapter(private val onItemSelectedListener: OnItemSelectedListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     private var dataSource = listOf<UserProfile>()
 
     override fun getItemCount() = dataSource.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return ProfileInformationViewHolder(
             ProfileViewHolderLayoutBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -27,7 +29,10 @@ class ProfileAdapter(private val onItemSelectedListener: OnItemSelectedListener)
         )
     }
 
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        viewHolder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         castTo<ProfileInformationViewHolder>(viewHolder)?.bind(dataSource[position])
     }
 

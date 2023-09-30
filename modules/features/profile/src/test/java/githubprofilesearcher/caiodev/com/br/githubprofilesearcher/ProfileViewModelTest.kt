@@ -20,7 +20,6 @@ import java.io.Writer
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class, LiveDataTestExtension::class)
 class ProfileViewModelTest : TestSteps {
-
     private lateinit var viewModel: githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 
     @BeforeEach
@@ -33,37 +32,39 @@ class ProfileViewModelTest : TestSteps {
     }
 
     @Test
-    fun requestUpdatedGithubProfiles() = runBlocking {
-        var githubInfo: UserProfile? = null
+    fun requestUpdatedGithubProfiles() =
+        runBlocking {
+            var githubInfo: UserProfile? = null
 
-        given {
-            viewModel.requestUpdatedProfiles()
-        }
+            given {
+                viewModel.requestUpdatedProfiles()
+            }
 
-        doWhen {
-            githubInfo =
-                LiveDataTestUtil.getValue(viewModel.successStateFlow).first()
-        }
+            doWhen {
+                githubInfo =
+                    LiveDataTestUtil.getValue(viewModel.successStateFlow).first()
+            }
 
-        then {
-            assertEquals("torvalds", githubInfo?.login)
+            then {
+                assertEquals("torvalds", githubInfo?.login)
+            }
         }
-    }
 
     @Test
-    fun requestMoreGithubProfiles() = runBlocking {
-        given {
-            //
-        }
+    fun requestMoreGithubProfiles() =
+        runBlocking {
+            given {
+                //
+            }
 
-        doWhen {
-            //
-        }
+            doWhen {
+                //
+            }
 
-        then {
-            //
+            then {
+                //
+            }
         }
-    }
 
     @Test
     fun runTaskOnBackground_executeAGivenOperationOnBackground() {

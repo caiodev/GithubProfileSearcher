@@ -1,8 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api
 
 object MockedAPIResponseProvider {
-
-    const val profileInfoCallResult =
+    const val PROFILE_INFO_CALL_RESULT =
         "{\n" +
             "  \"total_count\": 156,\n" +
             "  \"incomplete_results\": false,\n" +

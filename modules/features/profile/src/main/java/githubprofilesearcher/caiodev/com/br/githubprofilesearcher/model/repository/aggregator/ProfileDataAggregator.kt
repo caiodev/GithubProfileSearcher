@@ -18,12 +18,14 @@ class ProfileDataAggregator(
     private val profileDatabaseRepository: IProfileDatabaseRepository,
     private val profileOriginRepository: IProfileOriginRepository,
 ) : IProfileDataAggregator {
-
     override suspend fun <T> getValue(key: Enum<*>): T {
         return keyValueRepository.getValue(key = key)
     }
 
-    override suspend fun <T> setValue(key: Enum<*>, value: T) {
+    override suspend fun <T> setValue(
+        key: Enum<*>,
+        value: T,
+    ) {
         keyValueRepository.setValue(key = key, value = value)
     }
 
@@ -32,11 +34,12 @@ class ProfileDataAggregator(
         pageNumber: Int,
         maxResultsPerPage: Int,
     ): State<*> {
-        val value = profileOriginRepository.provideUserInformation(
-            user = user,
-            pageNumber = pageNumber,
-            maxResultsPerPage = maxResultsPerPage,
-        )
+        val value =
+            profileOriginRepository.provideUserInformation(
+                user = user,
+                pageNumber = pageNumber,
+                maxResultsPerPage = maxResultsPerPage,
+            )
 
         return handleResult(
             value = value,

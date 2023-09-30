@@ -8,7 +8,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class DelayTest : TestSteps {
-
     override fun setupDependencies() {
         //
     }

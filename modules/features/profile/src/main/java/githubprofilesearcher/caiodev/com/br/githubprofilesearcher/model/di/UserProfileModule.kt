@@ -8,7 +8,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fet
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.IProfileDataAggregator
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.ProfileDataAggregator
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository.Companion.profilePreferencesInstanceID
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository.Companion.PROFILE_PREFERENCES_INSTANCE_ID
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.ProfileOriginRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
@@ -18,38 +18,39 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 @ExperimentalSerializationApi
-val userProfileViewModel = module {
+val userProfileViewModel =
+    module {
 
-    factory<IKeyValueRepository> {
-        ProfileKeyValueRepository(
-            PreferenceDataStoreFactory.create {
-                androidContext().preferencesDataStoreFile(profilePreferencesInstanceID)
-            },
-        )
-    }
+        factory<IKeyValueRepository> {
+            ProfileKeyValueRepository(
+                PreferenceDataStoreFactory.create {
+                    androidContext().preferencesDataStoreFile(PROFILE_PREFERENCES_INSTANCE_ID)
+                },
+            )
+        }
 
-    factory<IProfileDatabaseRepository> {
-        ProfileDatabaseRepository(appDatabase = get())
-    }
+        factory<IProfileDatabaseRepository> {
+            ProfileDatabaseRepository(appDatabase = get())
+        }
 
-    factory<IProfileOriginRepository> {
-        ProfileOriginRepository(
-            remoteFetcher = get(),
-            client = get(),
-        )
-    }
+        factory<IProfileOriginRepository> {
+            ProfileOriginRepository(
+                remoteFetcher = get(),
+                client = get(),
+            )
+        }
 
-    factory<IProfileDataAggregator> {
-        ProfileDataAggregator(
-            keyValueRepository = get(),
-            profileDatabaseRepository = get(),
-            profileOriginRepository = get(),
-        )
-    }
+        factory<IProfileDataAggregator> {
+            ProfileDataAggregator(
+                keyValueRepository = get(),
+                profileDatabaseRepository = get(),
+                profileOriginRepository = get(),
+            )
+        }
 
-    viewModel {
-        ProfileViewModel(
-            profileDataAggregator = get(),
-        )
+        viewModel {
+            ProfileViewModel(
+                profileDataAggregator = get(),
+            )
+        }
     }
-}

@@ -44,5 +44,4 @@ dependencies {
 
     api dep.ktxCore
     api dep.bundles.lifecycle
-    api dep.timber
 }

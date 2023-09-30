@@ -41,9 +41,6 @@ dependencies {
     //APIConnector
     implementation dep.bundles.apiConnection
 
-    //Logging
-    implementation dep.bundles.logging
-
     //JVM
     //Coroutines
     api dep.coroutinesTest

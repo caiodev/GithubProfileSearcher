@@ -13,7 +13,6 @@ class ProfileInformationViewHolder(
     onItemSelected: OnItemSelectedListener,
 ) :
     RecyclerView.ViewHolder(itemBinding.root) {
-
     private var profileUrl = ""
 
     init {

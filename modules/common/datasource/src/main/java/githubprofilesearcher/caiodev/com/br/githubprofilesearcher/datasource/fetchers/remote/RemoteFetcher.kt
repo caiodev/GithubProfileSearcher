@@ -25,10 +25,7 @@ import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 class RemoteFetcher {
-
-    suspend inline fun <reified T> call(
-        call: () -> HttpResponse,
-    ): State<*> {
+    suspend inline fun <reified T> call(call: () -> HttpResponse): State<*> {
         return try {
             val wrapper = call()
             val response = wrapper.body<T>()
@@ -42,7 +39,10 @@ class RemoteFetcher {
         }
     }
 
-    @PublishedApi internal inline fun <reified T> handleSuccess(headers: Headers, response: T?): State<Success> {
+    @PublishedApi internal inline fun <reified T> handleSuccess(
+        headers: Headers,
+        response: T?,
+    ): State<Success> {
         response?.let { apiResponse ->
             return SuccessWithBody(apiResponse, obtainTotalPages(headers))
         } ?: run {
@@ -53,8 +53,8 @@ class RemoteFetcher {
     @PublishedApi internal fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
             in ClientSideError -> ClientSide
-            SearchQuotaReachedError -> SearchQuotaReached
-            ResultLimitReachedError -> ResultLimitReached
+            SEARCH_QUOTA_REACHED_ERROR -> SearchQuotaReached
+            RESULT_LIMIT_REACHED_ERROR -> ResultLimitReached
             in ServerSideError -> ServerSide
             else -> Generic
         }
@@ -72,23 +72,24 @@ class RemoteFetcher {
 
     @PublishedApi internal fun obtainTotalPages(headers: Headers): Int {
         var totalPages = 0
-        headers[headerName]?.let { header ->
+        headers[HEADER_NAME]?.let { header ->
             if (header.isNotEmpty()) {
-                totalPages = Regex(headerPattern).findAll(header)
-                    .map(MatchResult::value)
-                    .toList()[headerListIndex].toInt()
+                totalPages =
+                    Regex(headerPattern).findAll(header)
+                        .map(MatchResult::value)
+                        .toList()[HEADER_LIST_INDEX].toInt()
             }
         }
         return totalPages
     }
 
     private companion object {
-        const val headerName = "link"
+        const val HEADER_NAME = "link"
         val headerPattern = "\\d+".toPattern().toString()
-        const val headerListIndex = 2
+        const val HEADER_LIST_INDEX = 2
         val ClientSideError = 400..404
-        const val SearchQuotaReachedError = 422
-        const val ResultLimitReachedError = 451
+        const val SEARCH_QUOTA_REACHED_ERROR = 422
+        const val RESULT_LIMIT_REACHED_ERROR = 451
         val ServerSideError = 500..511
     }
 }

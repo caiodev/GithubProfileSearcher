@@ -9,14 +9,14 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fet
 internal class ProfileKeyValueRepository(
     private val keyValueInstance: DataStore<Preferences>,
 ) : IKeyValueRepository {
+    override suspend fun <T> getValue(key: Enum<*>): T = keyValueInstance.getValue(key = key.toString())
 
-    override suspend fun <T> getValue(key: Enum<*>): T =
-        keyValueInstance.getValue(key = key.toString())
-
-    override suspend fun <T> setValue(key: Enum<*>, value: T) =
-        keyValueInstance.setValue(key = key.toString(), value = value)
+    override suspend fun <T> setValue(
+        key: Enum<*>,
+        value: T,
+    ) = keyValueInstance.setValue(key = key.toString(), value = value)
 
     companion object {
-        const val profilePreferencesInstanceID = "profile"
+        const val PROFILE_PREFERENCES_INSTANCE_ID = "profile"
     }
 }

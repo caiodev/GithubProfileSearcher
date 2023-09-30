@@ -19,13 +19,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.obtainDefaultString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ActivityProfileListingBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applySwipeRefreshVisibilityAttributes
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applyViewVisibility
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.changeDrawable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.showErrorSnackBar
@@ -37,15 +34,14 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.P
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.TransientViewsAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.states.User
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.OnItemSelectedListener
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.endOfResults
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.loading
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.retry
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.END_OF_RESULTS
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.RETRY
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
 internal class ProfileListingActivity : ComponentActivity() {
-
     private lateinit var binding: ActivityProfileListingBinding
 
     private val errorSnackBar by lazy {
@@ -88,7 +84,6 @@ internal class ProfileListingActivity : ComponentActivity() {
     private fun setupView() {
         binding = ActivityProfileListingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupSwipeRefreshLayout()
         setupActionViews()
         setupRecyclerView()
         setupTextInputEditText()
@@ -111,30 +106,10 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun setupActionViews() {
-        binding.actionIconImageView.setOnClickListener {
-            handleActionIconClick()
-        }
-
         binding.backToTopButton.setOnClickListener {
             it.isClickable = false
             it.applyViewVisibility(INVISIBLE)
             binding.profileInfoRecyclerView.scrollToPosition(0)
-        }
-    }
-
-    private fun setupSwipeRefreshLayout() {
-        val isLocalPopulation: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.LocalPopulationStatus)
-        val hasASuccessfulCallAlreadyBeenMade: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.SuccessStatus)
-
-        binding.githubProfileListSwipeRefreshLayout.apply {
-            if (!isLocalPopulation && !hasASuccessfulCallAlreadyBeenMade) {
-                applySwipeRefreshVisibilityAttributes(isSwipeEnabled = false)
-            }
-
-            setOnRefreshListener {
-                viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = true)
-                updatedProfileCall()
-            }
         }
     }
 
@@ -165,8 +140,6 @@ internal class ProfileListingActivity : ComponentActivity() {
                         viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = true)
                     }
 
-                    binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
-
                     text?.let {
                         if (it.isEmpty()) {
                             viewModel.setValue(key = ProfileKeyValueIDs.DeletedProfileStatus, value = true)
@@ -178,10 +151,13 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun initializeAdapterCallback() {
-        provideAdapter<TransientViewsAdapter>(transientViewsAdapter)?.setOnItemClicked(
+        provideAdapter<TransientViewsAdapter>(TRANSIENT_VIEWS_ADAPTER)?.setOnItemClicked(
             object :
                 OnItemClicked {
-                override fun onItemClick(adapterPosition: Int, id: Int) {
+                override fun onItemClick(
+                    adapterPosition: Int,
+                    id: Int,
+                ) {
                     paginationCall()
                 }
             },
@@ -202,10 +178,10 @@ internal class ProfileListingActivity : ComponentActivity() {
         val isHeaderVisible: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.HeaderStatus)
 
         if (!isHeaderVisible) {
-            changeViewState(headerAdapter, HeaderAdapter.header)
+            changeViewState(HEADER_ADAPTER, HeaderAdapter.HEADER)
         }
 
-        provideAdapter<ProfileAdapter>(githubProfileAdapter)?.apply {
+        provideAdapter<ProfileAdapter>(PROFILE_ADAPTER)?.apply {
             updateDataSource(user.content)
             notifyDataSetChanged()
         }
@@ -215,7 +191,7 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
 
         if (viewModel.getValue(key = ProfileKeyValueIDs.DataRequestStatus)) {
-            provideAdapter<ProfileAdapter>(githubProfileAdapter)?.updateDataSource(
+            provideAdapter<ProfileAdapter>(PROFILE_ADAPTER)?.updateDataSource(
                 user.content,
             )
 
@@ -232,7 +208,7 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun paginationCall() {
-        changeViewState(transientViewsAdapter, loading)
+        changeViewState(TRANSIENT_VIEWS_ADAPTER, LOADING)
         callApiThroughViewModel { viewModel.paginateProfiles() }
     }
 
@@ -257,7 +233,6 @@ internal class ProfileListingActivity : ComponentActivity() {
             viewModel.getValue(key = ProfileKeyValueIDs.DeletedProfileStatus)
         if (!hasUserDeletedProfileText) {
             setupUpperViewsInteraction(false)
-            binding.actionIconImageView.changeDrawable(R.drawable.ic_close)
         }
 
         viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = false)
@@ -265,7 +240,9 @@ internal class ProfileListingActivity : ComponentActivity() {
         task()
     }
 
-    private fun showErrorMessage(@StringRes message: Int) {
+    private fun showErrorMessage(
+        @StringRes message: Int,
+    ) {
         viewModel.setValue(key = ProfileKeyValueIDs.LastAttemptStatus, value = true)
         viewModel.setValue(key = ProfileKeyValueIDs.CallStatus, value = false)
 
@@ -273,38 +250,23 @@ internal class ProfileListingActivity : ComponentActivity() {
             viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = false)
         }
 
-        binding.githubProfileListSwipeRefreshLayout.applySwipeRefreshVisibilityAttributes()
-
-        binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
         binding.searchProfileTextInputEditText.hideKeyboard()
         binding.repositoryLoadingProgressBar.applyViewVisibility(GONE)
         setupUpperViewsInteraction(true)
         errorSnackBar.showErrorSnackBar(message)
 
         if (viewModel.getValue(key = ProfileKeyValueIDs.PaginationLoadingStatus)) {
-            changeViewState(transientViewsAdapter, retry)
-        }
-    }
-
-    private fun handleActionIconClick() {
-        val isThereAnOngoingCall: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.CallStatus)
-        if (!isThereAnOngoingCall) {
-            if (viewModel.getValue(key = ProfileKeyValueIDs.SearchStatus)) {
-                viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = true)
-                textInputEditTextNotEmptyRequiredCall()
-            } else {
-                binding.searchProfileTextInputEditText.setText(obtainDefaultString())
-                binding.actionIconImageView.changeDrawable(R.drawable.ic_search)
-                viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = true)
-                viewModel.setValue(key = ProfileKeyValueIDs.DeletedProfileStatus, value = true)
-            }
+            changeViewState(TRANSIENT_VIEWS_ADAPTER, RETRY)
         }
     }
 
     private fun setupRecyclerViewAddOnScrollListener() {
         binding.profileInfoRecyclerView.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                override fun onScrollStateChanged(
+                    recyclerView: RecyclerView,
+                    newState: Int,
+                ) {
                     val total = recyclerView.layoutManager?.itemCount
                     val recyclerViewLayoutManager = provideRecyclerViewLayoutManager()
 
@@ -344,11 +306,6 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun setupUpperViewsInteraction(isInteractive: Boolean) {
-        binding.actionIconImageView.apply {
-            isClickable = isInteractive
-            isFocusable = isInteractive
-        }
-
         with(binding.searchProfileTextInputEditText) {
             isClickable = isInteractive
             isCursorVisible = isInteractive
@@ -359,14 +316,16 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
     }
 
-    private fun isTextInputEditTextNotEmpty() =
-        binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
+    private fun isTextInputEditTextNotEmpty() = binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
 
     private fun provideRecyclerViewLayoutManager() =
         castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
 
-    private fun changeViewState(adapterPosition: Int, viewState: Int) {
-        if (adapterPosition == headerAdapter) {
+    private fun changeViewState(
+        adapterPosition: Int,
+        viewState: Int,
+    ) {
+        if (adapterPosition == HEADER_ADAPTER) {
             (castTo<HeaderAdapter>(concatAdapter.adapters[adapterPosition]))?.apply {
                 updateViewState(viewState)
                 viewModel.setValue(key = ProfileKeyValueIDs.HeaderStatus, value = true)
@@ -377,9 +336,9 @@ internal class ProfileListingActivity : ComponentActivity() {
                 notifyDataSetChanged()
 
                 when (viewState) {
-                    endOfResults -> saveItemView(isEndOfResultsItemVisible = true)
-                    loading -> saveItemView(isPaginationLoadingItemVisible = true)
-                    retry -> saveItemView(isRetryItemVisible = true)
+                    END_OF_RESULTS -> saveItemView(isEndOfResultsItemVisible = true)
+                    LOADING -> saveItemView(isPaginationLoadingItemVisible = true)
+                    RETRY -> saveItemView(isRetryItemVisible = true)
                     else -> saveItemView()
                 }
             }
@@ -411,8 +370,8 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val headerAdapter = 0
-        private const val githubProfileAdapter = 1
-        private const val transientViewsAdapter = 2
+        private const val HEADER_ADAPTER = 0
+        private const val PROFILE_ADAPTER = 1
+        private const val TRANSIENT_VIEWS_ADAPTER = 2
     }
 }

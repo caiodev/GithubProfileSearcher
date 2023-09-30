@@ -6,10 +6,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fea
 
 @androidx.room.Database(entities = [UserProfile::class], version = 1)
 abstract class AppDatabase : RoomDatabase(), Database {
-
     abstract override fun profileDao(): ProfileDao
 
     companion object {
-        const val databaseName = "app-db"
+        const val DATABASE_NAME = "app-db"
     }
 }

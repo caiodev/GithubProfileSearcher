@@ -31,15 +31,16 @@ suspend fun Aggregator.handleResult(
     }
 
 fun Aggregator.handleError(error: State<Error>?): ErrorWithMessage {
-    val errorMessage: Int = when (error) {
-        UnknownHost, SocketTimeout, Connect -> Core.string.unknown_host_and_socket_timeout
-        SSLHandshake -> Core.string.ssl_handshake
-        ClientSide -> Core.string.client_side
-        ServerSide -> Core.string.server_side
-        SearchQuotaReached -> Core.string.query_limit
-        ResultLimitReached -> Core.string.limit_of_profile_results
-        else -> Core.string.generic
-    }
+    val errorMessage: Int =
+        when (error) {
+            UnknownHost, SocketTimeout, Connect -> Core.string.unknown_host_and_socket_timeout
+            SSLHandshake -> Core.string.ssl_handshake
+            ClientSide -> Core.string.client_side
+            ServerSide -> Core.string.server_side
+            SearchQuotaReached -> Core.string.query_limit
+            ResultLimitReached -> Core.string.limit_of_profile_results
+            else -> Core.string.generic
+        }
 
     return ErrorWithMessage(errorMessage)
 }

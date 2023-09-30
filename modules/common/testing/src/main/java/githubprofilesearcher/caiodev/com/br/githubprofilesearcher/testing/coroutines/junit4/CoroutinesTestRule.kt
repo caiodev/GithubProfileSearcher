@@ -13,10 +13,12 @@ import kotlin.coroutines.ContinuationInterceptor
 
 @ExperimentalCoroutinesApi
 class CoroutinesTestRule : TestRule, TestCoroutineScope by TestCoroutineScope() {
-
     val dispatcher = coroutineContext[ContinuationInterceptor] as TestCoroutineDispatcher
 
-    override fun apply(base: Statement, description: Description): Statement {
+    override fun apply(
+        base: Statement,
+        description: Description,
+    ): Statement {
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {

@@ -6,8 +6,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databi
 
 class HeaderViewHolder(private val itemBinding: HeaderViewHolderLayoutBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
-
-    internal fun bind(@StringRes model: Int) {
+    internal fun bind(
+        @StringRes model: Int,
+    ) {
         itemBinding.userListHeader.text =
             itemView.context.getString(model)
     }

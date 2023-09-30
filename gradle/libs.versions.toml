@@ -5,6 +5,9 @@
 #AppCompat
 appCompat = '1.7.0-alpha03'
 
+#Chucker
+chucker = '4.0.0'
+
 #Coil
 coil = '2.4.0'
 
@@ -61,9 +64,6 @@ okHttp = '5.0.0-alpha.11'
 #Room
 room = '2.5.2'
 
-#Timber
-timber = '5.0.1'
-
 #Views/ViewGroups
 #ConstraintLayout
 constraintLayout = '2.1.4'
@@ -114,6 +114,10 @@ serialization = { group = "io.ktor", name = "ktor-client-serialization", version
 #AppCompat
 appCompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appCompat" }
 
+#Chucker
+debugChucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
+releaseChucker = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
+
 #Coil
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 
@@ -146,10 +150,6 @@ leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", v
 #Lifecycle section
 lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycleViewmodelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-
-#Logging section
-okhttpLoggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttp" }
-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 #Material design
 materialDesign = { group = "com.google.android.material", name = "material", version.ref = "materialDesign" }
@@ -246,11 +246,6 @@ compose = [
 lifecycle = [
     "lifecycleRuntimeKtx",
     "lifecycleViewmodelKtx"
-]
-
-logging = [
-    "okhttpLoggingInterceptor",
-    "timber"
 ]
 
 room = [

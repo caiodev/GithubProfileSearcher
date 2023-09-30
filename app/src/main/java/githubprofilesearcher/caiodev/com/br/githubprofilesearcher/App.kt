@@ -12,7 +12,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-import timber.log.Timber
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.R as UI
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -24,7 +23,6 @@ class App : Application(), ImageLoaderFactory {
             androidLogger(Level.DEBUG)
             modules(global, userProfileViewModel)
         }
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -32,13 +30,13 @@ class App : Application(), ImageLoaderFactory {
             .crossfade(true)
             .diskCache {
                 DiskCache.Builder()
-                    .directory(applicationContext.cacheDir.resolve(coilCacheDir))
-                    .maxSizePercent(diskCacheCap)
+                    .directory(applicationContext.cacheDir.resolve(COIL_CACHE_DIR))
+                    .maxSizePercent(DISK_CACHE_CAP)
                     .build()
             }
             .memoryCache {
                 MemoryCache.Builder(applicationContext)
-                    .maxSizePercent(memoryCacheCap)
+                    .maxSizePercent(MEMORY_CACHE_CAP)
                     .build()
             }
             .placeholder(UI.mipmap.ic_launcher)
@@ -47,8 +45,8 @@ class App : Application(), ImageLoaderFactory {
     }
 
     companion object {
-        private const val coilCacheDir = "image_cache"
-        private const val diskCacheCap = 0.10
-        private const val memoryCacheCap = 0.25
+        private const val COIL_CACHE_DIR = "image_cache"
+        private const val DISK_CACHE_CAP = 0.10
+        private const val MEMORY_CACHE_CAP = 0.25
     }
 }

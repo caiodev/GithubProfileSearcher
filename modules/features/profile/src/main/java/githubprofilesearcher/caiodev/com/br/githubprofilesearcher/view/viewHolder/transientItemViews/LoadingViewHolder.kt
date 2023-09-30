@@ -5,6 +5,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databi
 
 class LoadingViewHolder(itemBinding: LoadingViewHolderLayoutBinding) : RecyclerView.ViewHolder(itemBinding.root) {
     companion object {
-        const val loading = 2
+        const val LOADING = 2
     }
 }

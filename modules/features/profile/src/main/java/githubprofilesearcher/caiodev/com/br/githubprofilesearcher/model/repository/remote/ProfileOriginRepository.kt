@@ -15,7 +15,6 @@ class ProfileOriginRepository(
     private val client: HttpClient,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : IProfileOriginRepository {
-
     override suspend fun provideUserInformation(
         user: String,
         pageNumber: Int,
@@ -26,7 +25,7 @@ class ProfileOriginRepository(
                 fetchUserInfo(
                     user = user,
                     pageNumber = pageNumber,
-                    maxResultsPerPage = maxResultsPerPage
+                    maxResultsPerPage = maxResultsPerPage,
                 )
             }
         }

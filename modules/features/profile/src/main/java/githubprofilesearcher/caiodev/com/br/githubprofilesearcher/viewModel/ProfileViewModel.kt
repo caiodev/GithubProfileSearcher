@@ -33,7 +33,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 internal class ProfileViewModel(
     private val profileDataAggregator: IProfileDataAggregator,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<UIState>(Default)
     val uiState: StateFlow<UIState>
         get() = _uiState
@@ -42,7 +41,7 @@ internal class ProfileViewModel(
     private val profilesInfoList: List<UserProfile> = _profileInfoList
 
     fun requestUpdatedProfiles(profile: String = obtainDefaultString()) {
-        setValue(key = PageNumber, value = initialPage)
+        setValue(key = PageNumber, value = INITIAL_PAGE)
 
         if (profile.isNotEmpty()) {
             setValue(key = TemporaryProfileText, value = profile)
@@ -83,7 +82,7 @@ internal class ProfileViewModel(
                 profileDataAggregator.provideUserInformation(
                     user = user,
                     pageNumber = getValue(key = PageNumber),
-                    maxResultsPerPage = itemsPerPage,
+                    maxResultsPerPage = ITEMS_PER_PAGE,
                 )
             handleResult(value, shouldListItemsBeRemoved)
         }
@@ -114,9 +113,7 @@ internal class ProfileViewModel(
         }
     }
 
-    private fun setupUpdatedList(
-        successWithBody: SuccessWithBody<*>,
-    ) {
+    private fun setupUpdatedList(successWithBody: SuccessWithBody<*>) {
         runTaskOnBackground {
             successWithBody.apply {
                 if (_profileInfoList.isNotEmpty()) {
@@ -130,9 +127,7 @@ internal class ProfileViewModel(
         }
     }
 
-    private fun setupPaginationList(
-        successWithBody: SuccessWithBody<*> = SuccessWithBody(Any()),
-    ) {
+    private fun setupPaginationList(successWithBody: SuccessWithBody<*> = SuccessWithBody(Any())) {
         runTaskOnBackground {
             successWithBody.apply {
                 castTo<Profile>(successWithBody.data)?.let {
@@ -147,7 +142,10 @@ internal class ProfileViewModel(
         return runTaskOnForeground { profileDataAggregator.getValue(key = key) }
     }
 
-    fun <T> setValue(key: Enum<*>, value: T) {
+    fun <T> setValue(
+        key: Enum<*>,
+        value: T,
+    ) {
         runTaskOnForeground { profileDataAggregator.setValue(key = key, value = value) }
     }
 
@@ -172,7 +170,7 @@ internal class ProfileViewModel(
             setValue(key = SearchStatus, value = false)
         }
 
-        setValue(key = PageNumber, getValue<Int>(key = PageNumber).plus(initialPage))
+        setValue(key = PageNumber, getValue<Int>(key = PageNumber).plus(INITIAL_PAGE))
 
         _uiState.emit(User(content = profilesInfoList))
     }
@@ -180,7 +178,7 @@ internal class ProfileViewModel(
     inline fun <reified T> castTo(value: Any) = ValueCasting.castTo<T>(value)
 
     private companion object {
-        const val initialPage = 1
-        const val itemsPerPage = 20
+        const val INITIAL_PAGE = 1
+        const val ITEMS_PER_PAGE = 20
     }
 }

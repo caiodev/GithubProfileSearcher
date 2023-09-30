@@ -4,7 +4,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.stat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.RemoteFetcher
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.MockedAPIResponseProvider.profileInfoCallResult
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.MockedAPIResponseProvider.PROFILE_INFO_CALL_RESULT
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.APITestService.newInstance
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.factory.APITestService.setup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,7 +25,6 @@ import javax.net.ssl.SSLHandshakeException
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Error as Error
 
 class RemoteRepositoryTest : TestSteps {
-
     private lateinit var mockWebServer: MockWebServer
     private lateinit var userProfile: UserProfileCall
     private lateinit var remoteRepository: RemoteFetcher
@@ -54,7 +53,7 @@ class RemoteRepositoryTest : TestSteps {
                 MockResponse()
                     .setResponseCode(200)
                     .setBody(
-                        profileInfoCallResult,
+                        PROFILE_INFO_CALL_RESULT,
                     ),
             )
         }
@@ -309,16 +308,12 @@ class RemoteRepositoryTest : TestSteps {
         }
     }
 
-    private fun setupException(
-        exception: IOException = IOException(),
-    ): Response<Profile> {
+    private fun setupException(exception: IOException = IOException()): Response<Profile> {
         throwException(exception)
         return listOf<Response<Profile>>()[0]
     }
 
-    private fun throwException(
-        exception: IOException,
-    ) {
+    private fun throwException(exception: IOException) {
         throw exception
     }
 }

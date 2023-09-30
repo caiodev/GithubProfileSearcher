@@ -6,6 +6,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databi
 class EndOfResultsViewHolder(itemBinding: EndOfResultsViewHolderLayoutBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
     companion object {
-        const val endOfResults = 4
+        const val END_OF_RESULTS = 4
     }
 }

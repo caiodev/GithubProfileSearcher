@@ -23,7 +23,9 @@ fun EditText.hideKeyboard() {
         ?.hideSoftInputFromWindow(applicationWindowToken, 0)
 }
 
-fun ImageView.changeDrawable(@DrawableRes newDrawable: Int) {
+fun ImageView.changeDrawable(
+    @DrawableRes newDrawable: Int,
+) {
     setImageDrawable(
         ContextCompat.getDrawable(
             context,
@@ -38,7 +40,9 @@ fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
     }
 }
 
-fun View.applyBackgroundColor(@ColorRes color: Int) {
+fun View.applyBackgroundColor(
+    @ColorRes color: Int,
+) {
     setBackgroundColor(ContextCompat.getColor(context, color))
 }
 
@@ -53,8 +57,6 @@ fun Snackbar.showErrorSnackBar(
     show()
 }
 
-fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(
-    isSwipeEnabled: Boolean = true,
-) {
+fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(isSwipeEnabled: Boolean = true) {
     isEnabled = isSwipeEnabled
 }

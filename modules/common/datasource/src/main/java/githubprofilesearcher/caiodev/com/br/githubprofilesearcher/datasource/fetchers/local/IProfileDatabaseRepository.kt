@@ -4,8 +4,9 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fea
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
 
 interface IProfileDatabaseRepository : ProfileDao {
-
     override suspend fun getProfilesFromDb(): List<UserProfile>
+
     override suspend fun insertProfilesIntoDb(profileList: List<UserProfile>)
+
     override suspend fun dropProfileInformation()
 }
