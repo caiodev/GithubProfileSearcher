@@ -11,7 +11,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fea
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.IProfileDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.repository.IProfileOriginRepository
 
 class ProfileDataAggregator(
     private val keyValueRepository: IKeyValueRepository,
@@ -29,13 +29,13 @@ class ProfileDataAggregator(
         keyValueRepository.setValue(key = key, value = value)
     }
 
-    override suspend fun provideUserInformation(
+    override suspend fun fetchProfileInfo(
         user: String,
         pageNumber: Int,
         maxResultsPerPage: Int,
     ): State<*> {
         val value =
-            profileOriginRepository.provideUserInformation(
+            profileOriginRepository.fetchProfileInfo(
                 user = user,
                 pageNumber = pageNumber,
                 maxResultsPerPage = maxResultsPerPage,

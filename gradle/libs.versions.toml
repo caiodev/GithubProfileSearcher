@@ -32,7 +32,7 @@ ktlint = '1.0.0'
 ktlintPlugin = '11.6.0'
 
 #Gradle
-gradle = '8.1.1'
+gradle = '8.1.2'
 
 #Koin
 koin = '3.4.2'
@@ -261,12 +261,6 @@ views = [
 
 # Test Bundles #
 
-testCore = [
-    "archTest",
-    "testCore",
-    "testRunner"
-]
-
 junit = [
     "junit",
     "junit5"
@@ -281,4 +275,10 @@ kotest = [
 mockk = [
     "mockkAgent",
     "mockkAndroid"
+]
+
+testCore = [
+    "archTest",
+    "testCore",
+    "testRunner"
 ]

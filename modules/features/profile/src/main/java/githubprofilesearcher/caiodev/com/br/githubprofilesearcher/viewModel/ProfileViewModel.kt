@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ErrorWithMessage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.State
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithBody
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnForeground
@@ -79,7 +78,7 @@ internal class ProfileViewModel(
         runTaskOnBackground {
             _uiState.emit(Loading)
             val value =
-                profileDataAggregator.provideUserInformation(
+                profileDataAggregator.fetchProfileInfo(
                     user = user,
                     pageNumber = getValue(key = PageNumber),
                     maxResultsPerPage = ITEMS_PER_PAGE,
@@ -153,10 +152,6 @@ internal class ProfileViewModel(
         _profileInfoList.addAll(list)
     }
 
-    fun updateUIWithCache() {
-        setupPaginationList()
-    }
-
     private suspend fun saveDataAfterSuccess() {
         setValue(key = CurrentProfileText, value = getValue<String>(key = TemporaryProfileText))
         setValue(key = LastAttemptStatus, value = false)
@@ -174,8 +169,6 @@ internal class ProfileViewModel(
 
         _uiState.emit(User(content = profilesInfoList))
     }
-
-    inline fun <reified T> castTo(value: Any) = ValueCasting.castTo<T>(value)
 
     private companion object {
         const val INITIAL_PAGE = 1

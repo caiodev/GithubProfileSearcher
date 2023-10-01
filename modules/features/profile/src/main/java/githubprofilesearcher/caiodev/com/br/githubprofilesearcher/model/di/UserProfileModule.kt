@@ -9,8 +9,10 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.reposito
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.ProfileDataAggregator
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository.Companion.PROFILE_PREFERENCES_INSTANCE_ID
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.ProfileOriginRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.repository.IProfileOriginRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.repository.ProfileOriginRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.repository.calls.IProfileClient
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.repository.calls.ProfileClient
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.android.ext.koin.androidContext
@@ -32,6 +34,8 @@ val userProfileViewModel =
         factory<IProfileDatabaseRepository> {
             ProfileDatabaseRepository(appDatabase = get())
         }
+
+        factory<IProfileClient> { ProfileClient(client = get()) }
 
         factory<IProfileOriginRepository> {
             ProfileOriginRepository(

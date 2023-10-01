@@ -2,6 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.reposit
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.Aggregator
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.repository.IProfileOriginRepository
 
 interface IProfileDataAggregator : Aggregator, IKeyValueRepository, IProfileOriginRepository
