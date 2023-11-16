@@ -29,7 +29,7 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            LOADING -> {
+            LOADING ->
                 LoadingViewHolder(
                     LoadingViewHolderLayoutBinding.inflate(
                         inflater,
@@ -37,9 +37,8 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         false,
                     ),
                 )
-            }
 
-            RETRY -> {
+            RETRY ->
                 RetryViewHolder(
                     RetryViewHolderLayoutBinding.inflate(
                         inflater,
@@ -48,7 +47,6 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     ),
                     itemClicked,
                 )
-            }
 
             END_OF_RESULTS ->
                 EndOfResultsViewHolder(

@@ -14,10 +14,10 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.stat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithoutBody
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.UnknownHost
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.Aggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.ICell
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
-suspend fun Aggregator.handleResult(
+suspend fun ICell.handleResult(
     value: State<*>,
     onSuccess: suspend () -> Unit = {},
 ): State<*> =
@@ -30,7 +30,7 @@ suspend fun Aggregator.handleResult(
         else -> handleError(ValueCasting.castTo(value))
     }
 
-fun Aggregator.handleError(error: State<Error>?): ErrorWithMessage {
+fun ICell.handleError(error: State<Error>?): ErrorWithMessage {
     val errorMessage: Int =
         when (error) {
             UnknownHost, SocketTimeout, Connect -> Core.string.unknown_host_and_socket_timeout

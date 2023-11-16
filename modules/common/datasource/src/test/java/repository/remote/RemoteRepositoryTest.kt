@@ -1,7 +1,6 @@
 package repository.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfileCall
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.RemoteFetcher
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSteps
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.api.MockedAPIResponseProvider.PROFILE_INFO_CALL_RESULT
@@ -13,10 +12,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import retrofit2.Response
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException

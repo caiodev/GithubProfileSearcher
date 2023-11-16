@@ -1,5 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher
 
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.models.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.sections.profile.unit.viewModel.fakes.repository.local.FakeLocalRepository
@@ -9,18 +10,16 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.TestSt
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing.coroutines.junit5.CoroutinesTestExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import utils.base.liveData.junit4.LiveDataTestUtil
-import utils.base.liveData.junit5.LiveDataTestExtension
 import java.io.Writer
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class, LiveDataTestExtension::class)
 class ProfileViewModelTest : TestSteps {
-    private lateinit var viewModel: githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
+    private lateinit var viewModel:
+        githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
 
     @BeforeEach
     override fun setupDependencies() {

@@ -26,7 +26,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.ap
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.showErrorSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Empty
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Error
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Loading
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.HeaderAdapter
@@ -98,7 +97,6 @@ internal class ProfileListingActivity : ComponentActivity() {
                     is User -> onSuccess(uiState)
                     is Error -> showErrorMessage(uiState.message)
                     is Loading -> binding.repositoryLoadingProgressBar.isVisible = true
-                    is Empty -> {}
                     else -> Unit
                 }
             }
@@ -173,6 +171,7 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun onSuccess(user: User) {
+        binding.repositoryLoadingProgressBar.isVisible = false
         setupUpperViewsInteraction(true)
 
         val isHeaderVisible: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.HeaderStatus)
@@ -201,15 +200,15 @@ internal class ProfileListingActivity : ComponentActivity() {
 
     private fun updatedProfileCall(profile: String = "") {
         if (profile.isNotEmpty()) {
-            callApiThroughViewModel { viewModel.requestUpdatedProfiles(profile) }
+            getData { viewModel.requestUpdatedProfiles(profile) }
         } else {
-            callApiThroughViewModel { viewModel.requestUpdatedProfiles() }
+            getData { viewModel.requestUpdatedProfiles() }
         }
     }
 
     private fun paginationCall() {
         changeViewState(TRANSIENT_VIEWS_ADAPTER, LOADING)
-        callApiThroughViewModel { viewModel.paginateProfiles() }
+        getData { viewModel.paginateProfiles() }
     }
 
     private fun textInputEditTextNotEmptyRequiredCall() {
@@ -226,7 +225,7 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
     }
 
-    private inline fun callApiThroughViewModel(crossinline task: () -> Unit) {
+    private inline fun getData(crossinline task: () -> Unit) {
         viewModel.setValue(key = ProfileKeyValueIDs.CallStatus, value = true)
 
         val hasUserDeletedProfileText: Boolean =
@@ -318,8 +317,7 @@ internal class ProfileListingActivity : ComponentActivity() {
 
     private fun isTextInputEditTextNotEmpty() = binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
 
-    private fun provideRecyclerViewLayoutManager() =
-        castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
+    private fun provideRecyclerViewLayoutManager() = castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
 
     private fun changeViewState(
         adapterPosition: Int,
@@ -357,8 +355,7 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
     }
 
-    private inline fun <reified T> provideAdapter(adapterPosition: Int) =
-        castTo<T>(concatAdapter.adapters[adapterPosition])
+    private inline fun <reified T> provideAdapter(adapterPosition: Int) = castTo<T>(concatAdapter.adapters[adapterPosition])
 
     private fun launchBrowser(profileUrl: String) {
         startActivity(

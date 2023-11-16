@@ -51,6 +51,9 @@ dependencies {
     //JUnit
     api dep.bundles.junit
 
+    //Koin
+    api dep.koinTest
+
     //Kotest
     api dep.bundles.kotest
 

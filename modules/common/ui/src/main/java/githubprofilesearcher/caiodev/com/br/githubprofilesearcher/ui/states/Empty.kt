@@ -1,3 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states
 
-data class Empty(val message: Int) : UIState
+import androidx.annotation.StringRes
+
+data class Empty(
+    @StringRes val message: Int,
+) : UIState

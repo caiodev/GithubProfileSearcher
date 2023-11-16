@@ -12,16 +12,16 @@ chucker = '4.0.0'
 coil = '2.4.0'
 
 #Compose
-activity = '1.8.0-rc01'
-compiler = '1.5.3'
-composeCore = '1.6.0-alpha06'
-material3 = '1.2.0-alpha08'
+activity = '1.8.0'
+compiler = '1.5.4'
+composeCore = '1.6.0-alpha08'
+material3 = '1.2.0-alpha10'
 
 #Coroutines
 coroutines = '1.7.3'
 
 #DataStore
-dataStore = '1.1.0-alpha05'
+dataStore = '1.1.0-alpha06'
 
 #Quality checking
 #Detekt
@@ -32,16 +32,16 @@ ktlint = '1.0.0'
 ktlintPlugin = '11.6.0'
 
 #Gradle
-gradle = '8.1.2'
+gradle = '8.1.3'
 
 #Koin
-koin = '3.4.2'
+koin = '3.5.0'
 
 #Kotlin
-kotlin = '1.9.10'
+kotlin = '1.9.20'
 
 #KSP
-ksp = '1.9.10-1.0.13'
+ksp = '1.9.20-1.0.14'
 
 #Ktor
 ktor = '2.3.4'
@@ -56,20 +56,20 @@ leakCanary = '2.12'
 lifecycle = '2.6.2'
 
 #Material design
-materialDesign = '1.9.0'
+materialDesign = '1.10.0'
 
 #OkHttp
 okHttp = '5.0.0-alpha.11'
 
 #Room
-room = '2.5.2'
+room = '2.6.0'
 
 #Views/ViewGroups
 #ConstraintLayout
 constraintLayout = '2.1.4'
 
 #RecyclerView
-recyclerView = '1.3.1'
+recyclerView = '1.3.2'
 
 #SwipeRefreshLayout
 swipeRefreshLayout = '1.2.0-alpha01'
@@ -180,6 +180,9 @@ jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco
 #JUnit
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit5 = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit5" }
+
+#Koin
+koinTest = { group = "io.insert-koin", name = "koin-android-test", version.ref = "koin" }
 
 #Kotest
 kotestCore = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }

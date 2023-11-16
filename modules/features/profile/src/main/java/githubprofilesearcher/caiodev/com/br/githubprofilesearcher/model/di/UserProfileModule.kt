@@ -5,8 +5,10 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.IProfileDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.ProfileDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.IProfileDataAggregator
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.ProfileDataAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.IProfileDataCellAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.aggregator.ProfileDataCellAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.cells.profileData.IProfileDataCell
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.cells.profileData.ProfileDataCell
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueRepository.Companion.PROFILE_PREFERENCES_INSTANCE_ID
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.repository.IProfileOriginRepository
@@ -23,7 +25,7 @@ import org.koin.dsl.module
 val userProfileViewModel =
     module {
 
-        factory<IKeyValueRepository> {
+        single<IKeyValueRepository> {
             ProfileKeyValueRepository(
                 PreferenceDataStoreFactory.create {
                     androidContext().preferencesDataStoreFile(PROFILE_PREFERENCES_INSTANCE_ID)
@@ -44,17 +46,24 @@ val userProfileViewModel =
             )
         }
 
-        factory<IProfileDataAggregator> {
-            ProfileDataAggregator(
+        factory<IProfileDataCell> {
+            ProfileDataCell(
                 keyValueRepository = get(),
                 profileDatabaseRepository = get(),
                 profileOriginRepository = get(),
             )
         }
 
+        factory<IProfileDataCellAggregator> {
+            ProfileDataCellAggregator(
+                keyValueRepository = get(),
+                profileDataCell = get(),
+            )
+        }
+
         viewModel {
             ProfileViewModel(
-                profileDataAggregator = get(),
+                aggregator = get(),
             )
         }
     }

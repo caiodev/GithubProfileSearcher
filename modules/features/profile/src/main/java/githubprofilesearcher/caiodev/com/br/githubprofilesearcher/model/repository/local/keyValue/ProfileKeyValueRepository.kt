@@ -17,6 +17,6 @@ internal class ProfileKeyValueRepository(
     ) = keyValueInstance.setValue(key = key.toString(), value = value)
 
     companion object {
-        const val PROFILE_PREFERENCES_INSTANCE_ID = "profile"
+        internal const val PROFILE_PREFERENCES_INSTANCE_ID = "profile"
     }
 }

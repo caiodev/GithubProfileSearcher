@@ -17,7 +17,7 @@ import org.koin.core.scope.Scope
 
 object SourceConnector {
     private const val BASE_URL = "https://api.github.com/"
-    private const val TIMEOUT = 60000L
+    private const val TIMEOUT = 60_000L
 
     fun Scope.newInstance(
         baseUrl: String = this@SourceConnector.BASE_URL,
