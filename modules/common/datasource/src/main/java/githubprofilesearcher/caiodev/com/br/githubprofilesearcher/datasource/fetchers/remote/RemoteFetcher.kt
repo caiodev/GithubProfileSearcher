@@ -53,8 +53,8 @@ class RemoteFetcher {
     @PublishedApi internal fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
             in ClientSideError -> ClientSide
-            SEARCH_QUOTA_REACHED_ERROR -> SearchQuotaReached
-            RESULT_LIMIT_REACHED_ERROR -> ResultLimitReached
+            SearchQuotaReachedError -> SearchQuotaReached
+            ResultLimitReachedError -> ResultLimitReached
             in ServerSideError -> ServerSide
             else -> Generic
         }
@@ -88,8 +88,8 @@ class RemoteFetcher {
         val headerPattern = "\\d+".toPattern().toString()
         const val HEADER_LIST_INDEX = 2
         val ClientSideError = 400..404
-        const val SEARCH_QUOTA_REACHED_ERROR = 422
-        const val RESULT_LIMIT_REACHED_ERROR = 451
+        val SearchQuotaReachedError = 422
+        val ResultLimitReachedError = 451
         val ServerSideError = 500..511
     }
 }

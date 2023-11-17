@@ -7,6 +7,8 @@ plugins {
     id 'kotlinx-serialization'
 }
 
+apply from: "$project.rootDir/flavors/flavors.gradle"
+
 android {
     compileSdk 34
     defaultConfig {
@@ -29,6 +31,32 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_20)
+        }
+    }
+
+    flavorDimensions = ["version"]
+
+    productFlavors {
+        demo {
+            dimension "version"
+            versionNameSuffix "-demo"
+            buildConfigField "String", "BASE_URL", "\"https://api.github.com/\""
+        }
+
+        full {
+            dimension "version"
+            versionNameSuffix "-full"
+            buildConfigField "String", "BASE_URL", "\"https://api.github.com/\""
+        }
+    }
+
+    packagingOptions {
+        resources {
+            excludes += [
+                    '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md,licenses/ASM}',
+                    'win32-x86/attach_hotspot_windows.dll',
+                    'win32-x86-64/attach_hotspot_windows.dll'
+            ]
         }
     }
 

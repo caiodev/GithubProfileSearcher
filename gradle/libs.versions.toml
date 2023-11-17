@@ -25,17 +25,17 @@ dataStore = '1.1.0-alpha06'
 
 #Quality checking
 #Detekt
-detekt = '1.23.1'
+detekt = '1.23.3'
 
 #Ktlint
-ktlint = '1.0.0'
-ktlintPlugin = '11.6.0'
+ktlint = '1.0.1'
+ktlintPlugin = '11.6.1'
 
 #Gradle
-gradle = '8.1.3'
+gradle = '8.1.4'
 
 #Koin
-koin = '3.5.0'
+koin = '3.5.2-RC1'
 
 #Kotlin
 kotlin = '1.9.20'
@@ -80,7 +80,7 @@ swipeRefreshLayout = '1.2.0-alpha01'
 archTest = '2.2.0'
 
 #Core
-testCore = '1.6.0-alpha04'
+testCore = '1.6.0-alpha02'
 
 #Jacoco
 jacoco = '0.8.10'

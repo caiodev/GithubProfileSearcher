@@ -1,0 +1,7 @@
+android {
+    flavorDimensions "version"
+    productFlavors {
+        demo {}
+        full {}
+    }
+}

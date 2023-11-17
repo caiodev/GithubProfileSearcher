@@ -16,11 +16,10 @@ import kotlinx.serialization.json.Json
 import org.koin.core.scope.Scope
 
 object SourceConnector {
-    private const val BASE_URL = "https://api.github.com/"
     private const val TIMEOUT = 60_000L
 
     fun Scope.newInstance(
-        baseUrl: String = this@SourceConnector.BASE_URL,
+        baseUrl: String = BuildConfig.BASE_URL,
         interceptor: ChuckerInterceptor,
     ): HttpClient {
         return HttpClient(OkHttp) {

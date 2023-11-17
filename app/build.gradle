@@ -6,6 +6,8 @@ plugins {
     id 'kotlinx-serialization'
 }
 
+apply from: "$project.rootDir/flavors/flavors.gradle"
+
 android {
     compileSdk 34
     defaultConfig {

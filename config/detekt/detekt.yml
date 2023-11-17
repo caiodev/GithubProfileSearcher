@@ -14,13 +14,10 @@ complexity:
   StringLiteralDuplication:
     active: true
     excludes: ['**/test/**', '**/*Test.kt', '**/*Spec.kt']
-    threshold: 5
     ignoreAnnotation: true
-    excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: '$^'
   ComplexInterface:
     active: true
-    threshold: 10
     includeStaticDeclarations: false
     includePrivateDeclarations: false
   CyclomaticComplexMethod:
@@ -69,16 +66,24 @@ formatting:
   active: true
   android: false
   autoCorrect: true
-  ContextReceiverMapping:
+  BinaryExpressionWrapping:
     active: true
+  BlankLineBeforeDeclaration:
+    active: false
+  DiscouragedCommentLocation:
+    active: false
   Filename:
+    active: false
+  FunctionSignature:
     active: false
   MaximumLineLength:
     active: false
-  ParameterListSpacing:
-    active: true
-  TypeParameterListSpacing:
-    active: true
+  MultilineExpressionWrapping:
+    active: false
+  NoEmptyFirstLineInClassBody:
+    active: false
+  StringTemplateIndent:
+    active: false
 
 naming:
   ClassNaming:
@@ -215,6 +220,8 @@ style:
     active: true
     excludes: ['**/test/**', '**/*Test.kt', '**/*Spec.kt']
     excludeCommentStatements: true
+  MayBeConst:
+    active: false
   NestedClassesVisibility:
     active: true
   ObjectLiteralToLambda:
