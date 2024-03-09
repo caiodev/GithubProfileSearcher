@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6eb6d7d5a602821d09da58cd8d0991e9",
+    "identityHash": "59dcf4dc1805f60e1a6d0658891d55d4",
     "entities": [
       {
-        "tableName": "UserProfile",
+        "tableName": "User",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`login` TEXT NOT NULL, `profileUrl` TEXT NOT NULL, `userId` INTEGER NOT NULL, `userImage` TEXT NOT NULL, PRIMARY KEY(`userId`))",
         "fields": [
           {
@@ -46,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6eb6d7d5a602821d09da58cd8d0991e9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '59dcf4dc1805f60e1a6d0658891d55d4')"
     ]
   }
 }

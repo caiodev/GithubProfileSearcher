@@ -54,8 +54,7 @@ android {
         resources {
             excludes += [
                     '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md,licenses/ASM}',
-                    'win32-x86/attach_hotspot_windows.dll',
-                    'win32-x86-64/attach_hotspot_windows.dll'
+                    'win32-x86{/attach_hotspot_windows.dll,-64/attach_hotspot_windows.dll}'
             ]
         }
     }

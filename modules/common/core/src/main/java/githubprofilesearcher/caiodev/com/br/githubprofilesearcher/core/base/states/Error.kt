@@ -1,3 +1,3 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states
 
-object Error
+data class Error(val error: Int) : State<Error>

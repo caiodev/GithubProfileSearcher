@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Success message -->
-    <string name="back_online">Conexão reestabelecida</string>
+    <string name="successful_operation">Successo</string>
 
     <!-- Error messages -->
     <string name="empty_field">Campo vazio</string>

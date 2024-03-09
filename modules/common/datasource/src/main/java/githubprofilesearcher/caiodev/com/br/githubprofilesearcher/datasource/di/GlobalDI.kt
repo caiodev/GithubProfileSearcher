@@ -6,6 +6,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fet
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.Database
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.RemoteFetcher
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.api.SourceConnector.newInstance
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -25,4 +26,6 @@ val global =
         single { newInstance(interceptor = get()) }
 
         single { RemoteFetcher() }
+
+        single { Dispatchers.IO }
     }

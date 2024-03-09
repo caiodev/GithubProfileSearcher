@@ -51,7 +51,7 @@ dependencies {
     api dep.jacoco
 
     //JUnit
-    api dep.bundles.junit
+    api dep.junit5
 
     //Koin
     api dep.koinTest
@@ -61,9 +61,6 @@ dependencies {
 
     //MockK
     api dep.bundles.mockk
-
-    //MockWebServer
-    api dep.mockWebServer
 
     //Robolectric
     api dep.robolectric

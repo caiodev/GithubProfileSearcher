@@ -3,17 +3,17 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHold
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.load
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.UserProfile
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ProfileViewHolderLayoutBinding
-import okhttp3.internal.format
 
 class ProfileInformationViewHolder(
     private val itemBinding: ProfileViewHolderLayoutBinding,
     onItemSelected: OnItemSelectedListener,
 ) :
     RecyclerView.ViewHolder(itemBinding.root) {
-    private var profileUrl = ""
+    private var profileUrl = emptyString()
 
     init {
         itemBinding.parentLayout.setOnClickListener {
@@ -26,12 +26,12 @@ class ProfileInformationViewHolder(
 
         model.userId.let {
             itemBinding.userId.text =
-                format(itemView.context.getString(R.string.uid), it.toString())
+                String.format(itemView.context.getString(R.string.uid), it.toString())
         }
 
         model.login.let {
             itemBinding.userLogin.text =
-                format(itemView.context.getString(R.string.login), it)
+                String.format(itemView.context.getString(R.string.login), it)
         }
 
         itemBinding.userAvatar.load(model.userImage, itemView.context.imageLoader)

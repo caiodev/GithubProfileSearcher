@@ -1,0 +1,7 @@
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.aggregator
+
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.extension.ICellAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.cell.IProfileDataObtainmentCell
+
+interface IProfileDataCellAggregator : ICellAggregator, IKeyValueRepository, IProfileDataObtainmentCell

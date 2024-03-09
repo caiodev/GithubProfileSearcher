@@ -13,7 +13,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import kotlinx.coroutines.launch
@@ -50,13 +49,9 @@ fun View.applyViewVisibility(visibility: Int) {
     this.visibility = visibility
 }
 
-fun Snackbar.showErrorSnackBar(
+fun Snackbar.showMessage(
     @StringRes message: Int,
 ) {
     setText(message)
     show()
-}
-
-fun SwipeRefreshLayout.applySwipeRefreshVisibilityAttributes(isSwipeEnabled: Boolean = true) {
-    isEnabled = isSwipeEnabled
 }

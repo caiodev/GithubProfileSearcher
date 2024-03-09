@@ -81,7 +81,5 @@ class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
-    ) {
-        // detekt : Empty block
-    }
+    ) = Unit
 }

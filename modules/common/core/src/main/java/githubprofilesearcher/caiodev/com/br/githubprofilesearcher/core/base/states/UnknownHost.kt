@@ -1,3 +1,3 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states
 
-object UnknownHost : State<Error>
+data object UnknownHost : State<Error>

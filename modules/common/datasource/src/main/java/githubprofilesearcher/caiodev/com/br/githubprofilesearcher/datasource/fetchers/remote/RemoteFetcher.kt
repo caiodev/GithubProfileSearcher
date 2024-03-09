@@ -11,8 +11,6 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.stat
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SocketTimeout
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.State
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithBody
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SuccessWithoutBody
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.UnknownHost
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
@@ -39,18 +37,14 @@ class RemoteFetcher {
         }
     }
 
-    @PublishedApi internal inline fun <reified T> handleSuccess(
+    @PublishedApi
+    internal inline fun <reified T> handleSuccess(
         headers: Headers,
         response: T?,
-    ): State<Success> {
-        response?.let { apiResponse ->
-            return SuccessWithBody(apiResponse, obtainTotalPages(headers))
-        } ?: run {
-            return SuccessWithoutBody
-        }
-    }
+    ): State<Success<T?>> = Success(response, obtainTotalPages(headers))
 
-    @PublishedApi internal fun handleHttpError(responseCode: Int): State<Error> {
+    @PublishedApi
+    internal fun handleHttpError(responseCode: Int): State<Error> {
         return when (responseCode) {
             in ClientSideError -> ClientSide
             SearchQuotaReachedError -> SearchQuotaReached
@@ -60,7 +54,8 @@ class RemoteFetcher {
         }
     }
 
-    @PublishedApi internal fun handleException(exception: IOException): State<Error> {
+    @PublishedApi
+    internal fun handleException(exception: IOException): State<Error> {
         return when (exception) {
             is ConnectException -> Connect
             is SocketTimeoutException -> SocketTimeout
@@ -70,15 +65,17 @@ class RemoteFetcher {
         }
     }
 
-    @PublishedApi internal fun obtainTotalPages(headers: Headers): Int {
+    @PublishedApi
+    internal fun obtainTotalPages(headers: Headers): Int {
         var totalPages = 0
-        headers[HEADER_NAME]?.let { header ->
-            if (header.isNotEmpty()) {
-                totalPages =
-                    Regex(headerPattern).findAll(header)
-                        .map(MatchResult::value)
-                        .toList()[HEADER_LIST_INDEX].toInt()
-            }
+        val header = headers[HEADER_NAME]
+        if (!header.isNullOrEmpty()) {
+            totalPages =
+                Regex(headerPattern)
+                    .findAll(header)
+                    .map(MatchResult::value)
+                    .toList()[HEADER_LIST_INDEX]
+                    .toInt()
         }
         return totalPages
     }

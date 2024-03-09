@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
@@ -19,19 +20,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ActivityProfileListingBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applyViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.runTaskOnBackground
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.showErrorSnackBar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Error
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.states.Loading
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.showMessage
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.HeaderAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.ProfileAdapter
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.TransientViewsAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.states.User
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.state.ProfileUIState
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.OnItemSelectedListener
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.END_OF_RESULTS
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
@@ -43,7 +43,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 internal class ProfileListingActivity : ComponentActivity() {
     private lateinit var binding: ActivityProfileListingBinding
 
-    private val errorSnackBar by lazy {
+    private val snackBar by lazy {
         Snackbar.make(
             findViewById(android.R.id.content),
             Core.string.generic,
@@ -93,11 +93,19 @@ internal class ProfileListingActivity : ComponentActivity() {
     private fun setupObserver() {
         runTaskOnBackground {
             viewModel.uiState.collect { uiState ->
-                when (uiState) {
-                    is User -> onSuccess(uiState)
-                    is Error -> showErrorMessage(uiState.message)
-                    is Loading -> binding.repositoryLoadingProgressBar.isVisible = true
-                    else -> Unit
+                binding.progressBar.isGone = uiState.isLoading
+                if (uiState.isSuccess) {
+                    if (uiState.isSuccessWithContent) {
+                        onSuccess(data = uiState)
+                    } else {
+                        snackBar.showMessage(uiState.successMessage)
+                    }
+                } else {
+                    if (uiState.isEmptyStateError) {
+                        Unit
+                    } else {
+                        showErrorMessage(uiState.errorMessage)
+                    }
                 }
             }
         }
@@ -124,7 +132,7 @@ internal class ProfileListingActivity : ComponentActivity() {
             setOnEditorActionListener(
                 TextView.OnEditorActionListener { _, actionId, _ ->
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        textInputEditTextNotEmptyRequiredCall()
+                        makeTextInputEditTextNotEmptyRequiredCall()
                         return@OnEditorActionListener true
                     }
                     false
@@ -156,7 +164,7 @@ internal class ProfileListingActivity : ComponentActivity() {
                     adapterPosition: Int,
                     id: Int,
                 ) {
-                    paginationCall()
+                    getRecyclerData()
                 }
             },
         )
@@ -170,8 +178,9 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
     }
 
-    private fun onSuccess(user: User) {
-        binding.repositoryLoadingProgressBar.isVisible = false
+    private fun onSuccess(data: ProfileUIState) {
+
+        binding.progressBar.isVisible = false
         setupUpperViewsInteraction(true)
 
         val isHeaderVisible: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.HeaderStatus)
@@ -181,7 +190,7 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
 
         provideAdapter<ProfileAdapter>(PROFILE_ADAPTER)?.apply {
-            updateDataSource(user.content)
+            updateDataSource(data.content)
             notifyDataSetChanged()
         }
 
@@ -191,35 +200,31 @@ internal class ProfileListingActivity : ComponentActivity() {
 
         if (viewModel.getValue(key = ProfileKeyValueIDs.DataRequestStatus)) {
             provideAdapter<ProfileAdapter>(PROFILE_ADAPTER)?.updateDataSource(
-                user.content,
+                data.content,
             )
 
             viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = false)
         }
     }
 
-    private fun updatedProfileCall(profile: String = "") {
-        if (profile.isNotEmpty()) {
-            getData { viewModel.requestUpdatedProfiles(profile) }
-        } else {
-            getData { viewModel.requestUpdatedProfiles() }
-        }
+    private fun getTextFieldData(profile: String = emptyString()) {
+        getData { viewModel.getData(profile) }
     }
 
-    private fun paginationCall() {
+    private fun getRecyclerData() {
         changeViewState(TRANSIENT_VIEWS_ADAPTER, LOADING)
-        getData { viewModel.paginateProfiles() }
+        getData { viewModel.paginateData() }
     }
 
-    private fun textInputEditTextNotEmptyRequiredCall() {
+    private fun makeTextInputEditTextNotEmptyRequiredCall() {
         binding.searchProfileTextInputEditText.hideKeyboard()
         if (isTextInputEditTextNotEmpty()) {
-            binding.repositoryLoadingProgressBar.applyViewVisibility(VISIBLE)
+            binding.progressBar.applyViewVisibility(VISIBLE)
             viewModel.setValue(key = ProfileKeyValueIDs.DataRequestStatus, value = true)
             viewModel.setValue(key = ProfileKeyValueIDs.DeletedProfileStatus, value = false)
-            updatedProfileCall(binding.searchProfileTextInputEditText.text.toString())
+            getTextFieldData(binding.searchProfileTextInputEditText.text.toString())
         } else {
-            errorSnackBar.showErrorSnackBar(
+            snackBar.showMessage(
                 Core.string.empty_field,
             )
         }
@@ -250,9 +255,9 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
 
         binding.searchProfileTextInputEditText.hideKeyboard()
-        binding.repositoryLoadingProgressBar.applyViewVisibility(GONE)
+        binding.progressBar.applyViewVisibility(GONE)
         setupUpperViewsInteraction(true)
-        errorSnackBar.showErrorSnackBar(message)
+        snackBar.showMessage(message)
 
         if (viewModel.getValue(key = ProfileKeyValueIDs.PaginationLoadingStatus)) {
             changeViewState(TRANSIENT_VIEWS_ADAPTER, RETRY)
@@ -296,7 +301,7 @@ internal class ProfileListingActivity : ComponentActivity() {
                             !isRetryViewVisible &&
                             !isEndOfResultsViewVisible
                         ) {
-                            paginationCall()
+                            getRecyclerData()
                         }
                     }
                 }

@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">GithubProfileSearcher</string>
 
     <!-- Success message -->
-    <string name="back_online">Back online</string>
+    <string name="successful_operation">Success</string>
 
     <!-- Error messages -->
     <string name="empty_field">Empty field</string>

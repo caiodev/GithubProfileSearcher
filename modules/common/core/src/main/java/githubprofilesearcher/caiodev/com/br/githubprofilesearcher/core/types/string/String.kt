@@ -2,4 +2,4 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.st
 
 private const val EMPTY_STRING = ""
 
-fun obtainDefaultString() = EMPTY_STRING
+fun emptyString() = EMPTY_STRING

@@ -1,3 +1,3 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states
 
-object ClientSide : State<Error>
+data object ClientSide : State<Error>
