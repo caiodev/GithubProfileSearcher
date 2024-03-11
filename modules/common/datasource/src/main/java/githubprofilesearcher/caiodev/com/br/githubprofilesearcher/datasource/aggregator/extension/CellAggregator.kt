@@ -17,7 +17,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
 suspend fun ICell.handleResult(
     value: State<*>,
-    onSuccess: suspend (value: State<*>) -> Unit = {},
+    onSuccess: suspend (success: Success<*>) -> Unit = {},
     onFailure: suspend (error: Error) -> Unit = {},
 ) {
     when (value) {

@@ -80,8 +80,7 @@ testCore = '1.6.0-alpha05'
 jacoco = '0.8.11'
 
 #JUnit
-junitAndroidX = '1.2.0-alpha03'
-junit5 = '5.10.2'
+junitKtx = '1.2.0-alpha03'
 
 #Kotest
 kotest = '5.8.0'
@@ -94,8 +93,6 @@ robolectric = '4.11.1'
 
 #Runner
 testRunner = '1.6.0-alpha06'
-androidx-test-ext-junit = "1.2.0-alpha03"
-espresso-core = "3.6.0-alpha03"
 
 ##### Libraries #####
 
@@ -174,9 +171,6 @@ coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-t
 #Jacoco
 jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
 
-#JUnit
-junit5 = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit5" }
-
 #Koin
 koinTest = { group = "io.insert-koin", name = "koin-android-test", version.ref = "koin" }
 
@@ -199,9 +193,7 @@ composeTestJUnit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", ve
 composeTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeCore" }
 
 #JUnit
-junitAndroidX = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitAndroidX" }
-androidxTestExtJunit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
-espressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 ##### Plugins #####
 

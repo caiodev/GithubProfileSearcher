@@ -50,9 +50,6 @@ dependencies {
     //Jacoco
     api dep.jacoco
 
-    //JUnit
-    api dep.junit5
-
     //Koin
     api dep.koinTest
 
@@ -74,5 +71,5 @@ dependencies {
     debugApi dep.composeTestManifest
 
     //JUnit
-    api dep.junitAndroidX
+    api dep.junitKtx
 }

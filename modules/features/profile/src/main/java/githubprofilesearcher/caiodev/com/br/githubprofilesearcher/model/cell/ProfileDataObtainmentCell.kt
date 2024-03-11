@@ -45,9 +45,9 @@ internal class ProfileDataObtainmentCell(
 
         handleResult(
             value = value,
-            onSuccess = { content ->
+            onSuccess = { success ->
                 onUserInfoArrivalSuccess(
-                    state = content,
+                    state = success,
                     shouldListBeCleared = shouldListBeCleared,
                 )
             },
