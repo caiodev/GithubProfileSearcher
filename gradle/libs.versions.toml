@@ -25,7 +25,7 @@ dataStore = '1.1.0-beta02'
 
 #Quality checking
 #Detekt
-detekt = '1.23.4'
+detekt = '1.23.5'
 
 #Ktlint
 ktlint = '1.2.1'
@@ -80,7 +80,7 @@ testCore = '1.6.0-alpha05'
 jacoco = '0.8.11'
 
 #JUnit
-junitKtx = '1.2.0-alpha03'
+junit = '1.2.0-alpha03'
 
 #Kotest
 kotest = '5.8.0'
@@ -193,7 +193,8 @@ composeTestJUnit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", ve
 composeTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeCore" }
 
 #JUnit
-junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit" }
 
 ##### Plugins #####
 
@@ -250,6 +251,11 @@ views = [
 ]
 
 # Test Bundles #
+
+junit = [
+    "junit",
+    "junitKtx"
+]
 
 kotest = [
     "kotestCore",

@@ -1,7 +1,5 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.cell
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.State
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.extension.handleResult
@@ -9,6 +7,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fea
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.model.UserModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.model.local.repository.IUserDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Success
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.mapper.mapFrom
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
@@ -20,7 +20,6 @@ internal class ProfileDataObtainmentCell(
     private val userDatabaseRepository: IUserDatabaseRepository,
     private val profileOriginRepository: IProfileOriginRepository,
 ) : IProfileDataObtainmentCell {
-
     private var profileName: String = emptyString()
     private var pageNumber = INITIAL_PAGE
     private val userList = arrayListOf<User>()
@@ -28,7 +27,7 @@ internal class ProfileDataObtainmentCell(
 
     override suspend fun obtainProfileDataList(
         profile: String,
-        shouldListBeCleared: Boolean
+        shouldListBeCleared: Boolean,
     ): ProfileState {
         keyValueRepository.setValue(
             key = ProfileKeyValueIDs.CurrentProfileText,
@@ -38,10 +37,11 @@ internal class ProfileDataObtainmentCell(
         if (profile.isNotEmpty()) profileName = profile
         pageNumber = if (shouldListBeCleared) INITIAL_PAGE else pageNumber.plus(INITIAL_PAGE)
 
-        val value = profileOriginRepository.fetchProfileInfo(
-            user = profileName,
-            pageNumber = pageNumber,
-        )
+        val value =
+            profileOriginRepository.fetchProfileInfo(
+                user = profileName,
+                pageNumber = pageNumber,
+            )
 
         handleResult(
             value = value,
@@ -53,7 +53,7 @@ internal class ProfileDataObtainmentCell(
             },
             onFailure = { error ->
                 profileState = ProfileState(errorMessage = error.error)
-            }
+            },
         )
         return profileState
     }
@@ -75,16 +75,18 @@ internal class ProfileDataObtainmentCell(
 
                 onUserInfoArrival()
 
-                profileState = ProfileState(
-                    isSuccess = true,
-                    isSuccessWithContent = true,
-                    content = userList.mapFrom(),
-                )
+                profileState =
+                    ProfileState(
+                        isSuccess = true,
+                        isSuccessWithContent = true,
+                        content = userList.mapFrom(),
+                    )
             } else {
-                profileState = ProfileState(
-                    errorMessage = Core.string.client_side,
-                    areAllResultsEmpty = userList.isEmpty()
-                )
+                profileState =
+                    ProfileState(
+                        errorMessage = Core.string.client_side,
+                        areAllResultsEmpty = userList.isEmpty(),
+                    )
             }
         } ?: run {
             profileState = ProfileState(errorMessage = Core.string.generic)

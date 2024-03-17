@@ -1,17 +1,18 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ClientSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Connect
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Error
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Generic
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ResultLimitReached
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SSLHandshake
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SearchQuotaReached
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ServerSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SocketTimeout
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.State
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.UnknownHost
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ClientSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Connect
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ErrorState
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Generic
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ResultLimitReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.SSLHandshake
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.SearchQuotaReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ServerSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.SocketTimeout
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Success
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.SuccessState
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.UnknownHost
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Headers
@@ -41,10 +42,10 @@ class RemoteFetcher {
     internal inline fun <reified T> handleSuccess(
         headers: Headers,
         response: T?,
-    ): State<Success<T?>> = Success(response, obtainTotalPages(headers))
+    ): SuccessState<T?> = Success(response, obtainTotalPages(headers))
 
     @PublishedApi
-    internal fun handleHttpError(responseCode: Int): State<Error> {
+    internal fun handleHttpError(responseCode: Int): ErrorState {
         return when (responseCode) {
             in ClientSideError -> ClientSide
             SearchQuotaReachedError -> SearchQuotaReached
@@ -55,7 +56,7 @@ class RemoteFetcher {
     }
 
     @PublishedApi
-    internal fun handleException(exception: IOException): State<Error> {
+    internal fun handleException(exception: IOException): ErrorState {
         return when (exception) {
             is ConnectException -> Connect
             is SocketTimeoutException -> SocketTimeout

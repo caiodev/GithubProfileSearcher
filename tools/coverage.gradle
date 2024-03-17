@@ -2,15 +2,16 @@ apply plugin: 'jacoco'
 
 jacoco {
     toolVersion = dep.versions.jacoco.get()
-    reportsDirectory = file("$buildDir")
+    getReportsDirectory().set(file("$layout.buildDirectory/reports/jacoco"))
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
 }
 
-task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+tasks.register('jacocoReport', JacocoReport) {
+    dependsOn['testDebugUnitTest']
 
     def coverageSourceDirs = ["src/main/java"]
 
@@ -39,8 +40,8 @@ task jacocoReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
             '**/AppDatabase**'
     ]
 
-    def javaClasses = fileTree(dir: "$buildDir/intermediates/classes/debug", excludes: fileFilter)
-    def kotlinClasses = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def javaClasses = fileTree(dir: "${layout.buildDirectory}/intermediates/classes/debug", excludes: fileFilter)
+    def kotlinClasses = fileTree(dir: "$layout.buildDirectory/tmp/kotlin-classes/debug", excludes: fileFilter)
 
     classDirectories.setFrom files([javaClasses, kotlinClasses])
     additionalSourceDirs.setFrom files(coverageSourceDirs)

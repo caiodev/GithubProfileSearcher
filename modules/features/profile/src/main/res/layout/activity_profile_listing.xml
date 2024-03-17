@@ -41,8 +41,7 @@
                 android:inputType="text|textNoSuggestions"
                 android:paddingEnd="@dimen/padding_56dp"
                 android:textSize="@dimen/text_input_edit_text_text_size"
-                tools:ignore="RtlSymmetry"
-                tools:targetApi="o" />
+                tools:ignore="RtlSymmetry" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

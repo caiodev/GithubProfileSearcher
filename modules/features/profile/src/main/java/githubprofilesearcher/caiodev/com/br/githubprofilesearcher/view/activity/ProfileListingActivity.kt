@@ -179,7 +179,6 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun onSuccess(data: ProfileUIState) {
-
         binding.progressBar.isVisible = false
         setupUpperViewsInteraction(true)
 
@@ -322,8 +321,7 @@ internal class ProfileListingActivity : ComponentActivity() {
 
     private fun isTextInputEditTextNotEmpty() = binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
 
-    private fun provideRecyclerViewLayoutManager() =
-        castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
+    private fun provideRecyclerViewLayoutManager() = castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
 
     private fun changeViewState(
         adapterPosition: Int,
@@ -361,8 +359,7 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
     }
 
-    private inline fun <reified T> provideAdapter(adapterPosition: Int) =
-        castTo<T>(concatAdapter.adapters[adapterPosition])
+    private inline fun <reified T> provideAdapter(adapterPosition: Int) = castTo<T>(concatAdapter.adapters[adapterPosition])
 
     private fun launchBrowser(profileUrl: String) {
         startActivity(

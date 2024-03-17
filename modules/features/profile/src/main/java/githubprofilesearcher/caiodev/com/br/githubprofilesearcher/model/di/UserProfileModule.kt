@@ -20,51 +20,52 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val userProfileViewModel = module {
-    single<IKeyValueRepository> {
-        ProfileKeyValueRepository(
-            PreferenceDataStoreFactory.create {
-                androidContext()
-                    .preferencesDataStoreFile(PROFILE_PREFERENCES_INSTANCE_ID)
-            },
-        )
-    }
+val userProfileViewModel =
+    module {
+        single<IKeyValueRepository> {
+            ProfileKeyValueRepository(
+                PreferenceDataStoreFactory.create {
+                    androidContext()
+                        .preferencesDataStoreFile(PROFILE_PREFERENCES_INSTANCE_ID)
+                },
+            )
+        }
 
-    factory<IUserDatabaseRepository> {
-        UserDatabaseRepository(
-            dispatcher = get(),
-            appDatabase = get(),
-        )
-    }
+        factory<IUserDatabaseRepository> {
+            UserDatabaseRepository(
+                dispatcher = get(),
+                appDatabase = get(),
+            )
+        }
 
-    factory<IProfileClient> { ProfileClient(client = get()) }
+        factory<IProfileClient> { ProfileClient(client = get()) }
 
-    factory<IProfileOriginRepository> {
-        ProfileOriginRepository(
-            remoteFetcher = get(),
-            client = get(),
-            dispatcher = get(),
-        )
-    }
+        factory<IProfileOriginRepository> {
+            ProfileOriginRepository(
+                remoteFetcher = get(),
+                client = get(),
+                dispatcher = get(),
+            )
+        }
 
-    factory<IProfileDataObtainmentCell> {
-        ProfileDataObtainmentCell(
-            keyValueRepository = get(),
-            userDatabaseRepository = get(),
-            profileOriginRepository = get(),
-        )
-    }
+        factory<IProfileDataObtainmentCell> {
+            ProfileDataObtainmentCell(
+                keyValueRepository = get(),
+                userDatabaseRepository = get(),
+                profileOriginRepository = get(),
+            )
+        }
 
-    factory<IProfileDataCellAggregator> {
-        ProfileDataCellAggregator(
-            keyValueRepository = get(),
-            profileDataCell = get(),
-        )
-    }
+        factory<IProfileDataCellAggregator> {
+            ProfileDataCellAggregator(
+                keyValueRepository = get(),
+                profileDataCell = get(),
+            )
+        }
 
-    viewModel {
-        ProfileViewModel(
-            aggregator = get(),
-        )
+        viewModel {
+            ProfileViewModel(
+                aggregator = get(),
+            )
+        }
     }
-}

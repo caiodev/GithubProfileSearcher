@@ -9,7 +9,7 @@ plugins {
 }
 
 allprojects {
-    apply from: "$project.rootDir/tools/codeChecking.gradle.kts"
+    apply from: "$project.rootDir/tools/codeChecking.gradle"
     apply from: "$project.rootDir/tools/coverage.gradle"
     apply from: "$project.rootDir/tools/detekt.gradle"
     apply from: "$project.rootDir/tools/lint.gradle"
@@ -22,6 +22,6 @@ allprojects {
     }
 }
 
-tasks.register('clean', Delete) {
+tasks.register("clean", Delete) {
     delete layout.buildDirectory
 }

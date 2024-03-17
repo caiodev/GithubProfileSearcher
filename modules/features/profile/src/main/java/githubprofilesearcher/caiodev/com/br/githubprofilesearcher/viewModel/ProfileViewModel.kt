@@ -29,19 +29,21 @@ internal class ProfileViewModel(
         shouldListBeCleared: Boolean = false,
     ) {
         runTaskOnBackground {
-            val profileState = aggregator.obtainProfileDataList(
-                profile = profile,
-                shouldListBeCleared = shouldListBeCleared,
-            )
+            val profileState =
+                aggregator.obtainProfileDataList(
+                    profile = profile,
+                    shouldListBeCleared = shouldListBeCleared,
+                )
 
-            val profileUIState = ProfileUIState(
-                isSuccess = profileState.isSuccess,
-                isSuccessWithContent = profileState.isSuccessWithContent,
-                successMessage = profileState.successMessage,
-                isEmptyStateError = profileState.areAllResultsEmpty,
-                errorMessage = profileState.errorMessage,
-                content = profileState.content
-            )
+            val profileUIState =
+                ProfileUIState(
+                    isSuccess = profileState.isSuccess,
+                    isSuccessWithContent = profileState.isSuccessWithContent,
+                    successMessage = profileState.successMessage,
+                    isEmptyStateError = profileState.areAllResultsEmpty,
+                    errorMessage = profileState.errorMessage,
+                    content = profileState.content,
+                )
 
             _uiState.emit(profileUIState)
         }

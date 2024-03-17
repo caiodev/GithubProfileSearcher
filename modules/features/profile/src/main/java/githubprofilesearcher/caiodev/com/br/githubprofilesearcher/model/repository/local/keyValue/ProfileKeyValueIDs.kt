@@ -3,9 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.reposit
 enum class ProfileKeyValueIDs {
     DeletedProfileStatus,
     ProfileText,
-    TemporaryProfileText,
     CurrentProfileText,
-    PageNumber,
     SuccessStatus,
     LastAttemptStatus,
     CallStatus,
@@ -16,5 +14,4 @@ enum class ProfileKeyValueIDs {
     EndOfResultsStatus,
     PaginationLoadingStatus,
     RetryStatus,
-    LocalPopulationStatus,
 }

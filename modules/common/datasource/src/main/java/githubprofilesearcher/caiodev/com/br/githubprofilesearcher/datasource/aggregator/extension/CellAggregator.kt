@@ -1,18 +1,19 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.extension
 
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ClientSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Connect
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Error
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ResultLimitReached
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SSLHandshake
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SearchQuotaReached
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.ServerSide
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.SocketTimeout
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.State
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.Success
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.states.UnknownHost
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.ICell
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ClientSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Connect
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Error
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ErrorState
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ResultLimitReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.SSLHandshake
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.SearchQuotaReached
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ServerSide
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.SocketTimeout
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.State
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Success
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.UnknownHost
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
 suspend fun ICell.handleResult(
@@ -26,7 +27,7 @@ suspend fun ICell.handleResult(
     }
 }
 
-fun ICell.handleError(errorState: State<Error>?): Error {
+private fun handleError(errorState: ErrorState?): Error {
     val error: Int =
         when (errorState) {
             UnknownHost, SocketTimeout, Connect -> Core.string.unknown_host_and_socket_timeout
