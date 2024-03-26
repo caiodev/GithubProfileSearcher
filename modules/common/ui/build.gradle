@@ -37,10 +37,6 @@ android {
         kotlinCompilerExtensionVersion = dep.versions.compiler.get()
     }
 
-    configurations {
-        all*.exclude group: 'com.google.guava', module: 'listenablefuture'
-    }
-
     packagingOptions {
         resources {
             excludes += [

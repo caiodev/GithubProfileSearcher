@@ -50,10 +50,6 @@ android {
         }
     }
 
-    configurations {
-        all*.exclude group: 'com.google.guava', module: 'listenablefuture'
-    }
-
     packagingOptions {
         resources {
             excludes += [

@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castToNonNullable
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.bool.obtainDefaultBoolean
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.obtainDefaultInteger
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultInteger
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -31,7 +31,7 @@ suspend fun <T> DataStore<Preferences>.getValue(key: String): T {
         else ->
             provideRequestedValue(
                 key = castToNonNullable(intPreferencesKey(key)),
-                fallbackValue = obtainDefaultInteger() as T,
+                fallbackValue = defaultInteger() as T,
             )
     }
 }

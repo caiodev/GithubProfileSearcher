@@ -93,7 +93,7 @@ internal class ProfileListingActivity : ComponentActivity() {
     private fun setupObserver() {
         runTaskOnBackground {
             viewModel.uiState.collect { uiState ->
-                binding.progressBar.isGone = uiState.isLoading
+                binding.progressBar.isVisible = uiState.isLoading
                 if (uiState.isSuccess) {
                     if (uiState.isSuccessWithContent) {
                         onSuccess(data = uiState)
@@ -101,11 +101,7 @@ internal class ProfileListingActivity : ComponentActivity() {
                         snackBar.showMessage(uiState.successMessage)
                     }
                 } else {
-                    if (uiState.isEmptyStateError) {
-                        Unit
-                    } else {
-                        showErrorMessage(uiState.errorMessage)
-                    }
+                    Unit
                 }
             }
         }
