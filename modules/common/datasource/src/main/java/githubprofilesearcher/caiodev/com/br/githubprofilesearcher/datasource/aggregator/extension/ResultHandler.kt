@@ -21,10 +21,10 @@ suspend fun ICell.handleResult(
     onSuccess: suspend (success: Success<*>) -> Unit = {},
     onFailure: suspend (error: Error) -> Unit = {},
 ) {
-    when (value) {
-        is Success<*> -> onSuccess(value)
-        else -> onFailure(handleError(ValueCasting.castTo(value)))
-    }
+    if (value is Success<*>)
+        onSuccess(value)
+    else
+        onFailure(handleError(ValueCasting.castTo(value)))
 }
 
 private fun handleError(errorState: ErrorState?): Error {
