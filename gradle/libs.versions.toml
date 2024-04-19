@@ -2,6 +2,11 @@
 
 ##### Dependency versions #####
 
+#Android
+compileSdk = '34'
+minSdk = '26'
+targetSdk = '34'
+
 #AppCompat
 appCompat = '1.7.0-alpha03'
 
@@ -12,30 +17,31 @@ chucker = '4.0.0'
 coil = '2.6.0'
 
 #Compose
-activity = '1.8.2'
+activity = '1.9.0'
 compiler = '1.5.11'
-composeCore = '1.6.4'
-material3 = '1.3.0-alpha03'
+composeCore = '1.7.0-alpha07'
+material3 = '1.3.0-alpha05'
+runtimeTracingCompose = '1.0.0-beta01'
 
 #Coroutines
 coroutines = '1.8.0'
 
 #DataStore
-dataStore = '1.1.0-beta02'
+dataStore = '1.1.0'
 
 #Quality checking
 #Detekt
-detekt = '1.23.5'
+detekt = '1.23.6'
 
 #Ktlint
 ktlint = '1.2.1'
 ktlintPlugin = '12.1.0'
 
 #Gradle
-gradle = '8.3.1'
+gradle = '8.3.2'
 
 #Koin
-koin = '3.5.3'
+koin = '3.5.6'
 
 #Kotlin
 kotlin = '1.9.23'
@@ -44,16 +50,16 @@ kotlin = '1.9.23'
 ksp = '1.9.23-1.0.19'
 
 #Ktor
-ktor = '2.3.7'
+ktor = '2.3.10'
 
 #Ktx
-ktxCore = '1.13.0-beta01'
+ktxCore = '1.13.0'
 
 #LeakCanary
 leakCanary = '2.13'
 
 #Lifecycle
-lifecycle = '2.7.0'
+lifecycle = '2.8.0-beta01'
 
 #Material design
 materialDesign = '1.11.0'
@@ -126,6 +132,7 @@ materialIconsCoreCompose = { group = "androidx.compose.material", name = "materi
 materialIconsExtendedCompose = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeCore" }
 runtimeAndroidCompose = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "composeCore" }
 runtimeCompose = { group = "androidx.compose.runtime", name = "runtime", version.ref = "composeCore" }
+runtimeTracingCompose = { group = "androidx.compose.runtime", name = "runtime-tracing", version.ref = "runtimeTracingCompose" }
 uiCompose = { group = "androidx.compose.ui", name = "ui", version.ref = "composeCore" }
 uiToolingCompose = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeCore" }
 uiToolingPreviewCompose = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeCore" }
@@ -134,7 +141,7 @@ uiToolingPreviewCompose = { group = "androidx.compose.ui", name = "ui-tooling-pr
 ktxCore = { group = "androidx.core", name = "core-ktx", version.ref = "ktxCore" }
 
 #DataStore
-dataStorePreferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+preferencesDataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 
 #Koin
 koin = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
@@ -230,6 +237,7 @@ compose = [
     "materialIconsExtendedCompose",
     "runtimeAndroidCompose",
     "runtimeCompose",
+    "runtimeTracingCompose",
     "uiCompose",
     "uiToolingCompose",
     "uiToolingPreviewCompose"

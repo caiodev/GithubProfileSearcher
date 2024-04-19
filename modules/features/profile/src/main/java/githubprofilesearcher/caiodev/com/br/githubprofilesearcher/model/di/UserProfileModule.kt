@@ -42,9 +42,9 @@ val userProfileViewModel =
 
         factory<IProfileOriginRepository> {
             ProfileOriginRepository(
-                remoteFetcher = get(),
-                client = get(),
                 dispatcher = get(),
+                client = get(),
+                remoteFetcher = get(),
             )
         }
 

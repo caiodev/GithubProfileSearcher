@@ -11,6 +11,9 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup">
+
+        <profileable tools:targetApi="q" android:shell="true" />
+
         <activity
                 android:name=".view.activity.ProfileListingActivity"
                 android:configChanges="uiMode"
@@ -21,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

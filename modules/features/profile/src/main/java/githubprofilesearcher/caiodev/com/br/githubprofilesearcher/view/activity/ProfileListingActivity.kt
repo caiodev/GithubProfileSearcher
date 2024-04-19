@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
@@ -70,7 +68,10 @@ internal class ProfileListingActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        viewModel.setValue(key = ProfileKeyValueIDs.UserInputStatus, value = isTextInputEditTextNotEmpty())
+        viewModel.setValue(
+            key = ProfileKeyValueIDs.UserInputStatus,
+            value = isTextInputEditTextNotEmpty()
+        )
 
         if (isTextInputEditTextNotEmpty()) {
             viewModel.setValue(
@@ -137,14 +138,18 @@ internal class ProfileListingActivity : ComponentActivity() {
 
             addTextChangedListener {
                 doOnTextChanged { text, _, _, _ ->
-                    val shouldASearchBePerformed: Boolean = viewModel.getValue(ProfileKeyValueIDs.SearchStatus)
+                    val shouldASearchBePerformed: Boolean =
+                        viewModel.getValue(ProfileKeyValueIDs.SearchStatus)
                     if (!shouldASearchBePerformed) {
                         viewModel.setValue(key = ProfileKeyValueIDs.SearchStatus, value = true)
                     }
 
                     text?.let {
                         if (it.isEmpty()) {
-                            viewModel.setValue(key = ProfileKeyValueIDs.DeletedProfileStatus, value = true)
+                            viewModel.setValue(
+                                key = ProfileKeyValueIDs.DeletedProfileStatus,
+                                value = true
+                            )
                         }
                     }
                 }
@@ -153,17 +158,8 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun initializeAdapterCallback() {
-        provideAdapter<TransientViewsAdapter>(TRANSIENT_VIEWS_ADAPTER)?.setOnItemClicked(
-            object :
-                OnItemClicked {
-                override fun onItemClick(
-                    adapterPosition: Int,
-                    id: Int,
-                ) {
-                    getRecyclerData()
-                }
-            },
-        )
+        provideAdapter<TransientViewsAdapter>(TRANSIENT_VIEWS_ADAPTER)
+            ?.setOnItemClicked { _, _ -> getRecyclerData() }
     }
 
     private fun obtainProfileListener(): OnItemSelectedListener {
@@ -287,8 +283,10 @@ internal class ProfileListingActivity : ComponentActivity() {
                     if (recyclerViewLayoutManager?.findLastVisibleItemPosition() == total?.minus(2) &&
                         viewModel.getValue(key = ProfileKeyValueIDs.SuccessStatus)
                     ) {
-                        val isThereAnOngoingCall: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.CallStatus)
-                        val isRetryViewVisible: Boolean = viewModel.getValue(key = ProfileKeyValueIDs.RetryStatus)
+                        val isThereAnOngoingCall: Boolean =
+                            viewModel.getValue(key = ProfileKeyValueIDs.CallStatus)
+                        val isRetryViewVisible: Boolean =
+                            viewModel.getValue(key = ProfileKeyValueIDs.RetryStatus)
                         val isEndOfResultsViewVisible: Boolean =
                             viewModel.getValue(key = ProfileKeyValueIDs.EndOfResultsStatus)
 
@@ -315,9 +313,11 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
     }
 
-    private fun isTextInputEditTextNotEmpty() = binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
+    private fun isTextInputEditTextNotEmpty() =
+        binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
 
-    private fun provideRecyclerViewLayoutManager() = castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
+    private fun provideRecyclerViewLayoutManager() =
+        castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
 
     private fun changeViewState(
         adapterPosition: Int,
@@ -349,13 +349,20 @@ internal class ProfileListingActivity : ComponentActivity() {
         isRetryItemVisible: Boolean = false,
     ) {
         viewModel.apply {
-            viewModel.setValue(key = ProfileKeyValueIDs.EndOfResultsStatus, value = isEndOfResultsItemVisible)
-            viewModel.setValue(key = ProfileKeyValueIDs.PaginationLoadingStatus, value = isPaginationLoadingItemVisible)
+            viewModel.setValue(
+                key = ProfileKeyValueIDs.EndOfResultsStatus,
+                value = isEndOfResultsItemVisible
+            )
+            viewModel.setValue(
+                key = ProfileKeyValueIDs.PaginationLoadingStatus,
+                value = isPaginationLoadingItemVisible
+            )
             viewModel.setValue(key = ProfileKeyValueIDs.RetryStatus, value = isRetryItemVisible)
         }
     }
 
-    private inline fun <reified T> provideAdapter(adapterPosition: Int) = castTo<T>(concatAdapter.adapters[adapterPosition])
+    private inline fun <reified T> provideAdapter(adapterPosition: Int) =
+        castTo<T>(concatAdapter.adapters[adapterPosition])
 
     private fun launchBrowser(profileUrl: String) {
         startActivity(

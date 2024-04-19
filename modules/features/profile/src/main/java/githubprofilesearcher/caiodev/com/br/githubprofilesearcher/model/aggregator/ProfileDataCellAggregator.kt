@@ -20,5 +20,6 @@ internal class ProfileDataCellAggregator(
     override suspend fun obtainProfileDataList(
         profile: String,
         shouldListBeCleared: Boolean,
-    ): ProfileState = profileDataCell.obtainProfileDataList(profile = profile, shouldListBeCleared = shouldListBeCleared)
+    ): ProfileState =
+        profileDataCell.obtainProfileDataList(profile = profile, shouldListBeCleared = shouldListBeCleared)
 }

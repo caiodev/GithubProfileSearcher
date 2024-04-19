@@ -9,21 +9,20 @@ class UserDatabaseRepository(
     private val dispatcher: CoroutineDispatcher,
     private val appDatabase: Database,
 ) : IUserDatabaseRepository {
-    override suspend fun getUsers(): List<User> =
+    override suspend fun get(): List<User> =
         withContext(dispatcher) {
-            appDatabase.userDao().getUsers() ?: emptyList()
+            appDatabase.userDao().get() ?: emptyList()
         }
 
-    override suspend fun insertUsers(profileList: List<User>) {
+    override suspend fun upsert(profileList: List<User>) {
         withContext(dispatcher) {
-            appDatabase.userDao()
-                .insertUsers(profileList)
+            appDatabase.userDao().upsert(profileList)
         }
     }
 
-    override suspend fun dropUserInfo() {
+    override suspend fun drop() {
         withContext(dispatcher) {
-            appDatabase.userDao().dropUserInfo()
+            appDatabase.userDao().drop()
         }
     }
 }

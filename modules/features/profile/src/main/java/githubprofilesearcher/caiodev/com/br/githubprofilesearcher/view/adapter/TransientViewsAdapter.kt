@@ -3,7 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts.OnItemClicked
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.contracts.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.EmptyViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.EndOfResultsViewHolderLayoutBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.LoadingViewHolderLayoutBinding

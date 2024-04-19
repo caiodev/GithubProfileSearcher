@@ -16,27 +16,25 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.sta
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.UnknownHost
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
-suspend fun ICell.handleResult(
+inline fun <reified T> ICell.handleResult(
     value: State<*>,
-    onSuccess: suspend (success: Success<*>) -> Unit = {},
-    onFailure: suspend (error: Error) -> Unit = {},
-) {
-    if (value is Success<*>)
-        onSuccess(value)
-    else
-        onFailure(handleError(ValueCasting.castTo(value)))
+    onSuccess: (success: Success<*>) -> T,
+    onFailure: (error: Error) -> T,
+): T = if (value is Success<*>) {
+    onSuccess(value)
+} else {
+    onFailure(handleError(ValueCasting.castTo(value)))
 }
 
-private fun handleError(errorState: ErrorState?): Error {
-    val error: Int =
-        when (errorState) {
-            UnknownHost, SocketTimeout, Connect -> Core.string.unknown_host_and_socket_timeout
-            SSLHandshake -> Core.string.ssl_handshake
-            ClientSide -> Core.string.client_side
-            ServerSide -> Core.string.server_side
-            SearchQuotaReached -> Core.string.query_limit
-            ResultLimitReached -> Core.string.limit_of_profile_results
-            else -> Core.string.generic
-        }
-    return Error(error = error)
+@PublishedApi
+internal fun handleError(errorState: ErrorState?): Error {
+    when (errorState) {
+        UnknownHost, SocketTimeout, Connect -> Core.string.unknown_host_and_socket_timeout
+        SSLHandshake -> Core.string.ssl_handshake
+        ClientSide -> Core.string.client_side
+        ServerSide -> Core.string.server_side
+        SearchQuotaReached -> Core.string.query_limit
+        ResultLimitReached -> Core.string.limit_of_profile_results
+        else -> Core.string.generic
+    }.apply { return Error(error = this) }
 }

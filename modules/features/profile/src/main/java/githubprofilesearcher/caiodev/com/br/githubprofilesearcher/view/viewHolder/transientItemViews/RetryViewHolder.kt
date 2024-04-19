@@ -1,7 +1,7 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews
 
 import androidx.recyclerview.widget.RecyclerView
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.base.contracts.OnItemClicked
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.contracts.OnItemClicked
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.RetryViewHolderLayoutBinding
 
 class RetryViewHolder(

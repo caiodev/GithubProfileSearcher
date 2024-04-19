@@ -3,6 +3,7 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fe
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultLong
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -18,7 +19,7 @@ data class User(
     val profileUrl: String = emptyString(),
     @PrimaryKey
     @SerialName("id")
-    val userId: Long = 0,
+    val userId: Long = defaultLong(),
     @ColumnInfo
     @SerialName("avatar_url")
     val userImage: String = emptyString(),

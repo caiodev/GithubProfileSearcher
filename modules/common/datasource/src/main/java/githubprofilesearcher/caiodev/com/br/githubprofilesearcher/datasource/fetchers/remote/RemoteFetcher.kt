@@ -1,5 +1,6 @@
 package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote
 
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultInteger
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ClientSide
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Connect
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ErrorState
@@ -17,26 +18,24 @@ import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Headers
 import io.ktor.http.isSuccess
-import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 class RemoteFetcher {
-    suspend inline fun <reified T> call(call: () -> HttpResponse): State<*> {
-        return try {
-            val wrapper = call()
-            val response = wrapper.body<T>()
-            if (wrapper.status.isSuccess()) {
-                handleSuccess(wrapper.headers, response)
-            } else {
-                handleHttpError(wrapper.status.value)
-            }
-        } catch (exception: IOException) {
-            handleException(exception)
-        }
-    }
+    suspend inline fun <reified T> call(call: () -> HttpResponse): State<*> =
+        runCatching { call() }
+            .fold(
+                onSuccess = { content ->
+                    if (content.status.isSuccess()) {
+                        handleSuccess(content.headers, content.body<T>())
+                    } else {
+                        handleHttpError(content.status.value)
+                    }
+                },
+                onFailure = { exception -> handleException(exception) }
+            )
 
     @PublishedApi
     internal inline fun <reified T> handleSuccess(
@@ -56,7 +55,7 @@ class RemoteFetcher {
     }
 
     @PublishedApi
-    internal fun handleException(exception: IOException): ErrorState {
+    internal fun handleException(exception: Throwable): ErrorState {
         return when (exception) {
             is ConnectException -> Connect
             is SocketTimeoutException -> SocketTimeout
@@ -68,7 +67,7 @@ class RemoteFetcher {
 
     @PublishedApi
     internal fun obtainTotalPages(headers: Headers): Int {
-        var totalPages = 0
+        var totalPages = defaultInteger()
         val header = headers[HEADER_NAME]
         if (!header.isNullOrEmpty()) {
             totalPages =

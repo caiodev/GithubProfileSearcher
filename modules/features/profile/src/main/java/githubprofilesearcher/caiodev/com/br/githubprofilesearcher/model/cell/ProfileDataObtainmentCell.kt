@@ -23,7 +23,6 @@ internal class ProfileDataObtainmentCell(
     private var profileName: String = emptyString()
     private var pageNumber = INITIAL_PAGE
     private val userList = arrayListOf<User>()
-    private var profileState = ProfileState()
 
     override suspend fun obtainProfileDataList(
         profile: String,
@@ -35,7 +34,7 @@ internal class ProfileDataObtainmentCell(
         )
 
         if (profile.isNotEmpty()) profileName = profile
-        pageNumber = if (shouldListBeCleared) INITIAL_PAGE else pageNumber.plus(INITIAL_PAGE)
+        pageNumber = if (shouldListBeCleared) INITIAL_PAGE else ++pageNumber
 
         val value =
             profileOriginRepository.fetchProfileInfo(
@@ -43,7 +42,7 @@ internal class ProfileDataObtainmentCell(
                 pageNumber = pageNumber,
             )
 
-        handleResult(
+        return handleResult<ProfileState>(
             value = value,
             onSuccess = { success ->
                 onUserInfoArrivalSuccess(
@@ -52,20 +51,19 @@ internal class ProfileDataObtainmentCell(
                 )
             },
             onFailure = { error ->
-                profileState = ProfileState(errorMessage = error.error)
+                ProfileState(errorMessage = error.error)
             },
         )
-        return profileState
     }
 
     private suspend fun onUserInfoArrivalSuccess(
         state: State<*>,
         shouldListBeCleared: Boolean,
-    ) {
+    ): ProfileState {
         val userModel = ValueCasting.castTo<Success<UserModel>>(state)?.data
 
         userModel?.let {
-            if (it.profileList.isNotEmpty()) {
+            return if (it.profileList.isNotEmpty()) {
                 if (shouldListBeCleared) {
                     userList.clear()
                     userList.addAll(it.profileList)
@@ -73,31 +71,35 @@ internal class ProfileDataObtainmentCell(
                     userList.addAll(it.profileList)
                 }
 
-                onUserInfoArrival()
+                executePostUserInfoArrival(shouldListBeCleared = shouldListBeCleared)
 
-                profileState =
-                    ProfileState(
-                        isSuccess = true,
-                        isSuccessWithContent = true,
-                        content = userList.mapFrom(),
-                    )
+                ProfileState(
+                    isSuccess = true,
+                    isSuccessWithContent = true,
+                    content = userList.mapFrom(),
+                )
             } else {
-                profileState =
-                    ProfileState(
-                        errorMessage = Core.string.client_side,
-                        areAllResultsEmpty = userList.isEmpty(),
-                    )
+                ProfileState(
+                    errorMessage = Core.string.client_side,
+                    areAllResultsEmpty = userList.isEmpty(),
+                )
             }
         } ?: run {
-            profileState = ProfileState(errorMessage = Core.string.generic)
+            return ProfileState(errorMessage = Core.string.generic)
         }
     }
 
-    private suspend fun onUserInfoArrival() {
-        userDatabaseRepository.dropUserInfo()
-        userDatabaseRepository.insertUsers(profileList = userList.toList())
+    private suspend fun executePostUserInfoArrival(
+        shouldListBeCleared: Boolean,
+    ) {
+        if (shouldListBeCleared) userDatabaseRepository.drop()
 
-        keyValueRepository.setValue(key = ProfileKeyValueIDs.CurrentProfileText, value = emptyString())
+        userDatabaseRepository.upsert(profileList = userList.toList())
+
+        keyValueRepository.setValue(
+            key = ProfileKeyValueIDs.CurrentProfileText,
+            value = emptyString()
+        )
 
         if (!keyValueRepository.getValue<Boolean>(ProfileKeyValueIDs.SuccessStatus)) {
             keyValueRepository.setValue(key = ProfileKeyValueIDs.SuccessStatus, value = true)

@@ -9,10 +9,10 @@ plugins {
 apply from: "$project.rootDir/flavors/flavors.gradle"
 
 android {
-    compileSdk 34
+    compileSdk dep.versions.compileSdk.get().toInteger()
     defaultConfig {
-        minSdkVersion 26
-        targetSdkVersion 34
+        minSdkVersion dep.versions.minSdk.get()
+        targetSdkVersion dep.versions.targetSdk.get()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -8,9 +8,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 internal class ProfileOriginRepository(
-    private val remoteFetcher: RemoteFetcher,
-    private val client: IProfileClient,
     private val dispatcher: CoroutineDispatcher,
+    private val client: IProfileClient,
+    private val remoteFetcher: RemoteFetcher,
 ) : IProfileOriginRepository {
     override suspend fun fetchProfileInfo(
         user: String,

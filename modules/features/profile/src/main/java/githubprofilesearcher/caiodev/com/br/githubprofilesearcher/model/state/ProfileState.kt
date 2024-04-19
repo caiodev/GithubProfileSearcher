@@ -2,7 +2,6 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.state
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultInteger
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
 data class ProfileState(
     val isSuccess: Boolean = false,
