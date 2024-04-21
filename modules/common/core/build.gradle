@@ -49,9 +49,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
+    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
 
     api dep.ktxCore
     api dep.bundles.lifecycle

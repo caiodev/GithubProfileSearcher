@@ -1,7 +1,7 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.extension
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.cell
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.ICell
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.cell.contracts.ICell
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.ClientSide
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Connect
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Error
@@ -19,12 +19,13 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 inline fun <reified T> ICell.handleResult(
     value: State<*>,
     onSuccess: (success: Success<*>) -> T,
-    onFailure: (error: Error) -> T,
-): T = if (value is Success<*>) {
-    onSuccess(value)
-} else {
-    onFailure(handleError(ValueCasting.castTo(value)))
-}
+    crossinline onFailure: (error: Error) -> T,
+): T =
+    if (value is Success<*>) {
+        onSuccess(value)
+    } else {
+        onFailure(handleError(ValueCasting.castTo(value)))
+    }
 
 @PublishedApi
 internal fun handleError(errorState: ErrorState?): Error {

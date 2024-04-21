@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.calls
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.remote.calls
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get

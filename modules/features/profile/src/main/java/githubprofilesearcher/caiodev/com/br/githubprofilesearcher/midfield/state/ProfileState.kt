@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.state
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.state
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultInteger
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.UserProfile

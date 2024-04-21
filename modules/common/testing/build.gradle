@@ -52,15 +52,15 @@ dependencies {
     //APIConnector
     implementation dep.bundles.apiConnection
 
-    //JVM
     //Coroutines
     api dep.coroutinesTest
 
+    //JVM
     //Jacoco
     api dep.jacoco
 
     //Koin
-    api dep.koinTest
+    testApi dep.koinTest
 
     //Kotest
     api dep.bundles.kotest
@@ -69,16 +69,16 @@ dependencies {
     api dep.bundles.mockk
 
     //Robolectric
-    api dep.robolectric
-
-    //Test core
-    api dep.bundles.testCore
+    testApi dep.robolectric
 
     //Instrumented/UI
     //Compose
-    api dep.composeTestJUnit4
-    debugApi dep.composeTestManifest
+    androidTestApi dep.composeTestJUnit4
+    androidTestDebugApi dep.composeTestManifest
 
     //JUnit
-    api dep.bundles.junit
+    androidTestApi dep.bundles.junit
+
+    //Test core
+    androidTestApi dep.bundles.testCore
 }

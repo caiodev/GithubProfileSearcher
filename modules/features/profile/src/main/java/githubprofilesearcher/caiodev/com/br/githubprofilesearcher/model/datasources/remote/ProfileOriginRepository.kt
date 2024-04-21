@@ -1,9 +1,9 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.model.UserModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.remote.RemoteFetcher
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.State
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.calls.IProfileClient
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.remote.calls.IProfileClient
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 

@@ -11,14 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultInteger
 import kotlinx.coroutines.launch
 
 fun EditText.hideKeyboard() {
     castTo<InputMethodManager>(context.getSystemService(Context.INPUT_METHOD_SERVICE))
-        ?.hideSoftInputFromWindow(applicationWindowToken, 0)
+        ?.hideSoftInputFromWindow(applicationWindowToken, defaultInteger())
 }
 
-fun LifecycleOwner.runTaskOnBackground(task: suspend () -> Unit) {
+inline fun LifecycleOwner.runTaskOnBackground(crossinline task: suspend () -> Unit) {
     lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) { task() }
     }

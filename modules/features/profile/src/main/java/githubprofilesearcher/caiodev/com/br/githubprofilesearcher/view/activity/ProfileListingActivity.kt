@@ -18,8 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultInteger
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.local.keyValue.ProfileKeyValueIDs
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ActivityProfileListingBinding
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applyViewVisibility
@@ -34,7 +35,7 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolde
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.END_OF_RESULTS
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.RETRY
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel.ProfileViewModel
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewModel.ProfileViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
@@ -70,7 +71,7 @@ internal class ProfileListingActivity : ComponentActivity() {
 
         viewModel.setValue(
             key = ProfileKeyValueIDs.UserInputStatus,
-            value = isTextInputEditTextNotEmpty()
+            value = isTextInputEditTextNotEmpty(),
         )
 
         if (isTextInputEditTextNotEmpty()) {
@@ -112,7 +113,7 @@ internal class ProfileListingActivity : ComponentActivity() {
         binding.backToTopButton.setOnClickListener {
             it.isClickable = false
             it.applyViewVisibility(INVISIBLE)
-            binding.profileInfoRecyclerView.scrollToPosition(0)
+            binding.profileInfoRecyclerView.scrollToPosition(defaultInteger())
         }
     }
 
@@ -148,7 +149,7 @@ internal class ProfileListingActivity : ComponentActivity() {
                         if (it.isEmpty()) {
                             viewModel.setValue(
                                 key = ProfileKeyValueIDs.DeletedProfileStatus,
-                                value = true
+                                value = true,
                             )
                         }
                     }
@@ -313,11 +314,9 @@ internal class ProfileListingActivity : ComponentActivity() {
         }
     }
 
-    private fun isTextInputEditTextNotEmpty() =
-        binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
+    private fun isTextInputEditTextNotEmpty() = binding.searchProfileTextInputEditText.text.toString().isNotEmpty()
 
-    private fun provideRecyclerViewLayoutManager() =
-        castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
+    private fun provideRecyclerViewLayoutManager() = castTo<LinearLayoutManager>(binding.profileInfoRecyclerView.layoutManager)
 
     private fun changeViewState(
         adapterPosition: Int,
@@ -351,18 +350,17 @@ internal class ProfileListingActivity : ComponentActivity() {
         viewModel.apply {
             viewModel.setValue(
                 key = ProfileKeyValueIDs.EndOfResultsStatus,
-                value = isEndOfResultsItemVisible
+                value = isEndOfResultsItemVisible,
             )
             viewModel.setValue(
                 key = ProfileKeyValueIDs.PaginationLoadingStatus,
-                value = isPaginationLoadingItemVisible
+                value = isPaginationLoadingItemVisible,
             )
             viewModel.setValue(key = ProfileKeyValueIDs.RetryStatus, value = isRetryItemVisible)
         }
     }
 
-    private inline fun <reified T> provideAdapter(adapterPosition: Int) =
-        castTo<T>(concatAdapter.adapters[adapterPosition])
+    private inline fun <reified T> provideAdapter(adapterPosition: Int) = castTo<T>(concatAdapter.adapters[adapterPosition])
 
     private fun launchBrowser(profileUrl: String) {
         startActivity(

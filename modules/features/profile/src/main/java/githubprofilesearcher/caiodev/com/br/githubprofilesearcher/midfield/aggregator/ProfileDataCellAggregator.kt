@@ -1,8 +1,8 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.aggregator
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.aggregator
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.cell.IProfileDataObtainmentCell
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.state.ProfileState
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.cell.IProfileDataObtainmentCell
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.state.ProfileState
 
 internal class ProfileDataCellAggregator(
     private val keyValueRepository: IKeyValueRepository,
@@ -20,6 +20,5 @@ internal class ProfileDataCellAggregator(
     override suspend fun obtainProfileDataList(
         profile: String,
         shouldListBeCleared: Boolean,
-    ): ProfileState =
-        profileDataCell.obtainProfileDataList(profile = profile, shouldListBeCleared = shouldListBeCleared)
+    ): ProfileState = profileDataCell.obtainProfileDataList(profile = profile, shouldListBeCleared = shouldListBeCleared)
 }

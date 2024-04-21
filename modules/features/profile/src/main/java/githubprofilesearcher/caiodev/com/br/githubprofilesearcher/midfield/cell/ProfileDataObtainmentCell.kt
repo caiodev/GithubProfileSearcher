@@ -1,19 +1,19 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.cell
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.cell
 
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R.string
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.extension.handleResult
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.cell.handleResult
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.model.User
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.model.UserModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.features.profile.model.local.repository.IUserDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.State
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.Success
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.mapper.mapFrom
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue.ProfileKeyValueIDs
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote.IProfileOriginRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.state.ProfileState
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.mapper.mapFrom
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.state.ProfileState
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.local.keyValue.ProfileKeyValueIDs
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.remote.IProfileOriginRepository
 
 internal class ProfileDataObtainmentCell(
     private val keyValueRepository: IKeyValueRepository,
@@ -80,25 +80,23 @@ internal class ProfileDataObtainmentCell(
                 )
             } else {
                 ProfileState(
-                    errorMessage = Core.string.client_side,
+                    errorMessage = string.client_side,
                     areAllResultsEmpty = userList.isEmpty(),
                 )
             }
         } ?: run {
-            return ProfileState(errorMessage = Core.string.generic)
+            return ProfileState(errorMessage = string.generic)
         }
     }
 
-    private suspend fun executePostUserInfoArrival(
-        shouldListBeCleared: Boolean,
-    ) {
+    private suspend fun executePostUserInfoArrival(shouldListBeCleared: Boolean) {
         if (shouldListBeCleared) userDatabaseRepository.drop()
 
         userDatabaseRepository.upsert(profileList = userList.toList())
 
         keyValueRepository.setValue(
             key = ProfileKeyValueIDs.CurrentProfileText,
-            value = emptyString()
+            value = emptyString(),
         )
 
         if (!keyValueRepository.getValue<Boolean>(ProfileKeyValueIDs.SuccessStatus)) {

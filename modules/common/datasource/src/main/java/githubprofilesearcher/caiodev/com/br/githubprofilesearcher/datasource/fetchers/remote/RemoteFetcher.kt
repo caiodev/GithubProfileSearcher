@@ -34,7 +34,7 @@ class RemoteFetcher {
                         handleHttpError(content.status.value)
                     }
                 },
-                onFailure = { exception -> handleException(exception) }
+                onFailure = { exception -> handleException(exception) },
             )
 
     @PublishedApi
@@ -67,17 +67,15 @@ class RemoteFetcher {
 
     @PublishedApi
     internal fun obtainTotalPages(headers: Headers): Int {
-        var totalPages = defaultInteger()
         val header = headers[HEADER_NAME]
         if (!header.isNullOrEmpty()) {
-            totalPages =
-                Regex(headerPattern)
-                    .findAll(header)
-                    .map(MatchResult::value)
-                    .toList()[HEADER_LIST_INDEX]
-                    .toInt()
+            return Regex(headerPattern)
+                .findAll(header)
+                .map(MatchResult::value)
+                .toList()[HEADER_LIST_INDEX]
+                .toInt()
         }
-        return totalPages
+        return defaultInteger()
     }
 
     private companion object {

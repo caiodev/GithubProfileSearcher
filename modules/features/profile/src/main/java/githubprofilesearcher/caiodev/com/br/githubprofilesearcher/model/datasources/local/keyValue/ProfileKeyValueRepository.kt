@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.local.keyValue
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

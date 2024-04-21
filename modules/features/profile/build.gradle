@@ -55,11 +55,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':modules:common:core') because 'Core Module'
     implementation project(':modules:common:datasource') because 'Datasource Module'
-    implementation project(':modules:common:ui') because 'UI Module'
-
-    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
+    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
+    implementation project(':modules:common:ui') because 'UI Module'
 }

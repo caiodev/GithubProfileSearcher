@@ -68,24 +68,18 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':modules:common:core') because 'Core Module'
-
-    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
+    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
 
-    //DataStore
-    api dep.preferencesDataStore
-
-    //Koin
+    api dep.bundles.apiConnection
     api dep.koin
 
     //Logging
     debugImplementation dep.debugChucker
     releaseImplementation dep.releaseChucker
 
-    //APIConnector
-    api dep.bundles.apiConnection
+    api dep.preferencesDataStore
 
     //Room
     implementation dep.bundles.room

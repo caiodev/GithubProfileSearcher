@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.remote
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.remote
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.State
 

@@ -1,10 +1,10 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.viewModel
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewModel
 
 import androidx.lifecycle.ViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.extensions.runTaskOnForeground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.aggregator.IProfileDataCellAggregator
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.aggregator.IProfileDataCellAggregator
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.state.ProfileUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

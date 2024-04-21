@@ -14,8 +14,8 @@ android {
         applicationId "githubprofilesearcher.caiodev.com.br.githubprofilesearcher"
         minSdkVersion dep.versions.minSdk.get()
         targetSdkVersion dep.versions.targetSdk.get()
-        versionCode 1
-        versionName "1.0"
+        versionCode dep.versions.versionCode.get().toInteger()
+        versionName dep.versions.versionName.get()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -69,14 +69,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':modules:common:core') because 'Core Module'
     implementation project(':modules:common:datasource') because 'Datasource Module'
     implementation project(':modules:common:ui') because 'UI Module'
     implementation project(':modules:features:profile') because 'Profile Module'
-
-    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
-    androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
 
     debugImplementation dep.leakCanary
 }

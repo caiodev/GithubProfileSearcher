@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.repository.local.keyValue
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.model.datasources.local.keyValue
 
 enum class ProfileKeyValueIDs {
     DeletedProfileStatus,

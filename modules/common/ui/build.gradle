@@ -55,25 +55,19 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':modules:common:core') because 'Core Module'
-
-    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
     androidTestImplementation project(':modules:common:testing') because 'Android Testing Module'
+    testImplementation project(':modules:common:testing') because 'JVM Testing Module'
 
     //AppCompat
     api dep.appCompat
-
-    //Coil
     api dep.coil
 
     //Compose
     api dep.bundles.compose
     debugApi dep.uiToolingCompose
 
-    //Material design
     api dep.materialDesign
-
-    //Views/ViewGroups
+    api dep.runtimeTracing
     api dep.bundles.views
 }
