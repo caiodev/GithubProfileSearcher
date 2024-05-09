@@ -1,0 +1,3 @@
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.base.aggregator.contracts
+
+interface ICellAggregator

@@ -20,7 +20,17 @@ dependencyResolutionManagement {
 rootProject.name = "GithubProfileSearcher"
 include(":app")
 include(":modules:common:core")
-include(":modules:common:datasource")
-include(":modules:common:testing")
-include(":modules:common:ui")
+
+include(":modules:common:datasource:datasource")
+include(":modules:common:datasource:features:profile")
+
+include(":modules:common:midfield:midfield")
+include(":modules:common:midfield:features:profile")
+
+include(":modules:common:testing:instrumented")
+include(":modules:common:testing:jvm")
+include(":modules:common:testing:testing")
+
+include(":modules:common:ui:ui")
+
 include(":modules:features:profile")

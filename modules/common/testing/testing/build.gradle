@@ -1,0 +1,51 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
+}
+
+apply from: "$project.rootDir/flavors/flavors.gradle"
+
+android {
+    compileSdk dep.versions.compileSdk.get().toInteger()
+    defaultConfig {
+        minSdkVersion dep.versions.minSdk.get()
+        targetSdkVersion dep.versions.targetSdk.get()
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_20)
+        }
+    }
+
+    packagingOptions {
+        resources {
+            excludes += [
+                    '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md,licenses/ASM}',
+                    'win32-x86{/attach_hotspot_windows.dll,-64/attach_hotspot_windows.dll}'
+            ]
+        }
+    }
+
+    testOptions {
+        unitTests.all { useJUnitPlatform() }
+    }
+
+    namespace 'githubprofilesearcher.caiodev.com.br.githubprofilesearcher.testing'
+}
+
+dependencies {
+    api dep.bundles.common
+}

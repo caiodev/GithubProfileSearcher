@@ -9,7 +9,7 @@ targetSdk = '34'
 versionCode = '1'
 versionName = '1.0'
 
-appCompat = '1.7.0-alpha03'
+appCompat = '1.7.0-beta01'
 
 chucker = '4.0.0'
 
@@ -18,15 +18,15 @@ coil = '2.6.0'
 #Compose
 activity = '1.9.0'
 compiler = '1.5.11'
-composeCore = '1.7.0-alpha07'
-material3 = '1.3.0-alpha05'
+composeCore = '1.7.0-alpha08'
+material3 = '1.3.0-alpha06'
 runtimeTracingCompose = '1.0.0-beta01'
 
 coroutines = '1.8.0'
 
-dataStore = '1.1.0'
+dataStore = '1.1.1'
 
-gradle = '8.3.2'
+gradle = '8.4.0'
 
 koin = '3.5.6'
 
@@ -36,11 +36,14 @@ ksp = '1.9.23-1.0.19'
 
 ktor = '2.3.10'
 
-ktxCore = '1.13.0'
+ktxCore = '1.13.1'
 
-lifecycle = '2.8.0-beta01'
+lifecycle = '2.8.0-rc01'
 
-materialDesign = '1.11.0'
+materialDesign = '1.12.0'
+
+#Paging
+paging = '3.3.0-rc01'
 
 #Quality/Performance
 detekt = '1.23.6'
@@ -55,16 +58,16 @@ room = '2.6.1'
 constraintLayout = '2.1.4'
 recyclerView = '1.3.2'
 
-# Test dependency versions #
+# Test Dependencies #
 
 archTest = '2.2.0'
-testCore = '1.6.0-alpha05'
 jacoco = '0.8.12'
-junit = '1.2.0-alpha03'
-kotest = '5.8.1'
+junit = '1.2.0-alpha04'
+junit5 = '5.11.0-M1'
 mockkVersion = '1.13.10'
 robolectric = '4.11.1'
-testRunner = '1.6.0-alpha06'
+testCore = '1.6.0-alpha06'
+testRunner = '1.6.0-alpha07'
 
 ##### Libraries #####
 
@@ -115,6 +118,10 @@ lifecycleViewmodelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmo
 
 materialDesign = { group = "com.google.android.material", name = "material", version.ref = "materialDesign" }
 
+#Paging
+pagingCompose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+pagingRuntimeKtx = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+
 #Room
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -128,23 +135,19 @@ recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version
 
 ##### Testing Section #####
 
+# Common #
+
 coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
 
 # JVM #
 
-jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
+#JUnit5
+junit5Api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
+junit5Engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
 
 koinTest = { group = "io.insert-koin", name = "koin-android-test", version.ref = "koin" }
-
-#Kotest
-kotestCore = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
-kotestProperty = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
-kotestRunner = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
-
-#MockK
-mockkAgent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion" }
-mockkAndroid = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion" }
-
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 # Instrumented/UI #
@@ -154,8 +157,12 @@ composeTestJUnit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", ve
 composeTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeCore" }
 
 #JUnit
-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+junitAndroid = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit" }
+
+#MockK
+mockkAgent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion" }
+mockkAndroid = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion" }
 
 #TestCore
 archTest = { group = "androidx.arch.core", name = "core-testing", version.ref = "archTest" }
@@ -207,6 +214,11 @@ lifecycle = [
     "lifecycleViewmodelKtx"
 ]
 
+paging = [
+    "pagingCompose",
+    "pagingRuntimeKtx"
+]
+
 room = [
     "room",
     "roomKtx"
@@ -219,24 +231,26 @@ views = [
 
 # Test Bundles #
 
-junit = [
-    "junit",
-    "junitKtx"
+common = [
+    "coroutinesTest",
+    "jacoco"
 ]
 
-kotest = [
-    "kotestCore",
-    "kotestProperty",
-    "kotestRunner"
-]
-
-mockk = [
-    "mockkAgent",
-    "mockkAndroid"
-]
-
-testCore = [
+instrumented = [
     "archTest",
+    "composeTestJUnit4",
+    "composeTestManifest",
+    "junitAndroid",
+    "junitKtx",
+    "mockkAgent",
+    "mockkAndroid",
     "testCore",
     "testRunner"
+]
+
+jvm = [
+    "junit5Engine",
+    "koinTest",
+    "mockk",
+    "robolectric"
 ]

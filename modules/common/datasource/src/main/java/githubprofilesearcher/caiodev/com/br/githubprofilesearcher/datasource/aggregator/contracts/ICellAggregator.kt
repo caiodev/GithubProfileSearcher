@@ -1,3 +1,0 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.aggregator.contracts
-
-interface ICellAggregator

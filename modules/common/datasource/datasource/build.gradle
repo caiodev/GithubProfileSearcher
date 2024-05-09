@@ -1,0 +1,86 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    id 'com.android.library'
+    id 'com.google.devtools.ksp'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
+}
+
+apply from: "$project.rootDir/flavors/flavors.gradle"
+
+android {
+    compileSdk dep.versions.compileSdk.get().toInteger()
+    defaultConfig {
+        minSdkVersion dep.versions.minSdk.get()
+        targetSdkVersion dep.versions.targetSdk.get()
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    ksp { arg("room.schemaLocation", "$projectDir/schemas") }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_20)
+        }
+    }
+
+    flavorDimensions = ["version"]
+
+    productFlavors {
+        demo {
+            dimension "version"
+            versionNameSuffix "-demo"
+            buildConfigField "String", "BASE_URL", "\"https://api.github.com/\""
+        }
+
+        full {
+            dimension "version"
+            versionNameSuffix "-full"
+            buildConfigField "String", "BASE_URL", "\"https://api.github.com/\""
+        }
+    }
+
+    packagingOptions {
+        resources {
+            excludes += [
+                    '/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md,licenses/ASM}',
+                    'win32-x86{/attach_hotspot_windows.dll,-64/attach_hotspot_windows.dll}'
+            ]
+        }
+    }
+
+    testOptions {
+        unitTests.all { useJUnitPlatform() }
+    }
+
+    namespace 'githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':modules:common:core') because 'Core Module'
+    androidTestImplementation project(':modules:common:testing:instrumented') because 'Android Testing Module'
+    testImplementation project(':modules:common:testing:jvm') because 'JVM Testing Module'
+
+    api dep.bundles.apiConnection
+
+    //Logging
+    debugImplementation dep.debugChucker
+    releaseImplementation dep.releaseChucker
+
+    api dep.preferencesDataStore
+
+    //Room
+    api dep.bundles.room
+    ksp dep.roomCompiler
+}

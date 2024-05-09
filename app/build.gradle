@@ -70,8 +70,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':modules:common:core') because 'Core Module'
-    implementation project(':modules:common:datasource') because 'Datasource Module'
-    implementation project(':modules:common:ui') because 'UI Module'
+    implementation project(':modules:common:datasource:datasource') because 'Datasource Module'
+    implementation project(':modules:common:ui:ui') because 'UI Module'
     implementation project(':modules:features:profile') because 'Profile Module'
 
     debugImplementation dep.leakCanary
