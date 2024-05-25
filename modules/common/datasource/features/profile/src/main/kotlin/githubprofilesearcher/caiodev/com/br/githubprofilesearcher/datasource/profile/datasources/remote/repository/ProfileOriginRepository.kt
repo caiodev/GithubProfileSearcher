@@ -4,11 +4,11 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fet
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.remote.calls.IProfileClient
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.remote.model.UserModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.states.State
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 internal class ProfileOriginRepository(
-    private val dispatcher: CoroutineDispatcher,
+    private val dispatcher: CoroutineContext,
     private val client: IProfileClient,
     private val remoteFetcher: RemoteFetcher,
 ) : IProfileOriginRepository {

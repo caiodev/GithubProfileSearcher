@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlinx-serialization'
+    alias dep.plugins.androidApplication
+    alias dep.plugins.kotlinPlugin
+    alias dep.plugins.serialization
 }
 
 apply from: "$project.rootDir/flavors/flavors.gradle"
@@ -70,7 +70,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':modules:common:core') because 'Core Module'
-    implementation project(':modules:common:datasource:datasource') because 'Datasource Module'
     implementation project(':modules:common:ui:ui') because 'UI Module'
     implementation project(':modules:features:profile') because 'Profile Module'
 

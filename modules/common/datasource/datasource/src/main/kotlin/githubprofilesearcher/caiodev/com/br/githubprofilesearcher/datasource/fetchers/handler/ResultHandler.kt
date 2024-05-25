@@ -20,7 +20,7 @@ inline fun <reified S, T> State<*>.handleResult(
     crossinline onFailure: (error: Error) -> T,
 ): T =
     if (this is Success<*>) {
-        onSuccess(ValueCasting.castTo<S>(this.data))
+        onSuccess(ValueCasting.castTo<S>(data))
     } else {
         onFailure(handleError(ValueCasting.castTo(this)))
     }
@@ -29,7 +29,7 @@ inline fun <reified S, T> State<*>.handleResult(
 internal fun handleError(errorState: ErrorState?): Error {
     when (errorState) {
         ClientSide -> Core.string.client_side
-        Connect, UnknownHost, SocketTimeout -> Core.string.unknown_host_and_socket_timeout
+        Connect, SocketTimeout, UnknownHost -> Core.string.unknown_host_and_socket_timeout
         ResultLimitReached -> Core.string.limit_of_profile_results
         SearchQuotaReached -> Core.string.query_limit
         ServerSide -> Core.string.server_side

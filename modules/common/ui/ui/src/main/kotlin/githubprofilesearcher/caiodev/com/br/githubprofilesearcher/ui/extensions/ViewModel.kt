@@ -2,30 +2,22 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.extensions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineDispatcher
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.one
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-private val coroutineStatusMutableStateFlow = MutableStateFlow(false)
-
-fun ViewModel.runTaskOnBackground(
-    dispatcher: CoroutineDispatcher,
-    task: suspend () -> Unit,
+inline fun ViewModel.runTaskOnBackground(
+    dispatcher: CoroutineContext,
+    crossinline task: suspend () -> Unit,
 ) {
     viewModelScope.launch(dispatcher) {
         task()
-        coroutineStatusMutableStateFlow.collect {
-            if (it) {
-                ensureActive()
-                coroutineStatusMutableStateFlow.value = false
-            }
-        }
     }
 }
 
-fun ViewModel.onCoroutineStatusRequested(): Boolean {
-    coroutineStatusMutableStateFlow.value = true
-    return viewModelScope.isActive
-}
+fun ViewModel.onCoroutineStatusRequested(): Boolean = viewModelScope.apply { ensureActive() }.isActive
+
+inline fun <reified T> ViewModel.mutableSharedFlowOf() = MutableSharedFlow<T>(replay = one())

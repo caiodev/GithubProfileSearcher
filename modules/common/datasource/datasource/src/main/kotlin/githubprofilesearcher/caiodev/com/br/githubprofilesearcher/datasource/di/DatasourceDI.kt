@@ -9,19 +9,22 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fet
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Interceptor
 import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.lazyModule
+import kotlin.coroutines.CoroutineContext
 
 val datasource =
-    module {
-        single<Database> {
+    lazyModule {
+        single {
             Room.databaseBuilder(
                 androidContext(),
                 AppDatabase::class.java,
                 AppDatabase.DATABASE_NAME,
             ).build()
-        }
-        single<Interceptor> { ChuckerInterceptor(androidContext()) }
+        } bind Database::class
+        singleOf(::ChuckerInterceptor) bind Interceptor::class
         single { newInstance(interceptor = get()) }
-        single { RemoteFetcher() }
-        single { Dispatchers.IO }
+        singleOf(::RemoteFetcher)
+        single { Dispatchers.IO } bind CoroutineContext::class
     }

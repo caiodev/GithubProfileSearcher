@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    alias dep.plugins.androidLibrary
+    alias dep.plugins.kotlinPlugin
 }
 
 apply from: "$project.rootDir/flavors/flavors.gradle"
@@ -12,8 +12,6 @@ android {
     defaultConfig {
         minSdkVersion dep.versions.minSdk.get()
         targetSdkVersion dep.versions.targetSdk.get()
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
 
     compileOptions {
@@ -21,20 +19,10 @@ android {
         targetCompatibility JavaVersion.VERSION_20
     }
 
-    buildFeatures {
-        buildConfig true
-        compose true
-        viewBinding true
-    }
-
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_20)
         }
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion dep.versions.compiler.get()
     }
 
     packagingOptions {
@@ -56,8 +44,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':modules:common:core') because 'Core Module'
-    implementation project(':modules:common:midfield:features:profile') because 'Midfield Module'
+    api project(':modules:common:ui:features:profile') because 'Profile UI Module'
     androidTestImplementation project(':modules:common:testing:instrumented') because 'Android Testing Module'
     testImplementation project(':modules:common:testing:jvm') because 'JVM Testing Module'
-    implementation project(':modules:common:ui:ui') because 'UI Module'
 }

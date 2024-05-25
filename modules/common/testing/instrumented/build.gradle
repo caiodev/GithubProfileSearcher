@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    alias dep.plugins.androidLibrary
+    alias dep.plugins.kotlinPlugin
 }
 
 apply from: "$project.rootDir/flavors/flavors.gradle"

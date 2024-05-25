@@ -3,13 +3,13 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.prof
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R.string
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.handler.handleResult
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.database.features.profile.entity.UserEntity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.fetchers.local.keyValue.IKeyValueRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.local.repository.database.IUserDatabaseRepository
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.local.repository.keyValue.ProfileKeyValueIDs
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.remote.model.User
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.remote.model.UserModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.remote.repository.IProfileOriginRepository
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.profile.mapper.mapFromRemote
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.profile.mapper.mapFromEntity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.profile.mapper.mapToEntity
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.profile.state.ProfileState
 
@@ -20,7 +20,6 @@ internal class ProfileDataObtainmentCell(
 ) : IProfileDataObtainmentCell {
     private var profileName: String = emptyString()
     private var pageNumber = INITIAL_PAGE
-    private val userList = arrayListOf<User>()
 
     override suspend fun obtainProfileDataList(
         profile: String,
@@ -62,19 +61,31 @@ internal class ProfileDataObtainmentCell(
         shouldListBeCleared: Boolean,
     ): ProfileState {
         userModel?.let {
+            val profileList = arrayListOf<UserEntity>()
             return if (it.profileList.isNotEmpty()) {
-                if (shouldListBeCleared) userList.clear()
-                userList.addAll(it.profileList)
-                executePostUserInfoArrival(shouldListBeCleared = shouldListBeCleared)
-                ProfileState(
-                    isSuccess = true,
-                    isSuccessWithContent = true,
-                    content = userList.mapFromRemote(),
-                )
+                if (shouldListBeCleared) {
+                    userDatabaseRepository.drop()
+                    userDatabaseRepository.insert(profileList = it.profileList.mapToEntity())
+                    profileList.addAll(userDatabaseRepository.get())
+                    executePostUserInfoArrival()
+                    ProfileState(
+                        isSuccess = true,
+                        isSuccessWithContent = true,
+                        content = profileList.mapFromEntity(),
+                    )
+                } else {
+                    userDatabaseRepository.upsert(profileList = it.profileList.mapToEntity())
+                    profileList.addAll(userDatabaseRepository.get())
+                    ProfileState(
+                        isSuccess = true,
+                        isSuccessWithContent = true,
+                        content = profileList.mapFromEntity(),
+                    )
+                }
             } else {
                 ProfileState(
                     errorMessage = string.client_side,
-                    areAllResultsEmpty = userList.isEmpty(),
+                    areAllResultsEmpty = profileList.isEmpty(),
                 )
             }
         } ?: run {
@@ -84,11 +95,7 @@ internal class ProfileDataObtainmentCell(
         }
     }
 
-    private suspend fun executePostUserInfoArrival(shouldListBeCleared: Boolean) {
-        if (shouldListBeCleared) userDatabaseRepository.drop()
-
-        userDatabaseRepository.upsert(profileList = userList.mapToEntity())
-
+    private suspend fun executePostUserInfoArrival() {
         keyValueRepository.setValue(
             key = ProfileKeyValueIDs.CurrentProfileText,
             value = emptyString(),

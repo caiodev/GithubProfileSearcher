@@ -1,12 +1,12 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder
 
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.load
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ProfileViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.ProfileViewHolderLayoutBinding
 
 class ProfileInformationViewHolder(
     private val itemBinding: ProfileViewHolderLayoutBinding,

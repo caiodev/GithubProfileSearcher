@@ -21,9 +21,10 @@ class ProfileDataCellAggregator(
         profile: String,
         shouldListBeCleared: Boolean,
         isCoroutineActive: () -> Boolean,
-    ): ProfileState = profileDataCell.obtainProfileDataList(
-        profile = profile,
-        shouldListBeCleared = shouldListBeCleared,
-        isCoroutineActive = isCoroutineActive,
-    )
+    ): ProfileState =
+        profileDataCell.obtainProfileDataList(
+            profile = profile,
+            shouldListBeCleared = shouldListBeCleared,
+            isCoroutineActive = isCoroutineActive,
+        )
 }

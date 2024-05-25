@@ -1,13 +1,13 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.profile.UserProfile
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ProfileViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.OnItemSelectedListener
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.ProfileInformationViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.ProfileViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.OnItemSelectedListener
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.ProfileInformationViewHolder
 
 class ProfileAdapter(private val onItemSelectedListener: OnItemSelectedListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

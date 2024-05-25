@@ -1,6 +1,7 @@
 plugins {
     alias dep.plugins.androidApplication apply false
     alias dep.plugins.androidLibrary apply false
+    alias dep.plugins.composeCompiler apply false
     alias dep.plugins.detekt apply false
     alias dep.plugins.kotlinPlugin apply false
     alias dep.plugins.ksp apply false

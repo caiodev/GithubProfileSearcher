@@ -1,21 +1,21 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.contracts.OnItemClicked
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.EmptyViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.EndOfResultsViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.LoadingViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.RetryViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.EMPTY
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.END_OF_RESULTS
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.RetryViewHolder.Companion.RETRY
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.EmptyViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.EndOfResultsViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.LoadingViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.RetryViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.EmptyViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.EmptyViewHolder.Companion.EMPTY
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.EndOfResultsViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.EndOfResultsViewHolder.Companion.END_OF_RESULTS
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.LoadingViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.RetryViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.RetryViewHolder.Companion.RETRY
 
 class TransientViewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var itemClicked: OnItemClicked

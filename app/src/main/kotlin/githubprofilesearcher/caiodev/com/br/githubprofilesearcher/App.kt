@@ -5,13 +5,12 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.di.datasource
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.di.profileModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.lazyModules
 import org.koin.core.logger.Level
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.R as UI
 
 class App : Application(), ImageLoaderFactory {
     override fun onCreate() {
@@ -19,7 +18,7 @@ class App : Application(), ImageLoaderFactory {
         startKoin {
             androidContext(this@App)
             androidLogger(Level.DEBUG)
-            modules(datasource, profileModule)
+            lazyModules(profileModule)
         }
     }
 
@@ -37,8 +36,8 @@ class App : Application(), ImageLoaderFactory {
                     .maxSizePercent(MEMORY_CACHE_CAP)
                     .build()
             }
-            .placeholder(UI.mipmap.ic_launcher)
-            .error(UI.mipmap.ic_launcher)
+            .placeholder(R.mipmap.ic_launcher)
+            .error(R.mipmap.ic_launcher)
             .build()
     }
 

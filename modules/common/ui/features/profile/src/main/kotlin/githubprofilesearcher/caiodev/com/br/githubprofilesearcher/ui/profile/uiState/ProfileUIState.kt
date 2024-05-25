@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.state
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.uiState
 
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.midfield.profile.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core

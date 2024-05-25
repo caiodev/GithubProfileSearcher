@@ -32,5 +32,6 @@ include(":modules:common:testing:jvm")
 include(":modules:common:testing:testing")
 
 include(":modules:common:ui:ui")
+include(":modules:common:ui:features:profile")
 
 include(":modules:features:profile")

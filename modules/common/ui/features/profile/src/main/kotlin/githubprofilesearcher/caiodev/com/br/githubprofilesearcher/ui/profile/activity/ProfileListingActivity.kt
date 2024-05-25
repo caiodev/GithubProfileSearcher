@@ -1,4 +1,4 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.activity
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -16,23 +16,23 @@ import com.google.android.material.snackbar.Snackbar
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.cast.ValueCasting.castTo
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.defaultInteger
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.string.emptyString
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.R
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.ActivityProfileListingBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.R
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.adapter.HeaderAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.adapter.ProfileAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.adapter.TransientViewsAdapter
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.ActivityProfileListingBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.uiState.ProfileUIState
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.OnItemSelectedListener
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewModel.ProfileViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.applyViewVisibility
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.hideKeyboard
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.snackBar.showMessage
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.HeaderAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.ProfileAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter.TransientViewsAdapter
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.state.ProfileUIState
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.OnItemSelectedListener
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.LoadingViewHolder.Companion.LOADING
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewModel.ProfileViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.R as Core
 
-internal class ProfileListingActivity : ComponentActivity() {
+class ProfileListingActivity : ComponentActivity() {
     private lateinit var binding: ActivityProfileListingBinding
 
     private val snackBar by lazy {
@@ -140,28 +140,24 @@ internal class ProfileListingActivity : ComponentActivity() {
     }
 
     private fun getTextFieldData(profile: String = emptyString()) {
-        getData { viewModel.getData(profile) }
+        viewModel.getData(profile)
     }
 
     private fun getRecyclerData() {
         changeViewState(TRANSIENT_VIEWS_ADAPTER, LOADING)
-        getData { viewModel.paginateData() }
+        viewModel.paginateData()
     }
 
     private fun makeTextInputEditTextNotEmptyRequiredCall() {
         binding.searchProfileTextInputEditText.hideKeyboard()
         if (isTextInputEditTextNotEmpty()) {
             binding.progressBar.applyViewVisibility(VISIBLE)
-            getTextFieldData(binding.searchProfileTextInputEditText.text.toString())
+            getTextFieldData(binding.searchProfileTextInputEditText.text.toString().trim())
         } else {
             snackBar.showMessage(
                 Core.string.empty_field,
             )
         }
-    }
-
-    private inline fun getData(crossinline task: () -> Unit) {
-        task()
     }
 
     private fun setupRecyclerViewAddOnScrollListener() {

@@ -1,13 +1,13 @@
-package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.adapter
+package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.EmptyViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.databinding.HeaderViewHolderLayoutBinding
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.HeaderViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.viewHolder.transientItemViews.EmptyViewHolder.Companion.EMPTY
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.EmptyViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.databinding.HeaderViewHolderLayoutBinding
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.HeaderViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.EmptyViewHolder
+import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.viewHolder.transientItemViews.EmptyViewHolder.Companion.EMPTY
 
 class HeaderAdapter(private val headerName: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var viewType = EMPTY

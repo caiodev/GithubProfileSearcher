@@ -6,7 +6,7 @@ import io.ktor.client.request.parameter
 
 class ProfileClient(
     private val client: HttpClient,
-) : githubprofilesearcher.caiodev.com.br.githubprofilesearcher.datasource.profile.datasources.remote.calls.IProfileClient {
+) : IProfileClient {
     override suspend fun fetchUserInfo(
         user: String,
         pageNumber: Int,
