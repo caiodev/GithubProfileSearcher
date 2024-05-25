@@ -43,7 +43,7 @@ class App : Application(), ImageLoaderFactory {
 
     companion object {
         private const val COIL_CACHE_DIR = "coil_image_cache"
-        private const val DISK_CACHE_CAP = .05
-        private const val MEMORY_CACHE_CAP = .2
+        private const val DISK_CACHE_CAP = .01
+        private const val MEMORY_CACHE_CAP = .05
     }
 }

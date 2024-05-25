@@ -66,22 +66,16 @@ internal class ProfileDataObtainmentCell(
                 if (shouldListBeCleared) {
                     userDatabaseRepository.drop()
                     userDatabaseRepository.insert(profileList = it.profileList.mapToEntity())
-                    profileList.addAll(userDatabaseRepository.get())
-                    executePostUserInfoArrival()
-                    ProfileState(
-                        isSuccess = true,
-                        isSuccessWithContent = true,
-                        content = profileList.mapFromEntity(),
-                    )
                 } else {
                     userDatabaseRepository.upsert(profileList = it.profileList.mapToEntity())
-                    profileList.addAll(userDatabaseRepository.get())
-                    ProfileState(
-                        isSuccess = true,
-                        isSuccessWithContent = true,
-                        content = profileList.mapFromEntity(),
-                    )
                 }
+                profileList.addAll(userDatabaseRepository.get())
+                executePostUserInfoArrival()
+                ProfileState(
+                    isSuccess = true,
+                    isSuccessWithContent = true,
+                    content = profileList.mapFromEntity(),
+                )
             } else {
                 ProfileState(
                     errorMessage = string.client_side,
