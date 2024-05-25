@@ -8,8 +8,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.extensions.
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.extensions.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.uiState.ProfileUIState
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.profile.uiState.mapToProfileUIState
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.flow.SharedFlow
+import kotlin.coroutines.CoroutineContext
 
 internal class ProfileViewModel(
     private val dispatcher: CoroutineContext,

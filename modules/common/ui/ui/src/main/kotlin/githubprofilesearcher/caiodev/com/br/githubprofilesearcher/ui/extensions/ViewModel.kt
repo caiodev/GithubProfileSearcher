@@ -3,11 +3,11 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.extensions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.core.types.number.one
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 inline fun ViewModel.runTaskOnBackground(
     dispatcher: CoroutineContext,
