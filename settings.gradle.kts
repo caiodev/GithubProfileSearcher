@@ -1,12 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
-pluginManagement {
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-}
+rootProject.name = "GithubProfileSearcher"
 
 dependencyResolutionManagement {
     defaultLibrariesExtensionName.set("dep")
@@ -17,21 +11,23 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "GithubProfileSearcher"
+pluginManagement {
+    repositories {
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
-include(":modules:common:core")
-
-include(":modules:common:datasource:datasource")
-include(":modules:common:datasource:features:profile")
-
-include(":modules:common:midfield:midfield")
-include(":modules:common:midfield:features:profile")
-
+include(":modules:common:data")
+include(":modules:common:di")
+include(":modules:common:domain")
+include(":modules:common:resources")
 include(":modules:common:testing:instrumented")
 include(":modules:common:testing:jvm")
 include(":modules:common:testing:testing")
-
-include(":modules:common:ui:ui")
-include(":modules:common:ui:features:profile")
-
+include(":modules:common:ui")
+include(":modules:common:utils")
 include(":modules:features:profile")

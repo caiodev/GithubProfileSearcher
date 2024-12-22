@@ -1,74 +1,71 @@
-##### Dependency versions #####
-
 [versions]
 
 #Android Versioning Metadata
-compileSdk = '34'
+compileSdk = '35'
 minSdk = '26'
-targetSdk = '34'
 versionCode = '1'
 versionName = '1.0'
 
-appCompat = '1.7.0-rc01'
+appCompat = '1.7.0'
 
-chucker = '4.0.0'
+chucker = '4.1.0'
 
-coil = '2.6.0'
+coil = '3.0.4'
 
 #Compose
-activity = '1.9.0'
-composeCore = '1.7.0-beta01'
-material3 = '1.3.0-beta01'
-runtimeTracingCompose = '1.0.0-beta01'
+accompanist = '0.37.0'
+activity = '1.10.0-rc01'
+composeCore = '1.8.0-alpha07'
+icons = '1.7.6'
+material3 = '1.4.0-alpha05'
 
-coroutines = '1.8.0'
+coroutines = '1.10.0'
 
 dataStore = '1.1.1'
 
-gradle = '8.4.1'
+gradle = '8.7.3'
 
-koin = '3.6.0-Beta4'
+koin = '4.1.0-Beta1'
 
-kotlin = '2.0.0'
+kotlin = '2.1.0'
 
-ksp = '2.0.0-1.0.21'
+ksp = '2.1.0-1.0.29'
 
-ktor = '2.3.10'
+ktor = '3.0.2'
 
-ktxCore = '1.13.1'
+ktxCore = '1.16.0-alpha01'
 
-lifecycle = '2.8.0'
+lifecycle = '2.9.0-alpha08'
 
-materialDesign = '1.12.0'
+materialDesign = '1.13.0-alpha09'
 
-#Paging
-paging = '3.3.0'
+paging = '3.3.5'
 
 #Quality/Performance
-detekt = '1.23.6'
-ktlint = '1.2.1'
-ktlintPlugin = '12.1.1'
-leakCanary = '2.14'
-runtimeTracing = '1.3.0-alpha02'
+detekt = '1.23.7'
+ktlint = '1.5.0'
+ktlintPlugin = '12.1.2'
+leakCanary = '3.0-alpha-8'
 
-room = '2.6.1'
+room = '2.7.0-alpha12'
 
 #Views/ViewGroups
-constraintLayout = '2.1.4'
-recyclerView = '1.3.2'
+constraintLayout = '2.2.0'
+recyclerView = '1.4.0-rc01'
+
+workManager = '2.10.0'
 
 # Test Dependencies #
 
 archTest = '2.2.0'
 jacoco = '0.8.12'
-junit = '1.2.0-beta01'
-junit5 = '5.11.0-M1'
-mockk = '1.13.10'
-robolectric = '4.11.1'
-testCore = '1.6.0-beta01'
-testRunner = '1.6.0-beta01'
-
-##### Libraries #####
+junit = '1.2.1'
+junit5 = '5.11.4'
+junit5PlatformLauncher = '1.11.4'
+konsist = '0.17.3'
+mockk = '1.13.13'
+testCore = '1.6.1'
+testRunner = '1.6.2'
 
 [libraries]
 
@@ -86,19 +83,23 @@ appCompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 debugChucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 releaseChucker = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
 
-coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+#Coil
+coilComposeAndroid = { group = "io.coil-kt.coil3", name = "coil-compose-android", version.ref = "coil" }
+coilNetworkClient = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 
 #Compose
+accompanistAdaptiveCompose = { group = "com.google.accompanist", name = "accompanist-adaptive", version.ref = "accompanist" }
 activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 animationCompose = { group = "androidx.compose.animation", name = "animation", version.ref = "composeCore" }
 foundationCompose = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeCore" }
 lifecycleCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 material3Compose = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
-materialIconsCoreCompose = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeCore" }
-materialIconsExtendedCompose = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeCore" }
+material3WindowSizeClassCompose = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
+materialIconsCoreCompose = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "icons" }
+materialIconsExtendedCompose = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "icons" }
+runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "composeCore" }
 runtimeAndroidCompose = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "composeCore" }
-runtimeCompose = { group = "androidx.compose.runtime", name = "runtime", version.ref = "composeCore" }
-runtimeTracingCompose = { group = "androidx.compose.runtime", name = "runtime-tracing", version.ref = "runtimeTracingCompose" }
+runtimeTracingCompose = { group = "androidx.compose.runtime", name = "runtime-tracing", version.ref = "composeCore" }
 uiCompose = { group = "androidx.compose.ui", name = "ui", version.ref = "composeCore" }
 uiToolingCompose = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeCore" }
 uiToolingPreviewCompose = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeCore" }
@@ -107,10 +108,13 @@ ktxCore = { group = "androidx.core", name = "core-ktx", version.ref = "ktxCore" 
 
 preferencesDataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 
+#Koin
 koinAndroid = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koinCompose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 koinCore = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koinCoroutines = { group = "io.insert-koin", name = "koin-core-coroutines", version.ref = "koin" }
+koinStartup = { group = "io.insert-koin", name = "koin-androidx-startup", version.ref = "koin" }
+koinWorkManager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
 
 leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
 
@@ -122,45 +126,44 @@ materialDesign = { group = "com.google.android.material", name = "material", ver
 
 #Paging
 pagingCompose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
-pagingRuntimeKtx = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+pagingRuntimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 
 #Room
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-roomKtx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-
-runtimeTracing = { group = "androidx.tracing", name = "tracing-ktx", version.ref = "runtimeTracing" }
 
 #Views/ViewGroups
 constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
 
+workManager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
+
 ##### Testing Section #####
 
 # Common #
-
 coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
+konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 
 # JVM #
-
 #JUnit5
 junit5Api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
 junit5Engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
+junit5PlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit5PlatformLauncher" }
 
-koinTest = { group = "io.insert-koin", name = "koin-android-test", version.ref = "koin" }
+koinTest = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
-robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 # Instrumented/UI #
-
 #Compose
 composeTestJUnit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeCore" }
 composeTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "composeCore" }
 
 #JUnit
-junitAndroid = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
-junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit" }
+junitAndroidKtx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit" }
+
+koinInstrumentedTest = { group = "io.insert-koin", name = "koin-android-test", version.ref = "koin" }
 
 #MockK
 mockkAgent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
@@ -171,19 +174,19 @@ archTest = { group = "androidx.arch.core", name = "core-testing", version.ref = 
 testCore = { group = "androidx.test", name = "core-ktx", version.ref = "testCore" }
 testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 
-##### Plugins #####
+workManagerTest = { group = "androidx.work", name = "work-testing", version.ref = "workManager" }
 
 [plugins]
+
 androidApplication = { id = "com.android.application", version.ref = "gradle" }
 androidLibrary = { id = "com.android.library", version.ref = "gradle" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinPlugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
-##### Bundles #####
 
 [bundles]
 
@@ -196,16 +199,23 @@ apiConnection = [
     "serialization"
 ]
 
+coil = [
+    "coilComposeAndroid",
+    "coilNetworkClient"
+]
+
 compose = [
+    "accompanistAdaptiveCompose",
     "activityCompose",
     "animationCompose",
     "foundationCompose",
     "lifecycleCompose",
     "material3Compose",
+    "material3WindowSizeClassCompose",
     "materialIconsCoreCompose",
     "materialIconsExtendedCompose",
+    "runtime",
     "runtimeAndroidCompose",
-    "runtimeCompose",
     "runtimeTracingCompose",
     "uiCompose",
     "uiToolingCompose",
@@ -214,7 +224,11 @@ compose = [
 
 koin = [
     "koinAndroid",
-    "koinCompose",
+    "koinCoroutines",
+    "koinStartup"
+]
+
+koinJvm = [
     "koinCore",
     "koinCoroutines"
 ]
@@ -229,38 +243,41 @@ paging = [
     "pagingRuntimeKtx"
 ]
 
-room = [
-    "room",
-    "roomKtx"
-]
-
 views = [
     "constraintLayout",
     "recyclerView"
 ]
 
-# Test Bundles #
-
-common = [
-    "coroutinesTest",
-    "jacoco"
+workManager = [
+    'koinWorkManager',
+    'workManager'
 ]
 
-instrumented = [
-    "archTest",
+# Testing Section #
+
+commonTest = [
+    "coroutinesTest",
+    "jacoco",
+    "konsist"
+]
+
+composeTest = [
     "composeTestJUnit4",
-    "composeTestManifest",
-    "junitAndroid",
-    "junitKtx",
+    "composeTestManifest"
+]
+
+instrumentedTest = [
+    "archTest",
+    "junitAndroidKtx",
+    "koinInstrumentedTest",
     "mockkAgent",
     "mockkAndroid",
     "testCore",
     "testRunner"
 ]
 
-jvm = [
-    "junit5Engine",
+jvmTest = [
+    "junit5Api",
     "koinTest",
-    "mockk",
-    "robolectric"
+    "mockk"
 ]

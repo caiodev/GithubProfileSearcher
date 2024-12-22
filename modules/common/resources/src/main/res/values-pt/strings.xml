@@ -1,0 +1,21 @@
+<resources>
+    <!-- Success message -->
+    <string name="successful_operation">Successo</string>
+
+    <!-- Error messages -->
+    <string name="empty_field">Campo vazio</string>
+    <string name="client_side">Não conseguimos obter o que você está procurando.\nPor favor, tente novamente mais tarde</string>
+    <string name="server_side">Os servidores estão sobrecarregados no momento.\nPor favor, tente novamente mais tarde</string>
+    <string name="query_limit">A volume máximo de buscas foi alcançado.\nPor favor, tente novamente em alguns instantes</string>
+    <string name="limit_of_profile_results">Você alcançou o milésimo perfil 🎉</string>
+    <string name="unknown_host_and_socket_timeout">Por favor, verifique sua conexão e tente novamente mais tarde</string>
+    <string name="ssl_handshake">A rede na qual você está, não é segura.\nPor favor, mude de rede e tente novamente mais tarde</string>
+    <string name="generic">Ocorreu um erro.\nPor favor, tente novamente mais tarde</string>
+
+    <!--Profile info-->
+    <string name="profile_hint">Digite um perfil</string>
+    <string name="login">Usuário: %s</string>
+    <string name="profile_list_header">Perfis</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="end_of_results">Fim dos resultados</string>
+</resources>

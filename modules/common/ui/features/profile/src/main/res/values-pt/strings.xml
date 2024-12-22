@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!--Profile info-->
-    <string name="profile_hint">Digite um perfil</string>
-    <string name="login">Usuário: %s</string>
-    <string name="user_list_header">Perfis</string>
-    <string name="retry">Tentar novamente</string>
-    <string name="end_of_results">Fim dos resultados</string>
-</resources>

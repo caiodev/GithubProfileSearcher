@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/parentConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.view.activity.ProfileListingActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/profileInfoRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/padding_8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileTextInputLayout" />
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_8dp"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:layout_marginEnd="@dimen/margin_8dp"
+            android:hint="@string/profile_hint"
+            app:hintTextAppearance="?android:textAppearanceSmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchProfileTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="profile"
+                android:imeOptions="actionSearch"
+                android:inputType="text|textNoSuggestions"
+                android:paddingEnd="@dimen/padding_56dp"
+                android:textSize="@dimen/text_input_edit_text_text_size"
+                tools:ignore="RtlSymmetry" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+            android:id="@+id/backToTopButton"
+            android:layout_width="@dimen/view_48dp"
+            android:layout_height="@dimen/view_48dp"
+            android:padding="@dimen/padding_8dp"
+            android:rotation="-90"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_back_to_top"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

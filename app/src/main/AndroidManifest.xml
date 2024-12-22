@@ -4,7 +4,7 @@
 
     <application
         android:name=".App"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:localeConfig="@xml/locales_config"
@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup"
         tools:targetApi="tiramisu">
 
         <profileable
@@ -20,7 +19,7 @@
             tools:targetApi="q" />
 
         <activity
-            android:name=".ui.profile.activity.ProfileListingActivity"
+            android:name="githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.ui.activity.ProfileListingActivity"
             android:configChanges="uiMode"
             android:exported="true">
             <intent-filter>
