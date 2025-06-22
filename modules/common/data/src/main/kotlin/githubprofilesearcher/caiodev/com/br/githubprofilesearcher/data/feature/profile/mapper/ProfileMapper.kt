@@ -8,14 +8,14 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.domain.feature
 internal fun ProfileModel.mapFromRemote(): UserProfileModel =
     UserProfileModel(
         profileList =
-        profileList.map {
-            UserProfile(
-                login = it.login,
-                profileUrl = it.profileUrl,
-                profileId = it.profileId,
-                profileImage = it.profileImage,
-            )
-        },
+            profileList.map {
+                UserProfile(
+                    login = it.login,
+                    profileUrl = it.profileUrl,
+                    profileId = it.profileId,
+                    profileImage = it.profileImage,
+                )
+            },
     )
 
 internal fun List<ProfileEntity>.mapFromEntity(): List<UserProfile> =

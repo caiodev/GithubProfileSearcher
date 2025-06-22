@@ -32,8 +32,7 @@ class ProfileRemoteRepository(
                             maxResultsPerPage = ITEMS_PER_PAGE,
                         )
                     },
-                )
-                .handleResult<ProfileModel, Pair<Flow<UserProfileModel?>, Flow<Int>>>(
+                ).handleResult<ProfileModel, Pair<Flow<UserProfileModel?>, Flow<Int>>>(
                     onSuccess = { result ->
                         provideUserProfileResultFlows(success = flow { emit(result?.mapFromRemote()) })
                     },
@@ -44,8 +43,8 @@ class ProfileRemoteRepository(
         }
 
     private fun provideUserProfileResultFlows(
-        success: Flow<UserProfileModel?> = emptyFlow<UserProfileModel?>(),
-        error: Flow<Int> = emptyFlow<Int>(),
+        success: Flow<UserProfileModel?> = emptyFlow(),
+        error: Flow<Int> = emptyFlow(),
     ): Pair<Flow<UserProfileModel?>, Flow<Int>> = Pair(first = success, second = error)
 
     companion object {

@@ -8,13 +8,13 @@ plugins {
 }
 
 android {
-    compileSdk =
-        dep.versions.compileSdk
-            .get()
-            .toInt()
     defaultConfig {
         minSdk =
             dep.versions.minSdk
+                .get()
+                .toInt()
+        compileSdk =
+            dep.versions.compileSdk
                 .get()
                 .toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -74,8 +74,6 @@ dependencies {
     // Logging
     debugImplementation(dep.debugChucker)
     releaseImplementation(dep.releaseChucker)
-
-    implementation(dep.preferencesDataStore)
 
     // Room
     implementation(dep.room)

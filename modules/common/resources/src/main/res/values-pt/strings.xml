@@ -1,7 +1,4 @@
 <resources>
-    <!-- Success message -->
-    <string name="successful_operation">Successo</string>
-
     <!-- Error messages -->
     <string name="empty_field">Campo vazio</string>
     <string name="client_side">Não conseguimos obter o que você está procurando.\nPor favor, tente novamente mais tarde</string>

@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdk =
-        dep.versions.compileSdk
-            .get()
-            .toInt()
     defaultConfig {
         minSdk =
             dep.versions.minSdk
+                .get()
+                .toInt()
+        compileSdk =
+            dep.versions.compileSdk
                 .get()
                 .toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -19,7 +19,7 @@ import org.koin.androix.startup.KoinStartup
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.lazyModules
 import org.koin.core.logger.Level
-import org.koin.dsl.KoinAppDeclaration
+import org.koin.dsl.koinConfiguration
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.resources.R as Resources
 
 @OptIn(KoinExperimentalAPI::class)
@@ -27,8 +27,8 @@ class App :
     Application(),
     KoinStartup,
     SingletonImageLoader.Factory {
-    override fun onKoinStartup(): KoinAppDeclaration =
-        {
+    override fun onKoinStartup() =
+        koinConfiguration {
             androidContext(this@App)
             androidLogger(Level.DEBUG)
             lazyModules(profileModule)
@@ -40,8 +40,7 @@ class App :
                 .getDrawable(
                     applicationContext,
                     Resources.mipmap.ic_launcher,
-                )
-                ?.asImage()
+                )?.asImage()
         return ImageLoader
             .Builder(context)
             .components { add(KtorNetworkFetcherFactory()) }
@@ -52,14 +51,12 @@ class App :
                     .directory(cacheDir.resolve(COIL_CACHE_DIR).toOkioPath())
                     .maxSizePercent(DISK_CACHE_CAP)
                     .build()
-            }
-            .memoryCache {
+            }.memoryCache {
                 MemoryCache
                     .Builder()
                     .maxSizePercent(context, MEMORY_CACHE_CAP)
                     .build()
-            }
-            .placeholder(defaultImage)
+            }.placeholder(defaultImage)
             .error(defaultImage)
             .logger(DebugLogger())
             .build()

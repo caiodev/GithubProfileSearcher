@@ -10,14 +10,14 @@ apply {
 }
 
 android {
-    compileSdk =
-        dep.versions.compileSdk
-            .get()
-            .toInt()
     defaultConfig {
         applicationId = "githubprofilesearcher.caiodev.com.br.githubprofilesearcher.app"
         minSdk =
             dep.versions.minSdk
+                .get()
+                .toInt()
+        compileSdk =
+            dep.versions.compileSdk
                 .get()
                 .toInt()
         versionCode =

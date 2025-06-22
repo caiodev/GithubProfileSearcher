@@ -5,10 +5,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.resources.R as
 
 data class ProfileUIState(
     val content: List<UserProfile> = emptyList(),
-    val errorMessage: Int = Resources.string.generic,
-    val isEmptyStateError: Boolean = content.isEmpty(),
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
-    val isSuccessWithContent: Boolean = isSuccess && content.isNotEmpty(),
-    val successMessage: Int = Resources.string.successful_operation,
+    val errorMessage: Int = Resources.string.generic,
+    val isEmptyStateError: Boolean = !isSuccess && content.isEmpty(),
 )

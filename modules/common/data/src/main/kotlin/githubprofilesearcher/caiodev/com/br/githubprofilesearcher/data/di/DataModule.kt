@@ -22,8 +22,7 @@ internal val dataModule =
                     androidContext(),
                     AppDatabase::class.java,
                     AppDatabase.DATABASE_NAME,
-                )
-                .build()
+                ).build()
         } bind Database::class
         singleOf(::ChuckerInterceptor) bind Interceptor::class
         single { newInstance(interceptor = get()) }

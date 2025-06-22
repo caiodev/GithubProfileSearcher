@@ -9,14 +9,16 @@ import kotlin.test.assertEquals
 class ValueCastingTest {
     @Test
     fun `castToNullable should return a valid value`() {
-        arrayListOf(defaultInteger()).castTo<List<Int>>()
+        arrayListOf(defaultInteger())
+            .castTo<List<Int>>()
             ?.first()
             ?.apply { assertEquals(defaultInteger(), this) }
     }
 
     @Test
     fun `castToNonNullable should return a valid value`() {
-        arrayListOf(defaultInteger()).castToNonNullable<List<Int>>()
+        arrayListOf(defaultInteger())
+            .castToNonNullable<List<Int>>()
             .first()
             .apply { assertEquals(defaultInteger(), this) }
     }

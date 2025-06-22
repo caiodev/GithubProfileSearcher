@@ -2,14 +2,13 @@ package githubprofilesearcher.caiodev.com.br.githubprofilesearcher.profile.ui.ac
 
 import android.R
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -67,22 +66,9 @@ class ProfileListingActivity : ComponentActivity() {
             viewModel.uiState.collect { uiState ->
                 binding.progressBar.isVisible = uiState.isLoading
                 if (uiState.isSuccess) {
-                    if (uiState.isSuccessWithContent) {
-                        onSuccess(uiState = uiState)
-                    } else {
-                        snackBar.showMessage(uiState.successMessage)
-                    }
+                    onDisplay(uiState = uiState)
                 } else {
-                    if (uiState.content.isNotEmpty()) {
-                        onSuccess(uiState = uiState)
-                    }
-                    Toast
-                        .makeText(
-                            applicationContext,
-                            getString(uiState.errorMessage),
-                            Toast.LENGTH_LONG,
-                        )
-                        .show()
+                    snackBar.showMessage(uiState.errorMessage)
                 }
             }
         }
@@ -125,7 +111,7 @@ class ProfileListingActivity : ComponentActivity() {
             }
         }
 
-    private fun onSuccess(uiState: ProfileUIState) {
+    private fun onDisplay(uiState: ProfileUIState) {
         binding.progressBar.isVisible = false
         setupUpperViewsInteraction(true)
         profileAdapter.apply {
@@ -193,14 +179,13 @@ class ProfileListingActivity : ComponentActivity() {
             .toString()
             .isNotEmpty()
 
-    private fun provideRecyclerViewLayoutManager() =
-        binding.profileInfoRecyclerView.layoutManager.castTo<LinearLayoutManager>()
+    private fun provideRecyclerViewLayoutManager() = binding.profileInfoRecyclerView.layoutManager.castTo<LinearLayoutManager>()
 
     private fun launchBrowser(profileUrl: String) {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse(profileUrl),
+                profileUrl.toUri(),
             ),
         )
     }

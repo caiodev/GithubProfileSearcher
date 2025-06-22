@@ -42,10 +42,10 @@ internal class ProfileViewModel(
                     if (it.profileList.isNotEmpty()) {
                         emitUIState(
                             content =
-                            fetchLocalProfileUseCase(
-                                userProfileModel = userProfileModel,
-                                shouldListBeCleared = true,
-                            ),
+                                fetchLocalProfileUseCase(
+                                    userProfileModel = userProfileModel,
+                                    shouldListBeCleared = true,
+                                ),
                             isSuccess = true,
                         )
                     } else {
@@ -66,21 +66,22 @@ internal class ProfileViewModel(
         errorMessage: Int = Resources.string.generic,
         isSuccess: Boolean = false,
     ) {
-        val stateContent =
-            if (
-                content.isEmpty() &&
-                _uiState.replayCache.isNotEmpty()
-            ) {
-                _uiState.replayCache.first().content
+        val state =
+            if (_uiState.replayCache.isNotEmpty()) {
+                val cache = _uiState.replayCache.first()
+                cache.copy(
+                    content = content.ifEmpty { cache.content },
+                    isSuccess = isSuccess,
+                    isEmptyStateError = !cache.isSuccess && cache.content.isEmpty(),
+                    errorMessage = errorMessage,
+                )
             } else {
-                content
+                ProfileUIState(
+                    content = content,
+                    isSuccess = isSuccess,
+                    errorMessage = errorMessage,
+                )
             }
-        _uiState.emit(
-            ProfileUIState(
-                content = stateContent,
-                errorMessage = errorMessage,
-                isSuccess = isSuccess,
-            ),
-        )
+        _uiState.emit(state)
     }
 }
