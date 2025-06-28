@@ -4,13 +4,14 @@ import androidx.lifecycle.ViewModel
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.domain.feature.profile.model.UserProfile
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.domain.feature.profile.usecase.IFetchLocalProfileUseCase
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.domain.feature.profile.usecase.IFetchRemoteProfileUseCase
-import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.extensions.viewmodel.mutableSharedFlowOf
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.extensions.viewmodel.runTaskOnBackground
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.ui.feature.profile.uiState.ProfileUIState
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.utils.types.string.emptyString
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.resources.R as Resources
 
 internal class ProfileViewModel(
@@ -18,9 +19,9 @@ internal class ProfileViewModel(
     private val fetchLocalProfileUseCase: IFetchLocalProfileUseCase,
     private val fetchRemoteProfileUseCase: IFetchRemoteProfileUseCase,
 ) : ViewModel() {
-    private val _uiState = mutableSharedFlowOf<ProfileUIState>()
-    val uiState: SharedFlow<ProfileUIState>
-        get() = _uiState.asSharedFlow()
+    private val _uiState = MutableStateFlow(ProfileUIState())
+    val uiState: StateFlow<ProfileUIState>
+        get() = _uiState.asStateFlow()
 
     fun getData(profile: String) {
         encapsulateCall(profile = profile)
@@ -61,27 +62,20 @@ internal class ProfileViewModel(
         }
     }
 
-    private suspend fun emitUIState(
+    private fun emitUIState(
         content: List<UserProfile> = emptyList(),
         errorMessage: Int = Resources.string.generic,
         isSuccess: Boolean = false,
     ) {
-        val state =
-            if (_uiState.replayCache.isNotEmpty()) {
-                val cache = _uiState.replayCache.first()
-                cache.copy(
-                    content = content.ifEmpty { cache.content },
-                    isSuccess = isSuccess,
-                    isEmptyStateError = !cache.isSuccess && cache.content.isEmpty(),
-                    errorMessage = errorMessage,
-                )
-            } else {
-                ProfileUIState(
-                    content = content,
-                    isSuccess = isSuccess,
-                    errorMessage = errorMessage,
-                )
-            }
-        _uiState.emit(state)
+        _uiState.update { lastUIState ->
+            lastUIState.copy(
+                shouldTriggerData = !lastUIState.shouldTriggerData,
+                hasDataBeenTriggered = true,
+                content = content.ifEmpty { lastUIState.content },
+                isSuccess = isSuccess,
+                isEmptyStateError = !lastUIState.isSuccess && lastUIState.content.isEmpty(),
+                errorMessage = errorMessage,
+            )
+        }
     }
 }

@@ -20,13 +20,13 @@ material3 = '1.4.0-alpha16'
 
 coroutines = '1.10.2'
 
-gradle = '8.10.1'
+gradle = '8.11.0'
 
 koin = '4.1.0'
 
-kotlin = '2.1.21'
+kotlin = '2.2.0'
 
-ksp = '2.1.21-2.0.2'
+ksp = '2.2.0-2.0.2'
 
 ktor = '3.1.3'
 
@@ -57,10 +57,10 @@ workManager = '2.10.2'
 archTest = '2.2.0'
 jacoco = '0.8.13'
 junit = '1.3.0-alpha03'
-junit5 = '5.13.1'
-junit5PlatformLauncher = '1.13.1'
+junit5 = '5.13.2'
+junit5PlatformLauncher = '1.13.2'
 konsist = '0.17.3'
-mockk = '1.14.2'
+mockk = '1.14.4'
 testCore = '1.7.0-alpha03'
 
 [libraries]
@@ -88,7 +88,7 @@ accompanistAdaptiveCompose = { group = "com.google.accompanist", name = "accompa
 activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 animationCompose = { group = "androidx.compose.animation", name = "animation", version.ref = "composeCore" }
 foundationCompose = { group = "androidx.compose.foundation", name = "foundation", version.ref = "composeCore" }
-lifecycleCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycleViewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 material3Compose = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 material3WindowSizeClassCompose = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
 runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "composeCore" }
@@ -201,7 +201,7 @@ compose = [
     "activityCompose",
     "animationCompose",
     "foundationCompose",
-    "lifecycleCompose",
+    "lifecycleViewModelCompose",
     "material3Compose",
     "material3WindowSizeClassCompose",
     "runtime",

@@ -65,10 +65,12 @@ class ProfileListingActivity : ComponentActivity() {
         runTaskOnBackground {
             viewModel.uiState.collect { uiState ->
                 binding.progressBar.isVisible = uiState.isLoading
-                if (uiState.isSuccess) {
-                    onDisplay(uiState = uiState)
-                } else {
-                    snackBar.showMessage(uiState.errorMessage)
+                if (uiState.hasDataBeenTriggered) {
+                    if (uiState.isSuccess) {
+                        onDisplay(uiState = uiState)
+                    } else {
+                        snackBar.showMessage(uiState.errorMessage)
+                    }
                 }
             }
         }
@@ -179,7 +181,8 @@ class ProfileListingActivity : ComponentActivity() {
             .toString()
             .isNotEmpty()
 
-    private fun provideRecyclerViewLayoutManager() = binding.profileInfoRecyclerView.layoutManager.castTo<LinearLayoutManager>()
+    private fun provideRecyclerViewLayoutManager() =
+        binding.profileInfoRecyclerView.layoutManager.castTo<LinearLayoutManager>()
 
     private fun launchBrowser(profileUrl: String) {
         startActivity(

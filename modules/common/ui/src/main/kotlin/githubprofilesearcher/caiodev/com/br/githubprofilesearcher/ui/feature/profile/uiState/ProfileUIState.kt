@@ -4,6 +4,8 @@ import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.domain.feature
 import githubprofilesearcher.caiodev.com.br.githubprofilesearcher.resources.R as Resources
 
 data class ProfileUIState(
+    val shouldTriggerData: Boolean = false,
+    val hasDataBeenTriggered: Boolean = false,
     val content: List<UserProfile> = emptyList(),
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
