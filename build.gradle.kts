@@ -10,7 +10,7 @@ plugins {
     alias(dep.plugins.serialization) apply false
 }
 
-val detektVersion = dep.versions.detekt.get()
+val detektVersion: String = dep.versions.detekt.get() ?: ""
 allprojects {
     apply { from("${project.rootDir}/scripts/codeChecking.gradle.kts") }
     apply { from("${project.rootDir}/scripts/coverage.gradle") }
